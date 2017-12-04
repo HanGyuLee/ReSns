@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #26. mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="jsrresns">
+
+
+<!-- 팔로우 리스트  가져오기 -->
+<resultMap type="HashMap" id="getFollowListMap">
+<result property="login_id" 			column="login_id" 					javaType="String" />
+<result property="follow_id" 			column="follow_id" 					javaType="String" />
+<result property="follow_name" 			column="follow_name" 				javaType="String" />
+<result property="follow_pimage" 	column="follow_proile_image" 		javaType="String" />
+</resultMap>
+<select id="getFollowList" parameterType="HashMap" resultMap="getFollowListMap">
+select F.fk_login_id as login_id, F.follow_id as follow_id, L.login_name as follow_name, nvl(M.uimg_profile_filename,'profile.png') as follow_proile_image
+from tbl_follow F left join tbl_login L
+on F.follow_id = L.login_id
+left join tbl_uimage M
+on F.follow_id = M.fk_login_id
+where F.fk_login_id = #{login_id}
+</select>
+<!-- 팔로우 리스트 가져오기 끝 -->
+
+
+
+
+<!-- 팔로워 리스트  가져오기 -->
+<resultMap type="HashMap" id="getFollowerListMap">
+<result property="login_id" 			column="login_id" 					javaType="String" />
+<result property="follower_id" 			column="follower_id" 					javaType="String" />
+<result property="follower_name" 			column="follower_name" 				javaType="String" />
+<result property="follower_pimage" 	column="follower_proile_image" 		javaType="String" />
+</resultMap>
+<select id="getFollowerList" parameterType="HashMap" resultMap="getFollowerListMap">
+select F.follow_id as login_id, F.fk_login_id as follower_id, L.login_name as follower_name, nvl(M.uimg_profile_filename,'profile.png') as follower_proile_image
+from tbl_follow F left join tbl_login L
+on F.fk_login_id = L.login_id
+left join tbl_uimage M
+on F.fk_login_id = M.fk_login_id
+where F.follow_id = #{login_id}
+</select>
+<!-- 팔로워 리스트 가져오기 끝 -->
+
+
+
+
+
+
+<!-- 중복팔로우 확인 시작 -->
+<select id="followCheck" parameterType="HashMap" resultType="Integer">
+select count(*)
+from tbl_follow
+where fk_login_id = #{login_id} and follow_id =  #{follow_id}
+</select>
+<!-- 중복팔로우 확인 끝-->
+
+<!-- 팔로우하기 -->
+<insert id="followAdd" parameterType="HashMap">
+insert into tbl_follow(follow_seq, fk_login_id, follow_id)
+values(follow_seq.nextval, #{login_id}, #{follow_id})
+</insert>
+
+<update id="followupdate" parameterType="HashMap">
+update tbl_user set user_ing = user_ing+1
+where fk_login_id = #{login_id}
+</update>
+
+<update id="followerupdate" parameterType="HashMap">
+update tbl_user set user_ed = user_ed+1
+where fk_login_id = #{follow_id}
+</update>
+<!-- 팔로우하기  끝-->
+
+
+
+<!-- 언팔로우 시작 -->
+
+<delete id="unFollow" parameterType="HashMap">
+delete from tbl_follow
+where fk_login_id = #{login_id} and follow_id = #{follow_id}
+</delete>
+
+<update id="unfollowupdate" parameterType="HashMap">
+update tbl_user set user_ing = user_ing-1
+where fk_login_id = #{login_id}
+</update>
+
+<update id="unfollowerupdate" parameterType="HashMap">
+update tbl_user set user_ed = user_ed-1
+where fk_login_id = #{follow_id}
+</update>
+<!-- 언팔로우 끝-->
+
+</mapper>
