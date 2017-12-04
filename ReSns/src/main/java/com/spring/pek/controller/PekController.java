@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.spring.pek.model.MapVO;
+import com.spring.pek.model.ReVO;
+import com.spring.pek.model.TagVO;
 import com.spring.pek.service.InterPekService;
 
 @Controller
@@ -36,33 +39,24 @@ public class PekController {
 	@RequestMapping(value = "/detailBoard.re", method = {RequestMethod.GET})
 	public String detailBoard(HttpServletRequest req) {
 		
-		// 아이디도 넘겨줘야 함
+		//String fk_login_id = req.getParameter("fk_login_id");
 		String seq_tbl_board = req.getParameter("seq_tbl_board");
 		
 		
-		/*필요한 거(비공개 아닌 글, 삭제되지 않은 회원, 신고당하지 않은 덧글)
+		/*필요한 거(비공개 아닌 글, 삭제되지 않은 회원, 신고당하지 않은 덧글)*/
 		
-		tbl_login : 별명
-		tbl_uimage : 프사 이미지
-		tbl_board : 내용, 시간
-		tbl_re : 덧글 (덧글 쓴 사람 프사, 별명)
-		tbl_tag : 태그
-		tbl_map : 위치*/
+		//HashMap<String, String> userHashMap = service.showUser(fk_login_id);
+		String str_reList = service.showRe(seq_tbl_board);
+		//List<TagVO> tagList = service.showTag(seq_tbl_board);
+		//MapVO locvo = service.showLoc(seq_tbl_board);
+		
+		//req.setAttribute("userHashMap", userHashMap);
+		req.setAttribute("str_reList", str_reList);
+		//req.setAttribute("tagList", tagList);
+		//req.setAttribute("locvo", locvo);
 		
 		
-		// 글 1개 select 메소드
-		// 댓글 보여주기 select 메소드
-		// 댓글 갯수 보여주기 select 메소드
-		// 하트 보여주기 select 메소드
-		// 하트 갯수 보여주기 select 메소드
-		// 위치 보여주기 select 메소드
-		// 게시물 이미지 보여주기 select 메소드
-		// 태그 보여주기 select 메소드
-		
-		return "";
-		// 글 내용 더보기
-		// 모달
-		// 사진 크게 보기
+		return "reListJSON.notiles";
 	}
 	
 	// 글쓰기 요청

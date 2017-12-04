@@ -6,17 +6,23 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+
 <script type="text/javascript">
 
-	$(document).ready(function(){
+	function showDetail() {
 		
-		$("#popBoard").click(function(){
-			
-			var form_data = {"seq_tbl_board" : $("#seq_tbl_board").val(),
-							"fk_login_id" : $("#fk_login_id").val()
-							};
-			
-			
+		// showUser();
+		showRe();
+		//	showTag();
+		//	showLoc();
+		
+	}
+
+	
+	/* function showUser() {
+		
+		var form_data = {"fk_login_id" : $("#fk_login_id").val()};
+
 			$.ajax({
 				
 				url: "/resns/detailBoard.re",
@@ -32,11 +38,92 @@
 				}
 				
 			});
-			
-		});
 		
+	} */
+	
+	function showRe() {
 		
-	});
+		var form_data = {"seq_tbl_board" : $("#seq_tbl_board").val()};
+
+			$.ajax({
+				
+				url: "/resns/detailBoard.re",
+				type: "GET",
+				data: form_data,  
+				dataType: "JSON", 
+				success: function(data) {
+					
+					if (data.length != null) {
+						
+						
+						var result = "";
+						
+						$.each(data, function(entryIndex, entry){
+							
+							var re_content = entry.re;
+							
+							result += "<span style='font-weight = bold;'>"+re_content+"</span>";
+						
+						});
+					}
+						
+					$("#test").html(result);
+				
+					
+				}, error: function() {
+					
+					
+					alert(".");
+					
+				}
+				
+			});
+		
+	}
+	
+	/* function showTag() {
+		
+		var form_data = {"seq_tbl_board" : $("#seq_tbl_board").val()};
+
+			$.ajax({
+				
+				url: "/resns/detailBoard.re",
+				type: "GET",
+				data: form_data,  
+				dataType: "JSON", 
+				success: function(data) {
+				
+					alert(".");
+					
+				}, error: function() {
+					
+				}
+				
+			});
+		
+	} */
+	
+	/* function showLoc() {
+		
+		var form_data = {"seq_tbl_board" : $("#seq_tbl_board").val()};
+
+			$.ajax({
+				
+				url: "/resns/detailBoard.re",
+				type: "GET",
+				data: form_data,  
+				dataType: "JSON", 
+				success: function(data) {
+				
+					alert(".");
+					
+				}, error: function() {
+					
+				}
+				
+			});
+		
+	} */
 
 </script>
 </head>
@@ -51,7 +138,8 @@
 		    <div class="col-md-8 col-sm-12 co-xs-12 gal-item">
 		      <div class="box">
 		        <a href="#" data-toggle="modal" data-target="#${status.count}">
-		          <img id="popBoard" src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" style="width: 300px; height: 300px;">
+		          <img id="popBoard${status.count}" src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" style="width: 300px; height: 300px;"
+		          		onclick="showDetail();">
 		        
 		        </a>
 		        <div class="modal fade" id="${status.count}" tabindex="-1" role="dialog">
@@ -61,12 +149,14 @@
 		              <div class="modal-body">
 		              <div style="width: 68%; height: 350px; border: 1px solid blue; float: left;">
 		                <img src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" style="width: 400px; height: 300px;">
+		                
 		               </div>
 		                <div style="border: 1px solid red; width: 30%; height: 350px; float: right;">
 		                </div>
 		                <div style="border: 1px solid green; width: 68%; height: 120px; float: left;">
+		                <span style="line-height: 180%;">${map.BOARD_CONTENT}</span>
 		                </div>
-		                <div style="border: 1px solid purple; width: 30%; height: 120px; float: right;">
+		                <div id="test${status.count}" style="border: 1px solid purple; width: 30%; height: 120px; float: right;">
 		                </div>
 		              </div>
 		                <div class="col-md-12 description">
