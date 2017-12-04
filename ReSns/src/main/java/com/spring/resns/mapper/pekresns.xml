@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #26. mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #27. 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="pekresns">
+
+
+	<resultMap type="java.util.HashMap" id="getBoardListMap">
+		<result property="RNO" 	column="rno" 	javaType="String" />
+ 		<result property="SEQ_TBL_BOARD" 	column="seq_tbl_board" 	javaType="String" />
+ 		<result property="BOARD_HEART" 	column="board_heart" 	javaType="String" />
+ 		<result property="FK_LOGIN_ID" 	column="fk_login_id" 	javaType="String" />
+ 		<result property="BIMG_FILENAME" 	column="bimg_filename" 	javaType="String" />
+	</resultMap>
+	<select id="getBoardList" resultMap="getBoardListMap">
+	
+	
+		select rno, seq_tbl_board, board_heart, fk_login_id, bimg_filename
+				from 
+				(
+				select rownum as rno, V.*
+				from
+				(
+				select B.seq_tbl_board, B.board_heart, B.fk_login_id, I.bimg_filename
+				from tbl_board B left join tbl_bimage I
+				on B.seq_tbl_board = I.seq_tbl_board
+				where B.board_status = 0
+				order by B.board_heart desc
+				) V
+				) T
+		where rno between 1 and 3
+	
+	</select>
+
+
+</mapper>

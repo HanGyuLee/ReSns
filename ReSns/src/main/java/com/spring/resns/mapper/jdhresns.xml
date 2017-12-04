@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #26. mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #27. 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="jdhresns">
+
+
+<!-- 로그인 여부 알아오기 === -->
+	<select id="loginEnd" parameterType="HashMap" resultType="int">
+	
+		   select case (select count(*)
+                    from tbl_login
+                    where login_id = #{id} and login_pwd = #{pwd}
+                    and login_status in (1,9))
+	        when 1 then 1
+	        else ( case (select count(*)
+	                from tbl_login
+	                where login_id = #{id})
+	               when 1 then 0
+	               else -1
+	               end
+	              )
+	            end as LOGINCHECK
+	 	from dual
+	
+	</select>
+	
+	
+	<select id="getLoginMember" parameterType="String" resultType="com.spring.jdh.model.UserVO">
+	
+		select fk_login_id, user_email, user_birth, user_gender, user_ing, user_ed, user_boardcnt, user_report
+		from tbl_user
+		where fk_login_id = #{id}
+	</select>
+	
+	<select id="getloginSession" parameterType="String" resultType="com.spring.jdh.model.LoginVO">
+	
+		select login_id, login_pwd, login_name, login_status
+		from tbl_login
+		where login_status in (1,9)
+		and login_id = #{id}
+	</select>
+
+
+</mapper>
