@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #26. mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #27. 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="pmhresns">
+
+	<resultMap type="java.util.HashMap" id="getReportListMap">
+		<result property="seq_tbl_report" 	column="seq_tbl_report" javaType="String" />
+ 		<result property="report_cate" 		column="report_cate" 	javaType="String" />
+ 		<result property="report_content" 	column="report_content" javaType="String" />
+ 		<result property="report_user" 		column="report_user" 	javaType="String" />
+ 		<result property="report_date1" 	column="report_date1" 	javaType="String" />
+ 		<result property="report_status" 	column="report_status" 	javaType="String" />
+	</resultMap>
+	<select id="getReport" resultMap="getReportListMap">
+		select seq_tbl_report, report_cate, report_content, report_user, report_date1, report_status
+		from view_report_main
+	</select>
+	
+		<resultMap type="java.util.HashMap" id="getReportDetailMap">
+		<result property="seq_tbl_report" column="seq_tbl_report" javaType="String" />	
+		<result property="report_cate" column="report_cate" javaType="String" />	
+		<result property="reporting_name" column="reporting_name" javaType="String" />	
+		<result property="reporting_id" column="reporting_id" javaType="String" />	
+		<result property="report_name" column="report_name" javaType="String" />	
+		<result property="report_id" column="report_id" javaType="String" />	
+		<result property="report_date1" column="report_date1" javaType="String" />	
+		<result property="report_date2" column="report_date2" javaType="String" />	
+		<result property="report_status" column="report_status" javaType="String" />	
+		<result property="fk_seq_tbl_board" column="fk_seq_tbl_board" javaType="String" />	
+		<result property="report_content" column="report_content" javaType="String" />	
+	</resultMap>
+	<select id="getReportDetail" parameterType="String" resultMap="getReportDetailMap">
+		select seq_tbl_report, report_cate, reporting_name, reporting_id, report_name, report_id, report_date1, report_date2, report_status, fk_seq_tbl_board, report_content
+		from view_report_detail
+		where fk_seq_tbl_board = #{seq}
+	</select>
+	
+
+</mapper>
