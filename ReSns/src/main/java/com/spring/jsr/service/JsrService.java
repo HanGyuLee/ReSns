@@ -3,6 +3,8 @@ package com.spring.jsr.service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -10,6 +12,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.jsr.model.InterJsrDAO;
+import com.spring.pek.model.BoardVO;
+import com.spring.pek.model.ReVO;
 
 
 //service  선언
@@ -34,7 +38,7 @@ public class JsrService implements InterJsrService {
 	@Override
 	public List<HashMap<String, String>> followerList(HashMap<String, String> map) {
 		List<HashMap<String, String>> followerList = jdao.getFollowerList(map);
-		System.out.println("팔로워 리스트 넘어오나요2");
+		//System.out.println("팔로워 리스트 넘어오나요2");
 		return followerList;
 	}
 
@@ -128,6 +132,63 @@ public class JsrService implements InterJsrService {
 		return unFollowAddEnd;
 	}
 
+
+	
+	//팔로우 하는 사람 게시글 가지고 오기
+	@Override
+	public List<BoardVO> followboard(HashMap<String, String> map) {
+		List<BoardVO> followboard = null;
+		
+		List<HashMap<String, String>> followList = jdao.getFollowList(map);
+		
+		if(followList != null){
+			followboard =  jdao.getFollowBoardView(map);
+			
+		}
+		
+		
+		return followboard;
+	}
+
+
+	//팔로우 글 댓글확인 하기 위한 
+	@Override
+	public String followre(String seq_tbl_board) {
+	System.out.println("서비스단!");
+	//List<ReVO> reList = jdao.followreList(seq_tbl_board);
+
+	List<HashMap<String,String>> resultMap = jdao.followRe(seq_tbl_board);
+	
+		JSONArray jsonMap = new JSONArray();
+		
+		
+		if (resultMap != null) {
+			for(HashMap<String, String> re : resultMap) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("re_seq", re.get("re_seq"));
+				jsonObj.put("seq_tbl_board", re.get("seq_tbl_board"));
+				jsonObj.put("re_id", re.get("re_id"));
+				jsonObj.put("re_content", re.get("re_content"));
+				jsonObj.put("re_date", re.get("re_date"));
+				jsonObj.put("re_status", re.get("re_status"));
+				jsonObj.put("re_fk_seq", re.get("re_fk_seq"));
+				jsonObj.put("re_groupno", re.get("re_groupno"));
+				jsonObj.put("re_depthno", re.get("re_depthno"));
+				jsonObj.put("login_name", re.get("login_name"));
+				jsonObj.put("uimg_profile_filename", re.get("uimg_profile_filename"));
+	
+				System.out.println("re.getRe_content()확인::"+re);
+				
+				jsonMap.put(jsonObj);
+			}
+		}
+		
+		String str_reList = jsonMap.toString();
+		
+		return str_reList;
+	}
+
+	
 	
 	
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.spring.jdh.model.LoginVO;
 import com.spring.jsr.service.InterJsrService;
+import com.spring.pek.model.BoardVO;
 
 
 @Controller
@@ -67,13 +68,18 @@ public class JsrController {
 	String follow_id = req.getParameter("followId");	
 	
 	LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
-	String login_id = loginUser.getLogin_id();
-
+	String login_id = null;	
 	//임시로 로그인 체크
-	if(login_id ==null){
-		return "jdh/loginform.tiles";	
+	if(loginUser == null){	
+		return "jdh/loginform.tiles";
 	}
-		
+
+	else{
+		login_id = loginUser.getLogin_id();
+	}
+
+
+
 	HashMap<String, String> map = new HashMap<String, String>();
 	map.put("follow_id", follow_id.trim());
 	map.put("login_id", login_id);
@@ -118,13 +124,18 @@ public class JsrController {
 		
 		String unFollow_id = req.getParameter("unFollowId");	
 		
+		
 		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
-		String login_id = loginUser.getLogin_id();
-
+		String login_id = null;	
 		//임시로 로그인 체크
-		if(login_id ==null){
-			return "index.tiles";	
+		if(loginUser == null){	
+			return "jdh/loginform.tiles";
 		}
+
+		else{
+			login_id = loginUser.getLogin_id();
+		}
+
 			
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("follow_id", unFollow_id.trim());
@@ -146,7 +157,7 @@ public class JsrController {
 		
 
 		
-		//리스트 실시간으로 다시 확인 위해 리스트 값 넘겨주기
+		//리스트 실시간으로 다시 확인 위해 리스트 값 넘겨주기 , 이건 나중에 지워도 됨
 		else{
 			
 			msg = "언 팔로우 성공!";
@@ -159,6 +170,58 @@ public class JsrController {
 		req.setAttribute("loc", loc);
 	return "msg.notiles";
 	}
+	
+	
+	//팔로우 메인 확인하기
+	@RequestMapping(value="/followmain.re", method={RequestMethod.GET})
+	public String followmain(HttpServletRequest req, HttpSession session) {	
+
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = null;	
+		//임시로 로그인 체크
+		if(loginUser == null){	
+			return "jdh/loginform.tiles";
+		}
+
+		else{
+			login_id = loginUser.getLogin_id();
+		}
+
+		System.out.println("login_id확인::"+login_id);
+		
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("login_id", login_id);
+		
+		//내가 팔로우 하는 사람 글목록 가져오기
+		List<BoardVO> followBoard = service.followboard(map);
+		
+		req.setAttribute("followBoard", followBoard);
+		
+		
+		
+	return "jsr/followmain.tiles2";
+	}
+	
+	
+	@RequestMapping(value="/followmainre.re", method={RequestMethod.GET})
+	public String followmainre(HttpServletRequest req, HttpSession session) {	
+		
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
+		System.out.println("seq::"+seq_tbl_board);
+	 
+		//댓글 내용 가져오기
+		String str_jsonMap = service.followre(seq_tbl_board);
+		
+		req.setAttribute("str_jsonMap",str_jsonMap);
+
+		
+	return "followreJSON.notiles";
+	}
+	
+	
+	
+	
 	
 /*	
 	//백문백답 게시판 질문 작성하는 폼 페이지 요청

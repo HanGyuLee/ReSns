@@ -7,6 +7,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.pek.model.BoardVO;
+import com.spring.pek.model.ReVO;
+
 //DAO선언---
 //Repository 선언
 
@@ -96,6 +99,29 @@ public class JsrDAO implements InterJsrDAO {
 	}
 
 
+	/*--------------------------------------------------------------------------------------------------------------------------*/	
+	
+	//내 팔로우 보드 리스트 가져오기
+	@Override
+	public List<BoardVO> getFollowBoardView(HashMap<String, String> map) {
+		List<BoardVO> getFollowBoardView = sqlsession.selectList("jsrresns.FollowBoardView",map);
+		return getFollowBoardView;
+	}
+
+
+	//내 팔롱 댓글 리스트 가져오기
+	@Override
+	public List<ReVO> followreList(String seq_tbl_board) {
+		List<ReVO> followreList = sqlsession.selectList("jsrresns.followreList",seq_tbl_board);
+		return followreList;
+	}
+
+	//내 팔로우 댓글 리스트 가져오기2
+	@Override
+	public List<HashMap<String, String>> followRe(String seq_tbl_board) {
+		 List<HashMap<String, String>> followRe = sqlsession.selectList("jsrresns.followreList",seq_tbl_board);
+		return followRe;
+	}
 
 
 	

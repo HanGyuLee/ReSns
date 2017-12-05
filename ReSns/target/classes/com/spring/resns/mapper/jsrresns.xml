@@ -15,7 +15,7 @@
 <result property="follow_pimage" 	column="follow_proile_image" 		javaType="String" />
 </resultMap>
 <select id="getFollowList" parameterType="HashMap" resultMap="getFollowListMap">
-select F.fk_login_id as login_id, F.follow_id as follow_id, L.login_name as follow_name, nvl(M.uimg_profile_filename,'profile.png') as follow_proile_image
+select F.fk_login_id as login_id, F.follow_id as follow_id, L.login_name as follow_name, nvl(M.uimg_profile_filename,'profile0.png') as follow_proile_image
 from tbl_follow F left join tbl_login L
 on F.follow_id = L.login_id
 left join tbl_uimage M
@@ -35,7 +35,7 @@ where F.fk_login_id = #{login_id}
 <result property="follower_pimage" 	column="follower_proile_image" 		javaType="String" />
 </resultMap>
 <select id="getFollowerList" parameterType="HashMap" resultMap="getFollowerListMap">
-select F.follow_id as login_id, F.fk_login_id as follower_id, L.login_name as follower_name, nvl(M.uimg_profile_filename,'profile.png') as follower_proile_image
+select F.follow_id as login_id, F.fk_login_id as follower_id, L.login_name as follower_name, nvl(M.uimg_profile_filename,'profile0.png') as follower_proile_image
 from tbl_follow F left join tbl_login L
 on F.fk_login_id = L.login_id
 left join tbl_uimage M
@@ -93,5 +93,89 @@ update tbl_user set user_ed = user_ed-1
 where fk_login_id = #{follow_id}
 </update>
 <!-- 언팔로우 끝-->
+
+
+
+
+<!-- 팔로우 게시글 리스트 가져오기 시작 -->
+<resultMap type="HashMap" id="FollowBoardMap">
+<result property="follow_name" 				column="follow_name" 				javaType="String" />
+<result property="seq_tbl_board" 			column="seq_tbl_board" 				javaType="String" />
+<result property="follow_proile_image" 		column="follow_proile_image" 		javaType="String" />
+<result property="follow_id" 				column="follow_id" 					javaType="String" />
+<result property="board_content" 			column="board_content" 				javaType="String" />
+<result property="board_time" 				column="board_time" 				javaType="String" />
+<result property="board_heart" 				column="board_heart" 				javaType="String" />
+<result property="board_recnt" 				column="board_recnt" 				javaType="String" />
+<result property="board_status" 			column="board_status" 				javaType="String" />
+<result property="bimg_filename" 			column="bimg_filename" 				javaType="String" />
+<result property="bimg_orgfilename" 		column="bimg_orgfilename" 			javaType="String" />
+<result property="bimg_filesize" 			column="bimg_filesize" 				javaType="String" />
+<result property="map_we" 					column="map_we" 					javaType="String" />
+<result property="ma_ky" 					column="ma_ky" 						javaType="String" />
+<result property="map_name" 				column="map_name" 					javaType="String" />
+</resultMap>
+
+<select id="FollowBoardView" parameterType="HashMap" resultMap="FollowBoardMap">
+select L.login_name as follow_name
+      , nvl(M.uimg_profile_filename,'profile.png') as follow_proile_image
+      ,F.follow_id as follow_id
+      ,b.seq_tbl_board as seq_tbl_board
+      ,b.board_content as board_content
+      ,b.board_time as board_time
+      ,b.board_heart as board_heart
+      ,b.board_recnt as board_recnt
+      ,b.board_status as board_status
+      ,i.bimg_filename as bimg_filename
+      ,i.bimg_orgfilename as bimg_orgfilename
+      ,i.bimg_filesize as bimg_filesize
+      ,M.map_we as map_we
+      ,M.map_ky as ma_ky
+      ,M.map_name as map_name
+from tbl_board B join tbl_bimage I
+on B.seq_tbl_board = I.seq_tbl_board
+left outer join tbl_map M
+on B.seq_tbl_board = M.fk_seq_tbl_board 
+join tbl_follow F
+on B.fk_login_id = F.follow_id
+join tbl_login L
+on F.follow_id = L.login_id
+join tbl_uimage M
+on F.follow_id = M.fk_login_id
+where F.fk_login_id = #{login_id}
+and B.board_status = 0
+order by B.seq_tbl_board desc
+</select>
+<!--  팔로우 게시글 리스트 가져오기 끝 -->
+
+
+
+<!-- 팔로우 게시글 댓글 가져오기  시작 -->
+<resultMap type="HashMap" id="followReMap">
+<result property="re_seq" 					column="re_seq" 				javaType="String" />
+<result property="seq_tbl_board" 			column="seq_tbl_board" 			javaType="String" />
+<result property="re_id" 					column="re_id" 					javaType="String" />
+<result property="re_content" 				column="re_content" 			javaType="String" />
+<result property="re_date" 					column="re_date" 				javaType="String" />
+<result property="re_status" 				column="re_status" 				javaType="String" />
+<result property="re_fk_seq" 				column="re_fk_seq" 				javaType="String" />
+<result property="re_groupno" 				column="re_groupno" 			javaType="String" />
+<result property="re_depthno" 				column="re_depthno" 			javaType="String" />
+<result property="login_name" 				column="login_name" 			javaType="String" />
+<result property="uimg_profile_filename"	column="uimg_profile_filename" 	javaType="String" />
+</resultMap>
+<select id="followreList" parameterType="String" resultMap="followReMap">
+select R.re_seq, R.seq_tbl_board, R.re_id, R.re_content, to_char(R.re_date, 'yyyy-mm-dd') as re_date, 
+R.re_status, R.re_fk_seq, R.re_groupno, R.re_depthno, L.login_name, U.uimg_profile_filename
+from tbl_re R left join tbl_login L
+on R.re_id = L.login_id
+left join tbl_uimage U
+on L.login_id = U.fk_login_id
+where seq_tbl_board = #{seq_tbl_board}
+</select> 
+<!-- 팔로우 게시글 댓글 가져오기 끝 -->
+
+
+
 
 </mapper>
