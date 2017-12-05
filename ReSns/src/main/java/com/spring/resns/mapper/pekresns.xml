@@ -7,23 +7,27 @@
 <mapper namespace="pekresns">
 
 
+	<!-- 인기 리스트 보기 -->
 	<resultMap type="java.util.HashMap" id="getBoardListMap">
 		<result property="RNO" 	column="rno" 	javaType="String" />
  		<result property="SEQ_TBL_BOARD" 	column="seq_tbl_board" 	javaType="String" />
  		<result property="BOARD_HEART" 	column="board_heart" 	javaType="String" />
  		<result property="FK_LOGIN_ID" 	column="fk_login_id" 	javaType="String" />
+ 		<result property="BOARD_CONTENT" 	column="board_content" 	javaType="String" />
+ 		<result property="BOARD_TIME" 	column="board_time" 	javaType="String" />
+ 		<result property="BOARD_RECNT" 	column="board_recnt" 	javaType="String" />
  		<result property="BIMG_FILENAME" 	column="bimg_filename" 	javaType="String" />
 	</resultMap>
 	<select id="getBoardList" resultMap="getBoardListMap">
 	
 	
-		select rno, seq_tbl_board, board_heart, fk_login_id, bimg_filename
+		select rno, seq_tbl_board, board_heart, fk_login_id, board_content, board_time, board_recnt, bimg_filename
 				from 
 				(
 				select rownum as rno, V.*
 				from
 				(
-				select B.seq_tbl_board, B.board_heart, B.fk_login_id, I.bimg_filename
+				select B.seq_tbl_board, B.board_heart, B.fk_login_id, B.board_content, B.board_time, B.board_recnt, I.bimg_filename
 				from tbl_board B left join tbl_bimage I
 				on B.seq_tbl_board = I.seq_tbl_board
 				where B.board_status = 0
@@ -32,6 +36,85 @@
 				) T
 		where rno between 1 and 3
 	
+	</select>
+	
+	
+	<!-- 글쓴이 별명과 프사 보기 -->
+	<resultMap type="java.util.HashMap" id="showUserMap">
+		<result property="LOGIN_NAME" 	column="login_name" 	javaType="String" />
+		<result property="UIMG_PROFILE_FILENAME" 	column="uimg_profile_filename" 	javaType="String" />
+	</resultMap>
+	<select id="showUser" parameterType="String" resultMap="showUserMap">
+		select L.login_name, U.uimg_profile_filename
+				from tbl_login L join tbl_uimage U 
+				on L.login_id = U.fk_login_id
+		where L.login_id = #{fk_login_id}
+	</select>
+	
+	
+	<!-- 한 게시글의 덧글 보기 -->
+	<resultMap type="java.util.HashMap" id="showReMap">
+		<result property="RE_SEQ" column="re_seq" javaType="String" />
+		<result property="SEQ_TBL_BOARD" column="seq_tbl_board" javaType="String" />
+		<result property="RE_ID" column="re_id" javaType="String" />
+		<result property="RE_CONTENT" column="re_content" javaType="String" />
+		<result property="RE_DATE" column="re_date" javaType="String" />
+		<result property="RE_STATUS" column="re_status" javaType="String" />
+		<result property="RE_FK_SEQ" column="re_fk_seq" javaType="String" />
+		<result property="RE_GROUPNO" column="re_groupno" javaType="String" />
+		<result property="RE_DEPTHNO" column="re_depthno" javaType="String" />
+		<result property="LOGIN_NAME" column="login_name" javaType="String" />
+		<result property="UIMG_PROFILE_FILENAME" column="uimg_profile_filename" javaType="String" />
+	</resultMap>
+	<select id="showRe" parameterType="String" resultMap="showReMap">
+		select R.re_seq, R.seq_tbl_board, R.re_id, R.re_content, to_char(R.re_date, 'yyyy-mm-dd') as re_date, 
+				R.re_status, R.re_fk_seq, R.re_groupno, R.re_depthno, L.login_name, U.uimg_profile_filename
+				from tbl_re R left join tbl_login L
+				on R.re_id = L.login_id
+				left join tbl_uimage U
+				on L.login_id = U.fk_login_id
+		where seq_tbl_board = #{seq_tbl_board}
+	</select>
+	
+	
+	<!-- 한 게시글의 태그 보기 -->
+	<select id="showTag" parameterType="String" resultType="com.spring.pek.model.TagVO">
+		select seq_tbl_tag, tag_content
+				from tbl_tag
+		where seq_tbl_board = #{seq_tbl_board}
+	</select>
+	
+	
+	<!-- 한 게시글의 위치주소 보기 -->
+	<select id="showLoc" parameterType="String" resultType="com.spring.pek.model.MapVO">
+		select map_name
+				from tbl_map
+		where fk_seq_tbl_board = #{seq_tbl_board}
+	</select>
+	
+	<!-- 좋아요 누르기 -->
+	<insert id="addHeart" parameterType="HashMap">
+		insert into tbl_heart (fk_login_id, fk_seq_tbl_board, heart_getid)
+		values (#{login_id}, #{seq_tbl_board}, #{fk_login_id})
+	</insert>
+	<!-- 좋아요 눌렀을 때 게시글의 하트 갯수 증가 -->
+	<update id="addHeartCnt" parameterType="String">
+		update tbl_board set board_heart = board_heart + 1
+		where seq_tbl_board = #{seq_tbl_board}
+	</update>
+	
+	<!-- 이미 좋아요 눌렀는지 확인하기 -->
+	<select id="HeartedUser" parameterType="HashMap" resultType="int">
+		select count(*) as cnt
+				from tbl_heart
+		where fk_seq_tbl_board = #{seq_tbl_board} and fk_login_id= #{login_id}
+	</select>
+	
+	<!-- 하트 아이콘 바꿔주기 위한 하트 여부 확인 -->
+	<select id="heartCheck" parameterType="HashMap" resultType="com.spring.pek.model.HeartVO">
+		select fk_login_id, fk_seq_tbl_board, heart_getid 
+				from tbl_heart
+		where fk_seq_tbl_board = #{seq_tbl_board} and fk_login_id = #{login_id}
 	</select>
 
 
