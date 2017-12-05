@@ -38,5 +38,63 @@
 		where fk_seq_tbl_board = #{seq}
 	</select>
 	
+	<select id="getBoardContent" parameterType="String" resultType="com.spring.pek.model.BoardVO">
+		select seq_tbl_board, fk_login_id, board_content, board_status, to_char(board_time, 'yyyy-mm-dd hh24:mi:ss') as board_time, board_heart, board_recnt
+		from tbl_board
+		where seq_tbl_board = #{reportnum}
+	</select>
+	
+	<select id="getReContent" parameterType="String" resultType="com.spring.pek.model.ReVO">
+		select re_seq, seq_tbl_board, re_id, re_content, to_char(re_date, 'yyyy-mm-dd hh24:mi:ss') as re_date, re_status, re_fk_seq, re_groupno, re_depthno
+		from tbl_re
+		where seq_tbl_board = #{reportnum}
+		start with re_fk_seq = 0
+		connect by prior re_seq = re_fk_seq
+		order siblings by re_groupno desc, re_seq asc
+	</select>
+	
+	<select id="getBimageContent" parameterType="String" resultType="com.spring.pek.model.BimageVO">
+		select bimg_seq, seq_tbl_board, bimg_filename, bimg_orgfilename, bimg_filesize
+		from tbl_bimage
+		where seq_tbl_board = #{reportnum}
+	</select>
+	
+	<update id="updateBoardContentStatusDel" parameterType="String">
+		update tbl_board set board_status = 2
+		where seq_tbl_board = #{seq}
+	</update>
+	
+	<update id="updateReContentStatusDel" parameterType="String">
+		update tbl_re set re_status = 0
+		where seq_tbl_board = #{seq}
+	</update>
+	
+	<update id="updateReportStatusDel" parameterType="String">
+		update tbl_report set report_date2 = sysdate
+       			            , report_status = 0
+		where fk_seq_tbl_board = #{seq}
+	</update>
+	
+	<update id="updateBoardContentStatusAct" parameterType="String" >
+		update tbl_board set board_status = 1
+		where seq_tbl_board = #{seq}
+	</update>
+	
+	<update id="updateReContentStatusAct" parameterType="String" >
+		update tbl_re set re_status = 1
+		where seq_tbl_board = #{seq}
+	</update>
+	
+	<update id="updateReportStatusAct" parameterType="String" >
+		update tbl_report set report_date2 = null
+       			            , report_status = 2
+		where fk_seq_tbl_board = #{seq}
+	</update>
+	
+	<select id="getReportSearch" parameterType="HashMap" resultMap="getReportListMap">
+		select rno, seq_tbl_report, report_cate, report_content, report_user, report_date1, report_status
+		from view_report_main
+		where ${searchType} like '%'||#{searchInput}||'%'
+	</select>
 
 </mapper>

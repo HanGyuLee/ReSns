@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>신고상세 페이지</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+<script src="<%= request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
 
 <style type="text/css">
@@ -21,6 +22,13 @@
 				text-align: left;
 				border: 1px solid grey;
 	 }
+	 
+	 .modal-dialog.modal-80size {
+			  width: 80%;
+			  height: 80%;
+			  margin: 0;
+			  padding: 0;
+		}
 	
 </style>
 
@@ -59,7 +67,20 @@
 	</tr>
 	<tr>
 		<td width="20%">처리상태</td>
-		<td width="80%"><c:out value="${reportMap['report_status']}"/></td>
+		<td width="80%">
+			<c:if test="${reportMap.report_status eq 0}">
+							0. 처리완료
+			</c:if>
+			<c:if test="${reportMap.report_status eq 1}">
+							1. 처리완료(비밀글)
+			</c:if>
+			<c:if test="${reportMap.report_status eq 2}">
+							2. 처리안된신고
+			</c:if>
+			<c:if test="${reportMap.report_status eq 3}">
+							3. 처리안된신고(비밀글)
+			</c:if>
+		</td>
 	</tr>
 	<tr>
 		<td width="20%">신고내용</td>
@@ -73,15 +94,15 @@
 </c:forEach> --%>
 
 </div>
-<input type="text" id="reportnum" value="${reportMap['fk_seq_tbl_board']}">
+<input type="hidden" id="reportnum" value="${reportMap['fk_seq_tbl_board']}">
 <br>
 <div align="center">
 <button type="button" id="popbutton" data-target="#layerpop" data-toggle="modal">해당게시물 가기</button>
 </div>
 
 
-<div class="modal fade" id="layerpop" >
-  <div class="modal-dialog" id="modalbody">
+<div class="modal fade" id="layerpop" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" id="modalbody">
     
   </div>
 </div>
@@ -103,7 +124,8 @@
 					success: function(data) {
 					
 						$("#modalbody").append(data);
-						$('div.modal').modal();
+						// $('div.modal').modal();
+						$("#layerpop").modal("show");
 					}, // end of success: function()----------
 					error: function(request, status, error){
 						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);

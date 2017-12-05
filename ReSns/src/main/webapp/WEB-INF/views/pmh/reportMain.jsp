@@ -78,6 +78,18 @@
 	</div>
 </div>
 	
+<div align="center">
+	<form id="searchFrm">
+		<select id="searchType" name="searchType">
+			<option value="report_content">제목</option>
+			<option value="report_user">아이디</option>
+		</select>
+		<input type="text" onkeyup="enterkey();" id="searchInput" name="searchInput">
+		<button type="button" id="searchBtn" onclick="goSearch();">찾기</button>
+		<button type="button" id="clearBtn" onclick="goClear();">검색해제</button>
+	</form>
+</div>	
+	
 	<form id="seqFrm">
 		<input type="hidden" id="seq" name="seq">
 	</form>
@@ -108,6 +120,15 @@
 		
 	});// end of $(document).ready()------------
 	
+	function enterkey() {
+        if (window.event.keyCode == 13) {
+ 
+        	goSearch();
+        }
+	}
+
+
+	
 	function goDetail(seq) {
 		
 		document.getElementById("seq").value = seq;
@@ -119,6 +140,25 @@
 		
 	}
 	
+	function goSearch() {
+		var frm = document.getElementById("searchFrm");
+		
+		var content = document.getElementById("searchInput").value;
+		
+		if (content.trim() == "") {
+			window.location.reload();
+			return;
+		}
+		
+		frm.action = "/resns/report.re";
+		frm.method = "GET";
+		frm.submit();
+	}
+	
+	function goClear() {
+		location.href = "/resns/report.re";
+	}
+	document.title = "신고관리 게시판";
 </script>
 </body>
 </html>

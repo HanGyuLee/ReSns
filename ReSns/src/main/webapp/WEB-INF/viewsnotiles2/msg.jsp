@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
     <script type="text/javascript">
-    if(${msg != ""}){
+    if(${msg ne ""}){
     	 alert("${msg}"); 	
     }
     location.href="${loc}";
