@@ -5,4 +5,43 @@
 
 <!-- ==== #27. 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
 <mapper namespace="hglresns">
+
+
+	<resultMap type="HashMap" id="boardMap">
+	 	<result property="seq_tbl_board" 		 column="seq_tbl_board" 		javaType="String"/>
+		<result property="board_content" 		 column="board_content" 		javaType="String"/>
+		<result property="board_time" 	 		 column="board_time" 			javaType="String"/>
+		<result property="bimg_filename" 		 column="bimg_filename" 		javaType="String"/>
+		<result property="fk_login_id" 			 column="fk_login_id" 			javaType="String"/>
+		
+ 	</resultMap>
+ 	
+			
+	<select id="myBoardList" parameterType="String" resultMap="boardMap" >	
+	
+		select  B.seq_tbl_board as seq_tbl_board,T.board_content board_content,
+				T.board_time board_time,B.bimg_filename bimg_filename,U.fk_login_id fk_login_id
+		from tbl_board T join tbl_bimage B
+		on T.seq_tbl_board = B.seq_tbl_board
+		join tbl_uimage U
+		on T.fk_login_id = U.fk_login_id
+		where U.fk_login_id = #{userid}
+		
+	</select>
+	
+	
+	<resultMap type="HashMap" id="profileMap">
+	 	<result property="fk_login_id" 			 column="fk_login_id" 			javaType="String"/>
+		<result property="uimg_profile_filename" column="uimg_profile_filename" javaType="String"/>
+		<result property="uimg_header_filename"  column="uimg_header_filename" 	javaType="String"/>
+ 	</resultMap>
+	
+	<select id="myProfile" parameterType="String" resultMap="profileMap" >	
+	
+		select fk_login_id,uimg_profile_filename,uimg_header_filename
+		from tbl_uimage
+		where fk_login_id =  #{userid}
+			
+	</select>
+
 </mapper>

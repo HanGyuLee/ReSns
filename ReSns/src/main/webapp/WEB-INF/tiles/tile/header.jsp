@@ -34,7 +34,7 @@ function gologout(){
 
 
 
-<div align="center" style="background-color: black;">
+
 	<ul class="nav nav-tabs mynav">
 		
 		<li style="margin-left:3%; "><a href="<%=request.getContextPath()%>/index.re"><img src="<%=request.getContextPath()%>/resources/images/home.png"></a></li>
@@ -80,11 +80,21 @@ function gologout(){
 					<li><a href="<%=request.getContextPath()%>/alarm/alarmList.re">${alarmList }</a></li>
 				</c:forEach>
 						</c:if>	
-				<li><img src="<%=request.getContextPath()%>/resources/images/user_black.png">친구가 팔로우함 </li>
-				<li><img src="<%=request.getContextPath()%>/resources/images/follow_black.png">새로운팔로워</li>
+				<li><img src="<%=request.getContextPath()%>/resources/images/user_black.png">(예시)친구가 팔로우함 </li>
+				<li><img src="<%=request.getContextPath()%>/resources/images/follow_black.png">(예시)새로운팔로워</li>
 			
 		</ul></li>
+		
+		
+		<c:if test="${sessionScope.loginUser == null}">
+		
 		<li style="margin-left:85%;margin-top:10px; margin-top:-60px; display:inline;"><a href="<%=request.getContextPath()%>/login.re"><img src="<%=request.getContextPath()%>/resources/images/user_white.png"></a></li>
+		</c:if>
+		<c:if test="${sessionScope.loginUser!= null}">
+		<li style="margin-left:85%;margin-top:10px; margin-top:-60px; display:inline;"><a href="<%=request.getContextPath()%>/mypage.re"><img src="<%=request.getContextPath()%>/resources/images/user_white.png"></a></li>
+		</c:if>
+		
+		
 		
 		<!-- ===== #52. 로그인 성공한 사용자 성명 출력하기. ===== -->
 		<c:if test="${sessionScope.loginUser.login_status eq 1}">
@@ -97,9 +107,9 @@ function gologout(){
 		
 		<c:if test="${sessionScope.loginUser.login_status eq 9}">
 		<li style="margin-left: 15%; margin-top: 1%;">
-		♥ 환영합니다~ <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.login_name}</span> 님 ♥
+		♥ 환영합니다~ 관리자  <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.login_name}</span> 님 ♥
 		</li>
 		</c:if>
 		
 	</ul>
-</div>
+
