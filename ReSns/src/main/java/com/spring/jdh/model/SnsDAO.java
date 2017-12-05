@@ -44,6 +44,32 @@ public class SnsDAO implements InterSnsDAO {
 			return loginUser;
 		}
 
+		// 아이디 찾기
+		@Override
+		public String getUserid(HashMap<String, String> map) {
+			String login_id = sqlsession.selectOne("jdhresns.getUserid", map);
+			return login_id;
+		}
+		
+		
+		// 아이디 존재여부
+		@Override
+		public int getUserExists(HashMap<String, String> map) {
+			
+			int n = sqlsession.selectOne("jdhresns.getUserExists", map);
+			
+			return n;
+		}
+
+		// 비밀번호 재설정
+		@Override
+		public int updatePwd(HashMap<String, String> map) {
+			
+			int n = sqlsession.selectOne("jdhresns.updatePwd", map);
+			
+			return n;
+		}
+
 	
 
 }

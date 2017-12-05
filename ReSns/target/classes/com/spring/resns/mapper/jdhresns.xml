@@ -42,6 +42,33 @@
 		where login_status in (1,9)
 		and login_id = #{id}
 	</select>
-
+	
+	
+	<!-- 아이디 찾기 -->
+	<select id="getUserid" parameterType="HashMap" resultType="String">
+		select m.login_id 
+		from tbl_login M join tbl_user D on M.login_id = D.FK_LOGIN_ID
+		where m.login_status in (1,9)
+		and d.user_email = #{email}
+		and m.login_name like #{nickname}
+	</select>
+	
+	<!-- 아이디와 메일이 존재하는지 여부 -->
+	<select id="getUserExists" parameterType="HashMap" resultType="int">
+	
+	select count(*)
+	from tbl_user
+	where fk_login_id = #{userid} and user_email = #{email};
+		
+	</select>
+	
+	<!-- 비밀번호 재설정 -->
+	
+	<select id="updatePwd" parameterType="HashMap" resultType="int">
+	
+	update tbl_login set login_pwd = #{pwd}
+	where login_id = #{userid}
+	
+	</select>
 
 </mapper>

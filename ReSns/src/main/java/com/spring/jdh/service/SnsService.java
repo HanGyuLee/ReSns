@@ -43,6 +43,30 @@ public class SnsService implements InterSnsService {
 			
 			return loginUser;
 		}
+
+		// 아이디 찾기
+		@Override
+		public String getUserid(HashMap<String, String> map) {
+			
+			String userid = dao.getUserid(map);
+			
+			return userid;
+		}
+
+		// 비밀번호 찾기 (아이디 존재여부)
+		@Override
+		public int getUserExists(HashMap<String, String> map) {
+			
+			int n = dao.getUserExists(map);
+			
+			return n;
+		}
+
+		@Override
+		public int updatePwd(HashMap<String, String> map) {
+			int n = dao.updatePwd(map);
+			return n;
+		}
 	
 
 

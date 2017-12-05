@@ -4,11 +4,10 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/BootStrapStudy/css/bootstrap.css">
+	<%-- <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/BootStrapStudy/css/bootstrap.css">
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-2.0.0.js"></script>
-	<script type="text/javascript" src="<%= request.getContextPath() %>/BootStrapStudy/js/bootstrap.js"></script>
-
-
+	<script type="text/javascript" src="<%= request.getContextPath() %>/BootStrapStudy/js/bootstrap.js"></script> 
+ --%>
 <style type="text/css">
 
 	#div_userid{
@@ -71,7 +70,7 @@
 		$("#btnFind").click(function(){
 			var frm = document.pwdFindFrm;
 			frm.method = "post";
-			frm.action = "<%= request.getContextPath() %>/pwdFind.do";
+			frm.action = "<%= request.getContextPath() %>/pwdFind.re";
 			frm.submit();
 		});
 		
@@ -83,7 +82,7 @@
 				
 				var frm = document.pwdFindFrm;
 				frm.method = "get"; // 단순하게 폼만 띄워주는 것이므로
-				frm.action = "<%= request.getContextPath() %>/pwdConfirm.do";
+				frm.action = "<%= request.getContextPath() %>/pwdConfirm.re";
 				frm.submit();
 				
 			}

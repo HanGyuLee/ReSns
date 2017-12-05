@@ -2,6 +2,7 @@ package com.spring.jdh.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.spring.common.FileManager;
+import com.spring.common.GoogleMail;
 import com.spring.common.MyUtil;
 import com.spring.jdh.model.LoginVO;
 import com.spring.jdh.model.MemberImageVO;
@@ -58,7 +61,6 @@ public class JdhController {
 		@RequestMapping(value="/login.re", method={RequestMethod.GET})
 		
 		public String login() {
-			
 			return "jdh/loginform.tiles";
 			// WEB-INF/views/login/loginform.jsp파일을 생성한다.
 		}// end of String login()-----------------------
@@ -109,7 +111,8 @@ public class JdhController {
 			
 		}// end of String loginEnd()-------------------
 			
-		
+	
+				
 	// ====  로그아웃 완료 요청. =====
 		@RequestMapping(value="/logout.re", method={RequestMethod.GET})
 		public String logout(HttpSession session) {
@@ -123,60 +126,124 @@ public class JdhController {
 		}// end of String logout()
 		
 		
-	//  ★★★★★ 공통관심사 클래스(Aspect 클래스) 생성하기 ★★★★★
-		@Aspect
-		@Component
-		public class LoginCheck {
-
-			// Pointcut을 생성한다.
-			@Pointcut("execution(public * com.spring.*.*Controller.requireLogin_*(..))")
-			public void requireLogin() {
+		
+		
+			////// 아이디 찾기
+			@RequestMapping(value="/idFind.re", method={RequestMethod.POST})	
+			public String idFind (HttpServletRequest req) {
 				
-			}
-			
-			
-			// 보조업무(어드바이스) 생성한다.
-			@Before("requireLogin()")
-			public void before(JoinPoint joinpoint) {	// JoinPoint 주업무 메소드
+				String email = req.getParameter("email"); // 뷰단에서 가져온값
+				String nickname = req.getParameter("nickname");
+				String method = req.getMethod();
 				
-				// 로그인 유무를 확인하기 위해서는 request 를 통해 session 을 얻어온다.
-				HttpServletRequest request = (HttpServletRequest)joinpoint.getArgs()[0]; // [0]은 request순서
-				HttpSession session = request.getSession();
+				if (email != null && nickname != null && !email.equals("") && !nickname.equals("") && method.equals("POST")) {
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("email", email);
+					map.put("nickname", nickname);
 				
-				HttpServletResponse response = (HttpServletResponse)joinpoint.getArgs()[1]; // [1]은 reponse순서
-				
-				
-				if(session.getAttribute("loginuser") == null){	// 이 값이 없다면
-					// 로그인을 하지 않은 상태이라면
+					String userid = service.getUserid(map);
 					
-					String msg = "먼저 로그인 하세요~~";
-					String loc = "/login.re";
-					request.setAttribute("msg", msg);
-					request.setAttribute("loc", loc);
-					
-					// >> 로그인 성공 후 로그인 하기전 페이지로 돌아가는 작업을 해주어야 한다. << 
-					// ===> 현재 페이지 주소 알아내기  <===
-					String url = MyUtil.getCurrentURL(request);	// 현재 페이지를 알려준다.
-					
-					session.setAttribute("gobackURL", url); // 세션에 돌아갈 페이지(url)정보를 저장시켜둔다.
-					
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/viewsnotiles/msg.jsp");
-					
-					try {
-						dispatcher.forward(request, response);
-					} catch (ServletException e) {
-						
-						e.printStackTrace();
-					} catch (IOException e) {
-						
-						e.printStackTrace();
-					}
+					JSONObject jobj = new JSONObject();
+					jobj.put("userid", userid);
+					String str_json = jobj.toString();
+					req.setAttribute("str_json", str_json);
 				}
 				
-			}// end of void before(JoinPoint joinpoint)
+				// jdh/loginform.tiles
+				return "idfindjson.notiles";
+			}
 		
 			
-		//////
+		
+			// 비밀번호 찾기
+			@RequestMapping(value="pwdFind.re", method={RequestMethod.GET})
+			public String pwdfind (HttpServletRequest req){
+				
+				String userid = req.getParameter("userid");
+				String email = req.getParameter("email");
+				String method = req.getMethod();
+				
+				 int n = 0;
+			      // 비밀번호 찾기 modal창에서 "찾기"버튼 클릭시
+			      if(userid != null && email != null && !userid.equals("") && !email.equals("") && method.equalsIgnoreCase("post")) {
+			         req.setAttribute("userid", userid);
+			         req.setAttribute("email", email);
+			         req.setAttribute("method", method);
+
+				
+				
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("userid", userid);
+				map.put("email", email);
+				
+				n = service.getUserExists(map);
+				
+				if (n == 1) { // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일이 DB에 등록된 경우...  인증키 메일 발송
+					GoogleMail mail = new GoogleMail();
+					Random rnd = new Random();
+					
+					try {
+						char randchar = ' ';
+						int randnum = 0;
+						String certificationCode = "";
+						// 랜덤한 영문소문자를 5개를 생성
+						
+						 for (int i = 0; i < 5; i++) {  // min 부터 max 사이의 값으로 랜덤한 정수를 얻으려면...
+							 
+							 randchar = (char)(rnd.nextInt('z' - 'a' + 1) + 'a');
+							 certificationCode += randchar;
+						 }
+						
+						 // 랜덤한 숫자(0-9)를 7개를 생성
+			               for (int i = 0; i < 7; i++) {
+			                  randnum = rnd.nextInt(9 - 0 + 1) + 0;
+			                  certificationCode += randnum;
+			               }
+			               mail.sendmail(email, certificationCode);
+			               req.setAttribute("certificationCode", certificationCode);
+			            } catch (Exception e) {  // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일은 존재하지만 메일발송이 실패한 경우
+			               e.printStackTrace();
+			               n = -1;
+			               req.setAttribute("sendFailmsg", "메일발송이 실패했습니다.");
+			            } // end of try~catch-------------------------
+			         } else {  // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일이 DB에 없는 경우
+			            n = 0;
+			         }
+			         req.setAttribute("n", n);
+			         req.setAttribute("userid", userid);
+			         req.setAttribute("email", email);
+			      }
+			      return "jdh/pwdFind.tiles";
+
+			} // end of 비밀번호 
+			
+			
+			// 비밀번호 재설정
+			 @RequestMapping(value="/")
+			   public String pwdConfirm(HttpServletRequest req) {  // 비밀번호 변경
+			      String method = req.getMethod();
+			      String userid = req.getParameter("userid");
+			      req.setAttribute("method", method);
+			      req.setAttribute("userid", userid);
+			      
+			      if(method.equalsIgnoreCase("post")) {
+			         String pwd = req.getParameter("pwd");
+			         String pwd2 = req.getParameter("pwd2");
+			         
+			         HashMap<String, String> map = new HashMap<String, String>();
+			         map.put("userid", userid);
+			         map.put("pwd", pwd);
+			         map.put("pwd2", pwd2);
+			         
+			         int n = service.updatePwd(map);
+			         req.setAttribute("n", n);
+			         req.setAttribute("pwd", pwd);
+			         req.setAttribute("pwd2", pwd2);
+			      }
+			      return "jdh/login/pwdConfirm.notiles";
+			   }
+
+			
 			
 			
 		// 회원가입 
@@ -274,6 +341,6 @@ public class JdhController {
 			*/
 			
 			return "";
-		}
-		}
+			}
+		
 }

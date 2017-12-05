@@ -1,14 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
+	<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
+
 
     <style type="text/css">
 
-	.mydiv {display: inline-block; 
+	 .mydiv {display: inline-block; 
 	        position: relative; 
 	        top: 30px; 
 	        line-height: 150%; 
 	        border: solid 0px green;
-	       }
+	       } 
 	
 	.mydisplay {display: block;}
 	       	
@@ -30,15 +35,62 @@
   				func_Login(event);
   			}
     	 }); // end of $("#pwd").keydown();-----------------------	
-    	 
-    }); // end of $(document).ready()---------------------------	 
-
+		
+		var method = "${method}";		
+		//alert("확인용 : " + method);
+		
+		if (method == "GET") {
+			$("#div_finalResult").hide(); //get 이면 보이지마라
+		}
+		
+		$("#btnFind").click(function(){
+			var frm = $("form[name=idFindFrm]").serialize();
+			$.ajax({
+				url:"idFind.re",
+				data:frm,
+				type:"post",
+				dataType:"JSON",
+				success:function(data){
+					$("#userid").html(data.userid);
+				}, error:function(){
+					alert("알 수 없는 오류입니다. 관리자에게 문의하세요.");
+				}
+			});
+		});
+		
+		if (method == "POST") {
+			$("#email").val("${email}");
+			$("#nickname").val("${nickname}");
+			$("#div_finalResult").show();
+		}
+		
+		$(".myclose").click(function(){
+			modalClose();
+		});
+		
+		$(document).on("keydown", function(e){
+			if(e.keyCode == 27) {
+				modalClose();
+			}
+		});
+	});
+     
+    function modalClose(){
+    	var userid = $("#userid").text();
+		$("#id").val(userid);
+		$("#pwd").focus();
+		
+		$("#email").val("");
+		$("#nickname").val("");
+		$("#userid").html("");
+    }
     
-    function func_Login(event) {
+    
+    function func_Login(event){
     	
     	if(${sessionScope.loginuser != null}) {
 			 alert("이미 로그인을 하신 상태 입니다 !!");
-			 $("#id").val(""); 
+			 $("#id").val("");
 			 $("#pwd").val("");
 			 $("#id").focus();
 			 event.preventDefault();
@@ -68,6 +120,7 @@
 		 document.loginFrm.method = "post";
 		 document.loginFrm.submit();
 		 
+    
     }  // end of function func_Login(event)-----------------------------
     
 </script>
@@ -90,9 +143,100 @@
 			</div>
 			
 			<div class="mydiv" style="margin-left: 10%;">
-				<button class="btn btn-success" style="width: 100px; font-size: 14pt;" type="button" id="btnLOGIN" >확인</button> 
-			</div>	 
+				<button class="btn btn-success" style="width: 100px; font-size: 14pt;" type="button" id="btnLOGIN" >확인</button>
+				
+			</div>	
+		
 		</form>
+		
+		<!-- <form name="findFrm">
+		
+		<div class="mydiv" style="margin-left: 20%;">
+			<button type="button" id="btnIdFind">아이디 찾기</button> 
+		</div>
+		
+		<div class="mydiv" style="margin-left: 20%;">
+			<button type="button" id="btnPwdFind">비밀번호 찾기</button> 
+		</div>
+		
+		</form> -->
+		
+		&nbsp;<br/><br/><br/><a data-toggle="modal" data-target="#idFindFrm" data-dismiss="modal" >아이디찾기</a> 
+		&nbsp;<br/><br/><br/><a data-toggle="modal" data-target="#passwdFind" data-dismiss="modal">비밀번호찾기</a>
+		
+	<div class="modal fade" id="idFindFrm" role="dialog">
+	<div class="modal-dialog">
+	
+		<%-- Modal content --%>
+      <div class="modal-content" align="center">
+        <div class="modal-header">
+          <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">아이디 찾기</h4>
+        </div>
+          <div class="modal-body" style="width: 100%; height: 300px;">
+          	<div id="idFind">
+          		<%-- <iframe style="border: none; width: 100%; height: 280px;" src="<%= request.getContextPath() %>/idFind.re"></iframe> --%>
+          	
+          	<form name="idFindFrm">
+
+				<div id="div_name" align="center">
+					<span style="color: blue; font-size: 12pt;">이메일</span><br/>
+					<input type="text" id="email" name="email" size="15" placeholder="email을 입력하세요." required />
+				</div>
+				
+				<div id="div_mobile" align="center">
+					<span style="color: blue; font-size: 12pt;">별명</span><br/>
+					<input type="text" id="nickname" name="nickname" size="15" placeholder="별명을 입력하세요." required />
+				</div>
+				
+				<div id="div_finalResult" align="center">
+					ID : <span style="color: red; font-size: 16pt; font-weight: bold;" id="userid"></span>
+				</div>
+				
+				<div id="div_btnFind" align="center">
+					<button type="button" class="btn btn-success" id="btnFind">찾기</button>
+				</div>
+				
+				<div class="modal-footer">
+          <button type="button" class="btn btn-default myclose" data-dismiss="modal">닫기</button>
+        		</div>
+				
+			</form>
+			
+
+			
+          	</div>
+          	
+        </div>
+          
+      </div>
+		
+	2</div>
+1</div>
+
+			<%-- 비밀번호 찾기 Modal --%>
+<div class="modal fade" id="passwdFind" role="dialog">
+	<div class="modal-dialog">
+	
+	<%-- Modal content --%>
+      <div class="modal-content" align="center">
+        <div class="modal-header">
+          <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">비밀번호 찾기</h4>
+        </div>
+          <div class="modal-body" style="width: 100%; height: 400px;">
+          	<div id="idFind">
+          		 <%-- <iframe style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath() %>/pwdFind.re"></iframe> --%>
+          	</div>
+        </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-default myclose" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+	
+	</div>
+</div>
+		
 	</div>
 	
 </div>

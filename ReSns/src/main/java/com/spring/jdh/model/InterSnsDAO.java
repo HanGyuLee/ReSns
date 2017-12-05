@@ -11,6 +11,12 @@ public interface InterSnsDAO {
 	int loginEnd(HashMap<String, String> map);	// 로그인 체크
 
 	LoginVO getloginSession(String id);	// 세션 받아오는 용
+
+	String getUserid(HashMap<String, String> map);	// 아이디 찾기
+
+	int getUserExists(HashMap<String, String> map);	// 비밀번호 찾기 아이디존재 여부
+
+	int updatePwd(HashMap<String, String> map);	// 비밀번호 재설정
 	
 	
 

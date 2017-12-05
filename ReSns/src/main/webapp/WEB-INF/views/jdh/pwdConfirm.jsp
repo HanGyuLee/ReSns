@@ -93,7 +93,7 @@
 				
 				var frm = document.pwdConfirmFrm;
 				frm.method = "post";
-				frm.action = "<%= request.getContextPath() %>/pwdConfirm.do"
+				frm.action = "<%= request.getContextPath() %>/pwdConfirm.re"
 				frm.submit();
 				
 			}

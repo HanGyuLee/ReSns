@@ -58,13 +58,13 @@
 		$("#btnFind").click(function(){
 			var frm = document.idFindFrm;
 			frm.method = "post";
-			frm.action = "<%= request.getContextPath() %>/idFind.do";
+			frm.action = "<%= request.getContextPath() %>/idFind.rs";
 			frm.submit();
 		});
 		
 		if (method == "POST") {
 			$("#name").val("${name}");
-			$("#mobile").val("${mobile}");
+			$("#email").val("${email}");
 			$("#div_finalResult").show();
 		}
 	  
@@ -79,8 +79,8 @@
 	</div>
 	
 	<div id="div_mobile" align="center">
-		<span style="color: blue; font-size: 12pt;">휴대전화</span><br/>
-		<input type="text" id="mobile" name="mobile" size="15" placeholder="-없이 입력하세요" required />
+		<span style="color: blue; font-size: 12pt;">이메일</span><br/>
+		<input type="text" id="email" name="email" size="15" placeholder="이메일을 입력하세요" required />
 	</div>
 	
 	<div id="div_finalResult" align="center">
