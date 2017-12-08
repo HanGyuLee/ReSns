@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #26. mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #27. 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="ydhresns">
+
+
+								<!-- 검색후결과물 -->
+<!-- 태그검색  -->
+<resultMap type="HashMap" id="Tag" >
+   <result property="tag_content"    column="A.board_content" javaType="String"/>
+   <result property="seq_tbl_board"  column="A.seq_tbl_board" javaType="String"/>
+   <result property="tag_content"    column="B.tag_content"   javaType="String"/>
+    <result property="bimg_filename" column="C.bimg_filename"   javaType="String"/>
+</resultMap>
+<select id="searchTag" parameterType="HashMap" resultMap="Tag">
+select A.board_content, A.seq_tbl_board, B.tag_content, C.bimg_filename
+from tbl_tag B left join tbl_board A
+on A.seq_tbl_board = B.seq_tbl_board
+join  tbl_bimage C
+on  A.seq_tbl_board = C.seq_tbl_board
+where lower(B.tag_content) like '%'|| lower(#{search})||'%'
+</select>
+
+<!-- 위치검색 -->
+<resultMap type="HashMap" id="searchMap"></resultMap>
+<select id="searchMap" parameterType="HashMap" resultMap="searchMap">
+select A.login_id, A.login_name, c.board_content, c.seq_tbl_board, D.map_we, D.map_ky, D.map_name, E.bimg_filename
+from tbl_login A left join tbl_user B
+on A.login_id = B.fk_login_id 
+join tbl_board C
+on A.login_id = C.fk_login_id
+join tbl_map D
+on C.seq_tbl_board = D.fk_seq_tbl_board
+join tbl_bimage E
+on D.fk_seq_tbl_board = E.seq_tbl_board
+where lower(D.map_name) like '%'||lower(#{search})||'%'
+</select>
+
+<!-- 이름그룹으로검색 -->
+<resultMap type="HashMap" id="searchName">
+  <result property="loginName" 	  column="A.login_name"  	           javaType="String"/>
+  <result property="userEd" 	  column="B.user_ed"  		           javaType="String"/>
+  <result property="userIng" 	  column="B.user_ing"   	           javaType="String"/>
+  <result property="userBrdCnt"   column="B.user_boardcnt"             javaType="String"/>
+    <result property="profilePic" column="C.uimg_profile_filename"     javaType="String"/>
+</resultMap>
+<select id="searchName" parameterType="HashMap" resultMap="searchName">
+    select A.login_name, B.user_ed, B.user_ing, B.user_boardcnt,C.uimg_profile_filename
+    from tbl_login A left join tbl_user B 
+    on A.login_id = B.fk_login_id
+    left join tbl_uimage C
+    on B.fk_login_id = C.fk_login_id
+    where lower(A.login_name) like '%'|| lower(#{search}) || '%'
+    and login_status = 1
+</select>
+
+<!-- 이름한명검색 -->
+<resultMap id="name" type="HashMap" >
+<result property="name"		 column="A.login_name"  		javaType="String" />
+<result property="img" 		 column="D.bimg_filename" 	    javaType="String" />
+<result property="ing" 		 column="B.user_ing" 		    javaType="String" />
+<result property="ed"        column="B.user_ed" 			javaType="String" />
+<result property="profile"   column="B.user_selfi" 		    javaType="String" />
+</resultMap>
+<select id="searchNameOne" parameterType="HashMap" resultMap="name">
+select  A.login_name, D.bimg_filename, B.user_ing, B.user_ed, B.user_selfi
+from tbl_login A left join tbl_user B
+on A.login_id = B.fk_login_id
+left join tbl_board C
+on B.fk_login_id = C.fk_login_id
+left join tbl_bimage D
+on C.seq_tbl_board = D.seq_tbl_board
+where A.login_name = #{search}
+and login_status = 1
+</select>
+
+									<!-- ajax -->
+<!-- 별명검색cnt -->
+<select id="jNameCnt" parameterType="HashMap" resultType="Integer">
+select count(*) as cnt
+from tbl_login A left join tbl_user B
+on A.login_id = B.fk_login_id
+where lower(A.login_name) like '%'|| lower(#{search})||'%' 
+and login_status = 1
+</select> 
+
+<!-- 별명검색 -->
+<resultMap type="HashMap" id="jNameList">
+  <result property="loginName" 	column="name"  	     javaType="String"/>
+</resultMap>
+<select id="jName" parameterType="HashMap" resultMap="jNameList">
+select A.login_name as name
+from tbl_login A left join tbl_user B
+on A.login_id = B.fk_login_id
+where lower(A.login_name) like '%'|| lower(#{search})||'%' 
+and A.login_status = 1
+</select>
+
+<!-- 별명한명검색 -->
+<resultMap type="String" id="jnameOne">
+ <result property="LoginName" 	column="name"  	     javaType="String"/>
+</resultMap>
+<select id="jNameOne" parameterType="String" resultMap="jnameOne">
+select A.login_name as name
+from tbl_login A left join tbl_user B
+on A.login_id = B.fk_login_id
+where lower(A.login_name) like '%'|| lower(#{search})||'%' 
+and A.login_status = 1
+</select>
+
+<!-- 태그검색결과(총게시물)  -->
+<select id="jTagCnt" parameterType="HashMap" resultType="Integer">
+select count(*) as cnt
+from
+(
+select tag_content
+from tbl_tag
+where lower(tag_content) like '%'|| lower(#{search})||'%'
+)
+</select> 
+
+<!-- 태그검색결과  -->
+<select id="jTag" parameterType="HashMap" resultType="String">
+select tag_content
+from tbl_tag
+where lower(tag_content) like '%'|| lower(#{search})||'%'
+</select>
+
+<!-- 지도검색총갯수 -->
+
+<select id="jMapCnt" parameterType="HashMap" resultType="Integer">
+select count(*) as cnt
+from
+(
+select map_name
+from tbl_map
+where lower(map_name) like '%'||lower(#{search})||'%'
+)
+</select>
+
+<!-- 지도검색 -->
+<resultMap type="HashMap" id="jmap">
+	<result property="mapName" column="mapNAme" javaType="String"/>
+</resultMap>
+<select id="jMap" parameterType="HashMap" resultMap="jmap">
+select map_name as mapNAme
+from tbl_map
+where lower(map_name) like '%'||lower(#{search})||'%'
+</select>
+
+                  <!--  더보기버튼  -->
+
+<!-- 이름검색후결과값에서 더보기버튼 -->
+<!-- <resultMap id="jButton" type="HashMap">
+	<result property="cnt" column="cnt" javaType="Integer"/>
+</resultMap>
+<select id="jButtonBnt" parameterType="HashMap" resultMap="jButton">
+select count(*) as cnt
+from tbl_login A left join tbl_user B
+on A.login_id = B.fk_login_id
+where lower(A.login_name) like '%'|| lower(#{search})||'%' 
+and login_status = 1
+</select> -->
+
+<!-- 페이징처리하기 -->
+<!-- <select id="moreName" parameterType="String" resultType="String">
+   select V.*   							
+   from                 
+   (                 	 
+    select rownum as rno , A.login_name, B.user_ed, B.user_ing, B.user_boardcnt,C.uimg_profile_filename
+    from tbl_login A left join tbl_user B 
+    on A.login_id = B.fk_login_id
+    left join tbl_uimage C
+    on B.fk_login_id = C.fk_login_id
+    where lower(A.login_name) like '%'|| lower(#{search}) || '%'
+    and login_status = 1
+   )V                    
+   where V.rno between ${startno}  and ${endrno}
+</select>
+ -->
+
+
+
+
+
+					<!-- YOUTUBE LIST -->
+
+
+<!-- 글insert -->
+<insert id="mwrite" parameterType="com.spring.ydh.model.MusicVO" >
+insert into tbl_music(seq_tbl_music,fk_login_id,music_link,music_name,music_content,music_date,music_commentCount)
+values(seq_tbl_music.nextval,#{fk_login_id},#{music_link},#{music_name},#{music_content},default, default )
+</insert>
+
+<!-- 글목록 : 글조회 페이징(X),검색(X)-->
+<select id="mlist" resultType="com.spring.ydh.model.MusicVO">
+select seq_tbl_music,music_name, music_content, to_char(sysdate,'yyyy-mm-dd') as music_date, music_commentcount
+from tbl_music
+order by seq_tbl_music desc
+</select>
+
+<!-- 글한개보이기 -->
+<select id="mview" parameterType="String" resultType="com.spring.ydh.model.MusicVO">
+select seq_tbl_music, music_name,to_char(sysdate,'yyyy-mm-dd') as music_date , music_content, music_link
+from tbl_music
+where seq_tbl_music = #{seq}
+</select>
+
+
+
+</mapper>
