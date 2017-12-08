@@ -255,38 +255,40 @@ public class JdhController {
 			String user_birth = req.getParameter("user_birth");		// 생년월일
 			String user_selfi = req.getParameter("user_selfi");		// 자기소개
 			
-			String uimg_filename = req.getParameter("uimg_filename");	// 이미지 파일
+			//String uimg_filename = req.getParameter("uimg_filename");	// 이미지 파일
 			
 			//String profile = req.getParameter("profile");	// 프로필 사진
 			// 이미지
 			
 			// 첨부파일이 있는지 없는지 알아오기 
 			
-			System.out.println("user_gender"+user_gender);
+			// System.out.println("user_gender"+user_gender);
 			
 			LoginVO lvo = new LoginVO(); 
 			UserVO uvo = new UserVO();
-			MemberImageVO ivo = new MemberImageVO();
+			//MemberImageVO ivo = new MemberImageVO();
 			
 			/////////////////////////////////////////////
 			lvo.setLogin_id(login_id);
 			lvo.setLogin_pwd(login_pwd);
-			lvo.setLogin_name(login_name);			
-			uvo.setUser_gender(Integer.parseInt(user_gender));
+			lvo.setLogin_name(login_name);	
 			
+			uvo.setFk_login_id(login_id);
 			uvo.setUser_email(user_email);
 			uvo.setUser_birth(user_birth);
+			uvo.setUser_gender(Integer.parseInt(user_gender));
 			uvo.setUser_selfi(user_selfi);
 			
-			ivo.getUimg_profile_filename();
+			
+			//ivo.getUimg_profile_filename();
 			
 			
-			int n = service.registerMember(lvo, uvo, ivo);
+			int n = service.registerMember(lvo, uvo );	//ivo
 			 
 			
-			if (n == 3) {
+			if (n == 2) {
 				String msg = "RE 회원가입이 정상적으로 처리되었습니다.";
-				String loc = "/login.re";
+				String loc = "/resns/login.re";
 				
 				req.setAttribute("msg", msg);
 				req.setAttribute("loc", loc);

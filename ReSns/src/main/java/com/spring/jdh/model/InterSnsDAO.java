@@ -22,7 +22,7 @@ public interface InterSnsDAO {
 
 	int registerDetail(UserVO uvo);	// 회원가입
 
-	int registerImg(MemberImageVO ivo);	// 회원가입
+	// int registerImg(MemberImageVO ivo);	// 회원가입(이미지)
 	
 	
 

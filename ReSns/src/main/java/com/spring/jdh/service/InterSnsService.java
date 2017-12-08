@@ -20,8 +20,8 @@ public interface InterSnsService {
 
 	int updatePwd(HashMap<String, String> map);		// 비밀번호 변경하기 
 
-	int registerMember(LoginVO lvo, UserVO uvo, MemberImageVO ivo) throws Throwable;	// 회원가입
-	
+	int registerMember(LoginVO lvo, UserVO uvo) throws Throwable;	// 회원가입
+	//, MemberImageVO ivo
 	
 
 	

@@ -49,7 +49,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="netmask">비밀번호</label>  
   <div class="col-md-4">
-  <input id="login_pwd" name="login_pwd" type="password" placeholder="비밀번호를 입력하세요." class="form-control input-md" required="required">
+  <input id="login_pwd" name="login_pwd" type="password" placeholder="영문자,숫자,특수기호를 포함 9글자 이상 입력하세요." class="form-control input-md" required="required">
   <span class="help-block"></span>  
   </div>
 </div>

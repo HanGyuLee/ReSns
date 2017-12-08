@@ -74,12 +74,12 @@ public class SnsService implements InterSnsService {
 
 		@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 		@Override
-		public int registerMember(LoginVO lvo, UserVO uvo, MemberImageVO ivo) throws Throwable {
+		public int registerMember(LoginVO lvo, UserVO uvo) throws Throwable {	//, MemberImageVO ivo
 			int p = dao.registerMember(lvo);
 			int s = dao.registerDetail(uvo);
-			int v = dao.registerImg(ivo);
+			//int v = dao.registerImg(ivo);
 			
-			return (p + s + v);
+			return (p + s);	// + v
 		}
 
 		

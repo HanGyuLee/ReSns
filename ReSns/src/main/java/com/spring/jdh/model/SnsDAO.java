@@ -86,11 +86,11 @@ public class SnsDAO implements InterSnsDAO {
 		}
 		
 		// 회원가입
-		@Override
+		/*@Override
 		public int registerImg(MemberImageVO ivo) {
 			int v = sqlsession.insert("jdhresns.registerImg", ivo);
 			return v;
-		}
+		}*/
 
 	
 
