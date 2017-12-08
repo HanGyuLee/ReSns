@@ -1,5 +1,6 @@
 package com.spring.jdh.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
@@ -59,7 +60,6 @@ public class JdhController {
 		// ==== 로그인 폼 페이지 요청. =====
 		
 		@RequestMapping(value="/login.re", method={RequestMethod.GET})
-		
 		public String login() {
 			return "jdh/loginform.tiles";
 			// WEB-INF/views/login/loginform.jsp파일을 생성한다.
@@ -103,7 +103,7 @@ public class JdhController {
 				String gobackURL = (String)session.getAttribute("gobackURL");
 				req.setAttribute("gobackURL", gobackURL);
 				
-				//session.removeAttribute("gobackURL");
+				session.removeAttribute("gobackURL");
 			}
 			
 			return "jdh/loginEnd.tiles";
@@ -156,75 +156,63 @@ public class JdhController {
 			
 		
 			// 비밀번호 찾기
-			@RequestMapping(value="pwdFind.re", method={RequestMethod.GET})
+			@RequestMapping(value="pwdFind.re", method={RequestMethod.GET, RequestMethod.POST})
 			public String pwdfind (HttpServletRequest req){
-				
 				String userid = req.getParameter("userid");
 				String email = req.getParameter("email");
 				String method = req.getMethod();
-				
-				 int n = 0;
-			      // 비밀번호 찾기 modal창에서 "찾기"버튼 클릭시
-			      if(userid != null && email != null && !userid.equals("") && !email.equals("") && method.equalsIgnoreCase("post")) {
-			         req.setAttribute("userid", userid);
-			         req.setAttribute("email", email);
-			         req.setAttribute("method", method);
-
-				
-				
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("userid", userid);
-				map.put("email", email);
-				
-				n = service.getUserExists(map);
-				
+				int n = 0;
+				  // 비밀번호 찾기 modal창에서 "찾기"버튼 클릭시
+				if(userid != null && email != null && !userid.equals("") && !email.equals("") && method.equalsIgnoreCase("post")) {
+				    req.setAttribute("userid", userid);
+				    req.setAttribute("email", email);
+				    req.setAttribute("method", method);
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("userid", userid);
+					map.put("email", email);
+					n = service.getUserExists(map);
+				}
 				if (n == 1) { // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일이 DB에 등록된 경우...  인증키 메일 발송
 					GoogleMail mail = new GoogleMail();
 					Random rnd = new Random();
-					
 					try {
 						char randchar = ' ';
 						int randnum = 0;
 						String certificationCode = "";
 						// 랜덤한 영문소문자를 5개를 생성
-						
 						 for (int i = 0; i < 5; i++) {  // min 부터 max 사이의 값으로 랜덤한 정수를 얻으려면...
-							 
 							 randchar = (char)(rnd.nextInt('z' - 'a' + 1) + 'a');
 							 certificationCode += randchar;
 						 }
-						
-						 // 랜덤한 숫자(0-9)를 7개를 생성
-			               for (int i = 0; i < 7; i++) {
-			                  randnum = rnd.nextInt(9 - 0 + 1) + 0;
-			                  certificationCode += randnum;
-			               }
-			               mail.sendmail(email, certificationCode);
-			               req.setAttribute("certificationCode", certificationCode);
-			            } catch (Exception e) {  // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일은 존재하지만 메일발송이 실패한 경우
-			               e.printStackTrace();
-			               n = -1;
-			               req.setAttribute("sendFailmsg", "메일발송이 실패했습니다.");
-			            } // end of try~catch-------------------------
-			         } else {  // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일이 DB에 없는 경우
-			            n = 0;
-			         }
-			         req.setAttribute("n", n);
-			         req.setAttribute("userid", userid);
-			         req.setAttribute("email", email);
-			      }
-			      return "jdh/pwdFind.tiles";
-
+						 	// 랜덤한 숫자(0-9)를 7개를 생성
+				            for (int i = 0; i < 7; i++) {
+				               randnum = rnd.nextInt(9 - 0 + 1) + 0;
+				               certificationCode += randnum;
+				            }
+				            mail.sendmail(email, certificationCode);
+				            req.setAttribute("certificationCode", certificationCode);
+				        } catch (Exception e) {  // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일은 존재하지만 메일발송이 실패한 경우
+				           e.printStackTrace();
+				           n = -1;
+				           req.setAttribute("sendFailmsg", "메일발송이 실패했습니다.");
+				        } // end of try~catch-------------------------
+				     } else {  // 비밀번호 찾기를 위해 입력한 사용자아이디와 이메일이 DB에 없는 경우
+				        n = 0;
+				     }
+					 req.setAttribute("n", n);
+				     req.setAttribute("userid", userid);
+				     req.setAttribute("email", email);
+				     return "jdh/pwdFind.tiles";
 			} // end of 비밀번호 
 			
-			
 			// 비밀번호 재설정
-			 @RequestMapping(value="/")
+			 @RequestMapping(value="/pwdConfirm.re")
 			   public String pwdConfirm(HttpServletRequest req) {  // 비밀번호 변경
 			      String method = req.getMethod();
 			      String userid = req.getParameter("userid");
 			      req.setAttribute("method", method);
 			      req.setAttribute("userid", userid);
+			      
 			      
 			      if(method.equalsIgnoreCase("post")) {
 			         String pwd = req.getParameter("pwd");
@@ -236,16 +224,15 @@ public class JdhController {
 			         map.put("pwd2", pwd2);
 			         
 			         int n = service.updatePwd(map);
+			         
 			         req.setAttribute("n", n);
 			         req.setAttribute("pwd", pwd);
 			         req.setAttribute("pwd2", pwd2);
 			      }
-			      return "jdh/login/pwdConfirm.notiles";
+			      return "jdh/pwdConfirm.tiles";
 			   }
-
-			
-			
-			
+			 
+			 
 		// 회원가입 
 		@RequestMapping(value="/reRegister.re", method={RequestMethod.GET})
 		public String register() {
@@ -254,9 +241,9 @@ public class JdhController {
 		}
 		
 		// 회원가입 메소드
-		@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+		//@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 		@RequestMapping(value="/reRegisterEnd.re", method={RequestMethod.POST})
-		public String reRegisterEnd(HttpServletRequest req, LoginVO lvo, UserVO uvo, MemberImageVO ivo) {
+		public String reRegisterEnd(HttpServletRequest req) throws Throwable{
 			
 			// 1. 폼에서 넘어온 값을 받기
 			String login_id = req.getParameter("login_id");			// 아이디 
@@ -269,78 +256,44 @@ public class JdhController {
 			String user_selfi = req.getParameter("user_selfi");		// 자기소개
 			
 			String uimg_filename = req.getParameter("uimg_filename");	// 이미지 파일
-			String profile = req.getParameter("profile");	// 프로필 파일	// null일때 if 문에서 써줌
+			
+			//String profile = req.getParameter("profile");	// 프로필 사진
 			// 이미지
 			
-			System.out.println("확인용profile : " + profile);
+			// 첨부파일이 있는지 없는지 알아오기 
 			
-			/*// 2. HashMap에 넣어준다.
-			HashMap<String, String> map = new HashMap<String, String>();
+			System.out.println("user_gender"+user_gender);
 			
-			map.put("login_id", login_id);
-			map.put("login_pwd", login_pwd);
-			map.put("login_name", login_name);
+			LoginVO lvo = new LoginVO(); 
+			UserVO uvo = new UserVO();
+			MemberImageVO ivo = new MemberImageVO();
 			
-			HashMap<String, String> map2 = new HashMap<String, String>();
+			/////////////////////////////////////////////
+			lvo.setLogin_id(login_id);
+			lvo.setLogin_pwd(login_pwd);
+			lvo.setLogin_name(login_name);			
+			uvo.setUser_gender(Integer.parseInt(user_gender));
 			
-			map2.put("login_id", login_id);
-			map2.put("login_pwd", login_pwd);
-			map2.put("login_name", login_name);
-			map2.put("user_gender", user_gender);
-			map2.put("user_email", user_email);
-			map2.put("user_birth", user_birth);
-			
-			
-			HashMap<String, String> map3 = new HashMap<String, String>();
-			
-			map3.put("login_id", login_id);
-			map3.put("login_pwd", login_pwd);
-			map3.put("login_name", login_name);
-			map3.put("user_gender", user_gender);
-			map3.put("user_email", user_email);
-			map3.put("user_birth", user_birth);
-			map3.put("uimg_filename", uimg_filename);*/
-			
-			lvo.getLogin_id();
-			lvo.getLogin_pwd();
-			lvo.getLogin_name();
-			
-			uvo.getUser_gender();
-			uvo.getUser_email();
-			uvo.getUser_birth();
-			uvo.getUser_selfi();
+			uvo.setUser_email(user_email);
+			uvo.setUser_birth(user_birth);
+			uvo.setUser_selfi(user_selfi);
 			
 			ivo.getUimg_profile_filename();
 			
 			
+			int n = service.registerMember(lvo, uvo, ivo);
+			 
 			
-			
-			if (profile == null) {
+			if (n == 3) {
+				String msg = "RE 회원가입이 정상적으로 처리되었습니다.";
+				String loc = "/login.re";
 				
-			} else{
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
 				
 			}
 			
-			
-			
-			// 3. Service 단으로 생성된 HashMap을 넘긴다.
-			/*int n = service.login1(map);
-			
-			String msg = "";
-			
-			if (n > 0) {
-				msg = "생년월일이 있는 회원 가입 성공!!";
-			}
-			else {
-				msg = "생년월일이 있는 회원 가입 실패!!";
-			}
-			
-			req.setAttribute("msg", msg);
-			
-			return "mybatisTest5AddEnd";
-			*/
-			
-			return "";
-			}
+			return "msg.notiles";	// 입력하고 
+		}
 		
 }

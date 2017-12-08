@@ -3,6 +3,7 @@ package com.spring.jdh.service;
 import java.util.HashMap;
 
 import com.spring.jdh.model.LoginVO;
+import com.spring.jdh.model.MemberImageVO;
 import com.spring.jdh.model.UserVO;
 
 public interface InterSnsService {
@@ -17,7 +18,9 @@ public interface InterSnsService {
 
 	int getUserExists(HashMap<String, String> map);	// 비밀번호 찾기.. (아이디 존재여부확인)
 
-	int updatePwd(HashMap<String, String> map);		// 비밀번호 재설정
+	int updatePwd(HashMap<String, String> map);		// 비밀번호 변경하기 
+
+	int registerMember(LoginVO lvo, UserVO uvo, MemberImageVO ivo) throws Throwable;	// 회원가입
 	
 	
 

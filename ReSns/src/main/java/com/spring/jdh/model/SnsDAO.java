@@ -65,9 +65,31 @@ public class SnsDAO implements InterSnsDAO {
 		@Override
 		public int updatePwd(HashMap<String, String> map) {
 			
-			int n = sqlsession.selectOne("jdhresns.updatePwd", map);
+			int n = sqlsession.update("jdhresns.updatePwd", map);
 			
 			return n;
+		}
+		
+		
+		// 회원가입
+		@Override
+		public int registerMember(LoginVO lvo) {
+			int p = sqlsession.insert("jdhresns.registerMember", lvo);
+			return p;
+		}
+		
+		// 회원가입
+		@Override
+		public int registerDetail(UserVO uvo) {
+			int s = sqlsession.insert("jdhresns.registerDetail", uvo);
+			return s;
+		}
+		
+		// 회원가입
+		@Override
+		public int registerImg(MemberImageVO ivo) {
+			int v = sqlsession.insert("jdhresns.registerImg", ivo);
+			return v;
 		}
 
 	

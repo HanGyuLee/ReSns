@@ -74,7 +74,6 @@
 			frm.submit();
 		});
 		
-		
 		$("#btnConfirmCode").click(function(){
 			
 			if ("${certificationCode}" ==$("#input_confirmCode").val() ) {
@@ -100,12 +99,12 @@
 <form name="pwdFindFrm">
 	<div id="div_userid" align="center">
 		<span style="color: blue; font-size: 12pt;">아이디</span><br/>
-		<input type="text" id="userid" name="userid" size="15" placeholder="ID" required />
+		<input type="text" id="userid" name="userid" size="15" placeholder="ID를 입력하세요." required />
 	</div>
 	
 	<div id="div_email" align="center">
 		<span style="color: blue; font-size: 12pt;">이메일</span><br/>
-		<input type="text" id="email" name="email" size="15" placeholder="-없이 입력하세요" required />
+		<input type="text" id="email" name="email" size="15" placeholder="이메일을 입력하세요." required />
 	</div>
 	
 	<div id="div_findResult" align="center">

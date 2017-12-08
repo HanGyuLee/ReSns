@@ -109,6 +109,8 @@ function gologout(){
 		<li style="margin-left: 15%; margin-top: 1%;">
 		♥ 환영합니다~ 관리자  <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.login_name}</span> 님 ♥
 		</li>
+		<br/>
+		<br/><div><button type="button" id="logout" name="logout" class="btn btn-primary" onclick="gologout();">로그아웃</button></div>
 		</c:if>
 		
 	</ul>

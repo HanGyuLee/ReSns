@@ -58,17 +58,38 @@
 	
 	select count(*)
 	from tbl_user
-	where fk_login_id = #{userid} and user_email = #{email};
+	where fk_login_id = #{userid} and user_email = #{email}
 		
 	</select>
 	
 	<!-- 비밀번호 재설정 -->
 	
-	<select id="updatePwd" parameterType="HashMap" resultType="int">
+	<update id="updatePwd" parameterType="HashMap">
+		update tbl_login set login_pwd = #{pwd}
+		where login_id = #{userid}
+	</update> 
 	
-	update tbl_login set login_pwd = #{pwd}
-	where login_id = #{userid}
+	<!-- 회원가입 인서트 -->
+	<insert id="registerMember" parameterType="com.spring.jdh.model.LoginVO">
+	 
+	 	insert into tbl_login(login_id, login_pwd, login_name, login_status)
+		values(#{login_id}, #{login_pwd}, #{login_name}, #{login_status})
 	
-	</select>
+	</insert>
+	
+	<insert id="registerDetail" parameterType="com.spring.jdh.model.UserVO">
+	
+		insert into tbl_user(fk_login_id, user_email, user_birth, user_gender, user_ing, user_ed, user_boardcnt, user_report, user_selfi)
+		values(#{fk_login_id}, #{user_email}, #{user_birth}, #{user_gender}, #{user_ing}, #{user_ed}, #{user_boardcnt}, #{user_report}, #{user_selfi})
+		
+	</insert>
+		
+	<insert id="registerImg" parameterType="com.spring.jdh.model.MemberImageVO">
+		
+		insert into tbl_uimage(uimg_seq,fk_login_id, uimg_profile_filename, uimg_header_filename,uimg_profile_orgfilename, uimg_header_orgfilename, uimg_profile_filesize, uimg_header_filesize)
+		values(uimg_seq.nextval, #{fk_login_id}, #{uimg_profile_filename}, #{uimg_header_filename}, #{uimg_profile_orgfilename}, #{uimg_profile_filesize}, #{uimg_profile_filesize})
+		
+	</insert>
+	
 
 </mapper>

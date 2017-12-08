@@ -11,6 +11,7 @@ public class MemberImageVO {
 	int uimg_profile_filesize;
 	int uimg_header_filesize; 
 	
+	public MemberImageVO() {}
 	
 	public MemberImageVO(int uimg_seq, String fk_login_id, String uimg_profile_filename, String uimg_header_filename,
 			String uimg_profile_orgfilename, String uimg_header_orgfilename, int uimg_profile_filesize,

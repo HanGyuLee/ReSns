@@ -153,7 +153,7 @@
 		
 		<div class="mydiv" style="margin-left: 20%;">
 			<button type="button" id="btnIdFind">아이디 찾기</button> 
-		</div>
+		</div> 
 		
 		<div class="mydiv" style="margin-left: 20%;">
 			<button type="button" id="btnPwdFind">비밀번호 찾기</button> 
@@ -163,7 +163,7 @@
 		
 		&nbsp;<br/><br/><br/><a data-toggle="modal" data-target="#idFindFrm" data-dismiss="modal" >아이디찾기</a> 
 		&nbsp;<br/><br/><br/><a data-toggle="modal" data-target="#passwdFind" data-dismiss="modal">비밀번호찾기</a>
-		
+		&nbsp;<br/><br/><br/><a type="button" id="reregister" href="<%= request.getContextPath() %>/reRegister.re">회원가입</a>
 	<div class="modal fade" id="idFindFrm" role="dialog">
 	<div class="modal-dialog">
 	
@@ -211,8 +211,8 @@
           
       </div>
 		
-	2</div>
-1</div>
+	</div>
+</div>
 
 			<%-- 비밀번호 찾기 Modal --%>
 <div class="modal fade" id="passwdFind" role="dialog">
@@ -226,7 +226,7 @@
         </div>
           <div class="modal-body" style="width: 100%; height: 400px;">
           	<div id="idFind">
-          		 <%-- <iframe style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath() %>/pwdFind.re"></iframe> --%>
+          		 <iframe style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath() %>/pwdFind.re"></iframe>
           	</div>
         </div>
           <div class="modal-footer">

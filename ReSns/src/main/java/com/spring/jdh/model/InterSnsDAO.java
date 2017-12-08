@@ -17,6 +17,12 @@ public interface InterSnsDAO {
 	int getUserExists(HashMap<String, String> map);	// 비밀번호 찾기 아이디존재 여부
 
 	int updatePwd(HashMap<String, String> map);	// 비밀번호 재설정
+
+	int registerMember(LoginVO lvo);	// 회원가입 
+
+	int registerDetail(UserVO uvo);	// 회원가입
+
+	int registerImg(MemberImageVO ivo);	// 회원가입
 	
 	
 

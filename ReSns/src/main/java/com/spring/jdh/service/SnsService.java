@@ -4,9 +4,13 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.jdh.model.InterSnsDAO;
 import com.spring.jdh.model.LoginVO;
+import com.spring.jdh.model.MemberImageVO;
 import com.spring.jdh.model.UserVO;
 
 
@@ -67,6 +71,18 @@ public class SnsService implements InterSnsService {
 			int n = dao.updatePwd(map);
 			return n;
 		}
+
+		@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+		@Override
+		public int registerMember(LoginVO lvo, UserVO uvo, MemberImageVO ivo) throws Throwable {
+			int p = dao.registerMember(lvo);
+			int s = dao.registerDetail(uvo);
+			int v = dao.registerImg(ivo);
+			
+			return (p + s + v);
+		}
+
+		
 	
 
 

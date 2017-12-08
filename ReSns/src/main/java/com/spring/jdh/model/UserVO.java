@@ -5,8 +5,7 @@ public class UserVO {
 	String fk_login_id;	// 아이디
 	String user_email;	// 이메일
 	String user_birth;	// 생년월일
-	int user_gender;	// 성별
-	int user_status;	// status
+	int user_gender;	// 성별	
 	int user_ing;		// 팔로잉
 	int user_ed;		// 팔로워
 	int user_boardcnt;	// 내 게시물수
@@ -19,14 +18,13 @@ public class UserVO {
 
 
 
-	public UserVO(String fk_login_id, String user_email, String user_birth, int user_gender, int user_status,
-			int user_ing, int user_ed, int user_boardcnt, int user_report, String user_selfi) {
+	public UserVO(String fk_login_id, String user_email, String user_birth, int user_gender, int user_ing, int user_ed,
+			int user_boardcnt, int user_report, String user_selfi) {
 		super();
 		this.fk_login_id = fk_login_id;
 		this.user_email = user_email;
 		this.user_birth = user_birth;
 		this.user_gender = user_gender;
-		this.user_status = user_status;
 		this.user_ing = user_ing;
 		this.user_ed = user_ed;
 		this.user_boardcnt = user_boardcnt;
@@ -80,18 +78,6 @@ public class UserVO {
 
 	public void setUser_gender(int user_gender) {
 		this.user_gender = user_gender;
-	}
-
-
-
-	public int getUser_status() {
-		return user_status;
-	}
-
-
-
-	public void setUser_status(int user_status) {
-		this.user_status = user_status;
 	}
 
 
@@ -153,8 +139,7 @@ public class UserVO {
 	public void setUser_selfi(String user_selfi) {
 		this.user_selfi = user_selfi;
 	}
-	
-	
-	
+
+
 	
 }
