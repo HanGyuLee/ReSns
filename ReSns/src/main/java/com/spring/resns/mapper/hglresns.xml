@@ -43,5 +43,82 @@
 		where fk_login_id =  #{userid}
 			
 	</select>
+	
+	
+	
+	<select id="existTblMypage" parameterType="String" resultType="int" >	
+	
+		select count(*) as cnt
+		from tbl_mypage
+		where fk_login_id =  #{userid}
+			
+	</select>
+	
+	
+	<resultMap type="HashMap" id="mypageMap">
+		<result property="textinput" 		column="textinput"  	javaType="String"/>
+		<result property="textarea" 		column="textarea" 		javaType="String"/>
+ 	</resultMap>
+	
+	<select id="myPage" parameterType="String" resultMap="mypageMap" >	
+	
+		select textinput,textarea
+		from tbl_mypage
+		where fk_login_id =  #{userid}
+			
+	</select>
+	
+	
+	
+	<update id="updateMyPage" parameterType="HashMap">
+		update tbl_mypage set textinput = #{textinput}, textarea = #{textarea}
+		where fk_login_id = #{userid}
+	</update>
+	
+	<insert id="insertMyPage" parameterType="HashMap">
+		insert into tbl_mypage
+  		values(#{userid},#{textinput},#{textarea})
+	</insert>
+	
+    
+    <resultMap type="HashMap" id="followerMap">
+	 	<result property="login_name" 		 		column="login_name" 			javaType="String"/>
+		<result property="uimg_profile_filename" 	column="uimg_profile_filename" 	javaType="String"/>
+		<result property="fk_login_id" 			 	column="fk_login_id" 			javaType="String"/>
+		
+ 	</resultMap>
+ 	
+			
+	<select id="myFollowerList" parameterType="String" resultMap="followerMap" >	
+			
+	    select L.login_name, nvl(U.uimg_profile_filename,'profile0.png') as uimg_profile_filename,F.fk_login_id
+	    from tbl_follow F left join tbl_login L 
+	    on F.fk_login_id = L.login_id
+	    left join tbl_uimage U 
+	    on F.fk_login_id = U.fk_login_id
+	    where F.follow_id =  #{userid} and L.login_status  = 1
+
+		
+	</select>
+	
+     <resultMap type="HashMap" id="followingMap">
+	 	<result property="login_name" 		 		column="login_name" 			javaType="String"/>
+		<result property="uimg_profile_filename" 	column="uimg_profile_filename" 	javaType="String"/>
+		<result property="follow_id" 			 	column="follow_id" 			javaType="String"/>
+		
+ 	</resultMap>
+ 	
+			
+	<select id="myFollowingList" parameterType="String" resultMap="followingMap" >	
+			
+	     select L.login_name, nvl(U.uimg_profile_filename,'profile0.png')as uimg_profile_filename,F.follow_id
+   		 from tbl_follow F  join tbl_login L 
+    	on F.follow_id = L.login_id
+    	left join tbl_uimage U 
+   	 	on F.follow_id = U.fk_login_id
+   		where F.fk_login_id = #{userid} and L.login_status = 1
+		
+	</select>
+    
 
 </mapper>

@@ -32,4 +32,52 @@ public class HglService implements InterHglService {
 	}
 
 
+
+	@Override
+	public int existTblMypage(String userid) {
+		int existCnt = dao.existTblMypage(userid);
+		return existCnt;
+	}
+
+
+
+	@Override
+	public HashMap<String, String> getMypage(String userid) {
+		HashMap<String, String> mypage = dao.getMypage(userid);
+		return mypage;
+	}
+
+
+
+	@Override
+	public int updateMyPage(HashMap<String, String> map) {
+		int result = dao.updateMyPage(map);
+		return result;
+	}
+
+
+
+	@Override
+	public int insertMyPage(HashMap<String, String> map) {
+		int result = dao.insertMyPage(map);
+		return result;
+	}
+
+
+
+	@Override
+	public List<HashMap<String, Object>> getmyFollowerList(String userid) {
+		List<HashMap<String, Object>> list = dao.getmyFollowerList(userid);
+		return list;
+	}
+
+
+
+	@Override
+	public List<HashMap<String, Object>> getmyFollowingList(String userid) {
+		List<HashMap<String, Object>> list = dao.getmyFollowingList(userid);
+		return list;
+	}
+
+
 }

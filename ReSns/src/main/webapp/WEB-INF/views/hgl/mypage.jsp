@@ -340,10 +340,35 @@ ul.c-controls li a:hover {
 
 $(function(){
 	
-	$(".hidemodal").click(function(){
-		$(this).modal('hide');
+	$(".clickhide").click(function(){
+		$(".hidemodal").modal('hide');
 		
 	});
+	
+	
+	$("#btnSave").click(function(){
+		goSave();
+	});
+	
+	function goSave(){
+		var frm = document.saveFrm;
+		
+		var textinput = $("#textinput").val();
+		var textarea = $("#textarea").val();
+		if(textinput.trim()==""){
+			alert("마이페이지 타이틀을 입력하세요");
+		}
+		if(textarea.trim()==""){
+			alert("마이페이지 소개글을 입력하세요");
+		}
+	
+		
+		frm.method = "post";
+		frm.action = "/resns/saveEnd.re";
+		frm.submit();
+	} // end of goSearch()
+	
+
 	
     /* BOOTSNIPP FULLSCREEN FIX */
     if (window.location == window.parent.location) {
@@ -421,7 +446,7 @@ $(function(){
 		<!--  <div class="row" style="border:1px solid green"> -->
 			<div class="col-lg-12 col-md-12 col-sm-12 post-title-block">
 
-				<h1 class="text-center" >　Gyu Lee's Page</h1>
+				<h1 class="text-center" >${mypage.textinput}</h1>
 				<ul class="list-inline text-center" style="font-size:20pt; font-weight:bold;">
 					<li>　　게시물　|　</li>
 					<li>유투브　|　</li>
@@ -430,8 +455,8 @@ $(function(){
 			</div>
 		<div style="width:80%; border:1px solid black;">	
 			<div class="col-lg-9 col-md-9 col-sm-12" style="margin-top:30px; width:50%; height:150px;border:1px solid black;">
-				<h3>안녕? 뿌이뿌잉</h3>
-			<br/>안녕~~~~~~ 나는 kh 교육생이야 ^^*
+				<h4>${mypage.textarea}</h4>
+			
 		
 			</div>	
 			
@@ -449,7 +474,7 @@ $(function(){
    </div>
   
   
-  <div id="settings" class="modal fade bs-example-modal-sm hidemodal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div id="settings" class="modal fade bs-example-modal-sm hidemodal clickhide" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -481,7 +506,12 @@ $(function(){
     </div>
     
     
-   <div id="mypageEdit" class="modal fade bs-example-modal-sm hidemodal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    
+    <form name="saveFrm" 
+		action="<%=request.getContextPath()%>/mypage.re" method="post">
+		
+		
+		 <div id="mypageEdit" class="modal fade bs-example-modal-sm hidemodal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-m">
             <div class="modal-content" style="padding-top:20px;height:300px; width:500px;">
                 <div class="modal-header">
@@ -512,8 +542,8 @@ $(function(){
 				  <label class="col-md-4 control-label" for="btnCancel"></label>
 				  <div class="col-md-8">
 				 
-				   <br/> <button id="btnCancel" name="btnCancel" class="btn btn-primary">Cancel</button>
-				    <button id="btnSave" name="btnSave" class="btn btn-success">Save</button>
+				   <br/> <button id="btnCancel" name="btnCancel" class="clickhide btn btn-primary">Cancel</button>
+				    <button id="btnSave" name="btnSave"  onClick="goSave();" class="clickhide btn btn-success">Save</button>
 				  </div>
 				</div>
     
@@ -522,13 +552,10 @@ $(function(){
             </div>
         </div>
     </div>
+	
+		
+	</form>
     
-    
-   
-    
-    
-
-  
    
     <div class="container gal-container" style="border:1px solid orange;margin-top:300px;">
    
@@ -536,9 +563,9 @@ $(function(){
    <div style="margin-left:-30px; margin-top:-80px;float: left; width:73%; border:1px solid black;">
    
    
-   <c:if test="${not empty list}">
+   <c:if test="${not empty myBoardList}">
    
-   <c:forEach var="board" items="${list}" varStatus="status" >
+   <c:forEach var="board" items="${myBoardList}" varStatus="status" >
    
     <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
       <div class="box" >
@@ -565,7 +592,7 @@ $(function(){
     
     </c:if>
     
-    <c:if test="${empty list}">
+    <c:if test="${empty myBoardList}">
     
     
     <br/>
@@ -590,9 +617,23 @@ $(function(){
     <div class="col-lg-3  col-md-3 col-sm-12">
 				
 				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<!-- 클릭하면 페이지로 이동하도록. -->
 
 <div class="container" style="margin-left:-330px;">
-    
 
     <div class="row">
         <div class="col-xs-12 col-sm-offset-3 col-sm-4">
@@ -600,7 +641,7 @@ $(function(){
                 <div class="panel-heading c-list">
                     <span class="title">Followers</span>
                    <ul class="pull-right c-controls">
-                        <li><a href="#cant-do-all-the-work-for-you" data-toggle="tooltip" data-placement="top" title="Add Contact"><i class="glyphicon glyphicon-plus"></i></a></li>
+                       
                         <li><a href="#" class="hide-search" data-command="toggle-search" data-toggle="tooltip" data-placement="top" title="Toggle Search"><i class="fa fa-ellipsis-v"></i></a></li>
                     </ul>
                 </div>
@@ -620,69 +661,109 @@ $(function(){
                 
                 <!--  팔로워 리스트 ~!!~! -->
                 
-              <%--   <c:if test="${not empty followerList }">
+                <c:if test="${not empty myFollowerList }">
                 	
-                	<c:forEach var="followvo" items="${followerList }">
-                
+                	<c:forEach var="follower" items="${myFollowerList}" varStatus="status">
+                <c:set var="count" value="${status.count }"></c:set>
+                  
                     <li class="list-group-item">
+                     <a href="<%=request.getContextPath() %>/otherspage.re?fk_login_id=${follower.fk_login_id}">
                         <div class="col-xs-12 col-sm-3">
-                            <img src="http://api.randomuser.me/portraits/men/49.jpg" alt="Scott Stevens" class="img-responsive img-circle" />
+                            <img src="<%=request.getContextPath()%>/resources/images/${follower.uimg_profile_filename}" alt="${follower.login_name}" class="img-responsive img-circle" />
                         </div>
                         <div class="col-xs-12 col-sm-9">
-                            <span class="name">Scott Stevens ${followvo.}</span><br/>
+                            <span class="name">${follower.login_name}</span><br/>
                             <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="5842 Hillcrest Rd"></span>
-                            <span class="visible-xs"> <span class="text-muted">5842 Hillcrest Rd  ${followvo.}</span><br/></span>
+                            <span class="visible-xs"> <span class="text-muted">${follower.fk_login_id}</span><br/></span>
                             <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(870) 288-4149"></span>
-                            <span class="visible-xs"> <span class="text-muted">(870) 288-4149  ${followvo.}</span><br/></span>
-                            <span class="fa fa-comments text-muted c-info" data-toggle="tooltip" title="scott.stevens@example.com"></span>
-                            <span class="visible-xs"> <span class="text-muted">scott.stevens@example.com  ${followvo.}</span><br/></span>
+         
                         </div>
+                    </a>
                         <div class="clearfix"></div>
+                          
                     </li>
+                 
+                    
+                    
                     </c:forEach>
+                    <li class="list-group-item"><span style="font-size:13pt; font-weight:bold; color:gray; padding:50px;">count : ${count}</span></li>
                     </c:if>
-                     <c:if test="${empty followerList}">
+                     <c:if test="${empty myFollowerList}">
                      <br/>
                      	<span style="font-size:13pt; font-weight:bold; color:gray; padding:50px;">아직 팔로워가 없습니다.^^ <br/><br/><br/> </span>
 
-                    </c:if> --%>
+                    </c:if> 
+                  
+                </ul>
+            </div>
+        </div>
+	</div>
+	
+	
+	<div class="row">
+        <div class="col-xs-12 col-sm-offset-3 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading c-list">
+                    <span class="title">Followings</span>
+                   <ul class="pull-right c-controls">
+                        
+                        <li><a href="#" class="hide-search" data-command="toggle-search" data-toggle="tooltip" data-placement="top" title="Toggle Search"><i class="fa fa-ellipsis-v"></i></a></li>
+                    </ul>
+                </div>
+                
+                <div class="row" style="display: none;">
+                    <div class="col-xs-12">
+                        <div class="input-group c-search">
+                            <input type="text" class="form-control" id="contact-list-search">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search text-muted"></span></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <ul class="list-group" id="contact-list">
+                
+                <!--  팔로워 리스트 ~!!~! -->
+                
+                <c:if test="${not empty myFollowingList }">
+                	
+                	<c:forEach var="following" items="${myFollowingList }" varStatus="status">
+                <c:set var="count" value="${status.count }"></c:set>
+                    <li class="list-group-item">
+                    
+                     <a href="<%=request.getContextPath() %>/otherspage.re?fk_login_id=${following.follow_id}">
+                        <div class="col-xs-12 col-sm-3">
+                            <img src="<%=request.getContextPath()%>/resources/images/${following.uimg_profile_filename}" alt="${following.login_name}" class="img-responsive img-circle" />
+                        </div>
+                        <div class="col-xs-12 col-sm-9">
+                            <span class="name">${following.login_name}</span><br/>
+                            <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="5842 Hillcrest Rd"></span>
+                            <span class="visible-xs"> <span class="text-muted">${following.follow_id}</span><br/></span>
+                            <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(870) 288-4149"></span>
+
+                        </div>
+                        </a>
+                        <div class="clearfix"></div>
+                    </li>
+                    </c:forEach>
+                     <li class="list-group-item"><span style="font-size:13pt; font-weight:bold; color:gray; padding:50px;">count : ${count}</span></li>
+                    </c:if>
+                     <c:if test="${empty myFollowingList}">
+                     <br/>
+                     	<span style="font-size:13pt; font-weight:bold; color:gray; padding:50px;"> 다른 사람을 팔로잉 해보세요^^ <br/><br/><br/> </span>
+
+                    </c:if> 
                   
                     
-                     <li class="list-group-item">
-                        <div class="col-xs-12 col-sm-3">
-                            <img src="http://api.randomuser.me/portraits/men/97.jpg" alt="Seth Frazier" class="img-responsive img-circle" />
-                        </div>
-                        <div class="col-xs-12 col-sm-9">
-                            <span class="name">Seth Frazier</span><br/>
-                            <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="7396 E North St"></span>
-                            <span class="visible-xs"> <span class="text-muted">7396 E North St</span><br/></span>
-                            <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(560) 180-4143"></span>
-                            <span class="visible-xs"> <span class="text-muted">(560) 180-4143</span><br/></span>
-                            <span class="fa fa-comments text-muted c-info" data-toggle="tooltip" title="seth.frazier@example.com"></span>
-                            <span class="visible-xs"> <span class="text-muted">seth.frazier@example.com</span><br/></span>
-                        </div>
-                        <div class="clearfix"></div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="col-xs-12 col-sm-3">
-                            <img src="http://api.randomuser.me/portraits/women/90.jpg" alt="Jean Myers" class="img-responsive img-circle" />
-                        </div>
-                        <div class="col-xs-12 col-sm-9">
-                            <span class="name">Jean Myers</span><br/>
-                            <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="4949 W Dallas St"></span>
-                            <span class="visible-xs"> <span class="text-muted">4949 W Dallas St</span><br/></span>
-                            <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(477) 792-2822"></span>
-                            <span class="visible-xs"> <span class="text-muted">(477) 792-2822</span><br/></span>
-                            <span class="fa fa-comments text-muted c-info" data-toggle="tooltip" title="jean.myers@example.com"></span>
-                            <span class="visible-xs"> <span class="text-muted">jean.myers@example.com</span><br/></span>
-                        </div>
-                        <div class="clearfix"></div>
-                    </li>
                      
                 </ul>
             </div>
         </div>
 	</div>
+	
+	
+	
     
     	<!-- JavaScrip Search Plugin -->
     <script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
@@ -698,105 +779,7 @@ $(function(){
     </div>
    
    
-    
-    <%-- 
-    <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
-      <div class="box">
-        <a href="#" data-toggle="modal" data-target="#image2">
-          <img src="<%=request.getContextPath()%>/resources/images/image2.png">
-        </a>
-        <div class="modal fade" id="image2" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-              <div class="modal-body">
-                 <img src="<%=request.getContextPath()%>/resources/images/image2.png">
-              </div>
-                <div class="col-md-12 description">
-                  <h4>This is the second one on my Gallery</h4>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    
-    
-    <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
-      <div class="box">
-        <a href="#" data-toggle="modal" data-target="#image3">
-          <img src="<%=request.getContextPath()%>/resources/images/image3.png">
-        </a>
-        <div class="modal fade" id="image3" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-              <div class="modal-body">
-                 <img src="<%=request.getContextPath()%>/resources/images/image3.png">
-              </div>
-                <div class="col-md-12 description">
-                  <h4>This is the second one on my Gallery</h4>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    
-    
-    <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
-      <div class="box">
-        <a href="#" data-toggle="modal" data-target="#image4">
-          <img src="<%=request.getContextPath()%>/resources/images/image4.png">
-        </a>
-        <div class="modal fade" id="image4" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-              <div class="modal-body">
-                <img src="<%=request.getContextPath()%>/resources/images/image4.png">
-              </div>
-                <div class="col-md-12 description">
-                  <h4>This is the third one on my Gallery</h4>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    
-     <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
-      <div class="box">
-        <a href="#" data-toggle="modal" data-target="#image5">
-          <img src="<%=request.getContextPath()%>/resources/images/image5.png">
-        </a>
-        <div class="modal fade" id="image5" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-              <div class="modal-body">
-                <img src="<%=request.getContextPath()%>/resources/images/image5.png">
-              </div>
-                <div class="col-md-12 description">
-                  <h4>This is the third one on my Gallery</h4>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> --%>
-    
-    <!-- 이렇게해야대`!!~! data-target은 #뒤에 파일명, 밑에 모달 id가 파일명이어야돼 둘이 같아야돼!!! 그니까 모달의 아이디를 받아와서 data-target에 쓰는것! -->
-    
-    
-    
-    
-  
-
-			
+ 
 			
 	</div>
 	</div>
