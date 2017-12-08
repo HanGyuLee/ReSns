@@ -17,11 +17,31 @@ public class PmhDAO implements InterPmhDAO {
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 
+	////////////////////////////////////// 신고게시판 DAO 시작 //////////////////////////////////////////
 	// DB에서 신고된 게시물의 목록을 가지고 온다.
-	@Override
+	/*@Override
 	public List<HashMap<String, String>> getReport() {
 		List<HashMap<String, String>> rvoList = sqlsession.selectList("pmhresns.getReport");
 		return rvoList;
+	}*/
+	
+	
+	/*@Override
+	public List<HashMap<String, String>> getReport(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> rvoList = sqlsession.selectList("pmhresns.getReportSearch", searchMap);
+		return rvoList;
+	}*/
+
+	@Override
+	public int getReportTotalCount2(HashMap<String, String> searchMap) {
+		int count = sqlsession.selectOne("pmhresns.getReportTotalCount2", searchMap);
+		return count;
+	}
+
+	@Override
+	public int getReportTotalCount1() {
+		int count = sqlsession.selectOne("pmhresns.getReportTotalCount1");
+		return count;
 	}
 	
 	// DB에서 신고된 게시물의 상세정보를 가지고 온다.
@@ -92,10 +112,48 @@ public class PmhDAO implements InterPmhDAO {
 		return n;
 	}
 
+	// DB에서 신고게시판의 검색결과가 포함된 목록을 가지고 온다(페이징처리)
 	@Override
-	public List<HashMap<String, String>> getReport(HashMap<String, String> searchMap) {
-		List<HashMap<String, String>> rvoList = sqlsession.selectList("pmhresns.getReportSearch", searchMap);
+	public List<HashMap<String, String>> getReportPgSearch(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> rvoList = sqlsession.selectList("pmhresns.getReportPgSearch", searchMap);
 		return rvoList;
 	}
+
+	// DB에서 신고게시판의 목록을 가지고 온다(페이징처리)
+	@Override
+	public List<HashMap<String, String>> getReportPg(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> rvoList = sqlsession.selectList("pmhresns.getReportPg", searchMap);
+		return rvoList;
+	}
+
+	////////////////////////////////////// 신고게시판 DAO 끝 //////////////////////////////////////////
+
+	/////////////////////////////// 문의게시판 DAO 시작 ////////////////////////////////////////
+
+	@Override
+	public List<HashMap<String, String>> getHelpPgSearch(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> helpList = sqlsession.selectList("pmhresns.getHelpPgSearch", searchMap);
+		return helpList;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getHelpPg(HashMap<String, String> searchMap) {
+		List<HashMap<String, String>> helpList = sqlsession.selectList("pmhresns.getHelpPg", searchMap);
+		return helpList;
+	}
+
+	@Override
+	public int getHelpTotalCount2(HashMap<String, String> searchMap) {
+		int count = sqlsession.selectOne("pmhresns.getHelpTotalCount2", searchMap);
+		return count;
+	}
+
+	@Override
+	public int getHelpTotalCount1() {
+		int count = sqlsession.selectOne("pmhresns.getHelpTotalCount1");
+		return count;
+	}
+	
+	/////////////////////////////// 문의게시판 DAO 끝 ////////////////////////////////////////
 
 }

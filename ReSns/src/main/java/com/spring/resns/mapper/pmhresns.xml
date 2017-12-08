@@ -6,7 +6,9 @@
 <!-- ==== #27. 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
 <mapper namespace="pmhresns">
 
+	<!-- //////////////// 신고게시판 mapper 시작 ////////////////// -->
 	<resultMap type="java.util.HashMap" id="getReportListMap">
+		<result property="rno" 				column="rno" 			javaType="String" />
 		<result property="seq_tbl_report" 	column="seq_tbl_report" javaType="String" />
  		<result property="report_cate" 		column="report_cate" 	javaType="String" />
  		<result property="report_content" 	column="report_content" javaType="String" />
@@ -14,10 +16,35 @@
  		<result property="report_date1" 	column="report_date1" 	javaType="String" />
  		<result property="report_status" 	column="report_status" 	javaType="String" />
 	</resultMap>
-	<select id="getReport" resultMap="getReportListMap">
-		select seq_tbl_report, report_cate, report_content, report_user, report_date1, report_status
+	
+	<select id="getReportPg" parameterType="HashMap"  resultMap="getReportListMap">
+		<![CDATA[
+		select rno, seq_tbl_report, report_cate, report_content, report_user, report_date1, report_status
 		from view_report_main
+		where rno >= #{startRno} and rno <= #{endRno}
+		order by rno
+		]]>
 	</select>
+	
+	<select id="getReportPgSearch" parameterType="HashMap"  resultMap="getReportListMap">
+		<![CDATA[
+		select rno, seq_tbl_report, report_cate, report_content, report_user, report_date1, report_status
+		from view_report_main
+		where rno >= #{startRno} and rno <= #{endRno}
+		and ${searchType} like '%'||#{searchInput}||'%'
+		order by rno
+		]]>
+	</select>
+	
+	
+	
+	<!-- <select id="getReport" resultMap="getReportListMap">
+		<![CDATA[
+		select rno, seq_tbl_report, report_cate, report_content, report_user, report_date1, report_status
+		from view_report_main
+		where rno >= #{startRno} and rno <= #{endRno}
+		]]>
+	</select> -->
 	
 		<resultMap type="java.util.HashMap" id="getReportDetailMap">
 		<result property="seq_tbl_report" column="seq_tbl_report" javaType="String" />	
@@ -91,10 +118,65 @@
 		where fk_seq_tbl_board = #{seq}
 	</update>
 	
-	<select id="getReportSearch" parameterType="HashMap" resultMap="getReportListMap">
+	<!-- <select id="getReportSearch" parameterType="HashMap" resultMap="getReportListMap">
 		select rno, seq_tbl_report, report_cate, report_content, report_user, report_date1, report_status
 		from view_report_main
 		where ${searchType} like '%'||#{searchInput}||'%'
-	</select>
+	</select> -->
 
+	<select id="getReportTotalCount1" resultType="java.lang.Integer">
+	    select count(*)
+	    from view_report_main
+	</select>
+	
+	<select id="getReportTotalCount2" parameterType="HashMap" resultType="java.lang.Integer">
+		select count(*)
+	    from view_report_main
+	    where ${searchType} like '%' || #{searchInput} || '%'
+	</select>
+	<!-- //////////////// 신고게시판 mapper 끝 ////////////////// -->
+	
+	<!-- //////////////// 문의게시판 mapper 시작 ////////////////// -->
+	<resultMap type="java.util.HashMap" id="getHelpListMap">
+		<result property="rno" 			column="rno" 			javaType="String" />
+		<result property="seq_tbl_ask" 	column="seq_tbl_ask" 	javaType="String" />
+		<result property="ask_cate" 	column="ask_cate"		javaType="String" />
+		<result property="ask_title" 	column="ask_title" 		javaType="String" />
+		<result property="fk_login_id" 	column="fk_login_id" 	javaType="String" />
+		<result property="ask_date1" 	column="ask_date1" 		javaType="String" />
+		<result property="ask_groupno" 	column="ask_groupno" 	javaType="String" />
+		<result property="ask_fk_seq" 	column="ask_fk_seq" 	javaType="String" />
+		<result property="ask_depthno" 	column="ask_depthno" 	javaType="String" />
+		<result property="ask_newest" 	column="ask_newest" 	javaType="String"/>
+	</resultMap>
+	<select id="getHelpPgSearch" parameterType="HashMap" resultMap="getHelpListMap">
+		<![CDATA[
+		select rno, seq_tbl_ask, ask_cate, ask_title, fk_login_id, ask_date1, ask_groupno, ask_fk_seq, ask_depthno, ask_newest
+		from view_help_main
+		where rno >= #{startRno} and rno <= #{endRno}
+		and ${searchType} like '%'||#{searchInput}||'%'
+		order by rno
+		]]>
+	</select>
+	
+	<select id="getHelpPg" parameterType="HashMap" resultMap="getHelpListMap">
+		<![CDATA[
+		select rno, seq_tbl_ask, ask_cate, ask_title, fk_login_id, ask_date1, ask_groupno, ask_fk_seq, ask_depthno, ask_newest
+		from view_help_main
+		where rno >= #{startRno} and rno <= #{endRno}
+		order by rno
+		]]>
+	</select>
+	
+	<select id="getHelpTotalCount1" resultType="java.lang.Integer">
+	    select count(*)
+	    from view_help_main
+	</select>
+	
+	<select id="getHelpTotalCount2" parameterType="HashMap" resultType="java.lang.Integer">
+		select count(*)
+	    from view_help_main
+	    where ${searchType} like '%' || #{searchInput} || '%'
+	</select>
+	<!-- //////////////// 문의게시판 mapper 끝 ////////////////// -->
 </mapper>

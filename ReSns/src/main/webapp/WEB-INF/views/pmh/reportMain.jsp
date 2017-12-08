@@ -16,11 +16,13 @@
 		 text-align: center;
 		 font-weight: bold;
 	}
+	
+	a.no-uline { text-decoration:none }
 </style>
 </head>
 <body>
 <div>
-	<div align="center"><h1>게시물 관리</h1></div>
+	<div align="center"><h1>신고관리 게시판</h1></div>
 	&nbsp;<br>
 <div class="container">
     <div class="row">
@@ -50,7 +52,7 @@
 								</c:if>								
 								</td>
 								<td style="text-align: left;">
-								&nbsp;<span style="font-weight: bold;"><a onclick="goDetail(${rvo.seq_tbl_report});">${rvo.report_content}</a></span>
+								&nbsp;<span style="font-weight: bold;"><a class="no-uline" onclick="goDetail(${rvo.seq_tbl_report});">${rvo.report_content}</a></span>
 								</td>
 								<td width="15%">
 									<c:if test="${rvo.report_status eq 0 || rvo.report_status eq 1}">
@@ -94,6 +96,10 @@
 		<input type="hidden" id="seq" name="seq">
 	</form>
 	
+</div>
+<br>
+<div align="center">
+		${pagebar}
 </div>
 
 <script type="text/javascript">
