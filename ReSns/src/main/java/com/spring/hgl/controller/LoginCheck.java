@@ -36,6 +36,12 @@ public class LoginCheck {
 		
 	}// end of requireLogiin
 	
+	// Pointcut 을 생성한다
+		@Pointcut("execution(public * com.spring.*.*.*Controller.requireLoginPEK_*(..))")
+		public void requireLogin2(){
+			
+		}// end of requireLogiin
+	
 
 	// 보조업무 (어드바이스) 생성한다.
 	@Before("requireLogin()")
@@ -59,9 +65,7 @@ public class LoginCheck {
 			// ===> 현재 페이지의 주소(URL) 알아내기 
 			String url = MyUtil.getCurrentURL(request);
 			session.setAttribute("gobackURL", url); // 세션에 돌아갈페이지의 주소를 저장시킴
-			
-			
-			
+	
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/viewsnotiles/msg.jsp");
 			try {
@@ -77,6 +81,46 @@ public class LoginCheck {
 		}
 		
 	} // end of before
+	
+	
+	// 보조업무 (어드바이스) 생성한다.
+		@Before("requireLogin2()")
+		public void before2(JoinPoint joinPoint){
+			// 로그인 유무를 확인하기위해 request를 통해서 session을 얻어온다.
+			HttpServletRequest request = (HttpServletRequest) joinPoint.getArgs()[0];
+			HttpSession session = request.getSession();
+			
+			HttpServletResponse response = (HttpServletResponse) joinPoint.getArgs()[1];
+			
+			if(session.getAttribute("loginUser") == null){
+				// 로그인 안 한 상태
+				String msg = "먼저 로그인 하세요~";
+				String loc ="/resns/login.re";
+				
+				request.setAttribute("msg", msg);
+				request.setAttribute("loc", loc);
+				
+				// >>> 로그인 성공 후 로그인 하기 전에 머물던 페이지로 돌아가는 작업하기 <<<
+				// ===> 현재 페이지의 주소(URL) 알아내기 
+				
+				
+				
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/viewsnotiles/msg.jsp");
+				try {
+					dispatcher.forward(request, response);
+				} catch (ServletException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		} // end of before
+	
+	
 
 	
 }// end of LoginCheck

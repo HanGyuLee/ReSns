@@ -540,13 +540,13 @@ $(function(){
 				
 			</div>
 		<div style="width:80%; border:1px solid transparent;">	
-			<div class="col-lg-9 col-md-9 col-sm-12" style="margin-top:70px; width:50%; height:150px;border:1px solid red;">
+			<div class="col-lg-9 col-md-9 col-sm-12" style="margin-top:70px; width:50%; height:150px;border:1px solid transparent;">
 				<h4>${mypage.textarea}</h4>
 			
 		
 			</div>	
 			
-			<div class="col-lg-9 col-md-9 col-sm-12 tangerine" align="center" style="margin-top:150px; width:30%; height:70px;border:1px solid red;">
+			<div class="col-lg-9 col-md-9 col-sm-12 tangerine" align="center" style="margin-top:150px; width:30%; height:70px;border:1px solid transparent;">
 				<h2>${sessionScope.loginUser.login_name}</h2>
 			</div>	
 		</div>
@@ -647,7 +647,7 @@ $(function(){
    
    
    <div style="margin-left:-30px; margin-top:-80px;float: left; width:73%; border:1px solid transparent; background-color:white;">
-   <div data-spy="scroll" class="tabbable-panel" style="border:1px solid transparent;">
+   <div data-spy="scroll" class="tabbable-panel" style="display:inline; border:1px solid transparent;">
         <div class="tabbable-line">
           <ul class="nav nav-tabs ">
             <li class="active">
@@ -736,16 +736,16 @@ $(function(){
         </div>
       </div>
   
-  </div>
+ 
   <div class="col-sm-4">
    <div class="panel panel-default">
    
 </div>
 
-
+ </div>
   
    
-   </div>
+   
    </div>
    
    
@@ -754,13 +754,6 @@ $(function(){
     
     
     <div class="col-lg-3  col-md-3 col-sm-12">
-				
-				
-				
-				
-				
-				
-				
 				
 				
 				
