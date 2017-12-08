@@ -171,4 +171,86 @@ public class PekService implements InterPekService {
 		return str_heartcheck;
 	}
 
+	
+	// 하트 취소
+	@Override
+	public int deleteHeart(HashMap<String, String> map) {
+		
+		int n = dao.deleteHeart(map);
+		
+		return n;
+	}
+
+	
+	// 하트 갯수 갱신하기
+	@Override
+	public String heartCounting(String seq_tbl_board) {
+		
+		int n = dao.heartCounting(seq_tbl_board);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("board_heart", n);
+		
+		String str_heartCounting = jsonObj.toString();
+		
+		return str_heartCounting;
+	}
+
+	
+	// 댓글 쓰기
+	@Override
+	public int writeReply(HashMap<String, String> map) {
+	
+		int n = dao.writeReply(map);
+		
+		return n;
+	}
+
+	
+	// 최대 groupno 구하기
+	@Override
+	public String maxGroupno() {
+		
+		String n = dao.maxGroupno();
+		
+		return n;
+	}
+
+	
+	// 댓글 갯수 갱신하기
+	@Override
+	public String reCounting(String seq_tbl_board) {
+		
+		int n = dao.reCounting(seq_tbl_board);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("board_recnt", n);
+		
+		String str_reCounting = jsonObj.toString();
+		
+		return str_reCounting;
+	}
+
+	
+	// 대댓글 쓰기
+	@Override
+	public int writeReRe(HashMap<String, String> map) {
+		
+		int n = dao.writeReRe(map);
+		
+		return n;
+	}
+
+	
+	// 댓글 삭제
+	@Override
+	public int deleteReply(HashMap<String, String> map) {
+		
+		int n = dao.deleteReply(map);
+		
+		return n;
+	}
+
 }

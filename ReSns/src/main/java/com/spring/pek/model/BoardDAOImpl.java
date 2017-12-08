@@ -95,4 +95,129 @@ public class BoardDAOImpl implements BoardDAO {
 		return heartcheck;
 	}
 
+	
+	// 하트 취소
+	@Override
+	public int deleteHeart(HashMap<String, String> map) {
+		
+		int n = 0;
+		
+		int n1 = sqlsession.delete("pekresns.deleteHeart", map);
+		
+		String seq_tbl_board = map.get("seq_tbl_board");
+		
+		int n2 = sqlsession.update("pekresns.deleteHeartCnt", seq_tbl_board);
+			
+		if (n1+n2 == 2) {
+			n = 1;
+		}
+		
+		return n;
+	}
+
+	
+	// 하트 갯수 갱신하기
+	@Override
+	public int heartCounting(String seq_tbl_board) {
+		
+		int n = sqlsession.selectOne("pekresns.heartCounting", seq_tbl_board);
+		
+		return n;
+	}
+
+	// 댓글 쓰기
+	@Override
+	public int writeReply(HashMap<String, String> map) {
+		
+		int n = 0;
+		
+		int n1 = sqlsession.insert("pekresns.writeReply", map);
+		
+		String seq_tbl_board = map.get("seq_tbl_board");
+		
+		int n2 = sqlsession.update("pekresns.addReCnt", seq_tbl_board);
+		
+		if (n1+n2 == 2) {
+			n = 1;
+		}
+		
+		return n;
+	}
+
+	// 최대 groupno 구하기
+	@Override
+	public String maxGroupno() {
+		
+		String n = sqlsession.selectOne("pekresns.maxGroupno");
+		
+		return n;
+	}
+
+	// 댓글 갯수 갱신하기
+	@Override
+	public int reCounting(String seq_tbl_board) {
+		
+		int n = sqlsession.selectOne("pekresns.reCounting", seq_tbl_board);
+		
+		return n;
+	}
+
+	
+	// 대댓글 쓰기
+	@Override
+	public int writeReRe(HashMap<String, String> map) {
+		
+		int n = 0;
+		
+		int n1 = sqlsession.insert("pekresns.writeReRe", map);
+		
+		String seq_tbl_board = map.get("seq_tbl_board");
+		
+		int n2 = sqlsession.update("pekresns.addReCnt", seq_tbl_board);
+		
+		if (n1+n2 == 2) {
+			n = 1;
+		}
+		
+		return n;
+	}
+	
+	// 댓글 삭제
+	@Override
+	public int deleteReply(HashMap<String, String> map) {
+		
+		int n1= 0;
+		int n2= 0;
+		int n = 0;
+		
+		String re_depthno = map.get("re_depthno");
+		
+		if (Integer.parseInt(re_depthno) == 0) {		// 원글 지우기(원글의 대댓글도 삭제)
+			
+			String replyCount = sqlsession.selectOne("pekresns.replyCount", map);
+			
+			map.put("replyCount", replyCount);
+			
+			n1 = sqlsession.delete("pekresns.deleteReply", map);
+			
+			n2 = sqlsession.update("pekresns.deleteReCntByGroupno", map);
+			
+
+		}
+		else {	// 대댓글 지우기
+			
+			n1 = sqlsession.delete("pekresns.deleteReRe", map);
+			
+			n2 = sqlsession.update("pekresns.deleteReCnt", map);
+			
+		}
+		
+		if (n1+n2 == 2) {
+			n = 1;
+		}
+		
+		
+		return n;
+	}
+
 }

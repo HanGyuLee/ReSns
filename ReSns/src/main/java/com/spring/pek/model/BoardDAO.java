@@ -22,4 +22,18 @@ public interface BoardDAO {
 
 	HeartVO heartCheck(HashMap<String, String> map);	// 하트 아이콘 바꿔주기 위한 하트 여부 확인
 
+	int deleteHeart(HashMap<String, String> map);		// 하트 취소
+
+	int heartCounting(String seq_tbl_board);		// 하트 갯수 갱신하기
+
+	int writeReply(HashMap<String, String> map);	// 댓글 쓰기
+
+	String maxGroupno();		// 최대 groupno 알아오기
+
+	int reCounting(String seq_tbl_board);		// 댓글 갯수 갱신하기
+
+	int writeReRe(HashMap<String, String> map);	// 대댓글 쓰기
+
+	int deleteReply(HashMap<String, String> map);		// 댓글 삭제
+
 }

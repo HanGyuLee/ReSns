@@ -38,14 +38,6 @@ public class PekController {
 		req.setAttribute("loginUser", loginUser);
 		req.setAttribute("boardList", boardList);
 		
-		/*if(seq_tbl_board != null) {
-			List<HashMap<String, String>> reList = service.showRe(seq_tbl_board);
-			List<TagVO> tagList = service.showTag(seq_tbl_board);
-			
-			req.setAttribute("reList", reList);
-			req.setAttribute("tagList", tagList);
-		}
-		 */
 		return "index.tiles";
 	}
 	
@@ -125,6 +117,32 @@ public class PekController {
 		return "heartCheckJSON.notiles";
 	}
 	
+	// 하트 갯수 갱신하기(ajax) 
+	@RequestMapping(value = "/heartCounting.re", method = {RequestMethod.GET})
+	public String heartCounting(HttpServletRequest req) {
+
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
+		
+		String str_heartCounting = service.heartCounting(seq_tbl_board);
+		
+		req.setAttribute("str_heartCounting", str_heartCounting);
+
+		return "heartCountingJSON.notiles";
+	}
+	
+	// 댓글 갯수 갱신하기(ajax) 
+	@RequestMapping(value = "/reCounting.re", method = {RequestMethod.GET})
+	public String reCounting(HttpServletRequest req) {
+
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
+		
+		String str_reCounting = service.reCounting(seq_tbl_board);
+		
+		req.setAttribute("str_reCounting", str_reCounting);
+
+		return "reCountingJSON.notiles";
+	}
+	
 	// 글쓰기 요청
 	@RequestMapping(value = "/writeBoard.re", method = {RequestMethod.GET})
 	public String writeBoard() {
@@ -171,34 +189,143 @@ public class PekController {
 	}
 	
 	// 덧글 쓰기
-	@RequestMapping(value = "/writeReply.re", method = {RequestMethod.POST})
-	public String writeReply() {
+	@RequestMapping(value = "/writeReply.re", method = {RequestMethod.GET})
+	public String writeReply(HttpServletRequest req, HttpSession session) {
 		
-		// 로그인 체크
-		// 원댓글 답글 구분
-		// 덧글 insert 메소드
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
+		String re_content = req.getParameter("re_content");
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();
 		
-		return "";
+		String maxGroupno = service.maxGroupno(); 
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("seq_tbl_board", seq_tbl_board);
+		map.put("re_content", re_content);
+		map.put("login_id", login_id);
+		map.put("maxGroupno", maxGroupno);
+		
+		int n = service.writeReply(map);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		
+		if (n == 1) {
+			
+			jsonObj.put("msg", "댓글 쓰기에 성공하였습니다.");
+			
+			String str_writeReply = jsonObj.toString();
+			
+			req.setAttribute("str_writeReply", str_writeReply);
+			
+			return "writeReplyJSON.notiles";
+			
+		}
+		else {
+			
+			String msg = "댓글 쓰기에 실패하였습니다.";
+			String loc = "javascript:history.back();";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "msg.notiles";
+
+		}
 	}
 	
-	// 덧글 삭제 요청
+	// 대댓글 쓰기
+	@RequestMapping(value = "/writeReRe.re", method = {RequestMethod.GET})
+	public String writeReRe(HttpServletRequest req, HttpSession session) {
+		
+		String re_seq = req.getParameter("re_seq");
+		String re_groupno = req.getParameter("re_groupno");
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
+		String re_content = req.getParameter("re_content");
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("re_seq", re_seq);
+		map.put("re_groupno", re_groupno);
+		map.put("seq_tbl_board", seq_tbl_board);
+		map.put("re_content", re_content);
+		map.put("login_id", login_id);
+		
+		int n = service.writeReRe(map);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		if (n == 1) {
+			
+			jsonObj.put("msg", "댓글 쓰기에 성공하였습니다.");
+			
+			String str_writeReRe = jsonObj.toString();
+			
+			req.setAttribute("str_writeReRe", str_writeReRe);
+			
+			return "writeReReJSON.notiles";
+			
+		}
+		else {
+			
+			String msg = "댓글 쓰기에 실패하였습니다.";
+			String loc = "javascript:history.back();";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "msg.notiles";
+
+		}
+		
+		
+	}
+	
+	// 덧글 삭제
 	@RequestMapping(value = "/deleteReply.re", method = {RequestMethod.GET})
-	public String deleteReply() {
+	public String deleteReply(HttpServletRequest req) {
 		
-		// 로그인 체크
-		// 원댓글 답글 구분
-		// 덧글 insert 메소드
+		String re_seq = req.getParameter("re_seq");
+		String re_groupno = req.getParameter("re_groupno");
+		String re_depthno = req.getParameter("re_depthno");
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
 		
-		return "";
-	}
-	
-	// 덧글 삭제 완료
-	@RequestMapping(value = "/deleteReplyEnd.re", method ={RequestMethod.GET})
-	public String deleteReplyEnd() {
+		HashMap<String, String> map = new HashMap<String, String>();
 		
-		// 
+		map.put("seq_tbl_board", seq_tbl_board);
+		map.put("re_seq", re_seq);
+		map.put("re_groupno", re_groupno);
+		map.put("re_depthno", re_depthno);
 		
-		return "";
+		int n = service.deleteReply(map);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		if (n == 1) {
+			
+			jsonObj.put("msg", "댓글이 삭제되었습니다.");
+			
+			String str_deleteRe = jsonObj.toString();
+			
+			req.setAttribute("str_deleteRe", str_deleteRe);
+			
+			return "deleteReJSON.notiles";
+			
+		}
+		else {
+			
+			String msg = "댓글 삭제에 실패하였습니다.";
+			String loc = "javascript:history.back();";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "msg.notiles";
+
+		}
 	}
 	
 	// 하트
@@ -247,21 +374,43 @@ public class PekController {
 
 		}
 		
-		/*if (cnt == 1) {
+		
+	}
+	
+	// 하트 취소
+	@RequestMapping(value = "/deleteHeart.re", method = {RequestMethod.GET})
+	public String deleteHeart(HttpServletRequest req, HttpSession session) {
+		
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();
+		
+		//System.out.println(seq_tbl_board+ fk_login_id+ login_id);
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("seq_tbl_board", seq_tbl_board);
+		map.put("login_id", login_id);
+		
+		
+		int n = service.deleteHeart(map);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		
+		if (n == 1) {
 			
-			String msg = "이미 좋아요 한 글 입니다.";
-			String loc = "javascript:history.back();";
+			jsonObj.put("msg", "취소 성공!");
 			
-			req.setAttribute("msg", msg);
-			req.setAttribute("loc", loc);
+			String str_deleteHeart = jsonObj.toString();
 			
-			return "msg.notiles";
+			req.setAttribute("str_deleteHeart", str_deleteHeart);
+			
+			return "deleteHeartJSON.notiles";
+			
 		}
-		
-		
-		int n = service.addHeart(map);
-		
-		if (n == 0) {
+		else {
+			
 			String msg = "좋아요 누르기에 실패하였습니다.";
 			String loc = "javascript:history.back();";
 			
@@ -269,42 +418,9 @@ public class PekController {
 			req.setAttribute("loc", loc);
 			
 			return "msg.notiles";
+
 		}
-		else {
-			HeartVO heartcheck = service.heartCheck(map);
-			
-			req.setAttribute("heartcheck", heartcheck);
-			
-			String msg = "좋아요 누르게 성공하였습니다.";
-			String loc = "javascript:history.go(0)";
-			
-			req.setAttribute("msg", msg);
-			req.setAttribute("loc", loc);
-			
-			return "msg.notiles";
-		}*/
-		
 	}
-	
-	// 하트 취소 요청
-	@RequestMapping(value = "/deleteHeart.re", method = {RequestMethod.GET})
-	public String deleteHeart() {
-		
-		// 로그인 체크
-		// 하트 delete 메소드
-		
-		return "";
-	}
-	
-	// 하트 취소 완료
-	@RequestMapping(value = "/deleteHeartEnd.re", method = {RequestMethod.GET})
-	public String deleteHeartEnd() {
-		
-		// 
-		
-		return "";
-	}
-		
 		
 	// 게시글 첨부파일 다운로드
 	@RequestMapping(value = "/downloadBoard.re", method = {RequestMethod.GET})

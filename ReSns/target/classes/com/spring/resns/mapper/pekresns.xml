@@ -67,13 +67,15 @@
 		<result property="UIMG_PROFILE_FILENAME" column="uimg_profile_filename" javaType="String" />
 	</resultMap>
 	<select id="showRe" parameterType="String" resultMap="showReMap">
-		select R.re_seq, R.seq_tbl_board, R.re_id, R.re_content, to_char(R.re_date, 'yyyy-mm-dd') as re_date, 
-				R.re_status, R.re_fk_seq, R.re_groupno, R.re_depthno, L.login_name, U.uimg_profile_filename
+		select R.re_seq, R.seq_tbl_board, R.re_id, R.re_content, to_char(R.re_date, 'yyyy-mm-dd') as re_date, R.re_status, R.re_fk_seq, R.re_groupno, R.re_depthno, L.login_name, U.uimg_profile_filename
 				from tbl_re R left join tbl_login L
 				on R.re_id = L.login_id
 				left join tbl_uimage U
 				on L.login_id = U.fk_login_id
-		where seq_tbl_board = #{seq_tbl_board}
+				where R.seq_tbl_board = #{seq_tbl_board} and R.re_status = 1
+				start with R.re_fk_seq = 0
+				connect by prior R.re_seq = R.re_fk_seq
+				order siblings by R.re_groupno asc, R.re_seq asc
 	</select>
 	
 	
@@ -116,6 +118,76 @@
 				from tbl_heart
 		where fk_seq_tbl_board = #{seq_tbl_board} and fk_login_id = #{login_id}
 	</select>
+	
+	<!-- 하트 취소 -->
+	<delete id="deleteHeart" parameterType="HashMap">
+		delete tbl_heart
+		where fk_login_id = #{login_id} and fk_seq_tbl_board = #{seq_tbl_board}
+	</delete>
+	<!-- 취소됐을 때 하트 갯수 감소 -->
+	<update id="deleteHeartCnt" parameterType="String">
+		update tbl_board set board_heart = board_heart - 1
+		where seq_tbl_board= #{seq_tbl_board}
+	</update>
+	
+	
+	<!-- 하트 갯수 갱신하기 -->
+	<select id="heartCounting" parameterType="String" resultType="int">
+		select board_heart
+		from tbl_board
+		where seq_tbl_board = #{seq_tbl_board}
+	</select>
+	
+	<!-- 최대 groupno 알아오기  -->
+	<select id="maxGroupno" resultType="String">
+		select max(re_groupno)+1
+		from tbl_re
+	</select>
+	<!-- 댓글 쓰기 -->
+	<insert id="writeReply" parameterType="HashMap">
+		insert into tbl_re (re_seq, seq_tbl_board, re_id, re_content, re_date, re_status, re_fk_seq, re_groupno, re_depthno)
+		values (re_seq.nextval, #{seq_tbl_board}, #{login_id}, #{re_content}, sysdate, default, default, #{maxGroupno}, default)
+	</insert>
+	<!-- 댓글 썼을 때 댓글 갯수 증가 -->
+	<update id="addReCnt" parameterType="String">
+		update tbl_board set board_recnt = board_recnt +1
+		where seq_tbl_board = #{seq_tbl_board}
+	</update>
+	
+	<!-- 댓글 갯수 갱신하기 -->
+	<select id="reCounting" parameterType="String" resultType="int">
+		select board_recnt
+		from tbl_board
+		where seq_tbl_board = #{seq_tbl_board}
+	</select>
+	<!-- 대댓글 쓰기 -->
+	<insert id="writeReRe" parameterType="HashMap">
+		insert into tbl_re (re_seq, seq_tbl_board, re_id, re_content, re_date, re_status, re_fk_seq, re_groupno, re_depthno)
+		values (re_seq.nextval, #{seq_tbl_board}, #{login_id}, #{re_content}, sysdate, default, #{re_seq}, #{re_groupno}, 1)
+	</insert>
+	
+	<delete id="deleteReply" parameterType="HashMap">
+		delete tbl_re
+		where re_groupno = #{re_groupno}
+	</delete>
+	<delete id="deleteReRe" parameterType="HashMap">
+		delete tbl_re
+		where re_seq = #{re_seq}
+	</delete>
+	<update id="deleteReCnt" parameterType="HashMap">
+		update tbl_board set board_recnt = board_recnt -1
+		where seq_tbl_board = #{seq_tbl_board}
+	</update>
+	
+	<select id="replyCount" parameterType="HashMap" resultType="String">
+		select count(*)
+			from tbl_re
+		where re_groupno = #{re_groupno}
+	</select>
+	<update id="deleteReCntByGroupno" parameterType="HashMap">
+		update tbl_board set board_recnt = board_recnt - #{replyCount}
+		where seq_tbl_board = #{seq_tbl_board}
+	</update>
 
 
 </mapper>
