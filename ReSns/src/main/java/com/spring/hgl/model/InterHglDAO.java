@@ -21,5 +21,7 @@ public interface InterHglDAO {
 	List<HashMap<String, Object>> getmyFollowerList(String userid);
 
 	List<HashMap<String, Object>> getmyFollowingList(String userid);
+
+	String getUsername(String userid);
 	
 }

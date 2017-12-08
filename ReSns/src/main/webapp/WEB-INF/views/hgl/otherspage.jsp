@@ -5,10 +5,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>MY PAGE</title>
+<title>Someone's PAGE</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ribeye">
+
+   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ribeye">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
+ 
 
 <style type="text/css">
 .ribeye {   font-family: 'Ribeye';
@@ -16,6 +18,7 @@
 
 .tangerine {   font-family: 'Tangerine';
         font-size: 68px;  text-shadow: 4px 4px 4px #aaa; }
+
 .back-to-top {
     cursor: pointer;
     position: fixed;
@@ -335,93 +338,6 @@ ul.c-controls li a:hover {
 
 
 
-
-
-
-
-.tabbable-panel {
-  border:1px solid #eee;
-  padding: 10px;
-}
-
-/* Default mode */
-.tabbable-line > .nav-tabs {
-  border: none;
-  margin: 0px;
-}
-.tabbable-line > .nav-tabs > li {
-  margin-right: 2px;
-}
-.tabbable-line > .nav-tabs > li > a {
-  border: 0;
-  margin-right: 0;
-  color: #737373;
-}
-.tabbable-line > .nav-tabs > li > a > i {
-  color: #a6a6a6;
-}
-.tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
-  border-bottom: 4px solid #fbcdcf;
-}
-.tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
-  border: 0;
-  background: none !important;
-  color: #333333;
-}
-.tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
-  color: #a6a6a6;
-}
-.tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
-  margin-top: 0px;
-}
-.tabbable-line > .nav-tabs > li.active {
-  border-bottom: 4px solid #f3565d;
-  position: relative;
-}
-.tabbable-line > .nav-tabs > li.active > a {
-  border: 0 !important;
-  color: #333333;
-}
-.tabbable-line > .nav-tabs > li.active > a > i {
-  color: #404040;
-}
-.tabbable-line > .tab-content {
-  margin-top: 0px;
-  background-color: transparent;
-  border: 0;
-  border-top: 0px solid #eee;
-  padding:  0;
-}
-.portlet .tabbable-line > .tab-content {
-  padding-bottom: 0;
-}
-
-/* Below tabs mode */
-
-.tabbable-line.tabs-below > .nav-tabs > li {
-  border-top: 4px solid transparent;
-}
-.tabbable-line.tabs-below > .nav-tabs > li > a {
-  margin-top: 0;
-}
-.tabbable-line.tabs-below > .nav-tabs > li:hover {
-  border-bottom: 0;
-  border-top: 4px solid #fbcdcf;
-}
-.tabbable-line.tabs-below > .nav-tabs > li.active {
-  margin-bottom: -2px;
-  border-bottom: 0;
-  border-top: 4px solid #f3565d;
-}
-.tabbable-line.tabs-below > .tab-content {
-  margin-top: -10px;
-  border-top: 0;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 15px;
-}
-
-
-
 </style>
 
 
@@ -436,29 +352,6 @@ $(function(){
 	});
 	
 	
-	$("#btnSave").click(function(){
-		goSave();
-	});
-	
-	function goSave(){
-		var frm = document.saveFrm;
-		
-		var textinput = $("#textinput").val();
-		var textarea = $("#textarea").val();
-		if(textinput.trim()==""){
-			alert("마이페이지 타이틀을 입력하세요");
-		}
-		if(textarea.trim()==""){
-			alert("마이페이지 소개글을 입력하세요");
-		}
-	
-		
-		frm.method = "post";
-		frm.action = "/resns/saveEnd.re";
-		frm.submit();
-	} // end of goSearch()
-	
-
 	
     /* BOOTSNIPP FULLSCREEN FIX */
     if (window.location == window.parent.location) {
@@ -537,136 +430,44 @@ $(function(){
 			<div class="col-lg-12 col-md-12 col-sm-12 post-title-block">
 
 				<h1 class="text-center tangerine" >${mypage.textinput}</h1>
-				
+				<ul class="list-inline text-center" style="font-size:20pt; font-weight:bold;">
+					<li>　　게시물　|　</li>
+					<li>유투브　|　</li>
+					<li>문   답</li>
+				</ul>
 			</div>
 		<div style="width:80%; border:1px solid transparent;">	
-			<div class="col-lg-9 col-md-9 col-sm-12" style="margin-top:70px; width:50%; height:150px;border:1px solid red;">
+			<div class="col-lg-9 col-md-9 col-sm-12 " style="margin-top:30px; width:50%; height:150px;border:1px solid transparent;">
 				<h4>${mypage.textarea}</h4>
 			
 		
 			</div>	
 			
-			<div class="col-lg-9 col-md-9 col-sm-12 tangerine" align="center" style="margin-top:150px; width:30%; height:70px;border:1px solid red;">
-				<h2>${sessionScope.loginUser.login_name}</h2>
+			<div class="col-lg-9 col-md-9 col-sm-12 ribeye" align="center" style="margin-top:110px; width:30%; height:70px;border:1px solid transparent;">
+				<h2>${userid}</h2>
 			</div>	
 		</div>
 			
 			
   
    <div style="margin-top:270px;margin-left:43%; border:1px solid transparent" >
-	   <a href="#" data-toggle="modal" data-target="#settings">
+	  
 	   <img  style="position:absolute; border:4px solid white; width:200px; height:200px;" src="<%=request.getContextPath()%>/resources/images/${profile.uimg_profile_filename}" alt="Debbie Schmidt" class="img-responsive img-circle" />
-	   </a>
+	  
    </div>
   
   
-  <div id="settings" class="modal fade bs-example-modal-sm hidemodal clickhide" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-           <h4 class="modal-title" id="mySmallModalLabel" align="center">내 설정</h4>
-       	 </div>
-                
-        <div class="modal-body ">
-             <ul class="list-group" id="contact-list">
-               
-            <li class="list-group-item" id="editInfo">                       
-                	내 정보 수정하기                 
-             </li>
-             <li class="list-group-item" id="changePf">                       
-               		프로필 사진 바꾸기                 
-             </li>
-             <li class="list-group-item" id="changeBg">                       
-           			배경 사진 바꾸기                
-             </li>
-               <li class="list-group-item " id="changeBg">                       
-           			<button type="button" class="mybutton" data-toggle="modal" data-target="#mypageEdit">내 페이지 설정 </button>       
-             </li>
-    
-           </ul>
-        </div>
-          
-            </div>
-        </div>
-    </div>
-    
-    
-    
-    <form name="saveFrm" 
-		action="<%=request.getContextPath()%>/mypage.re" method="post">
-		
-		
-		 <div id="mypageEdit" class="modal fade bs-example-modal-sm hidemodal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-m">
-            <div class="modal-content" style="padding-top:20px;height:300px; width:500px;">
-                <div class="modal-header">
-           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-           <h4 class="modal-title" id="mySmallModalLabel" align="center">내 페이지 설정</h4>
-       	 </div>
-                
-        <div class="modal-body" style="padding:10px;padding-top:30px;">
-             <!-- Text input-->
-				<div class="form-group">
-				  <label class="col-md-4 control-label" for="textinput">페이지 타이틀</label>  
-				  <div class="col-md-8">
-				  <input id="textinput" name="textinput" placeholder="" class="form-control input-md" required="" type="text">
-				    
-				  </div>
-				</div>
-				
-				<!-- Textarea -->
-				<div class="form-group">
-				  <label class="col-md-4 control-label" for="textarea">내 소개</label>
-				  <div class="col-md-8">                     
-				    <textarea class="form-control" id="textarea" name="textarea"></textarea>
-				  </div>
-				</div>
-				
-				<!-- Button (Double) -->
-				<div class="form-group">
-				  <label class="col-md-4 control-label" for="btnCancel"></label>
-				  <div class="col-md-8">
-				 
-				   <br/> <button id="btnCancel" name="btnCancel" class="clickhide btn btn-primary">Cancel</button>
-				    <button id="btnSave" name="btnSave"  onClick="goSave();" class="clickhide btn btn-success">Save</button>
-				  </div>
-				</div>
-    
-        </div>
-          
-            </div>
-        </div>
-    </div>
-	
-		
-	</form>
-    
-   
-    <div class="container gal-container" style="border:1px solid transparent;margin-top:300px;">
-   
-   
-   <div style="margin-left:-30px; margin-top:-80px;float: left; width:73%; border:1px solid transparent; background-color:white;">
-   <div data-spy="scroll" class="tabbable-panel" style="border:1px solid transparent;">
-        <div class="tabbable-line">
-          <ul class="nav nav-tabs ">
-            <li class="active">
-              <a href="#tab_default_1" data-toggle="tab">
-             	 게시물  </a>
-            </li>
-           
-            <li>
-              <a href="#tab_default_3" data-toggle="tab">
-           		  유투브</a>
-            </li>
-             <li>
-              <a href="#tab_default_4" data-toggle="tab">
-            	 문답</a>
-            </li>
-          </ul>
-          <div class="tab-content">
-            <div class="tab-pane active" id="tab_default_1">
  
+    
+   
+    
+   
+    <div class="container gal-container" style="border:0px solid orange;margin-top:300px;">
+   
+   
+   <div style="margin-left:-30px; margin-top:-80px;float: left; width:73%; border:1px solid transparent;">
+   
+   
    <c:if test="${not empty myBoardList}">
    
    <c:forEach var="board" items="${myBoardList}" varStatus="status" >
@@ -676,8 +477,8 @@ $(function(){
         <a href="#" data-toggle="modal" data-target="#bimg_filename${status.count}">
           <img src="<%=request.getContextPath()%>/resources/images/${board.bimg_filename}">
         </a>
-        <div class="modal fade" id="bimg_filename${status.count}" tabindex="-1" role="dialog"  >
-          <div class="modal-dialog" role="document">
+        <div class="modal fade" id="bimg_filename${status.count}" tabindex="-1" role="dialog">
+           <div class="modal-dialog" role="document">
             <div class="modal-content" style="margin-top:150px;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
               <div class="modal-body" >
@@ -709,44 +510,9 @@ $(function(){
     
     </c:if>
    
-            </div>
-            <div class="tab-pane" id="tab_default_2">
-              <p>
-               		준비중
-              </p>
-             
-
-             
-           
-            </div>
-            <div class="tab-pane" id="tab_default_3">
-              <p>
-                	준비중
-              </p>
-             
-            </div>
-             <div class="tab-pane" id="tab_default_4">
-              <p>
-              	 준비중
-
-              </p>
-               
-            </div>
-          </div>
-        </div>
-      </div>
-  
-  </div>
-  <div class="col-sm-4">
-   <div class="panel panel-default">
-   
-</div>
-
-
-  
    
    </div>
-   </div>
+   
    
    
    
@@ -754,20 +520,6 @@ $(function(){
     
     
     <div class="col-lg-3  col-md-3 col-sm-12">
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 				
 				
 				<!-- 클릭하면 페이지로 이동하도록. -->
@@ -799,6 +551,7 @@ $(function(){
                 <ul class="list-group" id="contact-list">
                 
                 <!--  팔로워 리스트 ~!!~! -->
+
                 
                 <c:if test="${not empty myFollowerList }">
                 	
@@ -880,7 +633,6 @@ $(function(){
                 	
                 	<c:forEach var="following" items="${myFollowingList }" varStatus="status">
                 <c:set var="count" value="${status.count }"></c:set>
-                
                     <li class="list-group-item">
                     <c:if test="${sessionScope.loginUser.login_id == following.follow_id}">
                     	<a href="<%=request.getContextPath() %>/mypage.re?fk_login_id=${following.follow_id}">
@@ -947,3 +699,4 @@ $(function(){
 
 </body>
 </html>
+

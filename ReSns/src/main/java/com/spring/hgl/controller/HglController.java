@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.spring.hgl.model.HglDAO;
 import com.spring.hgl.service.InterHglService;
 import com.spring.jdh.model.LoginVO;
 
@@ -25,7 +26,7 @@ public class HglController {
 	
 	@SuppressWarnings("null")
 	@RequestMapping(value="/mypage.re", method={RequestMethod.GET})
-	public String mypage(HttpServletRequest req,HttpServletResponse response,HttpSession session){		
+	public String requireLogin2_mypage(HttpServletRequest req,HttpServletResponse response,HttpSession session){		
 		
 			
 		String userid = null;
@@ -129,25 +130,40 @@ public class HglController {
 	@RequestMapping(value="/otherspage.re", method={RequestMethod.GET})
 	public String otherspage(HttpServletRequest req,HttpServletResponse response,HttpSession session){		
 		
-		String userid = req.getParameter("fk_login_id");
-				
+		
+		String userid  = req.getParameter("fk_login_id");
+			
+		
+		String username = service.getUsername(userid);
+			
+		
 		List<HashMap<String, Object>> myBoardList = service.getMyBoardList(userid);
 		List<HashMap<String, Object>> myFollowerList = service.getmyFollowerList(userid);
 		List<HashMap<String, Object>> myFollowingList = service.getmyFollowingList(userid);
 		
-		HashMap<String,String> profile = service.getMyProfile(userid);
-			
-		
+		HashMap<String,String> profile = service.getMyProfile(userid);			
 		HashMap<String,String> mypage =  null;
-	
+		HashMap<String,String> insertMypage =  new HashMap<String,String>();
+		
+		String textinput =username+ "'s Page";
+		String textarea = username+ "의 페이지 입니다";
+				
+		
+		insertMypage.put("textinput",textinput);
+		insertMypage.put("textarea",textarea);
+		insertMypage.put("userid",userid);
 		
 		
 		mypage=	service.getMypage(userid);
 		
-		
+		if(mypage == null){			
+			service.insertMyPage(insertMypage);			
+			insertMypage = service.getMypage(userid);
+			mypage = insertMypage;
+			
+		}
 	
-		req.setAttribute("mypage", mypage);
-		
+		req.setAttribute("mypage", mypage);	
 		req.setAttribute("userid", userid);
 		req.setAttribute("profile", profile);
 		req.setAttribute("myBoardList", myBoardList);

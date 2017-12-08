@@ -13,6 +13,7 @@
 		<result property="board_time" 	 		 column="board_time" 			javaType="String"/>
 		<result property="bimg_filename" 		 column="bimg_filename" 		javaType="String"/>
 		<result property="fk_login_id" 			 column="fk_login_id" 			javaType="String"/>
+		<result property="board_heart" 			 column="board_heart" 			javaType="String"/>
 		
  	</resultMap>
  	
@@ -20,7 +21,7 @@
 	<select id="myBoardList" parameterType="String" resultMap="boardMap" >	
 	
 		select  B.seq_tbl_board as seq_tbl_board,T.board_content board_content,
-				T.board_time board_time,B.bimg_filename bimg_filename,U.fk_login_id fk_login_id
+				T.board_time board_time,B.bimg_filename bimg_filename,U.fk_login_id fk_login_id,T.board_heart
 		from tbl_board T join tbl_bimage B
 		on T.seq_tbl_board = B.seq_tbl_board
 		join tbl_uimage U
@@ -40,10 +41,15 @@
 	
 		select fk_login_id,uimg_profile_filename,uimg_header_filename
 		from tbl_uimage
-		where fk_login_id =  #{userid}
+		where fk_login_id = #{userid}	
 			
 	</select>
 	
+	<select id="userName" parameterType="String" resultType="String">
+		    select login_name
+		    from tbl_login
+		    where login_id = #{userid}	
+	</select>
 	
 	
 	<select id="existTblMypage" parameterType="String" resultType="int" >	

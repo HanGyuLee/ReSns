@@ -24,6 +24,15 @@ public class HglDAO implements InterHglDAO{
 		HashMap<String, String> list = sqlsession.selectOne("hglresns.myProfile",userid);
 		return list;
 	}
+	
+	
+	@Override
+	public String getUsername(String userid) {
+		String userName = sqlsession.selectOne("hglresns.userName",userid);
+		return userName;
+	}
+	
+	
 
 	@Override
 	public int existTblMypage(String userid) {

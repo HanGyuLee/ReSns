@@ -80,4 +80,12 @@ public class HglService implements InterHglService {
 	}
 
 
+
+	@Override
+	public String getUsername(String userid) {
+		String userName = dao.getUsername(userid);
+		return userName;
+	}
+
+
 }
