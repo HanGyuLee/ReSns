@@ -252,5 +252,11 @@
 	<delete id="deleteAskFile" parameterType="HashMap">
 		delete from tbl_aimage where aimg_category = 1 and aimg_seq = #{seq}
 	</delete>
+	
+	<select id="selectAskFile" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_aimage
+		where aimg_category = 1 and aimg_seq = #{seq}
+	</select>
 	<!-- //////////////// 문의게시판 mapper 끝 ////////////////// -->
 </mapper>

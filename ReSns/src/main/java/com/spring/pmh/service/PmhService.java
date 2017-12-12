@@ -222,6 +222,8 @@ public class PmhService implements InterPmhService {
 	@Override
 	public int askModify(HashMap<String, Object> helpMap) {
 		
+		int n1, n2 = 0, n3 = 0, n4 = 0;
+		
 		String fk_seq = (String) helpMap.get("fk_seq");
 		if (fk_seq == null || fk_seq.trim().isEmpty() ) { 
 			// 원글쓰기인 경우
@@ -230,20 +232,29 @@ public class PmhService implements InterPmhService {
 		}
 		
 		String imgCheck = (String) helpMap.get("imgCheck");
-		if (imgCheck != null && imgCheck.equals("1")) {
+		if (imgCheck != null && imgCheck.equals("0")) {
 			helpMap.put("aimg_category", 1);
-			int n2 = pdao.deleteAskFile(helpMap);
+			n2 = pdao.deleteAskFile(helpMap) * 10;
 		}
+		
+		helpMap.put("aimg_category", 1);
+		int count = pdao.selectAskFile(helpMap);
 		
 		String newFileName = (String) helpMap.get("newFileName");
+		
 		if (newFileName != null && !newFileName.trim().isEmpty() ) {
-			helpMap.put("aimg_category", 1);
-			int n3 = pdao.updateAskFile(helpMap);
+			if (count >= 1) {
+				n3 = pdao.updateAskFile(helpMap) * 100;
+			}
+			else {
+				n4 = pdao.insertAskFile(helpMap) * 1000;
+			}
+			
 		}
 		
-		int n1 = pdao.askModify(helpMap);
+		n1 = pdao.askModify(helpMap);
 		
-		return n1;
+		return n1+n2+n3+n4;
 	}
 	
 	//////////////////////////////////문의게시판 서비스 끝 ///////////////////////////////////////////

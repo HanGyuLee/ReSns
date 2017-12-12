@@ -220,6 +220,12 @@ public class PmhDAO implements InterPmhDAO {
 		return n;
 	}
 
+	@Override
+	public int selectAskFile(HashMap<String, Object> helpMap) {
+		int count = sqlsession.selectOne("pmhresns.selectAskFile", helpMap);
+		return count;
+	}
+
 
 	
 	/////////////////////////////// 문의게시판 DAO 끝 ////////////////////////////////////////

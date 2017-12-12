@@ -534,9 +534,7 @@ public class PmhController {
 				fileSize = file.getSize();
 				
 				thumbnailFileName = thumbnailManager.doCreateThumbnail(newFileName, path);
-				
-				int seqplus = Integer.parseInt(seq) + 1;
-				helpMap.put("seq", seqplus);
+					
 				helpMap.put("newFileName", newFileName);
 				helpMap.put("originalFilename", originalFilename);
 				helpMap.put("fileSize", fileSize);

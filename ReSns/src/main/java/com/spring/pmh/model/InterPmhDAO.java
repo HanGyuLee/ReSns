@@ -76,5 +76,7 @@ public interface InterPmhDAO {
 
 	int deleteAskFile(HashMap<String, Object> helpMap); // 파일 삭제를 선택하는 경우 파일을 삭제하는 메소드
 
+	int selectAskFile(HashMap<String, Object> helpMap); // update 문을 실행시키기 위해 해당하는 row 가 있는지 검사하는 메소드
+
 	/////////////////////////////// 문의게시판 DAO 끝 ////////////////////////////////////////
 }

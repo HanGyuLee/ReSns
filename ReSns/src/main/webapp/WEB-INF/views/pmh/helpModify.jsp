@@ -112,7 +112,7 @@
     	<br>
    	 		<input id="aimg_deleteCheck" name="aimg_deleteCheck" type="checkbox" > 체크하시면 업로드된 파일을 삭제합니다.
    	 		<input type="hidden" name="aimg_delete" id="aimg_delete" >
-    </c:if>
+   </c:if>
   </div>
 </div>
 
@@ -130,10 +130,10 @@
   </div>
 </div>
 
-	<input type="hidden" name="fk_seq" value="${fk_seq}" />
-	<input type="hidden" name="groupno" value="${groupno}" />
-	<input type="hidden" name="depthno" value="${depthno}" />
-	<input type="text" name="seq" value="${seq}" />
+	<input type="hidden" name="seq" value="${avo.seq_tbl_ask}" />
+	<input type="hidden" name="groupno" value="${avo.ask_groupno}" />
+	<input type="hidden" name="fk_seq" value="${avo.ask_fk_seq}" />
+	<input type="hidden" name="depthno" value="${avo.ask_depthno}" />
 
 <div align="center" class="buttons">
 		<button type="button" id="listBtn" style="margin-right: 100px;" onclick="goList();">목록</button>
@@ -175,17 +175,20 @@
 		else {
 			document.getElementById("ask_secret").value = 1;
 		}
+		 
 		
-		var checkedImage = document.getElementById("aimg_deleteCheck").checked;
+		var checkedImage = document.getElementById("aimg_deleteCheck");
 		
-		if (checkedImage) {
-			document.getElementById("aimg_delete").value = 0;
+		if (checkedImage != null) {
+			if (checkedImage.checked) {
+				document.getElementById("aimg_delete").value = 0;
+			}
+			else {
+				document.getElementById("aimg_delete").value = 1;
+			}
 		}
-		else {
-			document.getElementById("aimg_delete").value = 1;
-		}
 		
-		
+			
 		var frm = document.getElementById("writeFrm");
 		
 		frm.method = "post";

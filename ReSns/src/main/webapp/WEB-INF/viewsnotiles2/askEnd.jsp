@@ -5,11 +5,11 @@
 
 <script type="text/javascript">
 	
-	<c:if test="${n eq 1}">
+	<c:if test="${n >= 1}">
 		alert("글쓰기 성공!!");
 	</c:if>
 	
-	<c:if test="${n ne 1}">
+	<c:if test="${n < 1}">
 		alert("글쓰기 실패!!");
 	</c:if>
 	
