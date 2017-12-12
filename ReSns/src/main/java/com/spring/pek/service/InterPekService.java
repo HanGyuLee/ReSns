@@ -56,4 +56,8 @@ public interface InterPekService {
 
 	String fileName(String seq_tbl_board);		// 지울 이미지 이름 알아오기
 
+	void deleteImg(String seq_tbl_board);		// 이미지 지우기
+
+	List<TagVO> showAllTag();		// 모든 태그 보기
+
 }

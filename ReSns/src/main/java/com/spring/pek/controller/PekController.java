@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.spring.common.FileManager;
 import com.spring.jdh.model.LoginVO;
 import com.spring.pek.model.BimageVO;
+import com.spring.pek.model.TagVO;
 import com.spring.pek.service.InterPekService;
 
 @Controller
@@ -42,6 +43,12 @@ public class PekController {
 		
 		req.setAttribute("loginUser", loginUser);
 		req.setAttribute("boardList", boardList);
+		
+		
+		List<TagVO> tagList = service.showAllTag();
+		
+		req.setAttribute("tagList", tagList);
+		
 		
 		return "index.tiles";
 	}
@@ -255,6 +262,8 @@ public class PekController {
 			}
 
 		}
+		
+		req.setAttribute("n", boardResult);
 				
 		return "/pek/writeBoardEnd.tiles";
 			
@@ -270,33 +279,31 @@ public class PekController {
 		//System.out.println(seq_tbl_board);
 		
 		
-		/*int n = service.deleteAll(seq_tbl_board);
+		int n = service.deleteAll(seq_tbl_board);
 		
 		if (n == 1) {
 			
-		}*/
-		
-		
-		String root = session.getServletContext().getRealPath("/");
-		String path = root + "resources"+File.separator+"images";
-		
-		System.out.println(path);
-		
-		String fileName = service.fileName(seq_tbl_board);
-		
-		System.out.println(fileName);
-		
-		try {
+			String root = session.getServletContext().getRealPath("/");
+			String path = root + "resources"+File.separator+"images";
 			
-			fileManager.doFileDelete(fileName, path);
+			String fileName = service.fileName(seq_tbl_board);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+			
+			try {
+				
+				fileManager.doFileDelete(fileName, path);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			service.deleteImg(seq_tbl_board);
 		}
 		
-		//System.out.println(n);
 		
-		return "";
+		req.setAttribute("n", n);
+		
+		return "/pek/deleteBoardEnd.tiles";
 	}
 	
 	// 덧글 쓰기

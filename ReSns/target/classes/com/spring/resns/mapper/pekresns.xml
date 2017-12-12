@@ -278,5 +278,20 @@
 		from tbl_bimage
 		where seq_tbl_board = #{seq_tbl_board}
 	</select>
+	
+	<!-- 이미지 지우기 -->
+	<delete id="deleteImg">
+		delete tbl_bimage
+		where seq_tbl_board = #{seq_tbl_board}
+	</delete>
+	
+	
+	
+	<select id="showAllTag" resultType="com.spring.pek.model.TagVO">
+	
+	select tag_content
+	from tbl_tag
+	
+	</select>
 
 </mapper>

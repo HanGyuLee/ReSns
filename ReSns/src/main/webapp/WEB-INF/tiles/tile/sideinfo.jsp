@@ -9,15 +9,64 @@
 	${demo.css}
 </style>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/highcharts.js"></script>        <!-- 차트그리기 --> 
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/modules/data.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/modules/drilldown.js"></script>
+<script src="<%= request.getContextPath() %>/resources/highcharts/code/highcharts.js"></script>        <!-- 차트그리기 --> 
+<script src="<%= request.getContextPath() %>/resources/highcharts/code/modules/wordcloud.js"></script>
+<style type="text/css">
+
+#container {
+	min-width: 310px;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+</style>
 
 <script type="text/javascript">
 
 	$(document).ready(function() {
 		loopshowNowTime();
-		showRank();
+		/* showRank(); */
+		
+		$("#tagList").hide();
+		
+		var result = "";
+		
+		<c:forEach items="${tagList}" var="tag" varStatus="status">
+					result += '${tag.tag_content},';
+		</c:forEach>
+		
+		$("#tagList").html(result);
+		
+		var text = $("#tagList").text();
+		var lines = text.split(/[,\. ]+/g),
+		    data = Highcharts.reduce(lines, function (arr, word) {
+		        var obj = Highcharts.find(arr, function (obj) {
+		            return obj.name === word;
+		        });
+		        if (obj) {
+		            obj.weight += 1;
+		        } else {
+		            obj = {
+		                name: word,
+		                weight: 1
+		            };
+		            arr.push(obj);
+		        }
+		        return arr;
+		    }, []);
+
+		Highcharts.chart('container', {
+		    series: [{
+		        type: 'wordcloud',
+		        data: data,
+		        name: 'Occurrences'
+		    }],
+		    title: {
+		        text: '인기 해시 태그'
+		    }
+		});
+		
+		
 	}); // end of ready(); ---------------------------------
 
 	function showNowTime() {
@@ -66,16 +115,19 @@
 					}, timejugi);
 		
 	}// end of loopshowNowTime() --------------------------
-	
-	
-
 </script>
 
 
-<div style="margin: 0 auto;" align="center">
+<!-- <div style="margin: 0 auto;" align="center">
 	현재시각 :&nbsp; 
 	<div id="clock" style="display:inline;"></div>
-</div>
+</div> -->
+
+<body>
+
+<div id="container"></div>
+<span id="tagList"></span>
+</body>
 	
 	
 	

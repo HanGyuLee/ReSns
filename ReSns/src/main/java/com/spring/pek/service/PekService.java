@@ -333,4 +333,23 @@ public class PekService implements InterPekService {
 		return fileName;
 	}
 
+	
+	// 이미지 지우기
+	@Override
+	public void deleteImg(String seq_tbl_board) {
+		
+		dao.deleteImg(seq_tbl_board);
+		
+	}
+
+	
+	// 모든 태그 보기
+	@Override
+	public List<TagVO> showAllTag() {
+		
+		List<TagVO> tagList = dao.showAllTag();
+		
+		return tagList;
+	}
+
 }
