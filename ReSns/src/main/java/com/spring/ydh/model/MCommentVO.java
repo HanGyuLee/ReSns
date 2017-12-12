@@ -10,6 +10,9 @@ public class MCommentVO {
 	private	String seq_tbl_music ;   		//동영상시퀀스
 	private	String fk_login_id;      		//동영상올린사람의아이디
 	
+	
+	public MCommentVO(){}
+	
 	public MCommentVO(String seq_tbl_remusic, String re_ycontent, String re_ydate, String re_login_id,
 			String seq_tbl_music, String fk_login_id) {
 		super();

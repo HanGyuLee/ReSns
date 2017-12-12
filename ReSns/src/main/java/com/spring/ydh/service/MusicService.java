@@ -9,8 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.ydh.model.InterMusicDAO;
+import com.spring.ydh.model.MCommentVO;
+import com.spring.ydh.model.MusicDAO;
 import com.spring.ydh.model.MusicVO;
 
 @Service
@@ -173,19 +178,145 @@ public class MusicService implements InterMusicService {
 
 
 
-	@Override//글조회 페이징(X),검색(X)
-	public List<String> mlist() {
-		 List<String> list = dao.mlist();
+	/*
+	
+		@Override//글조회 페이징(X),검색(X)
+		public List<String> mlist() {
+			 List<String> list = dao.mlist();
+			return list;
+		}
+	
+	*/
+
+
+
+	@Override//글하나보여주기
+	public MusicVO mview(String seq_tbl_music, String userid) {
+		MusicVO mvo = dao.mview(seq_tbl_music); 
+		return mvo;
+	}
+
+
+	@Override//글수정폼띄우기
+	public MusicVO mupdate(String seq_tbl_music) {
+		MusicVO mvo = dao.mupdate(seq_tbl_music);
+		return mvo;
+	}
+	
+	
+	@Override//글수정(update)
+	public int mupdateEnd(HashMap<String,String> map) {
+		  int n = dao.mupdateEnd(map);
+		  System.out.println("n test::"+n);
+		return n;
+	}
+
+
+
+	@Override//글삭제
+	public int mdel(String seq_tbl_music) {
+		  //System.out.println("service");
+		  int n =  dao.mdel(seq_tbl_music);
+		  //System.out.println("n:"+n);
+		return n;
+	}
+
+
+
+	@Override//체크박스글삭제
+	public int delcheckbox(String seq_tbl_music) {
+		int n = dao.delcheckbox(seq_tbl_music);
+		return n;
+	}
+
+
+
+	@Override//검색어가 있는 페이징
+	public List<String> mlist(HashMap<String, String> map) {
+		List<String> list = dao.mlist(map);
 		return list;
 	}
 
 
 
-	@Override//글하나보여주기
-	public MusicVO mview(String seq, String userid) {
-		MusicVO mvo = dao.mview(seq); 
-		return mvo;
+	@Override//검색어가 없는 페이징
+	public List<String> mlist2(HashMap<String, String> map) {
+		List<String> list = dao.mlist2(map);
+		return list;
 	}
+
+
+
+	@Override//검색어가 있는경우
+	public int getTotalCount2(HashMap<String, String> map) {
+		 int n = dao.getTotalCount2(map);
+		return n;
+	}
+
+
+
+	@Override//검색어가 없는 경우
+	public int getTotalCount1() {
+		 int n = dao.getTotalCount1();
+		return n;
+	}
+
+
+
+	@Override//유튭 검색 자동완성
+	public String mJson(HashMap<String, String> map) {
+		
+		List<String> list = dao.mJson(map);
+		JSONArray jsonM = new JSONArray(); 
+		if(list != null){
+			for(String word : list){
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("word", word);
+				
+				jsonM.put(jsonObj);
+			}
+		}
+		String mJson = jsonM.toString();
+		return mJson;
+	
+	}
+
+	
+
+	@Override//댓글읽어오기
+	public List<HashMap<String, String>> commentList(String seq_tbl_music) {
+		List<HashMap<String, String> > clist = dao.commentList(seq_tbl_music);
+		return clist;
+	}
+
+
+/*
+	@Override//댓글쓰기
+	public int addComment(MCommentVO commentvo) {
+		int n = dao.addComment(commentvo);
+		return n;
+	}
+*/
+	
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int addComment(MCommentVO commentvo) {
+		
+		int result = 0;
+		
+		//1.insert를해준다. => 성공하면 n == 1
+		int n = 0;
+		n = dao.addComment(commentvo);
+		
+		if(n==1){
+			//2.update를 해준다.
+			result = dao.updateCommentCount(commentvo.getSeq_tbl_music());//부모글(tblBoard)의 글번호	
+		}
+		
+		return result;
+	}
+
+
+	
 
 
 

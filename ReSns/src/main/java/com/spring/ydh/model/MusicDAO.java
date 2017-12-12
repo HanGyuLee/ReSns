@@ -3,7 +3,6 @@ package com.spring.ydh.model;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,11 +109,97 @@ public class MusicDAO implements InterMusicDAO {
 
 
 	@Override//글하나보여주기
-	public MusicVO mview(String seq) {
-		MusicVO mvo = sqlsession.selectOne("ydhresns.mview",seq);
+	public MusicVO mview(String seq_tbl_music) {
+		MusicVO mvo = sqlsession.selectOne("ydhresns.mview",seq_tbl_music);
 		return mvo;
 	}
 
+	
+	@Override//글수정폼띄우기
+	public MusicVO mupdate(String seq_tbl_music) {
+		MusicVO mvo = sqlsession.selectOne("ydhresns.mupdate",seq_tbl_music);
+		return mvo;
+	}
+
+
+	@Override//글수정(update)
+	public int mupdateEnd(HashMap<String,String> map) {
+	     int n = sqlsession.update("ydhresns.mupdateEnd",map);
+		return n;
+	}
+
+
+	@Override//글삭제
+	public int mdel(String seq_tbl_music) {
+			int n = sqlsession.delete("ydhresns.mdel", seq_tbl_music);
+		return n;
+	}
+
+
+	@Override//체크박스글삭제
+	public int delcheckbox(String seq_tbl_music) {
+		int n = sqlsession.delete("ydhresns.delcheckbox",seq_tbl_music);
+		return n;
+	}
+
+
+	@Override//검색어가 있는 페이징
+	public List<String> mlist(HashMap<String, String> map) {
+		List<String> list = sqlsession.selectList("ydhresns.mlist",map);
+		return list;
+	}
+
+
+	@Override//검색어가 없는 페이징
+	public List<String> mlist2(HashMap<String, String> map) {
+		List<String> list = sqlsession.selectList("ydhresns.mlist2",map);
+		return list;
+	}
+
+
+	@Override//검색어가 있는경우
+	public int getTotalCount2(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("ydhresns.getTotalCount2", map);
+		return n;
+	}
+
+
+	@Override//검색어가 없는 경우
+	public int getTotalCount1() {
+		int n = sqlsession.selectOne("ydhresns.getTotalCount1");
+		return n;
+	}
+
+
+	@Override//유튭 검색 자동완성
+	public List<String> mJson(HashMap<String, String> map) {
+		List<String> mlist = sqlsession.selectList("ydhresns.mJson",map);
+		return mlist;
+	}
+
+
+	@Override//댓글
+	public List<HashMap<String, String>> commentList(String seq_tbl_music) {
+		List<HashMap<String, String>> list = sqlsession.selectList("ydhresns.commentList",seq_tbl_music);
+		return list;
+	}
+
+
+	@Override//댓글쓰기
+	public int addComment(MCommentVO commentvo) {
+		int n = sqlsession.insert("ydhresns.addComment",commentvo);
+		return n;
+	}
+
+
+	@Override//tx처리 댓글달린 부모글 업뎃
+	public int updateCommentCount(String seq_tbl_music) {
+		int n = sqlsession.insert("ydhresns.updateCommentCount",seq_tbl_music);
+		return n;
+	}
+
+
+	
 
 
 

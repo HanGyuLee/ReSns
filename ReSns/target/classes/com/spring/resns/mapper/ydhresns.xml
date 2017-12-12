@@ -194,20 +194,171 @@ and login_status = 1
 insert into tbl_music(seq_tbl_music,fk_login_id,music_link,music_name,music_content,music_date,music_commentCount)
 values(seq_tbl_music.nextval,#{fk_login_id},#{music_link},#{music_name},#{music_content},default, default )
 </insert>
-
-<!-- 글목록 : 글조회 페이징(X),검색(X)-->
-<select id="mlist" resultType="com.spring.ydh.model.MusicVO">
-select seq_tbl_music,music_name, music_content, to_char(sysdate,'yyyy-mm-dd') as music_date, music_commentcount
+ 							<!-- 글조회만들기 -->
+<!-- 글목록 : 글조회 페이징(X)-->
+<!-- <select id="mlist" resultType="com.spring.ydh.model.MusicVO">
+select seq_tbl_music,music_name, music_content, to_char(music_date,'yyyy-mm-dd') as music_date, music_commentcount
 from tbl_music
 order by seq_tbl_music desc
+</select> -->
+
+<!-- 글목록 페이징(O), 검색어(O) -->
+<resultMap type="HashMap" id="list">
+  <result property="music_name" 			column="T.music_name" 		  javaType="String"/>	
+  <result property="music_date" 			column="T.music_date" 		  javaType="String"/>
+  <result property="music_commentcount" 	column="T.music_commentcount" javaType="String"/>
+  <result property="seq_tbl_music" 		    column="T.seq_tbl_music" 	  javaType="String"/>
+  <result property="music_content" 		   column="T.music_content" 	  javaType="String"/>
+</resultMap>
+<select id="mlist" parameterType="HashMap" resultMap="list">
+ select T.music_name, T.music_date, T.music_commentcount, T.seq_tbl_music, T.music_content
+ from
+ (
+  select V.rno, V.music_name, V.music_date, V.music_commentcount, V.seq_tbl_music, V.music_content
+  from
+(
+  select rownum as rno 
+                  ,seq_tbl_music
+                  ,music_name
+                  ,case when length(music_content)>7 then substr(music_content,1,5)||'..' else music_content end as music_content
+                  ,to_char(music_date,'yyyy-mm-dd') as music_date
+                  ,music_commentcount
+  from tbl_music
+  where lower(${colname}) like '%'|| lower (#{search}) ||'%'
+  order by seq_tbl_music desc
+)V
+)T
+where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 </select>
+
+
+<!-- 글목록 : 페이징(O), 검색어(X) -->
+<resultMap type="HashMap" id="list2">
+	 <result property="rno"				 		column="V.rno" 					        javaType="String"/>
+	 <result property="music_name" 			 	column="V.music_name" 					javaType="String"/>
+	 <result property="music_date" 				column="V.music_date" 					javaType="String"/>
+	 <result property="music_commentcount" 		column="V.music_commentcount" 	        javaType="String"/>
+	 <result property="seq_tbl_music" 			column="V.seq_tbl_music" 				javaType="String"/>
+	 <result property="music_content" 			column="V.music_content" 				javaType="String"/> 
+	</resultMap>
+<select id="mlist2" parameterType="HashMap" resultMap="list2">
+	select V.rno, V.music_name, V.music_date, V.music_commentcount, V.seq_tbl_music, V.music_content
+	from
+	(
+	  select rownum as rno 
+	                  ,seq_tbl_music
+	                  ,music_name
+	                  ,music_content
+	                  ,to_char(music_date,'yyyy-mm-dd') as music_date
+	                  ,music_commentcount
+	  from tbl_music
+	  order by seq_tbl_music desc
+	)V
+	where V.rno >= #{startRno} and V.rno <![CDATA[<=]]> #{endRno}
+</select>
+
+
+			<!-- 페이징처리를 위한 totalcount 구하기 -->
+
+<!-- 검색어 있음 -->
+<select id="getTotalCount2" parameterType="HashMap" resultType="int">
+select count(*) as CNT
+from tbl_music
+where ${colname} like '%'||#{search}||'%'
+</select>
+
+<!-- 검색어 없음 -->			
+<select id="getTotalCount1" resultType="int">
+select count(*) as CNT
+from tbl_music
+</select>
+
+<!-- MUSIC페이지 ajax 검색 -->
+<select id="mJson" parameterType="HashMap" resultType="String" >
+   <if test='colname.equals("music_name")'>
+    	select music_name
+         from tbl_music
+         where lower(music_name) like '%'||lower(#{search})||'%'
+   </if>
+   <if test='colname.equals("music_content")'>   		
+		select case when length(music_content)>7 
+		       then substr(music_content,1,5)||'..' 
+		       else music_content
+		       end as music_content
+		from tbl_music
+		where lower(music_content) like '%'|| lower(#{search}) || '%'
+   </if>
+</select>
+
 
 <!-- 글한개보이기 -->
 <select id="mview" parameterType="String" resultType="com.spring.ydh.model.MusicVO">
-select seq_tbl_music, music_name,to_char(sysdate,'yyyy-mm-dd') as music_date , music_content, music_link
+select seq_tbl_music, music_name,to_char(music_date,'yyyy-mm-dd hh24:mi:ss') as music_date , music_content, music_link
 from tbl_music
-where seq_tbl_music = #{seq}
+where seq_tbl_music = #{seq_tbl_music}
 </select>
+
+
+<!-- 글수정할때 원글띄어주기 -->
+<select id="mupdate" parameterType="String" resultType="com.spring.ydh.model.MusicVO"> 
+select seq_tbl_music, music_name,to_char(music_date,'yyyy-mm-dd hh24:mi:ss') as music_date , music_content, music_link
+from tbl_music
+where seq_tbl_music = #{seq_tbl_music}
+</select>
+
+<!-- 글수정(update)해주기 -->
+<update id="mupdateEnd" parameterType="HashMap" >
+update tbl_music set music_name = #{music_name}
+                    ,music_content = #{music_content}
+                    ,music_link= #{music_link}
+where seq_tbl_music = #{seq_tbl_music}
+</update>
+
+<!-- 글삭제(delete) -->
+<delete id="mdel" parameterType="String">
+delete from tbl_music
+where seq_tbl_music = #{seq_tbl_music}
+</delete>
+
+<!-- 체크박스글삭제 -->
+<delete id="delcheckbox" parameterType="String">
+delete from tbl_music
+where seq_tbl_music in #{seq_tbl_music}
+</delete>
+
+
+
+<!-- 댓글읽어오기 -->
+<resultMap type="HashMap" id="comment">
+	<result property="login_name" 		 column="A.login_name" 		 javaType="String"/>
+	<result property="seq_tbl_remusic"   column="B.seq_tbl_remusic"  javaType="String"/>
+	<result property="re_ycontent" 	     column="B.re_ycontent"      javaType="String"/>
+	<result property="re_ydate" 		 column="B.re_ydate" 		 javaType="String"/>
+	<result property="re_login_id" 		 column="B.re_login_id" 	 javaType="String"/>
+	<result property="seq_tbl_music" 	 column="C.seq_tbl_music" 	 javaType="String"/>
+</resultMap>
+<select id="commentList" parameterType="HashMap" resultMap="comment">
+select A.login_name, B.seq_tbl_remusic, B.re_ycontent, B.re_ydate, B.re_login_id,C.seq_tbl_music
+from tbl_login A join tbl_remusic B
+on A.login_id = B.re_login_id
+join tbl_music C
+on B.seq_tbl_music = C.seq_tbl_music
+</select>
+
+
+<!-- 댓글쓰기 -->
+<insert id="addComment" parameterType="com.spring.ydh.model.MCommentVO" >
+insert into tbl_remusic(seq_tbl_remusic, re_ycontent, re_ydate, re_login_id, seq_tbl_music)
+values(seq_tbl_remusic.nextval, #{re_ycontent}, default,  #{re_login_id} , #{seq_tbl_music} )
+</insert>
+
+<!-- TX처리  댓글달렸을때 원글 업뎃  -->
+<update id="updateCommentCount" parameterType="String">
+update tbl_music set music_commentcount = music_commentcount + 1
+where seq_tbl_music = seq_tbl_music
+</update>
+
+
 
 
 

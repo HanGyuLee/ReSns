@@ -62,7 +62,7 @@
          	</tr>
          	
          	
-			<!--     수정할때 암호걸어주기
+			<!--     암호걸어주기
 			<tr>   
 				<th>암호</th>
 				<td><input type="password" name="pw" class="short" /></td>

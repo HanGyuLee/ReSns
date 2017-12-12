@@ -20,6 +20,12 @@
 
 <script type="text/javascript">
   
+function goWrite(){
+	var addWriteFrm = document.addWriteFrm;
+	addWriteFrm.submit();
+}
+  
+  
 </script>
 
 <div style="padding-left: 10%; border: solid 0px red;">
@@ -56,41 +62,45 @@
 	</table>
     <br/><br/>
     <div style="margin-left: 200px;">
-    <button type="button" onClick="javascript:location.href=">목록보기</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/edit.re?seq=${mvo.seq_tbl_music}'">수정</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/del.re?seq=${mvo.seq_tbl_music}'">삭제</button>
+    <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re'">되돌아가기</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/medit.re?seq_tbl_music=${mvo.seq_tbl_music}'">수정</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/mdel.re?seq_tbl_music=${mvo.seq_tbl_music}'">삭제</button>
 	<br/><br/>
 	</div>
+	
 	<!-- 댓글쓰기 -->
-	        성명 : <input type="text" name="name" value="${sessionScope.loginUser.login_name}" class="short" readonly />
+	      <%--   성명 : <input type="text" name="name" value="${sessionScope.loginUser.login_name}" class="short" readonly />
 		      <br/><br/>
-		댓글 : <input type="text" name="content" class="long" placeholder="  바른말 고운말을 씁시다:)"/>&nbsp;&nbsp;<button>확인</button>
-<%-- 	 
-	<form	name="addCommentFrm" action="<%=request.getContextPath()%>/addComment.action" method="get">
-			 <input type="hidden" name="userid" value="${sessionScope.logiUuser.userid}" />
-		성명 : <input type="text" name="name" value="${sessionScope.loginUser.name}" class="short" readonly />
+		댓글 : <input type="text" name="content" class="long" placeholder="  바른말 고운말을 씁시다:)"/>&nbsp;&nbsp;<button>확인</button> --%>
+	 
+	<form	name="addWriteFrm" action="<%=request.getContextPath()%>/addComment.re" method="get">
+			 <input type="hidden" name="login_id" value="${sessionScope.logiUuser.login_id}" />
+		성명 : <input type="text" name="login_name" value="${sessionScope.loginUser.login_name}" class="short" readonly />
 		      <br/><br/>
-		댓글 : <input type="text" name="content" class="long" />
-			 <!-- 게시물시퀏스에 달린 댓글 -->
-			 <input type="hidden" name="parentSeq" value="${m.seq_tbl_music}" />
+		댓글 : <input type="text" name="re_ycontent" class="long" placeholder="  바른말 고운말을 씁시다:)" />
+			 <!-- 게시물시퀀스에 달린 댓글 -->
+			 <input type="hidden" name="seq_tbl_music" value="${seq_tbl_music}" />
 		  
 			 <!-- 돌아갈 글 목록 페이지 -->
-			 <input type="hidden" name="gobackURL" value="${gobackURL}"/>
+		<%--  <input type="hidden" name="gobackURL" value="${gobackURL}"/>  --%>
 		&nbsp;&nbsp;<button type="button" onClick="goWrite();">쓰기</button>
 	</form>
 	
 	<!-- ==== #93. 댓글 내용 보여주기 ==== -->
+
 	 <c:if test="${not empty commentList}">
 		<table id="table2">
-			<c:forEach var="commentvo" items="${commentList}">
+			<c:forEach var="cvo" items="${commentList}">
 				<tr>
-					<td>${commentvo.name}</td>
-					<td>${commentvo.content}</td>
-					<td>${commentvo.regDate}</td>
+				
+				    <td>${cvo.LOGIN_NAME}</td>
+					<td>${cvo. RE_LOGIN_ID}</td>
+					<td>${cvo.RE_YCONTENT}</td>
+					<td>${cvo.RE_YDATE}</td>
 				</tr>
 			</c:forEach>
 		</table>
-	</c:if> --%>
+	</c:if> 
 
 </div>	
 	
