@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.pek.model.BoardVO;
 import com.spring.pek.model.ReVO;
+import com.spring.pek.model.TagVO;
 
 //DAO선언---
 //Repository 선언
@@ -109,12 +110,6 @@ public class JsrDAO implements InterJsrDAO {
 	}
 
 
-	//내 팔롱 댓글 리스트 가져오기
-	@Override
-	public List<ReVO> followreList(String seq_tbl_board) {
-		List<ReVO> followreList = sqlsession.selectList("jsrresns.followreList",seq_tbl_board);
-		return followreList;
-	}
 
 	//내 팔로우 댓글 리스트 가져오기2
 	@Override
@@ -125,7 +120,93 @@ public class JsrDAO implements InterJsrDAO {
 
 
 	
-	
-	
+	/*--------------------------------------------------------------------------------------------------------------------------*/	
 
+	//내 팔로우 내용 불러오기
+	@Override
+	public String getConVeiw(String seq_tbl_board) {
+		 String getConVeiw = sqlsession.selectOne("jsrresns.getConVeiw",seq_tbl_board);
+		return getConVeiw;
+	}
+
+
+	//태그 가져오기
+	@Override
+	public List<String> getFollowTag(String seq_tbl_board) {
+		List<String> getFollowTag =  sqlsession.selectList("jsrresns.getTag2",seq_tbl_board);
+		return getFollowTag;
+	}
+
+
+	/*--------------------------------------------------------------------------------------------------------------------------*/	
+	
+	//백문백답 작성하기
+	@Override
+	public int queAdd(QuestionBoardVO qboardvo) {
+		int n = sqlsession.insert("jsrresns.queAddEnd",qboardvo);
+		return n;
+	}
+
+	//백문백답 리스트 작성하기
+	@Override
+	public List<QuestionBoardVO> getQeList(HashMap<String, String> map) {
+		List <QuestionBoardVO> list = sqlsession.selectList("jsrresns.getQuList",map);
+		return list;
+	}
+
+	//백문백답 답변 가져오기
+	@Override
+	public QuestionBoardReplyVO getRp(String seq_tbl_q) {
+		 QuestionBoardReplyVO list = sqlsession.selectOne("jsrresns.getRp",seq_tbl_q); 
+		return list;
+	}
+
+	//해당하는 질문 내용 가져오기
+	@Override
+	public QuestionBoardVO getQView(String seq_tbl_q) {
+		QuestionBoardVO list = sqlsession.selectOne("jsrresns.getQView",seq_tbl_q);
+		return list;
+	}
+
+	//답변달기
+	@Override
+	public int QboardRe(QuestionBoardReplyVO qbrvo) {
+		int n = sqlsession.insert("jsrresns.QboardRe",qbrvo);
+		return n;
+	}
+
+	//질문상태값 변경
+	@Override
+	public int Qstaup(String fk_seq_tbl_q) {
+		int m = sqlsession.update("jsrresns.Qstaup",fk_seq_tbl_q);
+		return m;
+	}
+
+	//백문백답 질문 삭제
+	@Override
+	public int qdel(String seq_tbq_q) {
+		int n = sqlsession.delete("jsrresns.qdel",seq_tbq_q);
+		return n;
+	}
+
+
+	//답변삭제하기
+	@Override
+	public int adal(String fk_seq_tbl_q) {
+		int n = sqlsession.delete("jsrresns.adel",fk_seq_tbl_q);
+		return n;
+	}
+
+	//답변 삭제후 질문 상태값 변경해주기
+	@Override
+	public int adalpUp(String fk_seq_tbl_q) {
+		int m = sqlsession.update("jsrresns.adelQstaup",fk_seq_tbl_q);
+		return m;
+	}
+
+
+
+	
+	
+	
 }

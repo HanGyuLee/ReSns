@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.jsr.model.InterJsrDAO;
+import com.spring.jsr.model.QuestionBoardReplyVO;
+import com.spring.jsr.model.QuestionBoardVO;
 import com.spring.pek.model.BoardVO;
-import com.spring.pek.model.ReVO;
 
 
 //service  선언
@@ -132,17 +133,19 @@ public class JsrService implements InterJsrService {
 		return unFollowAddEnd;
 	}
 
-
+	/*--------------------------------------------------------------------------------------------------------------------------*/	
 	
 	//팔로우 하는 사람 게시글 가지고 오기
 	@Override
 	public List<BoardVO> followboard(HashMap<String, String> map) {
 		List<BoardVO> followboard = null;
-		
+
 		List<HashMap<String, String>> followList = jdao.getFollowList(map);
 		
 		if(followList != null){
 			followboard =  jdao.getFollowBoardView(map);
+
+			
 			
 		}
 		
@@ -150,11 +153,15 @@ public class JsrService implements InterJsrService {
 		return followboard;
 	}
 
+	
+
+	
+	
 
 	//팔로우 글 댓글확인 하기 위한 
 	@Override
 	public String followre(String seq_tbl_board) {
-	System.out.println("서비스단!");
+	//System.out.println("서비스단!");
 	//List<ReVO> reList = jdao.followreList(seq_tbl_board);
 
 	List<HashMap<String,String>> resultMap = jdao.followRe(seq_tbl_board);
@@ -177,7 +184,7 @@ public class JsrService implements InterJsrService {
 				jsonObj.put("login_name", re.get("login_name"));
 				jsonObj.put("uimg_profile_filename", re.get("uimg_profile_filename"));
 	
-				System.out.println("re.getRe_content()확인::"+re);
+				//System.out.println("re.getRe_content()확인::"+re);
 				
 				jsonMap.put(jsonObj);
 			}
@@ -188,10 +195,138 @@ public class JsrService implements InterJsrService {
 		return str_reList;
 	}
 
+
+	//내용과 태그 가져오기
+	@Override
+	public String followConTag(String seq_tbl_board) {
+		
+		List<String> list = null;
+		
+		String boardCon = "";
+		
+		boardCon = jdao.getConVeiw(seq_tbl_board);
+		
+		list =  jdao.getFollowTag(seq_tbl_board);
+		
+		JSONArray jsonMap = new JSONArray();
+
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("content", boardCon);
+		jsonObj.put("tag", list);
+		
+		jsonMap.put(jsonObj);
+		
+		String str_jsonMap = jsonMap.toString();
+		
+	
+		return str_jsonMap;
+	}
+	
+	/*--------------------------------------------------------------------------------------------------------------------------*/	
+
+	//백문백답 작성하기
+	@Override
+	public int queAdd(QuestionBoardVO qboardvo) {
+
+		int n = jdao.queAdd(qboardvo);
+		
+		
+		return n;
+	}
+
+	//백문백답 리스트 불러오기
+	@Override
+	public List<QuestionBoardVO> qeBoardList(HashMap<String, String> map) {
+		
+		List<QuestionBoardVO> list = jdao.getQeList(map);
+		return list;
+	}
+
+	//백문백답 답변 가져오기
+	@Override
+	public QuestionBoardReplyVO getReply(String seq_tbl_q) {
+		QuestionBoardReplyVO list =  jdao.getRp(seq_tbl_q);
+		return list;
+	}
+
+	//해당하는 질문내용 가져오기
+	@Override
+	public QuestionBoardVO getQView(String seq_tbl_q) {
+		QuestionBoardVO list = jdao.getQView(seq_tbl_q);
+		return list;
+	}
+
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int QboardRe(QuestionBoardReplyVO qbrvo) throws Throwable {
+		int a = 0;
+		int n = 0;
+		int c =0;
+		
+	    int m = jdao.QboardRe(qbrvo);
+		if(m == 1){
+		String Fk_seq_tbl_q = qbrvo.getFk_seq_tbl_q();
+		c= jdao.Qstaup(Fk_seq_tbl_q);		
+		n= m+c;
+		if(n==2){
+		a=1;	
+		}	
+		
+		}
+		
+		else{
+		a=0;
+		}
+		
+		
+		return a;
+	}
+
+
+	//질문삭제하기
+	@Override
+	public int qdel(String seq_tbq_q)  {
+		int n = jdao.qdel(seq_tbq_q);
+		
+		return n;
+	}
+
+
+	//답변삭제하기
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int qreplyDel(String fk_seq_tbl_q)throws Throwable  {
+	
+		int n=0;
+		int m=0;
+		int nm=0;
+		n = jdao.adal(fk_seq_tbl_q);
+		
+		if(n == 1){
+		m = jdao.adalpUp(fk_seq_tbl_q);	
+		
+		if (m == 1){
+			
+		nm =1;	
+		}
+		
+		}
+		
+		else{
+			nm=-3;
+		}
+		
+		
+		return nm;
+	}
+	
 	
 	
 	
 
+	
 	
 	
 	

@@ -3,6 +3,8 @@ package com.spring.jsr.service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.spring.jsr.model.QuestionBoardReplyVO;
+import com.spring.jsr.model.QuestionBoardVO;
 import com.spring.pek.model.BoardVO;
 
 public interface InterJsrService {
@@ -22,9 +24,32 @@ public interface InterJsrService {
 	//팔로우 하는 사람들 게시글 가지고 오기.
 	List<BoardVO> followboard(HashMap<String, String> map);
 	
+
+	
 	//팔로우 하는 사람 댓글 가져오기
 	String followre(String seq_tbl_board);
-
+	
+	//내용과 태그 가져오기
+	String followConTag(String seq_tbl_board);
+	
+	//백문백답 질문 작성
+	int queAdd(QuestionBoardVO qboardvo);
+	
+	//백문백답 리스트 불러오기
+	List<QuestionBoardVO> qeBoardList(HashMap<String, String> map);
+	//백문백답답변가져오기
+	QuestionBoardReplyVO getReply(String seq_tbl_q);
+	//해당하는 질문내용 가져오기
+	QuestionBoardVO getQView(String seq_tbl_q);
+	
+	//답변달기
+	int QboardRe(QuestionBoardReplyVO qbrvo) throws Throwable;
+	
+	//백문백답 질문삭제하기
+	int qdel(String seq_tbq_q);
+	
+	//답변삭제하기
+	int qreplyDel(String fk_seq_tbl_q)throws Throwable;
 
 
 

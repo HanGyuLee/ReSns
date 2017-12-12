@@ -114,21 +114,27 @@ where fk_login_id = #{follow_id}
 <result property="map_we" 					column="map_we" 					javaType="String" />
 <result property="ma_ky" 					column="ma_ky" 						javaType="String" />
 <result property="map_name" 				column="map_name" 					javaType="String" />
+<result property="title" 				column="title" 					javaType="String" />
 </resultMap>
 
 <select id="FollowBoardView" parameterType="HashMap" resultMap="FollowBoardMap">
 select L.login_name as follow_name
-      , nvl(M.uimg_profile_filename,'profile.png') as follow_proile_image
+      ,nvl(M.uimg_profile_filename,'profile0.png') as follow_proile_image
       ,F.follow_id as follow_id
-      ,b.seq_tbl_board as seq_tbl_board
-      ,b.board_content as board_content
-      ,b.board_time as board_time
-      ,b.board_heart as board_heart
-      ,b.board_recnt as board_recnt
-      ,b.board_status as board_status
-      ,i.bimg_filename as bimg_filename
-      ,i.bimg_orgfilename as bimg_orgfilename
-      ,i.bimg_filesize as bimg_filesize
+      ,B.seq_tbl_board as seq_tbl_board
+      ,B.board_content as board_content
+      ,case when length(B.board_content) > 10
+              then substr(B.board_content, 1, 10)||'...'
+              else B.board_content
+              end 
+         as title   
+      ,B.board_time as board_time
+      ,B.board_heart as board_heart
+      ,B.board_recnt as board_recnt
+      ,B.board_status as board_status
+      ,I.bimg_filename as bimg_filename
+      ,I.bimg_orgfilename as bimg_orgfilename
+      ,I.bimg_filesize as bimg_filesize
       ,M.map_we as map_we
       ,M.map_ky as ma_ky
       ,M.map_name as map_name
@@ -177,5 +183,105 @@ where seq_tbl_board = #{seq_tbl_board}
 
 
 
+<!--  팔로우 게시글 더 보기 자세히 보기 -->
+<select id="getConVeiw" parameterType="String" resultType="String">
+select board_content
+from tbl_board
+where seq_tbl_board = #{seq_tbl_board}
+</select>
+<!--  팔로우 게시글 더 보기 자세히 보기 -->
+
+
+<!--  태그가져오기 -->
+<select id="getTag2" parameterType="String" resultType="String">
+select tag_content
+from tbl_tag
+where seq_tbl_board = #{seq_tbl_board}
+</select>
+<!--  태그가져오기 -->
+
+
+<!-- 백문백답 인서트하기 -->
+<insert id="queAddEnd" parameterType="com.spring.jsr.model.QuestionBoardVO">
+insert into tbl_q(seq_tbl_q, fk_login_id, q_content, q_status, q_date,q_askid)
+values(seq_tbl_q.nextval,#{fk_login_id},#{q_content},default,default,#{q_askid})
+</insert>
+<!-- 백문백답 인서트하기 -->
+
+
+<!-- 백문백답 리스트 불러오기 -->
+<select id="getQuList" parameterType="HashMap" resultType="com.spring.jsr.model.QuestionBoardVO">
+select seq_tbl_q, fk_login_id, q_status, q_date, q_askid
+				,case when length(q_content) > 20
+              then substr(q_content, 1, 10)||'...'
+              else q_content
+              end 
+         	as q_content   
+from tbl_q
+where fk_login_id = #{fk_login_id}
+order by seq_tbl_q desc
+</select>
+<!-- 백문백답 리스트 불러오기 -->
+
+
+<!--  백문백답 답변 가져오기 -->
+<select id="getRp" parameterType="String" resultType="com.spring.jsr.model.QuestionBoardReplyVO">
+select fk_seq_tbl_q, fk_login_id, a_content, a_date
+from tbl_a
+where fk_seq_tbl_q = #{seq_tbl_q}
+</select>
+<!--  백문백답 답변 가져오기 끝 -->
+
+<!-- 백문백답 질문 한개 가져오기 -->
+<select id="getQView" parameterType="String" resultType="com.spring.jsr.model.QuestionBoardVO">
+select seq_tbl_q, fk_login_id, q_status, q_date, q_askid,q_content,case when length(q_content) > 15
+              then substr(q_content, 1, 10)||'...'
+              else q_content
+              end 
+         	as title
+from tbl_q
+where seq_tbl_q = #{seq_tbl_q}
+</select>
+<!-- 백문백답 질문 한개 가져오기 끝 -->
+
+
+<!-- 백문 백답 답변 달기 -->
+<insert id="QboardRe" parameterType="com.spring.jsr.model.QuestionBoardReplyVO">
+insert into tbl_a(fk_seq_tbl_q, fk_login_id, a_content, a_date)
+values(#{fk_seq_tbl_q},#{fk_login_id},#{a_content}, default)
+</insert>
+<!-- 백문 백답 답변 달기 끝 -->
+
+
+<!--  백문백답 질문 상태값 변경 -->
+<update id="Qstaup" parameterType="String">
+update tbl_q set q_status = 1
+where seq_tbl_q = #{fk_seq_tbl_q}
+</update>
+<!--  백문백답 질문 상태값 변경  끝-->
+
+
+<!-- 백문백답  질문 삭제하기 -->
+<delete id="qdel" parameterType="String">
+delete from tbl_q
+where seq_tbl_q = #{seq_tbl_q}
+</delete>
+<!-- 백문백답  질문 삭제하기  끝-->
+
+
+
+<!-- 백문백답 답변 삭제하기 -->
+<delete id="adel" parameterType="String">
+delete from tbl_a
+where fk_seq_tbl_q = #{fk_seq_tbl_q}
+</delete>
+<!-- 백문백답 답변 삭제하기  끝-->
+
+<!--  백문백답 질문 상태값 변경 -->
+<update id="adelQstaup" parameterType="String">
+update tbl_q set q_status = 0
+where seq_tbl_q = #{fk_seq_tbl_q}
+</update>
+<!--  백문백답 질문 상태값 변경  끝-->
 
 </mapper>
