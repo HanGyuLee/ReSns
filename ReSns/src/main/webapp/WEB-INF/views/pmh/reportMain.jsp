@@ -33,7 +33,6 @@
 						<tr>
 							<th width="10%">#</th>
 							<th width="10%">유형</th>
-							<th width="10%"></th>
 							<th style="text-align: left;" width="30%">제목</th>
 							<th width="15%">처리상태</th>
 							<th width="10%">아이디</th>
@@ -46,20 +45,16 @@
 							<tr>
 								<td width="10%">${rvo.seq_tbl_report}</td>
 								<td width="10%">${rvo.report_cate}</td>
-								<td width="10%">
-								<c:if test="${rvo.report_status eq 1 || rvo.report_status eq 3}">
-										<img src="<%= request.getContextPath() %>/resources/images/lock.png" width="20px" height="20px" alt="자물쇠">
-								</c:if>								
-								</td>
+								
 								<td style="text-align: left;">
 								&nbsp;<span style="font-weight: bold;"><a class="no-uline" onclick="goDetail(${rvo.seq_tbl_report});">${rvo.report_content}</a></span>
 								</td>
 								<td width="15%">
-									<c:if test="${rvo.report_status eq 0 || rvo.report_status eq 1}">
+									<c:if test="${rvo.report_status eq 0}">
 										[처리완료]<input type="hidden" id="color${status.count}" value="s">
 									</c:if>
 									
-									<c:if test="${rvo.report_status eq 2 || rvo.report_status eq 3}">
+									<c:if test="${rvo.report_status eq 1}">
 										[처리중]<input type="hidden" id="color${status.count}" value="d">
 									</c:if>
 								</td>
@@ -92,6 +87,7 @@
 	</form>
 </div>	
 	
+	<button type="button" onclick="goReport();">신고하기</button>
 	<form id="seqFrm">
 		<input type="hidden" id="seq" name="seq">
 	</form>
@@ -133,7 +129,7 @@
         }
 	}
 
-
+	
 	
 	function goDetail(seq) {
 		

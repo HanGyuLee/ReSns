@@ -153,6 +153,74 @@ public class PmhDAO implements InterPmhDAO {
 		int count = sqlsession.selectOne("pmhresns.getHelpTotalCount1");
 		return count;
 	}
+
+	@Override
+	public int getAskGroupMaxno() {
+		int n = sqlsession.selectOne("pmhresns.getAskGroupMaxno");
+		return n;
+	}
+
+	@Override
+	public int askWrite(HashMap<String, Object> helpMap) {
+		int n = sqlsession.insert("pmhresns.askWrite", helpMap);
+		return n;
+	}
+
+	@Override
+	public int insertAskFile(HashMap<String, Object> helpMap) {
+		int n = sqlsession.insert("pmhresns.insertAskFile", helpMap);
+		return n;
+	}
+
+	@Override
+	public int getAskSeq() {
+		int n = sqlsession.selectOne("pmhresns.getAskSeq");
+		return n;
+	}
+
+	@Override
+	public AskVO getAskDetail(String seq) {
+		AskVO avo = sqlsession.selectOne("pmhresns.getAskDetail", seq);
+		return avo;
+	}
+
+	@Override
+	public AimageVO getAskAimage(String seq) {
+		AimageVO aivo = sqlsession.selectOne("pmhresns.getAskAimage", seq);
+		return aivo;
+	}
+
+	@Override
+	public String getLoginNameById(String fk_login_id) {
+		String name = sqlsession.selectOne("pmhresns.getLoginNameById", fk_login_id);
+		return name;
+	}
+
+	@Override
+	public int updateHelpDelete(String seq) {
+		int n = sqlsession.update("pmhresns.updateHelpDelete", seq);
+		return n;
+	}
+	
+	@Override
+	public int askModify(HashMap<String, Object> helpMap) {
+		int n = sqlsession.update("pmhresns.askModify", helpMap);
+		return n;
+	}
+
+	@Override
+	public int updateAskFile(HashMap<String, Object> helpMap) {
+		int n = sqlsession.update("pmhresns.updateAskFile", helpMap);
+		return n;
+	}
+
+	@Override
+	public int deleteAskFile(HashMap<String, Object> helpMap) {
+		int n = sqlsession.delete("pmhresns.deleteAskFile", helpMap);
+		return n;
+	}
+
+
 	
 	/////////////////////////////// 문의게시판 DAO 끝 ////////////////////////////////////////
 

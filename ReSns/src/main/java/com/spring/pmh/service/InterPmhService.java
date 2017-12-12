@@ -6,6 +6,8 @@ import java.util.List;
 import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.BoardVO;
 import com.spring.pek.model.ReVO;
+import com.spring.pmh.model.AimageVO;
+import com.spring.pmh.model.AskVO;
 
 
 public interface InterPmhService {
@@ -44,6 +46,20 @@ public interface InterPmhService {
 	int getHelpTotalCount2(HashMap<String, String> searchMap); // 검색어가 있는 경우 게시물 총수를 구하는 메소드
 
 	int getHelpTotalCount1(); // 검색어가 없는 경우 게시물 총수를 구하는 메소드
+
+	int askWrite(HashMap<String, Object> helpMap); // 문의게시판에 글 작성하는 메소드
+
+	int getAskSeq(); // 작성할 게시물의 예상글번호를 가져오는 메소드
+
+	AskVO getAskDetail(String seq); // 선택한 게시물의 상세정보를 가져오는 메소드
+
+	AimageVO getAskAimage(String seq); // 선택한 게시물의 첨부파일을 가져오는 메소드
+
+	String getLoginNameById(String fk_login_id); // 해당하는 아이디의 회원이름을 가져오는 메소드
+
+	int updateHelpDelete(String seq); // 해당하는 게시물의 status를 0으로 바꿔주는 메소드
+
+	int askModify(HashMap<String, Object> helpMap); // 게시물을 update로 수정하는 메소드
 			
 	//////////////////////문의게시판 서비스 끝 ///////////////////////////
 }

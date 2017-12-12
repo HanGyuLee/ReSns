@@ -134,6 +134,8 @@
 	    from view_report_main
 	    where ${searchType} like '%' || #{searchInput} || '%'
 	</select>
+	
+	
 	<!-- //////////////// 신고게시판 mapper 끝 ////////////////// -->
 	
 	<!-- //////////////// 문의게시판 mapper 시작 ////////////////// -->
@@ -144,27 +146,35 @@
 		<result property="ask_title" 	column="ask_title" 		javaType="String" />
 		<result property="fk_login_id" 	column="fk_login_id" 	javaType="String" />
 		<result property="ask_date1" 	column="ask_date1" 		javaType="String" />
+		<result property="ask_status" 	column="ask_status" 	javaType="String" />
+		<result property="ask_secret" 	column="ask_secret" 	javaType="String" />
 		<result property="ask_groupno" 	column="ask_groupno" 	javaType="String" />
 		<result property="ask_fk_seq" 	column="ask_fk_seq" 	javaType="String" />
 		<result property="ask_depthno" 	column="ask_depthno" 	javaType="String" />
-		<result property="ask_newest" 	column="ask_newest" 	javaType="String"/>
+		<result property="ask_newest" 	column="ask_newest" 	javaType="String" />
 	</resultMap>
 	<select id="getHelpPgSearch" parameterType="HashMap" resultMap="getHelpListMap">
 		<![CDATA[
-		select rno, seq_tbl_ask, ask_cate, ask_title, fk_login_id, ask_date1, ask_groupno, ask_fk_seq, ask_depthno, ask_newest
+		select rno, seq_tbl_ask, ask_cate, ask_title, fk_login_id, ask_date1, ask_status, ask_secret, ask_groupno, ask_fk_seq, ask_depthno, ask_newest
 		from view_help_main
 		where rno >= #{startRno} and rno <= #{endRno}
+		and ask_status = 1
 		and ${searchType} like '%'||#{searchInput}||'%'
-		order by rno
+		start with ask_fk_seq = 0
+		connect by prior seq_tbl_ask = ask_fk_seq
+		order siblings by ask_groupno desc, seq_tbl_ask asc
 		]]>
 	</select>
 	
 	<select id="getHelpPg" parameterType="HashMap" resultMap="getHelpListMap">
 		<![CDATA[
-		select rno, seq_tbl_ask, ask_cate, ask_title, fk_login_id, ask_date1, ask_groupno, ask_fk_seq, ask_depthno, ask_newest
+		select rno, seq_tbl_ask, ask_cate, ask_title, fk_login_id, ask_date1, ask_status, ask_secret, ask_groupno, ask_fk_seq, ask_depthno, ask_newest
 		from view_help_main
 		where rno >= #{startRno} and rno <= #{endRno}
-		order by rno
+		and ask_status = 1
+		start with ask_fk_seq = 0
+		connect by prior seq_tbl_ask = ask_fk_seq
+		order siblings by ask_groupno desc, seq_tbl_ask asc
 		]]>
 	</select>
 	
@@ -178,5 +188,69 @@
 	    from view_help_main
 	    where ${searchType} like '%' || #{searchInput} || '%'
 	</select>
+	
+	<select id="getAskGroupMaxno" resultType="int">
+	    select nvl(max(ask_groupno), 0)
+		from tbl_ask
+	</select>
+	
+	<insert id="askWrite" parameterType="HashMap">
+		<if test='fk_seq.equals("")'>
+			insert into tbl_ask(seq_tbl_ask, fk_login_id, ask_cate, ask_title, ask_content, ask_date1, ask_status, ask_secret, ask_groupno)
+			values(seq_tbl_ask.nextval, #{fk_login_id}, #{ask_cate}, #{ask_title}, #{ask_content}, default, default, #{ask_secret}, #{groupno})
+		</if>
+		
+		<if test='!fk_seq.equals("")'>
+			insert into tbl_ask(seq_tbl_ask, fk_login_id, ask_cate, ask_title, ask_content, ask_date1, ask_status, ask_secret, ask_groupno, ask_fk_seq, ask_depthno)
+			values(seq_tbl_ask.nextval, #{fk_login_id}, #{ask_cate}, #{ask_title}, #{ask_content}, default, default, #{ask_secret}, #{groupno}, #{fk_seq}, #{depthno}+1)
+		</if>
+	</insert>
+	
+	<insert id="insertAskFile" parameterType="HashMap">
+		insert into tbl_aimage (aimg_category, aimg_seq, aimg_filename, aimg_orgfilename, aimg_filesize, aimg_status, aimg_thumb)
+		values(${aimg_category}, #{seq}, #{newFileName}, #{originalFilename}, #{fileSize}, 1, #{thumbnailFileName})
+	</insert>
+	
+	<select id="getAskSeq" resultType="int">
+	    select nvl(max(seq_tbl_ask), 0)
+		from tbl_ask
+	</select>
+	
+	<select id="getAskDetail" parameterType="String" resultType="com.spring.pmh.model.AskVO">
+		select seq_tbl_ask, fk_login_id, ask_cate, ask_title, ask_content, ask_date1, ask_status, ask_secret, ask_groupno, ask_fk_seq, ask_depthno
+		from tbl_ask
+		where seq_tbl_ask = #{seq}
+	</select>
+	
+	<select id="getAskAimage" parameterType="String" resultType="com.spring.pmh.model.AimageVO">
+		select aimg_category, aimg_seq, aimg_filename, aimg_orgfilename, aimg_filesize, aimg_status, aimg_thumb
+		from tbl_aimage
+		where aimg_category = 1 and aimg_seq = #{seq}
+	</select>
+	
+	<select id="getLoginNameById" parameterType="String" resultType="String">
+		select login_name
+		from tbl_login
+		where login_id = #{fk_login_id}
+	</select>
+	
+	<update id="updateHelpDelete" parameterType="String">
+		update tbl_ask set ask_status = 0
+		where seq_tbl_ask = #{seq}
+	</update>
+	
+	<update id="askModify" parameterType="HashMap">
+		update tbl_ask set ask_cate = #{ask_cate}, ask_title = #{ask_title}, ask_content = #{ask_content}, ask_secret = #{ask_secret}
+		where seq_tbl_ask = #{seq}
+	</update>
+	
+	<update id="updateAskFile" parameterType="HashMap">
+		update tbl_aimage set aimg_filename = #{newFileName}, aimg_orgfilename = #{originalFilename}, aimg_filesize = #{fileSize}, aimg_status = 1, aimg_thumb = #{thumbnailFileName}
+		where aimg_category = 1 and aimg_seq = #{seq}
+	</update>
+	
+	<delete id="deleteAskFile" parameterType="HashMap">
+		delete from tbl_aimage where aimg_category = 1 and aimg_seq = #{seq}
+	</delete>
 	<!-- //////////////// 문의게시판 mapper 끝 ////////////////// -->
 </mapper>

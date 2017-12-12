@@ -72,14 +72,9 @@
 							0. 처리완료
 			</c:if>
 			<c:if test="${reportMap.report_status eq 1}">
-							1. 처리완료(비밀글)
+							1. 처리중...
 			</c:if>
-			<c:if test="${reportMap.report_status eq 2}">
-							2. 처리안된신고
-			</c:if>
-			<c:if test="${reportMap.report_status eq 3}">
-							3. 처리안된신고(비밀글)
-			</c:if>
+			
 		</td>
 	</tr>
 	<tr>
