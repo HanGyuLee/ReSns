@@ -23,21 +23,13 @@ $(document).ready(function(){
 <c:forEach var="map" items="${searchTag}" >
 
 <div align="center">
-<c:if test="${map.BIMG_FILENAME != null}">
-	<img src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" style="width: 400px; height: 300px;"><br/><br/>
-			           태그내용 :${map.TAG_CONTENT} 
-				게시물번호 : ${map.SEQ_TBL_BOARD}     
-			         게시물사진 : ${map.BIMG_FILENAME}
-				게시물내용 :${map.BOARD_CONTENT}
-				${searchTag}
-</c:if>
 
-<c:if test="${map.BIMG_FILENAME == null}" >
-			          태그내용 :${map.TAG_CONTENT} 
+	<img src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" style="width: 400px; height: 300px;"><br/><br/>
+			     <%--       태그내용 :${map.TAG_CONTENT} 
 				게시물번호 : ${map.SEQ_TBL_BOARD}     
 			         게시물사진 : ${map.BIMG_FILENAME}
 				게시물내용 :${map.BOARD_CONTENT}
-</c:if>
+				 --%>
 
 </div>
 </c:forEach>	

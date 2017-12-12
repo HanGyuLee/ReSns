@@ -82,25 +82,22 @@ $(document).ready(function(){
 	
 	$("#displayList").click(function(event){
 		alert("Test");
-		var jresult = "";
+		var jName = "";
 		var $target = $(event.target);
-		alert("targettest::"+$target);
-		alert("zzz"+jresult);
+
 		if($target.is(".first")) {
-			jresult = $target.text() + $target.next().text() + $target.next().next().text();
-			alert("zzz"+jresult);
+			jName = $target.text() + $target.next().text() + $target.next().next().text();
+			
 		}
 		else if($target.is(".second")) {
-			jresult = $target.prev().text() + $target.text() + $target.next().text();
-			alert("zzz"+jresult);
+			jName = $target.prev().text() + $target.text() + $target.next().text();
+			
 		}
 		else if($target.is(".third")) {
-			jresult = $target.prev().prev().text() + $target.prev().text() + $target.text();
-			alert("zzz"+jresult);
+			jName = $target.prev().prev().text() + $target.prev().text() + $target.text();	
 		}
 		
-		$("#search").val(jresult); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
-		alert("z"+jresult);
+		$("#search").val(jName); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
 		$("#displayList").hide();
 	});
 	

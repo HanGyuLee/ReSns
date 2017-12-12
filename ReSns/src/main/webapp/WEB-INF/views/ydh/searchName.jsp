@@ -109,7 +109,7 @@ var lenNEW = 2; // 더보기... 클릭에 보여줄 상품의 갯수 단위 크�
                                    필로워: ${map.USER_ED}
                                    
                                    
-                     --------------${searchName}              
+                              
 </c:forEach>
 </div>
 	
