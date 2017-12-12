@@ -107,7 +107,7 @@
 	
 	  <result property="seq_tbl_notice"   column="seq_tbl_notice"       javaType="String" />
       <result property="notice_title"     column="notice_title"    		javaType="String" />
-      <result property="notice_date"      column cccccccccccc="notice_date"      	javaType="String" />
+      <result property="notice_date"      column="notice_date"      	javaType="String" />
       <result property="notice_status"    column="notice_status"  		javaType="String" />
       <result property="notice_cate"      column="notice_cate"   	  	javaType="String" />
       
