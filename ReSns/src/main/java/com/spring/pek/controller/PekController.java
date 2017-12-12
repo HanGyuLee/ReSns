@@ -286,6 +286,14 @@ public class PekController {
 		
 		System.out.println(fileName);
 		
+		try {
+			
+			fileManager.doFileDelete(fileName, path);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		//System.out.println(n);
 		
 		return "";
