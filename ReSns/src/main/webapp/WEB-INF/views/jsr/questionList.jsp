@@ -28,6 +28,15 @@ table{
   background-color: white;
 } 
 
+.goQ{
+background-color: black;
+border: black;
+}
+
+.goQ:hover {
+background-color: #404040;
+}
+
 
 </style>
 
@@ -53,35 +62,6 @@ $(document).ready(function(){
 	
 	}//end of goqView
 
-/* 	function showView(statuscount){
-		
-	var statuscount = statuscount;
-		$("#q_a_re"+statuscount).show();
-		//alert("번호확인"+statuscount);
- 
-		 
-		  var form_data = {"seq" : $("#review"+statuscount).val()}  
-		
-		$.ajax({
-		url: "/resns/questionView.re",
-		type: "GET",
-		data: form_data,
-		dataType: "HTML", 
-		success: function(data) {
-
-			$("#q_a_recontent"+statuscount).html(data);
-			
-		
-			
-		}, // end of success: function()----------
-		error: function(request, status, error){
-			alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		}
-	}); // end of $.ajax()------------------------
-		
-		
-	}//end of showView	 */
-	
 	function goDel(seq_tbl_q,statuscount){
 	var frm = document.delFrm;	
 	var seq_tbl_q = seq_tbl_q;
@@ -163,7 +143,7 @@ $(document).ready(function(){
 		</table>
 	</div>
 </div>
-
+<div align="center" ><button style="" type="button" class="delete btn btn-danger goQ" onClick="javascript:location.href='<%= request.getContextPath() %>/questionBoardAdd.re'">질문하기</button></div>
 <form name="qViewFrm">
 <input type="hidden" name="seq_tbl_q"/>
 </form>

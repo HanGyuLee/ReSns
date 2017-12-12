@@ -97,63 +97,77 @@ function goQReDel(){
 
 
 <tr>
+<td width="10px;"></td>
 <td><img src="<%=request.getContextPath() %>/resources/images/q_ask_icon.png"></td>
-<td  class="q_contentbox" ><span style="padding-right:100px; margin-left:20px; margin-right: 80px;">${getques.q_content}</span></td>
-<td><input id="fk_seq_tbl_q" name="fk_seq_tbl_q" type="text" value="${getques.seq_tbl_q}"/></td>
+<td class="q_contentbox" width="400px;" ><div style="margin-left: 20px; margin-right: 15px;">${getques.q_content}</div></td>
+<td><input id="fk_seq_tbl_q" name="fk_seq_tbl_q" type="hidden" value="${getques.seq_tbl_q}"/></td>
 </tr>
+
 <tr>
-<td colspan="2" align="right"><span style="text-align: right;">${getques.q_date}</span></td>
+<td width="10px;"></td>
+<td colspan="3"><div style="margin-left: 60%;">${getques.q_date}</div></td>
+<td width="10px;"></td>
 </tr>
 
 
 
 <tr style="margin-top: 20px; margin-bottom: 20px;">
-<td colspan="2" align="right">&nbsp;</td>
+<td colspan="5">&nbsp;</td>
 </tr>
 
 
 <tr>
-<td colspan="2" class="a_contentbox" style="padding-left: 50px;">
+<td width="10px;"></td>
+<td colspan="2" class="a_contentbox" style="">
  <c:if test ="${replay.a_content == null}" >
-<span style="text-align:right; margin-left:20px; margin-right: 20px;">아직 답변이 없습니다.</span>
+<div style="text-align:right; margin-right: 15px;">아직 답변이 없습니다.</div>
 </c:if>
  <c:if test ="${replay.a_content != null}" >
-<span style="text-align:right; margin-left:20px; margin-right: 20px;">${replay.a_content}</span>
+<div style="text-align:right; margin-left:10px; margin-right: 15px;">${replay.a_content}</div>
 </c:if>
 </td>
-<td align="right"><img src="<%=request.getContextPath() %>/resources/images/a_board_login_id.png"><input type="hidden" name="fk_login_id" value="${sessionScope.loginUser.login_id}" /></td>
+<td align="right"><div style="margin-left: 10px;"><img src="<%=request.getContextPath() %>/resources/images/a_board_login_id.png"><input type="hidden" name="fk_login_id" value="${sessionScope.loginUser.login_id}" /></div></td>
+<td width="10px;"></td>
 </tr>
+
 <tr>
-<td colspan="2" align="left"><span style="text-align: right;">${replay.a_date}</span></td>
+<td width="10px;"></td>
+<td colspan="2"><span style="margin-left: 5%;">${replay.a_date}</span></td>
+<td width="10px;"></td>
+<td width="10px;"></td>
 </tr>
 
 
 <tr style="margin-top: 20px; margin-bottom: 20px;">
-<td colspan="3" align="right">&nbsp;</td>
+<td colspan="5" align="right">&nbsp;</td>
 </tr>
 
 <c:if test ="${replay.a_content == null && getques.fk_login_id == sessionScope.loginUser.login_id}">
 <tr >
+<td width="10px;"></td>
 <td colspan="2" align="center">
 <div style="margin-left: 10px;"><textarea class="a_content" name="a_content" id="a_content" placeholder="답변을 작성해주세요." style=" height:100px; resize: none;"></textarea>
 </div>
+<td width="10px;"></td>
 </td>
 
 </tr>
+<td width="10px;"></td>
 <tr style="margin-top: 10px; margin-bottom: 20px;">
-<td colspan="2" align="center"> <button type="button" id="q_board_re"  onClick="goQboardRe();" class="delete btn btn-danger">답변 작성</button></td>
+<td colspan="3" align="center"> <button type="button" id="q_board_re"  onClick="goQboardRe();" class="delete btn btn-danger">답변 작성</button></td>
+<td width="10px;"></td>
 </tr>
 </c:if>
 
 
 <c:if test ="${replay.a_content != null && getques.fk_login_id == sessionScope.loginUser.login_id}">
 <tr >
-<td colspan="2" align="center">
+<td colspan="5" align="center">
 </td>
 
 </tr>
 <tr style="margin-top: 10px; margin-bottom: 20px;">
-<td colspan="2" align="center"> <button type="button" id="q_board_re"  onClick="goQReDel();" class="delete btn btn-danger">답변 삭제</button></td>
+<td colspan="5" align="center"> <button type="button" id="q_board_re"  onClick="goQReDel();" class="delete btn btn-danger">답변 삭제</button></td>
 </tr>
 </c:if>
 
@@ -167,7 +181,7 @@ function goQReDel(){
 </div>
 </div>
 
-<input type="text" id="gobackURL" value="돌아갈 주소 들어갈 자리"/>
+<input type="text" id="gobackURL" value="/resns/questionList?currentShowPageNo="${getques.seq_tbl_q}/>
 
 </form>
 

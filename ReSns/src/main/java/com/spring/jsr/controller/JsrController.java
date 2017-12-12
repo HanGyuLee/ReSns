@@ -2,6 +2,8 @@ package com.spring.jsr.controller;
 
 
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -292,6 +294,28 @@ public class JsrController {
 		String seq_tbl_q = req.getParameter("seq_tbl_q");
 		//System.out.println("테스트seq"+seq_tbl_q);
 		
+		int numberck=0;
+		
+		
+		if(seq_tbl_q != null){//사용자가 임의로 seq를 문자로 입력하였을 때 막기
+	    for(int i=0; i<seq_tbl_q.length(); i++) {
+            char ch = seq_tbl_q.charAt(i);
+        
+            if(ch<'0' || ch>'9') {
+    			numberck= 1;
+    			//return "msg.notiles";
+            }
+        }
+		}	
+		if(numberck == 1){
+			req.setAttribute("msg", "비정상적인 경로로 접속하였습니다.");
+			req.setAttribute("loc", "/resns/index.re");
+			return "msg.notiles";	
+		}
+		
+		
+		//문자 입력하였을 때 막기 끝.
+		
 		//답변 가져오기
 		QuestionBoardReplyVO replay = service.getReply(seq_tbl_q);
 		if (replay != null){
@@ -305,6 +329,16 @@ public class JsrController {
 		}
 		//질문 가져오기
 		QuestionBoardVO getques =  service.getQView(seq_tbl_q);	
+		
+		//없는 seq를 검색하였을 때
+		if(getques == null){
+			
+			req.setAttribute("msg", "비정상적인 경로로 접속하였습니다.");
+			req.setAttribute("loc", "/resns/index.re");
+			return "msg.notiles";
+		}
+		//없는 seq를 검색하였을 때 막기 끝.
+		
 		String q_content = getques.getQ_content();
 		q_content =  q_content.replaceAll("\r\n", "<br/>");
 		getques.setQ_content(q_content);
