@@ -101,26 +101,15 @@ var lenNEW = 2; // 더보기... 클릭에 보여줄 상품의 갯수 단위 크�
 								<!-- 검색결과 -->
 <div align="center">
 <c:forEach var="map" items="${searchName}" >
-	 <c:if test="${map.UIMG_PROFILE_FILENAME == null}">
-	  <br/><br/>
-	
-	  <img src="<%=request.getContextPath()%>/resources/images/defaultProfile.png" style="width: 50px; height: 50px;"><br/><br/> 
-				         이름 :${map.LOGIN_NAME}  
-					게시물 : ${map.USER_BOARDCNT}
-					팔로잉 :${map.USER_ING} 
-					필로워: ${map.USER_ED}
-    			
-     <br/><br/>
-     
-	 </c:if> 
-	
-	 <c:if test="${map.UIMG_PROFILE_FILENAME != null}">
+
 	    <img src="<%=request.getContextPath()%>/resources/images/${map.UIMG_PROFILE_FILENAME}" style="width: 50px; height: 50px;"><br/><br/>
 				 이름 :${map.LOGIN_NAME}  
                                     게시물 : ${map.USER_BOARDCNT}
                                     팔로잉 :${map.USER_ING} 
                                    필로워: ${map.USER_ED}
-	  </c:if>
+                                   
+                                   
+                     --------------${searchName}              
 </c:forEach>
 </div>
 	

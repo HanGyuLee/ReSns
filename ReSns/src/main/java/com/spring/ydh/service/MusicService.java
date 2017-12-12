@@ -290,14 +290,8 @@ public class MusicService implements InterMusicService {
 	}
 
 
-/*
-	@Override//댓글쓰기
-	public int addComment(MCommentVO commentvo) {
-		int n = dao.addComment(commentvo);
-		return n;
-	}
-*/
-	
+
+	//댓글TX
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	public int addComment(MCommentVO commentvo) {
 		
@@ -316,7 +310,6 @@ public class MusicService implements InterMusicService {
 	}
 
 
-	
 
 
 

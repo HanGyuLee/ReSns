@@ -10,18 +10,21 @@
 								<!-- 검색후결과물 -->
 <!-- 태그검색  -->
 <resultMap type="HashMap" id="Tag" >
-   <result property="tag_content"    column="A.board_content" javaType="String"/>
-   <result property="seq_tbl_board"  column="A.seq_tbl_board" javaType="String"/>
-   <result property="tag_content"    column="B.tag_content"   javaType="String"/>
-    <result property="bimg_filename" column="C.bimg_filename"   javaType="String"/>
+   <result property="login_name"        column="A.login_name" 		javaType="String"/>
+   <result property="login_id"          column="A.login_id" 		javaType="String"/>
+   <result property="seq_tbl_board"     column="B.seq_tbl_board"    javaType="String"/>
+   <result property="tag_content"       column="C.tag_content"   	javaType="String"/>
+   <result property="bimg_filename"     column="D.bimg_filename"    javaType="String"/>
 </resultMap>
 <select id="searchTag" parameterType="HashMap" resultMap="Tag">
-select A.board_content, A.seq_tbl_board, B.tag_content, C.bimg_filename
-from tbl_tag B left join tbl_board A
-on A.seq_tbl_board = B.seq_tbl_board
-join  tbl_bimage C
-on  A.seq_tbl_board = C.seq_tbl_board
-where lower(B.tag_content) like '%'|| lower(#{search})||'%'
+select A.login_name, A.login_id, B.seq_tbl_board, B.board_content, C.tag_content, D.bimg_filename
+from tbl_login A left join tbl_board B
+on A.login_id = B.fk_login_id
+left join tbl_tag C
+on B.seq_tbl_board = C.seq_tbl_board
+left join tbl_bimage D
+on C.seq_tbl_board = D.seq_tbl_board
+where substr(tag_content,2) = #{search}
 </select>
 
 <!-- 위치검색 -->
@@ -116,17 +119,18 @@ and A.login_status = 1
 select count(*) as cnt
 from
 (
-select tag_content
+select substr(tag_content,2)
 from tbl_tag
-where lower(tag_content) like '%'|| lower(#{search})||'%'
+where substr(tag_content,2) =#{search}
 )
+
 </select> 
 
 <!-- 태그검색결과  -->
 <select id="jTag" parameterType="HashMap" resultType="String">
-select tag_content
+select substr(tag_content,2) as tag_content
 from tbl_tag
-where lower(tag_content) like '%'|| lower(#{search})||'%'
+where substr(tag_content,2) = #{search}
 </select>
 
 <!-- 지도검색총갯수 -->
@@ -343,6 +347,7 @@ from tbl_login A join tbl_remusic B
 on A.login_id = B.re_login_id
 join tbl_music C
 on B.seq_tbl_music = C.seq_tbl_music
+where C.seq_tbl_music = #{seq_tbl_music}
 </select>
 
 

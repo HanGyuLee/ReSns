@@ -21,6 +21,7 @@ $(document).ready(function(){
 검색어결과뷰단Tag
 </head>
 <c:forEach var="map" items="${searchTag}" >
+
 <div align="center">
 <c:if test="${map.BIMG_FILENAME != null}">
 	<img src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" style="width: 400px; height: 300px;"><br/><br/>
@@ -28,6 +29,7 @@ $(document).ready(function(){
 				게시물번호 : ${map.SEQ_TBL_BOARD}     
 			         게시물사진 : ${map.BIMG_FILENAME}
 				게시물내용 :${map.BOARD_CONTENT}
+				${searchTag}
 </c:if>
 
 <c:if test="${map.BIMG_FILENAME == null}" >

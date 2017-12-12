@@ -382,7 +382,7 @@ public class YdhController {
     	if(req.getParameter("login_id").isEmpty() ){
 
     		String msg = "";
-    		String loc = gobackURL;//hidden타입으로 view.jsp에서 목록보기를 눌렀을때 온 값이다.
+    		String loc = gobackURL;
     		req.setAttribute("msg", msg);
     		req.setAttribute("loc", loc);
     		
@@ -409,6 +409,10 @@ public class YdhController {
     	// /WEB-INF/views2/board/addCommentEnd.jsp파일을 생성한다.
     }//addComment()
 	
+    
+    //댓글삭제
+    
+    
 	//글한개보기
 	@RequestMapping(value="/mview.re", method={RequestMethod.GET})
 	public String mview(HttpServletRequest req,HttpSession session){
