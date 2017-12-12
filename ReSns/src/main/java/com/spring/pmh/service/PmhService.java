@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.BoardVO;
 import com.spring.pek.model.ReVO;
+import com.spring.pmh.model.AimageVO;
+import com.spring.pmh.model.AskVO;
 import com.spring.pmh.model.InterPmhDAO;
 
 @Service
@@ -163,6 +165,85 @@ public class PmhService implements InterPmhService {
 	public int getHelpTotalCount1() {
 		int count = pdao.getHelpTotalCount1();
 		return count;
+	}
+
+	@Override
+	public int askWrite(HashMap<String, Object> helpMap) {
+		
+		String fk_seq = (String) helpMap.get("fk_seq");
+		
+		if (fk_seq == null || fk_seq.trim().isEmpty() ) { 
+			// 원글쓰기인 경우
+			int groupno = pdao.getAskGroupMaxno() + 1;
+			helpMap.put("groupno", String.valueOf(groupno));
+		}
+		
+		String newFileName = (String) helpMap.get("newFileName");
+		if (newFileName != null && !newFileName.trim().isEmpty() ) {
+			helpMap.put("aimg_category", 1);
+			int n2 = pdao.insertAskFile(helpMap);
+		}
+		
+		int n1 = pdao.askWrite(helpMap);
+		
+		return n1;
+	}
+
+	@Override
+	public int getAskSeq() {
+		int n = pdao.getAskSeq();
+		return n;
+	}
+
+	@Override
+	public AskVO getAskDetail(String seq) {
+		AskVO avo = pdao.getAskDetail(seq);
+		return avo;
+	}
+
+	@Override
+	public AimageVO getAskAimage(String seq) {
+		AimageVO aivo = pdao.getAskAimage(seq);
+		return aivo;
+	}
+
+	@Override
+	public String getLoginNameById(String fk_login_id) {
+		String name = pdao.getLoginNameById(fk_login_id);
+		return name;
+	}
+
+	@Override
+	public int updateHelpDelete(String seq) {
+		int n = pdao.updateHelpDelete(seq);
+		return n;
+	}
+
+	@Override
+	public int askModify(HashMap<String, Object> helpMap) {
+		
+		String fk_seq = (String) helpMap.get("fk_seq");
+		if (fk_seq == null || fk_seq.trim().isEmpty() ) { 
+			// 원글쓰기인 경우
+			int groupno = pdao.getAskGroupMaxno() + 1;
+			helpMap.put("groupno", String.valueOf(groupno));
+		}
+		
+		String imgCheck = (String) helpMap.get("imgCheck");
+		if (imgCheck != null && imgCheck.equals("1")) {
+			helpMap.put("aimg_category", 1);
+			int n2 = pdao.deleteAskFile(helpMap);
+		}
+		
+		String newFileName = (String) helpMap.get("newFileName");
+		if (newFileName != null && !newFileName.trim().isEmpty() ) {
+			helpMap.put("aimg_category", 1);
+			int n3 = pdao.updateAskFile(helpMap);
+		}
+		
+		int n1 = pdao.askModify(helpMap);
+		
+		return n1;
 	}
 	
 	//////////////////////////////////문의게시판 서비스 끝 ///////////////////////////////////////////

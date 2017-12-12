@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,9 +18,7 @@
 	legend { text-align: center;
 			margin-bottom: 10px auto;
 	}
-	div.buttons { 
-				
-	}
+	div.thumb{ margin-left: 517px; }
 	
 </style>
 </head>
@@ -60,14 +58,16 @@
 <legend>문의 작성하기</legend>
 
 <!-- Select Basic -->
+
 <div class="form-group">
   <label class="col-md-4 control-label" for="ask_cate">카테고리</label>
+  <input type="hidden" id="selectCate" value="${avo.ask_cate}">
   <div class="col-md-4">
     <select id="ask_cate" name="ask_cate" class="form-control">
       <option value="1">회원정보</option>
-      <option value="2">이용관련</option>
-      <option value="3">버그문의</option>
-      <option value="4">기타</option>
+	  <option value="2">이용관련</option>
+	  <option value="3">버그문의</option>
+	  <option value="4">기타</option>
     </select>
   </div>
 </div>
@@ -76,7 +76,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="fk_login_id">작성자</label>  
   <div class="col-md-4">
-  <input id="fk_login_id" name="fk_login_id" type="text" placeholder="" class="form-control input-md" value="${sessionScope.loginUser.login_id}" required="required" readonly>
+  <input id="fk_login_id" name="fk_login_id" type="text" placeholder="" class="form-control input-md" value="${avo.fk_login_id}" required="required" readonly>
     
   </div>
 </div>
@@ -85,7 +85,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="ask_title">제목</label>  
   <div class="col-md-4">
-  <input id="ask_title" name="ask_title" type="text" placeholder="" class="form-control input-md" required="required">
+  <input id="ask_title" name="ask_title" type="text" placeholder="" class="form-control input-md" value="${avo.ask_title}" required="required">
     
   </div>
 </div>
@@ -94,17 +94,29 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="ask_content">문의내용</label>
   <div class="col-md-4">                     
-    <textarea class="form-control" id="ask_content" name="ask_content"></textarea>
+    <textarea class="form-control" id="ask_content" name="ask_content">${avo.ask_content}</textarea>
   </div>
 </div>
 
+<div class="thumb">
+<c:if test="${aivo.aimg_thumb ne null}">
+	<img src="<%= request.getContextPath() %>/resources/files/${aivo.aimg_thumb}" alt="현재 업로드된 사진" title="현재 업로드된 사진"><br>
+</c:if>
+</div>
 <!-- File Button --> 
 <div class="form-group">
   <label class="col-md-4 control-label" for="aimg_category">파일첨부</label>
   <div class="col-md-4">
-    <input id="aimg_category" name="file" class="input-file" type="file">
+    <input id="aimg_category" name="file" class="input-file" type="file"> 파일 업로드를 다시 하시면 기존의 파일은 삭제됩니다.
+    <c:if test="${aivo.aimg_thumb ne null}">
+    	<br>
+   	 		<input id="aimg_deleteCheck" name="aimg_deleteCheck" type="checkbox" > 체크하시면 업로드된 파일을 삭제합니다.
+   	 		<input type="hidden" name="aimg_delete" id="aimg_delete" >
+    </c:if>
   </div>
 </div>
+
+
 
 <!-- Multiple Checkboxes (inline) -->
 <div class="form-group">
@@ -113,7 +125,7 @@
     <label class="checkbox-inline" for="ask_status">
       <input type="checkbox" name="ask_statusCheck" id="ask_statusCheck" value="1">
       <input type="hidden" name="ask_secret" id="ask_secret" >
-      체크하시면 비밀글로 저장됩니다.
+      &nbsp;체크하시면 비밀글로 저장됩니다.
     </label>
   </div>
 </div>
@@ -121,14 +133,14 @@
 	<input type="hidden" name="fk_seq" value="${fk_seq}" />
 	<input type="hidden" name="groupno" value="${groupno}" />
 	<input type="hidden" name="depthno" value="${depthno}" />
-	<input type="hidden" name="seq" value="${seq}" />
+	<input type="text" name="seq" value="${seq}" />
 
 <div align="center" class="buttons">
 		<button type="button" id="listBtn" style="margin-right: 100px;" onclick="goList();">목록</button>
 	
 		<button type="button" id="writeBtn" onclick="goWrite();">작성</button>
 
-		<button type="reset" style="margin-left: 100px;">취소</button>
+		<button type="button" style="margin-left: 100px;" onclick="goReset(this.form);">전부삭제</button>
 </div>
 
 </fieldset>
@@ -139,29 +151,56 @@
 
 <script type="text/javascript">
 
+	window.onload = function(){
+		selectCate();
+	}
+
+	function selectCate() {
+		var cate = document.getElementById("selectCate").value;
+		
+		document.getElementById("ask_cate").options[cate-1].selected = true;
+	}
+
 	function goList() {
 		location.href = "help.re";
 	}
 	
 	function goWrite() {
 		
-		var checked = document.getElementById("ask_statusCheck").checked;
+		var checkedStatus = document.getElementById("ask_statusCheck").checked;
 				
-		if (checked) {
+		if (checkedStatus) {
 			document.getElementById("ask_secret").value = 0;
 		}
 		else {
 			document.getElementById("ask_secret").value = 1;
 		}
 		
+		var checkedImage = document.getElementById("aimg_deleteCheck").checked;
+		
+		if (checkedImage) {
+			document.getElementById("aimg_delete").value = 0;
+		}
+		else {
+			document.getElementById("aimg_delete").value = 1;
+		}
+		
+		
 		var frm = document.getElementById("writeFrm");
 		
 		frm.method = "post";
-		frm.action = "<%= request.getContextPath() %>/helpWriteEnd.re";
+		frm.action = "<%= request.getContextPath() %>/helpModifyEnd.re";
 		frm.submit();
+	}
+	
+	function goReset(frm) {
+		$('[type=text], select , textarea', frm).val('');
+		$('[type=checkbox]:checked', frm).prop('checked', false);
+		document.getElementById("fk_login_id").value = "${avo.fk_login_id}";
 	}
 
 	document.title ="문의게시판 글쓰기 페이지";
+	
 </script>
 </body>
 </html>

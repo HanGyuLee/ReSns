@@ -50,9 +50,20 @@
 								<tr>
 									<td width="10%">${help.seq_tbl_ask}</td>
 									<td width="10%">${help.ask_cate}</td>
-									<td width="10%"></td>
-									<td style="text-align: left;" width="30%">${help.ask_title}&nbsp;
-									<c:if test="${help.ask_newest == 1}">
+									<td width="10%">
+										<c:if test="${help.ask_secret eq 0}">
+											<img src="<%= request.getContextPath() %>/resources/images/lock.png" width="20px"  height="15px"/>
+										</c:if>
+									</td>
+									<td style="text-align: left;" width="30%">
+										<c:if test="${help.ask_depthno eq 0}">
+											<span style="cursor: pointer;" onclick="goDetail('${help.seq_tbl_ask}');">${help.ask_title}</span>
+										</c:if>
+										<c:if test="${help.ask_depthno > 0}">
+											<span style="font-style: italic; padding-left: ${help.ask_depthno*20}px; cursor: pointer;" onclick="goDetail('${help.seq_tbl_ask}');">┗re ${help.ask_title}</span>
+										</c:if>
+									&nbsp;
+									<c:if test="${help.ask_newest eq 1}">
 										<img src="<%= request.getContextPath() %>/resources/images/pmh_newest.png" width="30px"  height="15px"/>
 									</c:if>
 									</td>
@@ -64,7 +75,7 @@
 						
 						<c:if test="${helpList eq null}">
 							<tr>
-								<td colspan="6">내용이 없습니다.</td>
+								<td colspan="6">문의된 내용이 없습니다.</td>
 							</tr>
 						</c:if>
 					</tbody>
@@ -110,8 +121,6 @@
 	    	goSearch();
 	    }
 	}
-	
-	
 	
 	function goDetail(seq) {
 		

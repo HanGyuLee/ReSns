@@ -54,5 +54,27 @@ public interface InterPmhDAO {
 
 	int getHelpTotalCount1(); // 검색이 없는 게시물 총수 구하는 메소드
 
+	int getAskGroupMaxno(); // 그룹번호가 있는 경우 그룹번호를 가지고 오는 메소드
+
+	int askWrite(HashMap<String, Object> helpMap); // 글쓰기 하는 메소드
+
+	int insertAskFile(HashMap<String, Object> helpMap); // 파일이 첨부된 경우 파일을 업로드하는 메소드
+
+	int getAskSeq(); // 예상글번호 가져오기
+
+	AskVO getAskDetail(String seq); // 상세정보 가져오기
+
+	AimageVO getAskAimage(String seq); // 선택한 게시물의 첨부파일 가져오기
+
+	String getLoginNameById(String fk_login_id); // 선택한 아이디에 해당하는 이름 가져오기
+
+	int updateHelpDelete(String seq); // 선택한 게시물을 update 로 삭제하는 메소드
+
+	int updateAskFile(HashMap<String, Object> helpMap); // 선택한 게시물을 수정하는 메소드
+
+	int askModify(HashMap<String, Object> helpMap); // 선택하는 게시물의 첨부파일을 변경하는 메소드
+
+	int deleteAskFile(HashMap<String, Object> helpMap); // 파일 삭제를 선택하는 경우 파일을 삭제하는 메소드
+
 	/////////////////////////////// 문의게시판 DAO 끝 ////////////////////////////////////////
 }

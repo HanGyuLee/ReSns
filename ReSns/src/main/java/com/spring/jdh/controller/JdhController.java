@@ -105,6 +105,7 @@ public class JdhController {
 				
 				// 세션에 저장된 돌아갈 페이지(url)정보를 불러온다.
 				String gobackURL = (String)session.getAttribute("gobackURL");
+				
 				req.setAttribute("gobackURL", gobackURL);
 				
 				session.removeAttribute("gobackURL");
