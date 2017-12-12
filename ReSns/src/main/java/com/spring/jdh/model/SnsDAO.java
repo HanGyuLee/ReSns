@@ -84,14 +84,23 @@ public class SnsDAO implements InterSnsDAO {
 			int s = sqlsession.insert("jdhresns.registerDetail", uvo);
 			return s;
 		}
+
 		
 		// 회원가입
-		/*@Override
+		@Override
 		public int registerImg(MemberImageVO ivo) {
 			int v = sqlsession.insert("jdhresns.registerImg", ivo);
 			return v;
-		}*/
+		}
 
 	
+				// 공지사항 리스트
+				@Override
+				public NoticeVO getNoticeList(NoticeVO noticevo) {
+					
+					NoticeVO noticeList = sqlsession.selectOne("jdhresns.getNoticeList", noticevo);
+					
+					return noticeList;
+				}
 
 }

@@ -85,12 +85,21 @@
 	</insert>
 	
 	<!-- 이미지파일 추가 -->	
-	<!-- <insert id="registerImg" parameterType="com.spring.jdh.model.MemberImageVO">
+	<insert id="registerImg" parameterType="com.spring.jdh.model.MemberImageVO">
 		
 		insert into tbl_uimage(uimg_seq,fk_login_id, uimg_profile_filename, uimg_header_filename,uimg_profile_orgfilename, uimg_header_orgfilename, uimg_profile_filesize, uimg_header_filesize)
 		values(uimg_seq.nextval, #{fk_login_id}, #{uimg_profile_filename}, #{uimg_header_filename}, #{uimg_profile_orgfilename}, #{uimg_profile_filesize}, #{uimg_profile_filesize})
 		
-	</insert> -->
+	</insert>
+	
+	
+	<select id="" parameterType="com.spring.jdh.model.NoticeVO">
+	
+	select count (*)
+	from tbl_notice
+	where seq_tbl_notice = #{seq_tbl_notice}, notice_title = #{notice_title}, notice_date = #{notice_date}, notice_status = #{notice_status}, notice_cate = #{notice_cate}
+	
+	</select>
 	
 
 </mapper>

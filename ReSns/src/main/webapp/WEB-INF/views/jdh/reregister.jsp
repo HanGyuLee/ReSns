@@ -110,7 +110,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="mac">사진등록</label>  
   <div class="col-md-4">
-  <input id="uimg_filename" name="uimg_filename" type="file" class="form-control input-md">
+  <input id="uimg_filename" name="attach" type="file" class="form-control input-md">
   <span class="help-block"></span>  
   </div>
 </div>

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.jdh.model.InterSnsDAO;
 import com.spring.jdh.model.LoginVO;
 import com.spring.jdh.model.MemberImageVO;
+import com.spring.jdh.model.NoticeVO;
 import com.spring.jdh.model.UserVO;
 
 
@@ -74,12 +75,42 @@ public class SnsService implements InterSnsService {
 
 		@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 		@Override
-		public int registerMember(LoginVO lvo, UserVO uvo) throws Throwable {	//, MemberImageVO ivo
+		public int registerMember(LoginVO lvo, UserVO uvo, MemberImageVO ivo) throws Throwable {	//
 			int p = dao.registerMember(lvo);
 			int s = dao.registerDetail(uvo);
-			//int v = dao.registerImg(ivo);
+			int v = dao.registerImg(ivo);
 			
-			return (p + s);	// + v
+			return (p + s + v);	// + v
+		}
+
+		// 공지사항 리스트
+		@Override
+		public NoticeVO noticeList(NoticeVO noticevo) {
+			
+			//LoginVO loginUser = dao.getloginSession(id);
+			
+			NoticeVO noticeList = dao.getNoticeList(noticevo);
+			
+			return noticeList;
+		}
+
+		// 파일첨부가 없다라면 기본이미지파일 넣어주는 
+		@Override
+		public int add_profile(MemberImageVO ivo) {
+			
+			return 0;
+			/*MemberImageVO prof = dao.getAdd_profile(ivo);
+			
+			return prof;*/
+		}
+
+		// 파일첨부가 있다라면
+		@Override
+		public int add_withFile(MemberImageVO ivo) {
+			
+			
+			
+			return 0;
 		}
 
 		
