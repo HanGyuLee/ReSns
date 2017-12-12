@@ -101,5 +101,25 @@
 	
 	</select>
 	
+	
+	
+	<resultMap type="java.util.HashMap" id="NoticeList">
+	
+	  <result property="seq_tbl_notice"   column="seq_tbl_notice"       javaType="String" />
+      <result property="notice_title"     column="notice_title"    		javaType="String" />
+      <result property="notice_date"      column cccccccccccc="notice_date"      	javaType="String" />
+      <result property="notice_status"    column="notice_status"  		javaType="String" />
+      <result property="notice_cate"      column="notice_cate"   	  	javaType="String" />
+      
+	</resultMap>
+	
+	<select id="getNoticeList" resultMap="NoticeList">
+	
+	select
+	seq_tbl_notice, notice_title, to_char(notice_date, 'yyyy-mm-dd hh24') as notice_date, notice_status, notice_cate
+	from tbl_notice
+	
+	</select>
+	
 
 </mapper>

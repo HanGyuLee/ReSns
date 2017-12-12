@@ -423,10 +423,16 @@ public class JdhController {
 			
 			List<HashMap<String, String>> noticeList = null;
 			
+			noticeList = service.getNoticeList();
+			
+			req.setAttribute("noticeList", noticeList);
+			
 			
 			
 			return "jdh/admNotice.tiles";
 		}
+		
+		
 		
 		
 }

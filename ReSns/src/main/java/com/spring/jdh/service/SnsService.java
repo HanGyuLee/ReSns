@@ -1,6 +1,7 @@
 package com.spring.jdh.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,16 +84,7 @@ public class SnsService implements InterSnsService {
 			return (p + s + v);	// + v
 		}
 
-		// 공지사항 리스트
-		@Override
-		public NoticeVO noticeList(NoticeVO noticevo) {
-			
-			//LoginVO loginUser = dao.getloginSession(id);
-			
-			NoticeVO noticeList = dao.getNoticeList(noticevo);
-			
-			return noticeList;
-		}
+		
 
 		// 파일첨부가 없다라면 기본이미지파일 넣어주는 
 		@Override
@@ -111,6 +103,15 @@ public class SnsService implements InterSnsService {
 			
 			
 			return 0;
+		}
+
+		// 공지사항 리스트 불러오기
+		@Override
+		public List<HashMap<String, String>> getNoticeList() {
+			
+			 List<HashMap<String, String>> noticeList = dao.getNoticeList();
+			
+			return noticeList;
 		}
 
 		

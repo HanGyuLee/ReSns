@@ -30,14 +30,14 @@
 						</tr>
 					</thead>
 					<tbody>					
-						<c:if test="${not empty list}">
+						<c:if test="${not empty noticeList}">
 						<c:forEach var="vo" items="${noticeList}" varStatus="status">
 						<tr>
-							<td>${jdhresns.seq_tbl_notice}</td>
-							<td>${jdhresns.notice_title}</td>
-							<td>${jdhresns.notice_date}</td>
-							<td>${jdhresns.notice_status}</td>
-							<td>${jdhresns.notice_cate}</td>
+							<td>${vo.seq_tbl_notice}</td>
+							<td>${vo.notice_title}</td>
+							<td>${vo.notice_date}</td>
+							<td>${vo.notice_status}</td>
+							<td>${vo.notice_cate}</td>
 							<td><p data-placement="top" data-toggle="tooltip"
 									title="Edit">
 								<button class="btn btn-primary btn-xs" data-title="Edit"

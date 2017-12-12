@@ -1,6 +1,7 @@
 package com.spring.jdh.model;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,14 @@ public class SnsDAO implements InterSnsDAO {
 				public NoticeVO getNoticeList(NoticeVO noticevo) {
 					
 					NoticeVO noticeList = sqlsession.selectOne("jdhresns.getNoticeList", noticevo);
+					
+					return noticeList;
+				}
+
+				@Override
+				public List<HashMap<String, String>> getNoticeList() {
+					
+					 List<HashMap<String, String>> noticeList = sqlsession.selectList("jdhresns.getNoticeList");
 					
 					return noticeList;
 				}

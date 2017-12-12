@@ -1,6 +1,7 @@
 package com.spring.jdh.model;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface InterSnsDAO {
 	
@@ -25,6 +26,8 @@ public interface InterSnsDAO {
 	NoticeVO getNoticeList(NoticeVO noticevo);	// 공지사항 리스트
 
 	int registerImg(MemberImageVO ivo);	// 회원가입(이미지)
+
+	List<HashMap<String, String>> getNoticeList();	// 공지사항 리스트 불러오기 
 	
 	
 
