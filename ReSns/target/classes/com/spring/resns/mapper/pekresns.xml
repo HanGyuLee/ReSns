@@ -19,6 +19,28 @@
  		<result property="BIMG_FILENAME" 	column="bimg_filename" 	javaType="String" />
 	</resultMap>
 	<select id="getBoardList" resultMap="getBoardListMap">
+		
+	select B.seq_tbl_board, B.board_heart, B.fk_login_id, B.board_content, B.board_time, B.board_recnt, I.bimg_filename
+		from tbl_board B left join tbl_bimage I
+		on B.seq_tbl_board = I.seq_tbl_board
+		where B.board_status = 0
+	order by B.board_heart desc
+	
+	</select>
+	
+	
+	<!-- 인기 리스트 보기2 -->
+	<resultMap type="java.util.HashMap" id="getBoardListMap2">
+		<result property="RNO" 	column="rno" 	javaType="String" />
+ 		<result property="SEQ_TBL_BOARD" 	column="seq_tbl_board" 	javaType="String" />
+ 		<result property="BOARD_HEART" 	column="board_heart" 	javaType="String" />
+ 		<result property="FK_LOGIN_ID" 	column="fk_login_id" 	javaType="String" />
+ 		<result property="BOARD_CONTENT" 	column="board_content" 	javaType="String" />
+ 		<result property="BOARD_TIME" 	column="board_time" 	javaType="String" />
+ 		<result property="BOARD_RECNT" 	column="board_recnt" 	javaType="String" />
+ 		<result property="BIMG_FILENAME" 	column="bimg_filename" 	javaType="String" />
+	</resultMap>
+	<select id="getBoardList2" resultMap="getBoardListMap2">
 	
 	
 		select rno, seq_tbl_board, board_heart, fk_login_id, board_content, board_time, board_recnt, bimg_filename
@@ -165,20 +187,22 @@
 		insert into tbl_re (re_seq, seq_tbl_board, re_id, re_content, re_date, re_status, re_fk_seq, re_groupno, re_depthno)
 		values (re_seq.nextval, #{seq_tbl_board}, #{login_id}, #{re_content}, sysdate, default, #{re_seq}, #{re_groupno}, 1)
 	</insert>
-	
+	<!-- 원글 삭제하기 -->
 	<delete id="deleteReply" parameterType="HashMap">
 		delete tbl_re
 		where re_groupno = #{re_groupno}
 	</delete>
+	<!-- 대댓글 삭제하기 -->
 	<delete id="deleteReRe" parameterType="HashMap">
 		delete tbl_re
 		where re_seq = #{re_seq}
 	</delete>
+	<!-- 댓글 갯수 감소하기 -->
 	<update id="deleteReCnt" parameterType="HashMap">
 		update tbl_board set board_recnt = board_recnt -1
 		where seq_tbl_board = #{seq_tbl_board}
 	</update>
-	
+	<!-- 대댓글 달린 원글 지웠을때 지운 댓글 갯수만큼 감소하기 -->
 	<select id="replyCount" parameterType="HashMap" resultType="String">
 		select count(*)
 			from tbl_re
@@ -189,5 +213,70 @@
 		where seq_tbl_board = #{seq_tbl_board}
 	</update>
 
+
+
+	<!-- 글쓰기 -->
+	<insert id="addBoard" parameterType="HashMap" >
+		insert into tbl_board (seq_tbl_board, fk_login_id, board_content, board_status, board_time)
+			values (seq_tbl_board.nextval, #{login_id}, #{board_content}, #{board_status}, sysdate)
+	</insert>
+	<!-- 가장 최근에 쓴 글번호 알기 -->
+	<select id="maxSeq" resultType="int">
+		select max(seq_tbl_board)
+		from tbl_board
+	</select>
+	
+	<!-- 태그 넣기 -->
+	<insert id="addTag" parameterType="HashMap">
+		insert into tbl_tag(seq_tbl_tag, seq_tbl_board, tag_content)
+		values (seq_tbl_tag.nextval, #{maxseq}, #{tag})
+	</insert>
+	
+	<!-- 위치 넣기 -->
+	<insert id="addLoc" parameterType="HashMap">
+		insert into tbl_map (fk_seq_tbl_board, map_we, map_ky, map_name)
+		values(#{maxseq}, #{map_we}, #{map_ky}, #{map_name})
+	</insert>
+	
+	<!-- 이미지 넣기 -->
+	<insert id="addBimage" parameterType="HashMap">
+		insert into tbl_bimage (bimg_seq, seq_tbl_board, bimg_filename, bimg_orgfilename, bimg_filesize)
+		values (bimg_seq.nextval, #{maxseq}, #{newFileName}, #{originalFilename}, #{fileSize})
+	</insert>
+	
+	
+	<!-- 글삭제하기(스테이터스 3으로 변경) -->
+	<update id="updateBoard" parameterType="String">
+		update tbl_board set board_status = 3
+		where seq_tbl_board = #{seq_tbl_board}
+	</update>
+	<!-- 한 게시글의 태그 모두 삭제 -->
+	<delete id="deleteTag" parameterType="String">
+		delete tbl_tag
+		where seq_tbl_board = #{seq_tbl_board}
+	</delete>
+	<!-- 위치 삭제 -->
+	<delete id="deleteMap" parameterType="String">
+		delete tbl_map
+		where fk_seq_tbl_board = #{seq_tbl_board}
+	</delete>
+	<!-- 한 게시글의 하트 모두 삭제 -->
+	<delete id="deleteHeartAll" parameterType="String">
+		delete tbl_heart
+		where fk_seq_tbl_board = #{seq_tbl_board}
+	</delete>
+	<!-- 한 게시글의 댓글 모두 삭제 -->
+	<delete id="deleteReAll" parameterType="String">
+		delete tbl_re
+		where seq_tbl_board = #{seq_tbl_board}
+	</delete>
+	
+	
+	<!-- 지울 파일 이름 알아오기 -->
+	<select id="fileName" parameterType="String" resultType="String">
+		select bimg_filename
+		from tbl_bimage
+		where seq_tbl_board = #{seq_tbl_board}
+	</select>
 
 </mapper>

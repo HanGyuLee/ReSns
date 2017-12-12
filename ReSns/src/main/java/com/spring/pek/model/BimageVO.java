@@ -1,5 +1,7 @@
 package com.spring.pek.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class BimageVO {
 	
 	
@@ -8,6 +10,9 @@ public class BimageVO {
 	String bimg_filename; /* 파일이름 */
 	String bimg_orgfilename; /* 파일원래이름 */
 	String bimg_filesize;	// 파일 사이즈
+	
+	
+	private MultipartFile attach;
 	
 	
 	public BimageVO() {}
@@ -61,6 +66,13 @@ public class BimageVO {
 		this.bimg_filesize = bimg_filesize;
 	}
 	
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
 	
 	
 	

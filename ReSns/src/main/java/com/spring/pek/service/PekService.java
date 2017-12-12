@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.BoardDAO;
 import com.spring.pek.model.HeartVO;
 import com.spring.pek.model.MapVO;
@@ -251,6 +252,85 @@ public class PekService implements InterPekService {
 		int n = dao.deleteReply(map);
 		
 		return n;
+	}
+
+	
+	// 위치 정보 추가하기
+	@Override
+	public int addLoc(HashMap<String, String> map) {
+		
+		int result = dao.addLoc(map);
+		
+		return result;
+	}
+
+	
+	// 글쓰기
+	@Override
+	public int addBoard(HashMap<String, String> map) {
+		
+		int result = dao.addBoard(map);
+		
+		return result;
+	}
+
+	
+	// 방금 쓴 글번호 알기
+	@Override
+	public int maxSeq() {
+		
+		int maxSeq = dao.maxSeq();
+		
+		return maxSeq;
+	}
+
+	
+	// 해시태그 넣기
+	@Override
+	public int addTag(HashMap<String, String> map) {
+		
+		int tagResult = dao.addTag(map);
+		
+		return tagResult;
+	}
+	
+	
+
+	// 사진 첨부
+	@Override
+	public void addBimage(HashMap<String, String> map) {
+		
+		dao.addBimage(map);
+		
+		
+	}
+
+	// 게시글(위치,태그,하트,덧글) 삭제
+	@Override
+	public int deleteAll(String seq_tbl_board) {
+		
+		int n = 0;
+		
+		try {
+			
+			n = dao.deleteAll(seq_tbl_board);
+			
+			
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
+		return n;
+	}
+
+	
+	// 지울 이미지 이름 알아오기
+	@Override
+	public String fileName(String seq_tbl_board) {
+		
+		String fileName = dao.fileName(seq_tbl_board);
+		
+		return fileName;
 	}
 
 }

@@ -9,6 +9,10 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-ui.js"></script> 
+
+<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 
 <title>Insert title here</title>
@@ -108,6 +112,8 @@ function showDetail(statuscount) {
 					
 					$.each(data, function(entryIndex, entry){
 						
+						var entryIndex = entryIndex;
+						
 						var re_seq = entry.re_seq;
 						var re_id = entry.re_id;
 						var re_content = entry.re_content;
@@ -125,13 +131,19 @@ function showDetail(statuscount) {
 						if(re_depthno == 0) {
 							result += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
 							result += "<span style='font-weight: bold;'>"+login_name+"</span>";
+							result += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
 							result += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' />";
+							result += "</a>";
 							
 							if ('${sessionScope.loginUser.login_id}' == re_id){
 								result +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px; cursor: pointer;' align='right' />";
 							}
 							
-							result += "<img src='resources/images/reoption.png' align='right' style='width: 15px; height: 15px; cursor: pointer;' onclick='writeReRe("+statuscount+","+re_groupno+","+re_seq+")' /><br/>";
+							result += "<img src='resources/images/reoption.png' align='right' style='width: 15px; height: 15px; cursor: pointer;' onclick='runEffect("+entryIndex+")' /><br/>";
+							result += "<div id='reReply"+entryIndex+"'>";
+							result += "<input type='text' id='reReValue"+entryIndex+"' />";
+							result += "<button onclick='writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+")'>입력</button>";
+							result += "</div>";
 							result += re_content;
 						}
 						else if (re_depthno == 1) {
@@ -142,10 +154,12 @@ function showDetail(statuscount) {
 							result += "<span style='font-weight: bold;'>"+login_name+"</span>";
 							
 							if ('${sessionScope.loginUser.login_id}' == re_id){
-								result +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+statuscount+")' style='width: 15px; height: 15px;' align='right' />";
+								result +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px;' align='right' />";
 							}
 							
+							result += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
 							result += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' /><br/>";
+							result += "</a>";
 							result += "<div style='margin-left: 20px;'>"+re_content+"</div>";
 							result += "</div>";
 							
@@ -154,7 +168,7 @@ function showDetail(statuscount) {
 						
 					});
 				}
-					
+				
 				$("#reList"+statuscount).html(result);
 			
 			
@@ -191,7 +205,9 @@ function showTag(statuscount) {
 						var seq_tbl_tag = entry.seq_tbl_tag;
 						var tag_content = entry.tag_content;
 						
-						result += "<a href='/resns/searchEndTag.re?search="+tag_content+"'>";
+						var sub_tag_content = tag_content.substring(1);
+
+						result += "<a href='/resns/searchEndTag.re?search="+sub_tag_content+"'>";
 						result += "<span style='font-weight: bold;'>"+tag_content+"</span>";
 						result += "</a>";
 
@@ -245,6 +261,12 @@ function addHeart(statuscount) {
 	var form_data = {"fk_login_id" : $("#fk_login_id"+statuscount).val(),
 					"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val()};
 	
+	if (${sessionScope.loginUser == null}) {
+		
+		location.href="/resns/addHeart.re";
+		
+	}
+	
 	$.ajax ({
 		
 		url: "/resns/addHeart.re",
@@ -276,6 +298,12 @@ function addHeart(statuscount) {
 function deleteHeart(statuscount) {
 	
 	var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+	
+	if (${sessionScope.loginUser == null}) {
+		
+		location.href="/resns/deleteHeart.re";
+		
+	}
 	 
 	 swal({
 		  title: "취소하시겠습니까?",
@@ -346,54 +374,59 @@ function heartCounting(statuscount) {
 
 function writeRe(statuscount) {
 	
-	var form_data = {"re_content" : $("#re_content"+statuscount).val(),
-					"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
 	
-	
-	$.ajax({
+	if (${sessionScope.loginUser != null}) {
 		
-		url: "/resns/writeReply.re",
-		type: "GET",
-		data: form_data,
-		dataType: "JSON",
-		success: function(data) {
+		var form_data = {"re_content" : $("#re_content"+statuscount).val(),
+						 "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+
+		$.ajax({
 			
-			swal(data.msg);
+			url: "/resns/writeReply.re",
+			type: "GET",
+			data: form_data,
+			dataType: "JSON",
+			success: function(data) {
+				
+				swal(data.msg);
+				
+				$("#re_content"+statuscount).val("");
+				
+				showRe(statuscount);
+				reCounting(statuscount);
+			}, error: function() {
+				
+			}
 			
-			$("#re_content"+statuscount).val("");
-			
-			showRe(statuscount);
-			reCounting(statuscount);
-		}, error: function() {
-			
-		}
-		
-	});
+		});
+	}
+	else if (${sessionScope.loginUser == null}) {
+		location.href="/resns/writeReply.re";
+	}
 }
 
-function writeReRe(statuscount, re_groupno, re_seq) {
+function writeReRe(entryIndex, statuscount, re_groupno, re_seq) {
 	
- 	swal({
-		  title: "An input!",
-		  text: "Write something interesting:",
-		  type: "input",
-		  showCancelButton: true,
-		  closeOnConfirm: false,
-		  inputPlaceholder: "Write something"
-		}, function (inputValue) {
-		  if (inputValue === false) return false;
-		  if (inputValue === "") {
-		    swal.showInputError("You need to write something!");
-		    return false
-		  }
-		  swal("Nice!", "You wrote: " + inputValue, "success");
-		});
+	var rereValue = $("#reReValue"+entryIndex).val();
+	
+	if (${sessionScope.loginUser == null}) {
+		
+		location.href="/resns/writeReRe.re";
+		
+	}
+	
+	
+	if ($.trim(rereValue) == "") {
+		
+		swal("내용을 입력하세요.");
+		
+		event.preventDefault();
+		
+	}
+	
 
-
-		 
-			  
-	 /*  var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
-				"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : inputValue
+	var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
+				"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue
 				};
 	  
 	  $.ajax({
@@ -404,7 +437,7 @@ function writeReRe(statuscount, re_groupno, re_seq) {
 		  dataType: "JSON",
 		  success: function(data) {
 			  
-			swal(data.msg, "", "success");
+			swal(data.msg);
 			  
 			showRe(statuscount);
 			reCounting(statuscount);
@@ -414,8 +447,7 @@ function writeReRe(statuscount, re_groupno, re_seq) {
 		  }
 		  
 		  
-	  }); */
-			  
+	  }); 
 }
 
 
@@ -472,12 +504,23 @@ function deleteRe(re_seq, re_groupno, re_depthno, statuscount) {
 	});
 	
 }
+
+
+function runEffect(entryIndex) {
+
+    // Most effect types need no options passed by default
+    var options = {};
+    
+    // Run the effect
+   $( "#reReply"+entryIndex ).toggle( "blind", options, 500 ); 
+  };
  
 </script>
+
 </head>
 <body>
-<link rel="stylesheet"
-		href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+
 	<section> <c:forEach items="${boardList}" var="map"
 		varStatus="status">
 
@@ -521,31 +564,40 @@ function deleteRe(re_seq, re_groupno, re_depthno, statuscount) {
 											style="width: 16px; height: 16px;" /> <span
 											id="showLoc${status.count}"></span>
 										<c:if test="${loginUser.login_id == map.FK_LOGIN_ID}">
+											<a href="/resns/deleteBoard.re?seq_tbl_board=${map.SEQ_TBL_BOARD}">
 											<img
 												src="<%=request.getContextPath()%>/resources/images/delete.png"
 												style="width: 18px; height: 18px;" align="right" />
+											</a>	
 										</c:if>
-										<img
-											src="<%=request.getContextPath()%>/resources/images/report.png"
-											style="width: 18px; height: 18px;" align="right" /> <img
-											src="<%=request.getContextPath()%>/resources/images/hearted.png"
-											id="hearted${status.count}"
-											style="width: 18px; height: 18px; cursor: pointer;"
-											align="right" onclick="deleteHeart('${status.count}');" /> <img
-											src="<%=request.getContextPath()%>/resources/images/heart.png"
-											id="heart${status.count}"
-											style="width: 18px; height: 18px; cursor: pointer;"
-											align="right" onclick="addHeart('${status.count}');" />
-											<span id="heartCnt${status.count}" style="font-weight: bold; font-size: 9pt;"></span> 
-											<br /> <span style="line-height: 180%;">${map.BOARD_CONTENT}</span><br />
+										<%-- <c:if test="${loginUser.login_id != null}"> --%>
+											<a href="/resns/reportingBoard.re?fk_login_id=${map.FK_LOGIN_ID}&seq_tbl_board=${map.SEQ_TBL_BOARD}">
+												<img
+													src="<%=request.getContextPath()%>/resources/images/report.png"
+													style="width: 18px; height: 18px;" align="right" /> 
+											</a>	
+											<img
+												src="<%=request.getContextPath()%>/resources/images/hearted.png"
+												id="hearted${status.count}"
+												style="width: 18px; height: 18px; cursor: pointer;"
+												align="right" onclick="deleteHeart('${status.count}');" /> 
+											<img
+												src="<%=request.getContextPath()%>/resources/images/heart.png"
+												id="heart${status.count}"
+												style="width: 18px; height: 18px; cursor: pointer;"
+												align="right" onclick="addHeart('${status.count}');" />
+										<%-- </c:if>		 --%>
+										<span id="heartCnt${status.count}" style="font-weight: bold; font-size: 9pt;"></span>
+										<br /> <span style="line-height: 180%;">${map.BOARD_CONTENT}</span><br />
 										<br />
 										<div id="tagList${status.count}"></div>
 									</div>
 									<div
 										style="border: 1px solid purple; width: 30%; height: 120px; float: right;">
-
-									<button onclick="writeRe('${status.count}');">입력</button>
-									<input type="text" id="re_content${status.count}" />
+									<%-- <c:if test="${loginUser.login_id != null}"> --%>
+										<button onclick="writeRe('${status.count}');">입력</button>
+										<input type="text" id="re_content${status.count}" />
+									<%-- </c:if> --%>	
 
 									</div>
 									

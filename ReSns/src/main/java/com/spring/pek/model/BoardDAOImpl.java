@@ -6,6 +6,9 @@ import java.util.List;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class BoardDAOImpl implements BoardDAO {
@@ -202,6 +205,10 @@ public class BoardDAOImpl implements BoardDAO {
 			
 			n2 = sqlsession.update("pekresns.deleteReCntByGroupno", map);
 			
+			if(n1+n2 > 0) {
+				n = 1;
+			}
+			
 
 		}
 		else {	// 대댓글 지우기
@@ -210,14 +217,108 @@ public class BoardDAOImpl implements BoardDAO {
 			
 			n2 = sqlsession.update("pekresns.deleteReCnt", map);
 			
-		}
-		
-		if (n1+n2 == 2) {
-			n = 1;
+			
+			if (n1+n2 == 2) {
+				n = 1;
+
+			}
 		}
 		
 		
 		return n;
+	
+	}
+
+	
+	// 글쓰기
+	@Override
+	public int addBoard(HashMap<String, String> map) {
+		
+		int result = sqlsession.insert("pekresns.addBoard", map);
+		
+		return result;
+	}
+
+	
+	// 방금 쓴 글번호 알기
+	@Override
+	public int maxSeq() {
+		
+		int maxSeq = sqlsession.selectOne("pekresns.maxSeq");
+		
+		return maxSeq;
+	}
+
+	
+	// 해시태그 넣기
+	@Override
+	public int addTag(HashMap<String, String> map) {
+		
+		String tag_content = map.get("tag_content");
+		
+		String[] tagList = tag_content.split(",");
+		
+		for (int i=0; i<tagList.length; i++) {
+			
+			map.put("tag", tagList[i]);
+			sqlsession.insert("pekresns.addTag", map);
+		}
+		
+		return 1;
+	}
+
+	
+	// 위치 추가하기
+	@Override
+	public int addLoc(HashMap<String, String> map) {
+		
+		int result = sqlsession.insert("pekresns.addLoc", map);
+		
+		return result;
+	}
+
+	
+	// 파일첨부
+	@Override
+	public void addBimage(HashMap<String, String> map) {
+		
+		sqlsession.insert("pekresns.addBimage", map);
+		
+	}
+
+	// 게시글(위치,태그,하트,덧글) 삭제
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int deleteAll(String seq_tbl_board) throws Throwable {
+		
+		int n = 0;
+		
+		sqlsession.delete("pekresns.deleteTag", seq_tbl_board);
+		
+		sqlsession.delete("pekresns.deleteMap", seq_tbl_board);
+		
+		sqlsession.delete("pekresns.deleteHeartAll", seq_tbl_board);
+		
+		sqlsession.delete("pekresns.deleteReAll", seq_tbl_board);
+		
+		int n1 = sqlsession.update("pekresns.updateBoard", seq_tbl_board);
+		
+		if (n1 == 1)
+			n=1;
+		
+		
+		return n;
+	}
+
+	
+	
+	// 지울 파일 이름 알아오기 
+	@Override
+	public String fileName(String seq_tbl_board) {
+		
+		String fileName = sqlsession.selectOne("pekresns.fileName", seq_tbl_board);
+		
+		return fileName;
 	}
 
 }

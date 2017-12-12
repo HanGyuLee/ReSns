@@ -36,4 +36,18 @@ public interface BoardDAO {
 
 	int deleteReply(HashMap<String, String> map);		// 댓글 삭제
 
+	int addBoard(HashMap<String, String> map);		// 글쓰기
+
+	int maxSeq();		// 방금 쓴 글번호 알기
+
+	int addTag(HashMap<String, String> map);		// 태그 넣기
+
+	int addLoc(HashMap<String, String> map);	// 위치 추가
+
+	void addBimage(HashMap<String, String> map);	// 파일첨부
+
+	int deleteAll(String seq_tbl_board) throws Throwable;		// 게시글(위치,태그,하트,덧글) 삭제
+
+	String fileName(String seq_tbl_board);		// 지울 파일 이름 알아오기
+
 }

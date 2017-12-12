@@ -3,6 +3,7 @@ package com.spring.pek.service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.HeartVO;
 import com.spring.pek.model.MapVO;
 import com.spring.pek.model.ReVO;
@@ -40,5 +41,19 @@ public interface InterPekService {
 	int writeReRe(HashMap<String, String> map);		// 대댓글 쓰기
 
 	int deleteReply(HashMap<String, String> map);		// 댓글 삭제
+
+	int addLoc(HashMap<String, String> map);		// 위치 추가하기
+
+	int addBoard(HashMap<String, String> map);		// 글쓰기
+
+	int maxSeq();		// 방금 쓴 글번호 알기
+
+	int addTag(HashMap<String, String> map);		// 해시태그
+
+	void addBimage(HashMap<String, String> map);		// 사진 입력
+
+	int deleteAll(String seq_tbl_board);		// 게시글(위치,태그,하트,덧글) 삭제
+
+	String fileName(String seq_tbl_board);		// 지울 이미지 이름 알아오기
 
 }

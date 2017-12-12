@@ -1,29 +1,34 @@
 package com.spring.pek.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.spring.common.FileManager;
 import com.spring.jdh.model.LoginVO;
-import com.spring.pek.model.HeartVO;
-import com.spring.pek.model.MapVO;
-import com.spring.pek.model.ReVO;
-import com.spring.pek.model.TagVO;
+import com.spring.pek.model.BimageVO;
 import com.spring.pek.service.InterPekService;
 
 @Controller
+@Component
 public class PekController {
 	
 	@Autowired
 	private InterPekService service;
+	
+	@Autowired
+	private FileManager fileManager;
 	
 	// 글 목록 보기 (인기페이지)
 	@RequestMapping(value = "/index.re", method = {RequestMethod.GET})
@@ -147,55 +152,153 @@ public class PekController {
 	@RequestMapping(value = "/writeBoard.re", method = {RequestMethod.GET})
 	public String writeBoard() {
 		
-		// 로그인 체크
-		// 게시물 insert 메소드(비공개/공개 구분)
-		// 맵 insert 메소드
-		// 태그 insert 메소드
-		// 게시물 이미지 insert 메소드
-		
-		return "";
+		return "/pek/writeBoard.tiles2";
 	}
 	
 	// 글쓰기 완료
-	@RequestMapping(value = "/writeBoardEnd.re", method = {RequestMethod.GET})
-	public String writeBoardEnd() {
+	@RequestMapping(value = "/writeBoardEnd.re", method = {RequestMethod.POST})
+	public String writeBoardEnd(BimageVO bimagevo, HttpServletRequest req, HttpSession session) {
 		
-		// 
+		String map_we = req.getParameter("map_we");
+		String map_ky = req.getParameter("map_ky");
+		String map_name = req.getParameter("map_name");
 		
-		return "";
+		//System.out.println("경도 위도 위치: "+map_we+map_ky+map_name);
+		
+		String board_status = req.getParameter("board_status");
+		String board_content = req.getParameter("board_content");
+		String tag_content = req.getParameter("tag_content");
+		
+		//System.out.println("태그내용: "+tag_content);
+		
+		//String bimg_orgfilename = req.getParameter("bimg_orgfilename");
+		
+		//System.out.println("파일이름: "+bimg_orgfilename);
+		
+		String loc = req.getParameter("loc");
+		
+		//System.out.println("위치켜기: "+loc);
+		
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();
+		
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("map_we", map_we);
+		map.put("map_ky", map_ky);
+		map.put("map_name", map_name);
+		map.put("board_status", board_status);
+		map.put("board_content", board_content);
+		map.put("tag_content", tag_content);
+		map.put("login_id", login_id);
+		
+		
+		int boardResult = service.addBoard(map);
+		
+		if (boardResult == 1) {
+			
+			int maxSeq = service.maxSeq();
+			
+			map.put("maxseq", String.valueOf(maxSeq));        
+			
+			if (!tag_content.trim().isEmpty()) {		// 해시태그를 썼다면	
+				service.addTag(map);
+			}
+			
+			if (Integer.parseInt(loc) == 1) {		// 위치를 켰다면
+				service.addLoc(map);
+			}
+			
+			if (!bimagevo.getAttach().isEmpty()) {	// 파일이 있다면
+				
+				//System.out.println("파일: "+bimagevo.getAttach());
+				String root = session.getServletContext().getRealPath("/");
+				String path = root + "resources"+File.separator+"images";
+				
+				
+				String newFileName = "";
+				
+				byte[] bytes = null;
+				
+				long fileSize = 0;
+				
+				
+				try {
+						bytes = bimagevo.getAttach().getBytes();
+					    // getBytes()는 첨부된 파일을 바이트단위로 파일을 다 읽어오는 것이다. 
+				   
+						newFileName = fileManager.doFileUpload(bytes, bimagevo.getAttach().getOriginalFilename(), path);
+						// 이것이 파일을 업로드 해주는 것이다.
+						// boardvo.getAttach().getOriginalFilename() 은 첨부된 파일의 실제 파일명(문자열)을 얻어오는 것이다. 
+						
+					
+						map.put("newFileName", newFileName);
+						// WAS(톰캣)에 저장될 파일명(20161121324325454354353333432.png)
+						
+						map.put("originalFilename", bimagevo.getAttach().getOriginalFilename());
+						// -- 진짜 파일명(강아지.png)   
+						// 사용자가 파일을 업로드 하거나 파일을 다운로드 할때 사용되어지는 파일명
+						
+						fileSize = bimagevo.getAttach().getSize();
+						// 첨부한 파일의 파일크기인데 리턴타입이 long 타입이다.
+						
+						map.put("fileSize", String.valueOf(fileSize));
+						// 첨부한 파일의 크기를 String 타입으로 변경해서 저장함.
+						
+				   } catch (Exception e) {
+						
+						e.printStackTrace();
+				   }
+				
+				
+				service.addBimage(map);
+			}
+
+		}
+				
+		return "/pek/writeBoardEnd.tiles";
+			
 	}
+
 	
-	// 글삭제 요청
+	// 글삭제
 	@RequestMapping(value = "/deleteBoard.re", method = {RequestMethod.GET})
-	public String deleteBoard() {
+	public String requireLoginPEK_deleteBoard(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
 		
-		// 로그인 체크
-		// 게시물 delete 메소드
-		// 맵 delete 메소드
-		// 태그 delete 메소드
-		// 태그 delete 메소드
-		// 게시물 이미지 delete 메소드
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
 		
-		return "";
-	}
-	
-	// 글삭제 완료
-	@RequestMapping(value = "/deleteBoardEnd.re", method = {RequestMethod.GET})
-	public String deleteBoardEnd() {
+		//System.out.println(seq_tbl_board);
 		
-		// 
+		
+		/*int n = service.deleteAll(seq_tbl_board);
+		
+		if (n == 1) {
+			
+		}*/
+		
+		
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "resources"+File.separator+"images";
+		
+		System.out.println(path);
+		
+		String fileName = service.fileName(seq_tbl_board);
+		
+		System.out.println(fileName);
+		
+		//System.out.println(n);
 		
 		return "";
 	}
 	
 	// 덧글 쓰기
 	@RequestMapping(value = "/writeReply.re", method = {RequestMethod.GET})
-	public String writeReply(HttpServletRequest req, HttpSession session) {
-		
+	public String requireLoginPEK_writeReply(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
+
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();	
 		String seq_tbl_board = req.getParameter("seq_tbl_board");
 		String re_content = req.getParameter("re_content");
-		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
-		String login_id = loginUser.getLogin_id();
 		
 		String maxGroupno = service.maxGroupno(); 
 		
@@ -219,25 +322,17 @@ public class PekController {
 			
 			req.setAttribute("str_writeReply", str_writeReply);
 			
-			return "writeReplyJSON.notiles";
-			
-		}
-		else {
-			
-			String msg = "댓글 쓰기에 실패하였습니다.";
-			String loc = "javascript:history.back();";
-			
-			req.setAttribute("msg", msg);
-			req.setAttribute("loc", loc);
-			
-			return "msg.notiles";
+			System.out.println("====> 댓글insert 함");
 
-		}
+		}	
+		
+		return "writeReplyJSON.notiles";
 	}
+		
 	
 	// 대댓글 쓰기
 	@RequestMapping(value = "/writeReRe.re", method = {RequestMethod.GET})
-	public String writeReRe(HttpServletRequest req, HttpSession session) {
+	public String requireLoginPEK_writeReRe(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
 		
 		String re_seq = req.getParameter("re_seq");
 		String re_groupno = req.getParameter("re_groupno");
@@ -259,6 +354,8 @@ public class PekController {
 		JSONObject jsonObj = new JSONObject();
 		
 		if (n == 1) {
+			
+			
 			
 			jsonObj.put("msg", "댓글 쓰기에 성공하였습니다.");
 			
@@ -330,7 +427,7 @@ public class PekController {
 	
 	// 하트
 	@RequestMapping(value = "/addHeart.re", method = {RequestMethod.GET})
-	public String addHeart(HttpServletRequest req, HttpSession session) {
+	public String requireLoginPEK_addHeart(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
 
 		String seq_tbl_board = req.getParameter("seq_tbl_board");
 		String fk_login_id = req.getParameter("fk_login_id");
@@ -379,7 +476,7 @@ public class PekController {
 	
 	// 하트 취소
 	@RequestMapping(value = "/deleteHeart.re", method = {RequestMethod.GET})
-	public String deleteHeart(HttpServletRequest req, HttpSession session) {
+	public String requireLoginPEK_deleteHeart(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
 		
 		String seq_tbl_board = req.getParameter("seq_tbl_board");
 		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
