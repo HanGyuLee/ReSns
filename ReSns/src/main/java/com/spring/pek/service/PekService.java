@@ -12,6 +12,7 @@ import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.BoardDAO;
 import com.spring.pek.model.HeartVO;
 import com.spring.pek.model.MapVO;
+import com.spring.pek.model.MessageVO;
 import com.spring.pek.model.ReVO;
 import com.spring.pek.model.TagVO;
 
@@ -350,6 +351,16 @@ public class PekService implements InterPekService {
 		List<TagVO> tagList = dao.showAllTag();
 		
 		return tagList;
+	}
+
+	
+	// 한 회원이 받은 쪽지 보기
+	@Override
+	public List<HashMap<String, String>> getMessage(String login_id) {
+		
+		List<HashMap<String, String>> msgList = dao.getMessage(login_id);
+		
+		return msgList;
 	}
 
 }

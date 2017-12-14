@@ -339,4 +339,14 @@ public class BoardDAOImpl implements BoardDAO {
 		return tagList;
 	}
 
+	
+	// 한 회원이 받은 쪽지 보기
+	@Override
+	public List<HashMap<String, String>> getMessage(String login_id) {
+		
+		List<HashMap<String, String>> msgList = sqlsession.selectList("pekresns.getMessage", login_id);
+		
+		return msgList;
+	}
+
 }

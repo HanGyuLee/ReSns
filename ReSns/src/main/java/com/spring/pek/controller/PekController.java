@@ -3,11 +3,13 @@ package com.spring.pek.controller;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.spring.common.FileManager;
 import com.spring.jdh.model.LoginVO;
 import com.spring.pek.model.BimageVO;
+import com.spring.pek.model.MessageVO;
 import com.spring.pek.model.TagVO;
 import com.spring.pek.service.InterPekService;
 
@@ -35,23 +38,44 @@ public class PekController {
 	@RequestMapping(value = "/index.re", method = {RequestMethod.GET})
 	public String index(HttpServletRequest req, HttpSession session) {
 		
-		//String seq_tbl_board = req.getParameter("seq_tbl_board");
-		
 		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
 		
 		List<HashMap<String, String>> boardList = service.getBoardList();
 		
 		req.setAttribute("loginUser", loginUser);
-		req.setAttribute("boardList", boardList);
-		
-		
-		List<TagVO> tagList = service.showAllTag();
-		
-		req.setAttribute("tagList", tagList);
-		
+		req.setAttribute("boardList", boardList);		
 		
 		return "index.tiles";
 	}
+	
+	
+	// 모든 태그 보기 (워드 클라우드용)
+	@RequestMapping(value = "/showAllTag.re", method = {RequestMethod.GET})
+	public String showAllTag(HttpServletRequest req, HttpSession session) {
+		
+		List<TagVO> tagList = service.showAllTag();
+		
+		JSONArray jsonMap = new JSONArray();
+		
+		if (tagList != null) {
+			for (TagVO tag : tagList) {
+				JSONObject jsonObj = new JSONObject();
+				
+				jsonObj.put("tag_content", tag.getTag_content());
+				
+				jsonMap.put(jsonObj);
+				
+			}
+		}
+		
+		String str_tagList = jsonMap.toString();
+		
+		req.setAttribute("str_tagList", str_tagList);
+		
+		
+		return "allTagJSON.notiles";
+	}
+	
 	
 	// 한 사람의 별명과 프사 보기(ajax) 
 	@RequestMapping(value = "/showUser.re", method = {RequestMethod.GET})
@@ -446,8 +470,16 @@ public class PekController {
 
 		String seq_tbl_board = req.getParameter("seq_tbl_board");
 		String fk_login_id = req.getParameter("fk_login_id");
-		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
-		String login_id = loginUser.getLogin_id();
+		
+		String login_id = "";
+		
+		Object obj = session.getAttribute("loginUser");
+		
+		if (obj != null) {
+			LoginVO loginUser = (LoginVO)obj;
+			
+			login_id = loginUser.getLogin_id();
+		}
 		
 		//System.out.println(seq_tbl_board+ fk_login_id+ login_id);
 
@@ -533,14 +565,23 @@ public class PekController {
 
 		}
 	}
+	
+	
+	
+
+	// 메세지
+	@RequestMapping (value="/message.re", method={RequestMethod.GET})
+	public String requireLoginPEK_message(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
 		
-	// 게시글 첨부파일 다운로드
-	@RequestMapping(value = "/downloadBoard.re", method = {RequestMethod.GET})
-	public String downloadBoard() {
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();
 		
-		// 
+		List<HashMap<String, String>> msgList = service.getMessage(login_id);
 		
-		return "";
+		req.setAttribute("msgList", msgList);
+		
+		return "/pek/message.notiles";
 	}
+		
 
 }

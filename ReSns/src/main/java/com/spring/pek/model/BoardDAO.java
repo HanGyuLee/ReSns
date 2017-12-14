@@ -54,4 +54,6 @@ public interface BoardDAO {
 
 	List<TagVO> showAllTag();		// 모든 태그 보기
 
+	List<HashMap<String, String>> getMessage(String login_id);		// 한 회원이 받은 쪽지 보기
+
 }

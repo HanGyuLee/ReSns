@@ -29,41 +29,29 @@
 		
 		$("#tagList").hide();
 		
-		var result = "";
-		
-		<c:forEach items="${tagList}" var="tag" varStatus="status">
-					result += '${tag.tag_content},';
-		</c:forEach>
-		
-		$("#tagList").html(result);
-		
-		var text = $("#tagList").text();
-		var lines = text.split(/[,\. ]+/g),
-		    data = Highcharts.reduce(lines, function (arr, word) {
-		        var obj = Highcharts.find(arr, function (obj) {
-		            return obj.name === word;
-		        });
-		        if (obj) {
-		            obj.weight += 1;
-		        } else {
-		            obj = {
-		                name: word,
-		                weight: 1
-		            };
-		            arr.push(obj);
-		        }
-		        return arr;
-		    }, []);
-
-		Highcharts.chart('container', {
-		    series: [{
-		        type: 'wordcloud',
-		        data: data,
-		        name: 'Occurrences'
-		    }],
-		    title: {
-		        text: '인기 해시 태그'
-		    }
+		$.ajax({
+			url: "/resns/showAllTag.re",
+			type: "GET",
+			dataType: "JSON",
+			success: function(data) {
+				
+				var result = "";
+				
+				$.each(data, function(entryIndex, entry){
+					
+					var tag_content = entry.tag_content;
+					
+					result += tag_content+",";
+					
+				});
+				
+				$("#tagList").html(result);
+				
+				popHash();
+				
+			}, error: function() {
+				
+			}
 		});
 		
 		
@@ -115,6 +103,40 @@
 					}, timejugi);
 		
 	}// end of loopshowNowTime() --------------------------
+	
+	
+	
+	function popHash() {
+		var text = $("#tagList").text();
+		var lines = text.split(/[,\. ]+/g),
+		    data = Highcharts.reduce(lines, function (arr, word) {
+		        var obj = Highcharts.find(arr, function (obj) {
+		            return obj.name === word;
+		        });
+		        if (obj) {
+		            obj.weight += 1;
+		        } else {
+		            obj = {
+		                name: word,
+		                weight: 1
+		            };
+		            arr.push(obj);
+		        }
+		        return arr;
+		    }, []);
+
+		Highcharts.chart('container', {
+		    series: [{
+		        type: 'wordcloud',
+		        data: data,
+		        name: '태그를 사용한 게시물'
+		    }],
+		    title: {
+		        text: '인기 해시 태그'
+		    }
+		});
+		
+	}
 </script>
 
 
@@ -125,8 +147,11 @@
 
 <body>
 
-<div id="container"></div>
 <span id="tagList"></span>
+<div id="container"></div>
+
+
+
 </body>
 	
 	

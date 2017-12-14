@@ -11,13 +11,197 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-ui.js"></script> 
 
-<link rel="stylesheet"
-		href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
-
 <title>Insert title here</title>
+<style type="text/css">
+
+
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,500,800);
+figure.snip1166 {
+  font-family: 'Raleway', Arial, sans-serif;
+  color: #fff;
+  position: relative;
+  float: left;
+  margin: 10px 1.5%;
+  min-width: 400px;
+  max-width: 400px;
+  min-height: 300px;
+  max-height: 300px;
+  width: 100%;
+  height : 100%;
+  background: #ffffff;
+  color: #000000;
+  text-align: left;
+}
+figure.snip1166 * {
+  -webkit-box-sizing: padding-box;
+  box-sizing: padding-box;
+  -webkit-transition: all 0.6s ease;
+  transition: all 0.6s ease;
+}
+figure.snip1166 img {
+  opacity: 1;
+  width: 100%;
+  min-width: 400px;
+  max-width: 400px;
+  min-height: 300px;
+  max-height: 300px;
+  vertical-align: top;
+  -webkit-transition: opacity 0.4s;
+  transition: opacity 0.4s;
+}
+figure.snip1166 figcaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+figure.snip1166 figcaption > div {
+  height: 70%;
+  overflow: hidden;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+figure.snip1166 h3,
+figure.snip1166 p {
+  margin: 0;
+  position: absolute;
+  right: 0;
+}
+figure.snip1166 h3 {
+  padding: 0 30px 0 15px;
+  color: #ffffff;
+  background-color: #1a1a1a;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 40px;
+  text-transform: uppercase;
+  top: 30%;
+  right: 0;
+  left: 30px;
+  z-index: 1;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+figure.snip1166 h3 span {
+  font-weight: 400;
+}
+figure.snip1166 h3:after,
+figure.snip1166 h3:before {
+  border-style: solid;
+  content: '';
+  position: absolute;
+  left: 100%;
+}
+figure.snip1166 h3:after {
+  border-width: 40px 0 0 12px;
+  border-color: transparent transparent transparent #1a1a1a;
+  top: 0;
+}
+figure.snip1166 h3:before {
+  border-width: 12px 12px 0 0;
+  border-color: #000000 transparent transparent transparent;
+  top: 100%;
+}
+figure.snip1166 p {
+  padding: 8px 45px;
+  opacity: 0;
+  font-size: 0.9em;
+  font-weight: 500;
+  left: 0;
+  -webkit-transform: translate3d(0%, -150%, 0);
+  transform: translate3d(0%, -150%, 0);
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+}
+figure.snip1166 a {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+}
+figure.snip1166.blue h3 {
+  background-color: #2980b9;
+}
+figure.snip1166.blue h3:after {
+  border-color: transparent transparent transparent #2980b9;
+}
+figure.snip1166.blue h3:before {
+  border-color: #123851 transparent transparent transparent;
+}
+figure.snip1166.red h3 {
+  background-color: #c0392b;
+}
+figure.snip1166.red h3:after {
+  border-color: transparent transparent transparent #c0392b;
+}
+figure.snip1166.red h3:before {
+  border-color: #581a14 transparent transparent transparent;
+}
+figure.snip1166.green h3 {
+  background-color: #27ae60;
+}
+figure.snip1166.green h3:after {
+  border-color: transparent transparent transparent #27ae60;
+}
+figure.snip1166.green h3:before {
+  border-color: #104627 transparent transparent transparent;
+}
+figure.snip1166.orange h3 {
+  background-color: #e67e22;
+}
+figure.snip1166.orange h3:after {
+  border-color: transparent transparent transparent #e67e22;
+}
+figure.snip1166.orange h3:before {
+  border-color: #7b410e transparent transparent transparent;
+}
+figure.snip1166.navy h3 {
+  background-color: #34495e;
+}
+figure.snip1166.navy h3:after {
+  border-color: transparent transparent transparent #34495e;
+}
+figure.snip1166.navy h3:before {
+  border-color: #07090c transparent transparent transparent;
+}
+figure.snip1166:hover img,
+figure.snip1166.hover img {
+  opacity: 0.3;
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+figure.snip1166:hover figcaption h3,
+figure.snip1166.hover figcaption h3 {
+  -webkit-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+figure.snip1166:hover figcaption p,
+figure.snip1166.hover figcaption p {
+  opacity: 0.8;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+
+
+</style>
+
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+	
+	 $(".hover").mouseleave(
+			    function () {
+			      $(this).removeClass("hover");
+			    }
+			  );
+	
+});
+
+
 function showDetail(statuscount) {
 	
 	$("#hearted"+statuscount).hide();
@@ -514,17 +698,16 @@ function runEffect(entryIndex) {
     // Run the effect
    $( "#reReply"+entryIndex ).toggle( "blind", options, 500 ); 
   };
- 
+  
 </script>
 
 </head>
 <body>
 
-
-	<section> <c:forEach items="${boardList}" var="map"
+	<!-- <section> --> <c:forEach items="${boardList}" var="map"
 		varStatus="status">
 
-		<div class="container gal-container">
+		<%-- <div class="container gal-container">
 			<div class="col-md-8 col-sm-12 co-xs-12 gal-item">
 				<div class="box">
 					<a href="#" data-toggle="modal" data-target="#${status.count}">
@@ -532,7 +715,18 @@ function runEffect(entryIndex) {
 						src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}"
 						style="width: 300px; height: 300px;"
 						onclick="showDetail('${status.count}');">
-					</a>
+					</a> --%>
+
+					<figure class="snip1166">
+					  <img src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" id="popBoard${status.count}"/>
+					  <figcaption>
+					    <h3>social net service :: re</h3>
+					    <div>
+					      <p>좋아요 ${map.BOARD_HEART}개</p>
+					    </div><a href="#" data-toggle="modal" data-target="#${status.count}" onclick="showDetail('${status.count}');"></a>
+					  </figcaption>
+					</figure>
+
 					<div class="modal fade" id="${status.count}" tabindex="-1"
 						role="dialog">
 						<div class="modal-dialog" role="document">
@@ -606,16 +800,15 @@ function runEffect(entryIndex) {
 							</div>
 						</div>
 					</div>
-				</div>
+			<!-- 	</div>
 			</div>
-		</div>
+		</div> -->
 		<input type="hidden" id="seq_tbl_board${status.count}"
 			value="${map.SEQ_TBL_BOARD}" />
 		<input type="hidden" id="fk_login_id${status.count}"
 			value="${map.FK_LOGIN_ID}" />
 		<input type="hidden" id="login_id${status.count}"
 			value="${loginUser.login_id}" />
-	</c:forEach> </section>
-	
+	</c:forEach><!-- </section> -->
 </body>
 </html>

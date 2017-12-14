@@ -5,8 +5,22 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/jquery.textillate.js"></script>
+<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet">
+<script type="text/javascript">
+
+$(function () {
+	$('.tlt').textillate({ in: { effect: 'rotateIn' } });
+})
+
+</script>
 </head>
 <body>
-<div style ="text-align: center;" >[공지사항]</div>
+<div style ="text-align: center; cursor: pointer;" class="tlt"><a href="#">여기에는 공지사항이 들어갑니다.</a></div>
 </body>
 </html>

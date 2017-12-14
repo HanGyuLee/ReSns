@@ -6,6 +6,7 @@ import java.util.List;
 import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.HeartVO;
 import com.spring.pek.model.MapVO;
+import com.spring.pek.model.MessageVO;
 import com.spring.pek.model.ReVO;
 import com.spring.pek.model.TagVO;
 
@@ -59,5 +60,7 @@ public interface InterPekService {
 	void deleteImg(String seq_tbl_board);		// 이미지 지우기
 
 	List<TagVO> showAllTag();		// 모든 태그 보기
+
+	List<HashMap<String, String>> getMessage(String login_id);		// 한 회원이 받은 쪽지 보기
 
 }

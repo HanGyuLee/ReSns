@@ -7,7 +7,7 @@
 <mapper namespace="pekresns">
 
 
-	<!-- 인기 리스트 보기 -->
+	<!-- 인기 리스트 보기 (페이징처리X) -->
 	<resultMap type="java.util.HashMap" id="getBoardListMap">
 		<result property="RNO" 	column="rno" 	javaType="String" />
  		<result property="SEQ_TBL_BOARD" 	column="seq_tbl_board" 	javaType="String" />
@@ -18,7 +18,7 @@
  		<result property="BOARD_RECNT" 	column="board_recnt" 	javaType="String" />
  		<result property="BIMG_FILENAME" 	column="bimg_filename" 	javaType="String" />
 	</resultMap>
-	<select id="getBoardList" resultMap="getBoardListMap">
+	<select id="getBoardList2" resultMap="getBoardListMap">
 		
 	select B.seq_tbl_board, B.board_heart, B.fk_login_id, B.board_content, B.board_time, B.board_recnt, I.bimg_filename
 		from tbl_board B left join tbl_bimage I
@@ -29,7 +29,7 @@
 	</select>
 	
 	
-	<!-- 인기 리스트 보기2 -->
+	<!-- 인기 리스트 보기 -->
 	<resultMap type="java.util.HashMap" id="getBoardListMap2">
 		<result property="RNO" 	column="rno" 	javaType="String" />
  		<result property="SEQ_TBL_BOARD" 	column="seq_tbl_board" 	javaType="String" />
@@ -40,7 +40,7 @@
  		<result property="BOARD_RECNT" 	column="board_recnt" 	javaType="String" />
  		<result property="BIMG_FILENAME" 	column="bimg_filename" 	javaType="String" />
 	</resultMap>
-	<select id="getBoardList2" resultMap="getBoardListMap2">
+	<select id="getBoardList" resultMap="getBoardListMap2">
 	
 	
 		select rno, seq_tbl_board, board_heart, fk_login_id, board_content, board_time, board_recnt, bimg_filename
@@ -56,7 +56,7 @@
 				order by B.board_heart desc
 				) V
 				) T
-		where rno between 1 and 3
+		where rno between 1 and 12
 	
 	</select>
 	
@@ -286,12 +286,36 @@
 	</delete>
 	
 	
-	
+	<!-- 모든 태그 보기 -->
 	<select id="showAllTag" resultType="com.spring.pek.model.TagVO">
+		select tag_content
+		from tbl_tag
+	</select>
 	
-	select tag_content
-	from tbl_tag
 	
+	<!-- 한 회원이 받은 쪽지 보기 -->
+	<resultMap type="java.util.HashMap" id="getMsgMap">
+		<result property="SEQ_TBL_MSG" column="seq_tbl_msg" javaType="String" />
+		<result property="MSG_SEND" column="msg_send" javaType="String" />
+		<result property="UIMG_PROFILE_FILENAME" column="uimg_profile_filename" javaType="String" />
+		<result property="LOGIN_NAME" column="login_name" javaType="String" />
+		<result property="MSG_CONTENT" column="msg_content" javaType="String" />
+		<result property="MSG_DATE" column="msg_date" javaType="String" />
+	</resultMap>
+	<select id="getMessage" parameterType="String" resultMap="getMsgMap">
+		select M.seq_tbl_msg, M.msg_send, U.uimg_profile_filename, L.login_name,
+			      case when length(M.msg_content) > 13 
+			          then substr(M.msg_content, 0, 11) || '...' else M.msg_content end as msg_content, 
+			      case when to_date(to_char(M.msg_date, 'yy-mm-dd'), 'yy-mm-dd') = to_date(to_char(sysdate, 'yy-mm-dd'), 'yy-mm-dd') 
+			          then to_char(M.msg_date, 'hh24:mi:ss') 
+			          else to_char(M.msg_date, 'yy-mm-dd') 
+			          end as msg_date
+			from tbl_msg M left join tbl_uimage U
+			on M.fk_login_id = U.fk_login_id
+			left join tbl_login L
+			on M.msg_send = L.login_id
+			where M.fk_login_id = #{login_id}
+		order by M.seq_tbl_msg desc
 	</select>
 
 </mapper>
