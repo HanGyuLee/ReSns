@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -41,6 +42,25 @@ public class PekController {
 		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
 		
 		List<HashMap<String, String>> boardList = service.getBoardList();
+		
+		if(boardList != null && boardList.size() > 0) {
+			
+			for (int i=0; i<boardList.size(); i++) {
+				
+				HashMap<String, String> map = boardList.get(i);
+				
+				String board_content = map.get("BOARD_CONTENT");
+				board_content = board_content.replaceAll("\r\n", "<br/>");
+				
+				map.put("BOARD_CONTENT", board_content);
+				
+			}// end of for---------------------------------
+
+		}
+		
+		else {
+			
+		}
 		
 		req.setAttribute("loginUser", loginUser);
 		req.setAttribute("boardList", boardList);		
@@ -569,7 +589,7 @@ public class PekController {
 	
 	
 
-	// 메세지
+	// 받은 메세지 보기
 	@RequestMapping (value="/message.re", method={RequestMethod.GET})
 	public String requireLoginPEK_message(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
 		
@@ -582,6 +602,33 @@ public class PekController {
 		
 		return "/pek/message.notiles";
 	}
+	
+	// 메세지 상세 보기
+	@RequestMapping (value="/msgDetail.re", method={RequestMethod.GET})
+	public String msgDetail(HttpServletRequest req) {
 		
+		String seq_tbl_msg = req.getParameter("seq_tbl_msg");
+		
+		HashMap<String, String> oneMsg = service.msgDetail(seq_tbl_msg);
+		
+		req.setAttribute("oneMsg", oneMsg);
+		
+		return "/pek/msgDetail.notiles";
+	}
+	
+	
+	// 보낸 메세지 보기
+	@RequestMapping (value="/sendingMsg.re", method={RequestMethod.GET})
+	public String requireLoginPEK_sendingMsg(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
+		
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();
+		
+		List<HashMap<String, String>> msgList = service.sendedMsg(login_id);
+		
+		req.setAttribute("msgList", msgList);
+		
+		return "/pek/sendedMsg.notiles";
+	}	
 
 }

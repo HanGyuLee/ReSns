@@ -699,6 +699,12 @@ function runEffect(entryIndex) {
    $( "#reReply"+entryIndex ).toggle( "blind", options, 500 ); 
   };
   
+ 
+function modalClose(statuscount) {
+	
+	$(statuscount).hide();
+}
+  
 </script>
 
 </head>
@@ -718,7 +724,13 @@ function runEffect(entryIndex) {
 					</a> --%>
 
 					<figure class="snip1166">
+					
+					<c:if test="${map.BIMG_FILENAME != null}">
 					  <img src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" id="popBoard${status.count}"/>
+					</c:if>
+					<c:if test="${map.BIMG_FILENAME == null}">
+						<img src="<%=request.getContextPath()%>/resources/images/default0.png" id="popBoard${status.count}"/>
+					</c:if>
 					  <figcaption>
 					    <h3>social net service :: re</h3>
 					    <div>
@@ -733,25 +745,25 @@ function runEffect(entryIndex) {
 							<div class="modal-content" style="width: 800px; height: 500px;">
 								<button type="button" class="close" data-dismiss="modal"
 									aria-label="Close">
-									<span aria-hidden="true">×</span>
+									<span aria-hidden="true" onclick="modalClose('${status.count}');">×</span>
 								</button>
 								<div class="modal-body">
 									<div
-										style="width: 68%; height: 350px; border: 1px solid blue; float: left;">
-										<div id="showUser${status.count}" align="right"></div>
+										style="width: 68%; height: 350px; border: 0px solid blue; float: left;">
+										<div id="showUser${status.count}" align="left"></div>
 										<img
 											src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}"
-											style="width: 400px; height: 300px;">
+											style="width: 400px; height: 300px; margin-top: 10px;">
 
 
 									</div>
 									<div
-										style="border: 1px solid red; width: 30%; height: 350px; float: right;">
+										style="border: 0px solid red; width: 30%; height: 350px; float: right;">
 										<span style="font-weight: bold;" id="reCnt${status.count}"></span>
 										<div id="reList${status.count}" style="overflow-y:scroll; height: 300px;"></div>
 									</div>
 									<div
-										style="border: 1px solid green; width: 68%; height: 120px; float: left;">
+										style="border: 0px solid green; width: 68%; height: 120px; float: left; overFlow: auto; max-height: 120px;">
 
 										<img
 											src="<%=request.getContextPath()%>/resources/images/user_location_black.png"
@@ -787,7 +799,7 @@ function runEffect(entryIndex) {
 										<div id="tagList${status.count}"></div>
 									</div>
 									<div
-										style="border: 1px solid purple; width: 30%; height: 120px; float: right;">
+										style="border: 0px solid purple; width: 30%; height: 120px; float: right;">
 									<%-- <c:if test="${loginUser.login_id != null}"> --%>
 										<button onclick="writeRe('${status.count}');">입력</button>
 										<input type="text" id="re_content${status.count}" />

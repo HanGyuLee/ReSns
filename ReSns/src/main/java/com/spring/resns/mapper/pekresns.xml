@@ -307,14 +307,58 @@
 			      case when length(M.msg_content) > 13 
 			          then substr(M.msg_content, 0, 11) || '...' else M.msg_content end as msg_content, 
 			      case when to_date(to_char(M.msg_date, 'yy-mm-dd'), 'yy-mm-dd') = to_date(to_char(sysdate, 'yy-mm-dd'), 'yy-mm-dd') 
-			          then to_char(M.msg_date, 'hh24:mi:ss') 
+			          then to_char(M.msg_date, 'hh24:mi') 
 			          else to_char(M.msg_date, 'yy-mm-dd') 
 			          end as msg_date
 			from tbl_msg M left join tbl_uimage U
-			on M.fk_login_id = U.fk_login_id
+			on M.msg_send = U.fk_login_id
 			left join tbl_login L
 			on M.msg_send = L.login_id
 			where M.fk_login_id = #{login_id}
+		order by M.seq_tbl_msg desc
+	</select>
+	
+	
+	<!-- 한 메세지 상세 보기 -->
+	<resultMap type="java.util.HashMap" id="msgDetailMap">
+		<result property="SEQ_TBL_MSG" column="seq_tbl_msg" javaType="String" />
+		<result property="MSG_SEND" column="msg_send" javaType="String" />
+		<result property="UIMG_PROFILE_FILENAME" column="uimg_profile_filename" javaType="String" />
+		<result property="LOGIN_NAME" column="login_name" javaType="String" />
+		<result property="MSG_CONTENT" column="msg_content" javaType="String" />
+		<result property="MSG_DATE" column="msg_date" javaType="String" />
+	</resultMap>
+	<select id="msgDetail" parameterType="String" resultMap="msgDetailMap">
+		select M.seq_tbl_msg, M.msg_send, U.uimg_profile_filename, L.login_name, M.msg_content, to_char(M.msg_date, 'yy-mm-dd hh24:mi') as msg_date
+			from tbl_msg M left join tbl_uimage U
+			on M.msg_send = U.fk_login_id
+			left join tbl_login L
+			on M.msg_send = L.login_id
+		where M.seq_tbl_msg = #{seq_tbl_msg}
+	</select>
+	
+	<!-- 한 회원이 보낸 쪽지 보기 -->
+	<resultMap type="java.util.HashMap" id="sendedMsgMap">
+		<result property="SEQ_TBL_MSG" column="seq_tbl_msg" javaType="String" />
+		<result property="FK_LOGIN_ID" column="fk_login_id" javaType="String" />
+		<result property="UIMG_PROFILE_FILENAME" column="uimg_profile_filename" javaType="String" />
+		<result property="LOGIN_NAME" column="login_name" javaType="String" />
+		<result property="MSG_CONTENT" column="msg_content" javaType="String" />
+		<result property="MSG_DATE" column="msg_date" javaType="String" />
+	</resultMap>
+	<select id="sendedMsg" parameterType="String" resultMap="sendedMsgMap">
+		select M.seq_tbl_msg, M.fk_login_id, U.uimg_profile_filename, L.login_name,
+			      case when length(M.msg_content) > 13 
+			          then substr(M.msg_content, 0, 11) || '...' else M.msg_content end as msg_content, 
+			      case when to_date(to_char(M.msg_date, 'yy-mm-dd'), 'yy-mm-dd') = to_date(to_char(sysdate, 'yy-mm-dd'), 'yy-mm-dd') 
+			          then to_char(M.msg_date, 'hh24:mi') 
+			          else to_char(M.msg_date, 'yy-mm-dd') 
+			          end as msg_date
+			from tbl_msg M left join tbl_uimage U
+			on M.msg_send = U.fk_login_id
+			left join tbl_login L
+			on M.fk_login_id = L.login_id
+			where M.msg_send = #{login_id}
 		order by M.seq_tbl_msg desc
 	</select>
 

@@ -6,7 +6,7 @@
 
 	<c:if test="${n == 1 && empty gobackURL}">
 		alert("글작성 성공!");
-		location.href="<%= request.getContextPath() %>/index.re"; 
+		location.href="<%= request.getContextPath() %>/mypage.re"; 
 	</c:if>
 	
 	<c:if test="${n == 1 && not empty gobackURL}">

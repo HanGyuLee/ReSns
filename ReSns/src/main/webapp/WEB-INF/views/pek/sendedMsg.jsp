@@ -153,7 +153,7 @@ function goDetail(seq_tbl_msg) {
       <div class="loading-icon perpetuum-mobile"><img src="<%=request.getContextPath()%>/resources/images/${msg.UIMG_PROFILE_FILENAME}" style="width: 30px; height: 30px;" class="img-circle" /></div>
     </div>
     <div class="description">
-    	<span style="font-size: 8pt; font-weight: bold;">from ${msg.LOGIN_NAME}</span>
+    	<span style="font-size: 8pt; font-weight: bold;">to ${msg.LOGIN_NAME}</span>
       <div class="name" style="cursor: pointer;" onclick="goDetail('${msg.SEQ_TBL_MSG}');">${msg.MSG_CONTENT}</div>
       <div style="font-size: 7pt;">${msg.MSG_DATE}</div>
     </div>

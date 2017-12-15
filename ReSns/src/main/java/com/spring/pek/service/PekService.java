@@ -363,4 +363,22 @@ public class PekService implements InterPekService {
 		return msgList;
 	}
 
+	
+	// 쪽지 상세 보기
+	@Override
+	public HashMap<String, String> msgDetail(String seq_tbl_msg) {
+		
+		HashMap<String, String> oneMsg = dao.msgDetail(seq_tbl_msg);
+		
+		return oneMsg;
+	}
+
+	@Override
+	public List<HashMap<String, String>> sendedMsg(String login_id) {
+		
+		List<HashMap<String, String>> msgList = dao.sendedMsg(login_id);
+		
+		return msgList;
+	}
+
 }

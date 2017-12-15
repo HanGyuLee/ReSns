@@ -114,26 +114,6 @@ body {
 </style>
 <script type="text/javascript">
 
-$(document).ready(function() {
-	
-	loop();
-	
-});
-
-function loop() {
-	
-	setTimeout(function() {
-					loop();	
-				}, 1000);
-	
-}
-
-function goDetail(seq_tbl_msg) {
-	
-	location.href="/resns/msgDetail.re?seq_tbl_msg="+seq_tbl_msg;
-	
-}
-
 </script>
 
 </head>
@@ -145,20 +125,18 @@ function goDetail(seq_tbl_msg) {
   <a href="/resns/sendingMsg.re" id="projects" >보낸 쪽지</a>
 </div>
 
-	<div class="container">
-	
-<c:forEach items="${msgList}" var="msg" varStatus="status">
+<div class="container">
   <div class="card">
-    <div class="icon-container">
-      <div class="loading-icon perpetuum-mobile"><img src="<%=request.getContextPath()%>/resources/images/${msg.UIMG_PROFILE_FILENAME}" style="width: 30px; height: 30px;" class="img-circle" /></div>
+
+    <div class="loading-icon perpetuum-mobile" style="margin-left: 20px; padding: 10px;">
+    <div style="font-size: 10pt;">메세지 내용</div>
     </div>
     <div class="description">
-    	<span style="font-size: 8pt; font-weight: bold;">from ${msg.LOGIN_NAME}</span>
-      <div class="name" style="cursor: pointer;" onclick="goDetail('${msg.SEQ_TBL_MSG}');">${msg.MSG_CONTENT}</div>
-      <div style="font-size: 7pt;">${msg.MSG_DATE}</div>
+    	<img src="<%=request.getContextPath()%>/resources/images/${oneMsg.UIMG_PROFILE_FILENAME}" style="width: 40px; height: 40px;" class="img-circle" /><span style="font-size: 10pt; font-weight: bold; margin-top: 9px;">${oneMsg.LOGIN_NAME}</span><br/>
+      <div class="name">${oneMsg.MSG_CONTENT}</div>
+      <div style="font-size: 7pt;">${oneMsg.MSG_DATE}</div>
     </div>
   </div>
-</c:forEach>  
   
 </div>
 </body>

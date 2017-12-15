@@ -202,7 +202,7 @@ function googleapisView() {
 <div class="form-group">
   <label class="col-md-4 control-label" for="tag_content">해시태그</label>  
   <div class="col-md-4">
-  <input id="tag_content" name="tag_content" type="text" placeholder="60자까지 가능합니다." class="form-control input-md">
+  <input id="tag_content" name="tag_content" type="text" placeholder="해시태그 사이는 쉼표로 구분합니다." class="form-control input-md">
     
   </div>
 </div>

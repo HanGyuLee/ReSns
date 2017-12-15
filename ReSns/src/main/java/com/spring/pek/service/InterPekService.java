@@ -63,4 +63,8 @@ public interface InterPekService {
 
 	List<HashMap<String, String>> getMessage(String login_id);		// 한 회원이 받은 쪽지 보기
 
+	HashMap<String, String> msgDetail(String seq_tbl_msg);		// 쪽지 상세 보기
+
+	List<HashMap<String, String>> sendedMsg(String login_id);	// 한 회원이 보낸 쪽지 보기
+
 }

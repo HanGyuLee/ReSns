@@ -25,7 +25,6 @@
 
 	$(document).ready(function() {
 		loopshowNowTime();
-		/* showRank(); */
 		
 		$("#tagList").hide();
 		
@@ -57,50 +56,11 @@
 		
 	}); // end of ready(); ---------------------------------
 
-	function showNowTime() {
-		
-		var now = new Date();
-	
-		var strNow = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
-		
-		var hour = "";
-		if(now.getHours() > 12) {
-			hour = " 오후 " + (now.getHours() - 12);
-		} else if(now.getHours() < 12) {
-			hour = " 오전 " + now.getHours();
-		} else {
-			hour = " 정오 " + now.getHours();
-		}
-		
-		var minute = "";
-		if(now.getMinutes() < 10) {
-			minute = "0"+now.getMinutes();
-		} else {
-			minute = ""+now.getMinutes();
-		}
-		
-		var second = "";
-		if(now.getSeconds() < 10) {
-			second = "0"+now.getSeconds();
-		} else {
-			second = ""+now.getSeconds();
-		}
-		
-		strNow += hour + ":" + minute + ":" + second;
-		
-		$("#clock").html("<span style='color:green; font-weight:bold;'>"+strNow+"</span>");
-	
-	}// end of function showNowTime() -----------------------------
-
-
 	function loopshowNowTime() {
-		showNowTime();
-		
-		var timejugi = 1000;   // 시간을 1초 마다 자동 갱신하려고.
 		
 		setTimeout(function() {
 						loopshowNowTime();	
-					}, timejugi);
+					}, 1000);
 		
 	}// end of loopshowNowTime() --------------------------
 	
