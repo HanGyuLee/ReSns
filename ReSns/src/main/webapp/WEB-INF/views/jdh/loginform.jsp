@@ -26,6 +26,9 @@
      $(document).ready(function(){
     	 
     	 $("#btnLOGIN").click(function() {
+    		 
+    		 var event = event || window.event;
+    		 
     		 func_Login(event);
     	 }); // end of $("#btnLOGIN").click();-----------------------
     	 

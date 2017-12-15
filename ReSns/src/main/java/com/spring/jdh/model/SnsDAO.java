@@ -96,14 +96,15 @@ public class SnsDAO implements InterSnsDAO {
 
 	
 				// 공지사항 리스트
-				@Override
+				/*@Override
 				public NoticeVO getNoticeList(NoticeVO noticevo) {
 					
 					NoticeVO noticeList = sqlsession.selectOne("jdhresns.getNoticeList", noticevo);
 					
 					return noticeList;
-				}
+				}*/
 
+				// 공지사항 리스트
 				@Override
 				public List<HashMap<String, String>> getNoticeList() {
 					
@@ -111,5 +112,38 @@ public class SnsDAO implements InterSnsDAO {
 					
 					return noticeList;
 				}
+
+				// 공지사항 
+				@Override
+				public NoticeVO getNoticeDetail(HashMap<String, String> map) {
+					// System.out.println("============nvo=============="+map.get("seq"));
+					NoticeVO nvo = sqlsession.selectOne("jdhresns.getNoticeDetail", map);
+					// System.out.println("============nvo=============="+nvo.getNotice_cate());
+					return nvo;
+				}
+
+				// 공지사항 등록하기
+				@Override
+				public int getNoticeRegister(NoticeVO nvo) {
+					
+					int n = sqlsession.insert("jdhresns.getNoticeRegister", nvo);
+					
+					return n;
+				}
+
+				@Override
+				public int getNoticeDelete(String seq) {
+					int n = sqlsession.update("jdhresns.getNoticeDelete", seq);
+					return n;
+				}
+
+				// 공지사항 수정하기
+				@Override
+				public int getNoticeModify(HashMap<String, Object> notimodiMap) {
+					int n = sqlsession.update("jdhresns.getNoticeModify", notimodiMap);
+					return n;
+				}
+				
+
 
 }

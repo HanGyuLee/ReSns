@@ -29,7 +29,7 @@
     document.title = "회원가입";
     </script>
     
- <form class="form-horizontal" name="registerFrm">
+ <form class="form-horizontal" name="registerFrm" encType="multipart/form-data">
 <fieldset>
 
 <!-- Form Name -->
@@ -68,7 +68,7 @@
   <fieldset>
     <legend>성별을 선택하세요 </legend>
     <label for="radio-1">남자</label>
-    <input type="radio" name="user_gender" id="user_gender" value="1">
+    <input type="radio" name="user_gender" id="user_gender" value="1" checked="checked">
     <label for="radio-2">여자</label>
     <input type="radio" name="user_gender" id="user_gender2" value="2">
     <label for="radio-3">선택안함</label>

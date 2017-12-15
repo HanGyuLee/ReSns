@@ -23,15 +23,16 @@ public interface InterSnsService {
 	int updatePwd(HashMap<String, String> map);		// 비밀번호 변경하기 
 
 	int registerMember(LoginVO lvo, UserVO uvo, MemberImageVO ivo) throws Throwable;	// 회원가입
-	//
+	
+	List<HashMap<String, String>> getNoticeList();	// 관리자 공지사항 리스트 불러오기
 
-	// NoticeVO noticeList(NoticeVO noticevo);	// 공지사항 데이터 가져오기
+	NoticeVO getNoticeDetail(HashMap<String, String> map);	// 관리자 상세 페이지 불러와버리기~
 
-	int add_profile(MemberImageVO ivo);		// 파일첨부가 없다라면 기본이미지파일 넣어줌.
+	int noticeRegister(NoticeVO nvo);	// 공지사항 등록하기
 
-	int add_withFile(MemberImageVO ivo);	// 파일첨부가 있다라면
+	int updateNoticeDelete(String seq);	// 공지사항 삭제하기
 
-	List<HashMap<String, String>> getNoticeList();	// 공지사항 리스트 불러오기
+	int noticeModify(HashMap<String, Object> notimodiMap);	// 공지사항 수정하기
 	
 	
 	

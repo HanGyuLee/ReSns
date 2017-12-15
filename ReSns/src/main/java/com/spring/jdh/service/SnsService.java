@@ -68,12 +68,14 @@ public class SnsService implements InterSnsService {
 			return n;
 		}
 
+		// 비밀번호 변경
 		@Override
 		public int updatePwd(HashMap<String, String> map) {
 			int n = dao.updatePwd(map);
 			return n;
 		}
 
+		/// 회원가입 
 		@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 		@Override
 		public int registerMember(LoginVO lvo, UserVO uvo, MemberImageVO ivo) throws Throwable {	//
@@ -86,25 +88,6 @@ public class SnsService implements InterSnsService {
 
 		
 
-		// 파일첨부가 없다라면 기본이미지파일 넣어주는 
-		@Override
-		public int add_profile(MemberImageVO ivo) {
-			
-			return 0;
-			/*MemberImageVO prof = dao.getAdd_profile(ivo);
-			
-			return prof;*/
-		}
-
-		// 파일첨부가 있다라면
-		@Override
-		public int add_withFile(MemberImageVO ivo) {
-			
-			
-			
-			return 0;
-		}
-
 		// 공지사항 리스트 불러오기
 		@Override
 		public List<HashMap<String, String>> getNoticeList() {
@@ -113,6 +96,42 @@ public class SnsService implements InterSnsService {
 			
 			return noticeList;
 		}
+
+		// 공지사항 상세페이지 불러와버리기~
+		@Override
+		public NoticeVO getNoticeDetail(HashMap<String, String> map) {
+			
+			NoticeVO nvo = dao.getNoticeDetail(map);
+			
+			return nvo;
+		}
+
+		@Override
+		public int noticeRegister(NoticeVO nvo) {
+			
+			int n  = dao.getNoticeRegister(nvo);
+			
+			return n;
+		}
+
+		// 공지사항 삭제하기
+		@Override
+		public int updateNoticeDelete(String seq) {
+			int n = dao.getNoticeDelete(seq);
+			return n;
+		}
+
+		// 공지사항 수정하기
+		@Override
+		public int noticeModify(HashMap<String, Object> notimodiMap) {
+			
+			int n = dao.getNoticeModify(notimodiMap);
+			
+			return n;
+		}
+
+
+		
 
 		
 	

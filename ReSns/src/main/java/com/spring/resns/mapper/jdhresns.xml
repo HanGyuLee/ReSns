@@ -86,10 +86,8 @@
 	
 	<!-- 이미지파일 추가 -->	
 	<insert id="registerImg" parameterType="com.spring.jdh.model.MemberImageVO">
-		
-		insert into tbl_uimage(uimg_seq,fk_login_id, uimg_profile_filename, uimg_header_filename,uimg_profile_orgfilename, uimg_header_orgfilename, uimg_profile_filesize, uimg_header_filesize)
-		values(uimg_seq.nextval, #{fk_login_id}, #{uimg_profile_filename}, #{uimg_header_filename}, #{uimg_profile_orgfilename}, #{uimg_profile_filesize}, #{uimg_profile_filesize})
-		
+		insert into tbl_uimage(uimg_seq, fk_login_id, uimg_profile_filename, uimg_header_filename, uimg_profile_orgfilename, uimg_header_orgfilename, uimg_profile_filesize, uimg_header_filesize)
+		values(uimg_seq.nextval, #{fk_login_id}, #{uimg_profile_filename}, #{uimg_header_filename}, #{uimg_profile_orgfilename}, #{uimg_header_orgfilename}, #{uimg_profile_filesize}, #{uimg_header_filesize})
 	</insert>
 	
 	
@@ -110,16 +108,52 @@
       <result property="notice_date"      column="notice_date"      	javaType="String" />
       <result property="notice_status"    column="notice_status"  		javaType="String" />
       <result property="notice_cate"      column="notice_cate"   	  	javaType="String" />
-      
+    
 	</resultMap>
 	
+	
+	<!-- 공지사항 리스트 불러오기 -->
 	<select id="getNoticeList" resultMap="NoticeList">
 	
 	select
 	seq_tbl_notice, notice_title, to_char(notice_date, 'yyyy-mm-dd hh24') as notice_date, notice_status, notice_cate
 	from tbl_notice
+	where notice_status = 1
+	order by seq_tbl_notice desc
 	
 	</select>
 	
+	
+	<!-- 공지사항 디테일 -->	
+	 <select id="getNoticeDetail" parameterType="HashMap" resultType="com.spring.jdh.model.NoticeVO">
+		select *
+		from tbl_notice
+		where seq_tbl_notice = #{seq}
+	 </select>
+	
+	<!-- 공지사항 등록하기 -->
+	
+	<insert id="getNoticeRegister" parameterType="com.spring.jdh.model.NoticeVO">
+	
+	insert into tbl_notice(seq_tbl_notice, notice_title, notice_content, notice_date, notice_status, notice_cate)
+	values(noticeSeq.nextval, #{notice_title}, #{notice_content}, default, 1, #{notice_cate})
 
+	</insert>
+	
+	<!-- 공지사항 삭제하기 -->
+	<update id="getNoticeDelete" parameterType="String">
+	
+	update tbl_notice set notice_status = 0
+	where seq_tbl_notice = #{seq} and notice_status = 1
+	
+	</update>
+	
+	<!-- 공지사항 수정하기 -->
+	
+	<!-- <update id="" parameterType="HashMap">
+		update tbl_notice set notice_title = #{notice_title}, notice_content = #{notice_content}, notice_date = sysdate, notice_cate = #{notice_cate}
+		where seq_tbl_ask = #{seq}
+	</update> -->
+	
+	
 </mapper>

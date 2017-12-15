@@ -23,11 +23,21 @@ public interface InterSnsDAO {
 
 	int registerDetail(UserVO uvo);	// 회원가입
 
-	NoticeVO getNoticeList(NoticeVO noticevo);	// 공지사항 리스트
+	// NoticeVO getNoticeList(NoticeVO noticevo);	// 공지사항 리스트
 
 	int registerImg(MemberImageVO ivo);	// 회원가입(이미지)
 
 	List<HashMap<String, String>> getNoticeList();	// 공지사항 리스트 불러오기 
+
+	NoticeVO getNoticeDetail(HashMap<String, String> map);	// 공지사항 리스트 불러오기
+
+	int getNoticeRegister(NoticeVO nvo);	// 공지사항 등록하기
+
+	int getNoticeDelete(String seq);	// 공지사항 삭제하기
+
+	int getNoticeModify(HashMap<String, Object> notimodiMap);	// 공지사항 수정하기
+
+	
 	
 	
 

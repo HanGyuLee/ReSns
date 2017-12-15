@@ -262,22 +262,8 @@ public class JdhController {
 			
 			
 			
-			String uimg_seq = req.getParameter("uimg_seq");			// 
-			String uimg_profile_filename = req.getParameter("uimg_profile_filename");	//  WAS(톰캣)에 저장될 파일명(20161121324325454354353333432.png)
-			String uimg_header_filename =req.getParameter("uimg_header_filename");		//	WAS(톰캣)에 저장될 파일명(20161121324325454354353333432.png)
-			String uimg_profile_orgfilename = req.getParameter("uimg_profile_orgfilename");	// 진짜 파일명(ex) --> 강아지.png)
-			String uimg_header_orgfilename = req.getParameter("uimg_header_orgfilename");	// 진짜 파일명(ex) --> 강아지.png)
-			String uimg_profile_filesize = req.getParameter("uimg_profile_filesize");	// 진짜 파일 ==> WAS(톰캣) 디스크에 저장됨.
-			String uimg_header_filesize = req.getParameter("uimg_header_filesize");		// 진짜 파일 ==> WAS(톰캣) 디스크에 저장됨.
 			MultipartFile attach = req.getFile("attach");
 			
-			
-			//String profile = req.getParameter("profile");	// 프로필 사진
-			// 이미지
-			
-			// 첨부파일이 있는지 없는지 알아오기 
-			
-			// System.out.println("user_gender"+user_gender);
 			
 			LoginVO lvo = new LoginVO(); 
 			UserVO uvo = new UserVO();
@@ -294,81 +280,48 @@ public class JdhController {
 			uvo.setUser_gender(Integer.parseInt(user_gender));
 			uvo.setUser_selfi(user_selfi);
 			
+			if(attach == null || attach.isEmpty()){
+				ivo.setAttach(null);
+			} else {
+				ivo.setAttach(attach);
+			}
 			
-			ivo.setUimg_seq(Integer.parseInt(uimg_seq));
-			ivo.setUimg_profile_filename(uimg_profile_filename);
-			ivo.setUimg_header_filename(uimg_header_filename);
-			ivo.setUimg_profile_orgfilename(uimg_profile_orgfilename);
-			ivo.setUimg_header_orgfilename(uimg_header_orgfilename);
-			ivo.setUimg_profile_filesize(Integer.parseInt(uimg_profile_filesize));
-			ivo.setUimg_header_filesize(Integer.parseInt(uimg_header_filesize));
-			ivo.setAttach(attach);
 			
-			if (!ivo.getAttach().isEmpty()){	// 첨부파일이 있다면..
-				// attach가 비어있지 않다면(즉, 첨부파이이 있는 경우라면)
+			
+			if (ivo.getAttach() != null && !ivo.getAttach().isEmpty()){	// 첨부파일이 있다면..
 				
-				/*
-					1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
-					>>>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기.
-						우리는 WAS(톰캣)의 webapp/resources/files 라는 폴더로 지정해준다.					
-				*/
-				
-				// WAS 의 webapp 의 절대경로를 알아와야 한다.
 				
 			String root = session.getServletContext().getRealPath("/");
 			String path = root + "resources" +File.separator+ "files";
-			// File.separator 은 운영체제가 Windows 이라면 "\" 를 말하고
-			// File.separator 은 운영체제가 Unix 이라면 "/" 를 말한다.
-			// ==> path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
 			
 			System.out.println("===> 확인용 path => " + path);
-			// 확인용 path => C:\SpringWorkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\files
-			
 			
 			// 2. 파일첨부를 위한 변수의 설정 및 값을 초기화한 후 파일올리기
 				String newFileName = "";
-				// WAS(톰캣) 디스크에 저장할 파일명
 				
 				byte[] bytes = null;
-				// 첨부파일을 WAS(톰캣) 디스크에 저장할때 사용되는 용도
 				
 				long fileSize = 0;
-				// 파일크기를 읽어오기 위한 용도
 				
 				try {
 					bytes = ivo.getAttach().getBytes();
-					// getBytes()는 첨부된 파일을 바이트 단위로 파일을 다 읽어 오는 것이다.
 					
-					//getOriginalFilename() 첨부파일의 이름을 
 					newFileName = fileManager.doFileUpload(bytes, ivo.getAttach().getOriginalFilename(), path);
-					// 이것이 파일을 업로드 해주는 것이다.
-					// boardvo.getAttach().getOriginalFilename() 은 첨부된 파일의 실제 파일명(문자열)을 얻어오는 것이다.
 					
-					// 3. BoardVO boardvo 에 fileName값과 orgFilename 값과 fileSize 값을 넣어주기
-					// ivo.setFileName(newFileName);
-					// WAS(톰캣)에 저장될 파일명(20161121324325454354353333432.png)
+					ivo.setFk_login_id(login_id);
 					
-					ivo.setUimg_profile_filename(uimg_profile_filename);
-					ivo.setUimg_profile_filename(uimg_profile_filename);
+					ivo.setUimg_profile_filename(newFileName);
+					ivo.setUimg_header_filename(newFileName);
 					
 					ivo.setUimg_profile_orgfilename(ivo.getAttach().getOriginalFilename());
 					ivo.setUimg_header_orgfilename(ivo.getAttach().getOriginalFilename());
 					
-					ivo.setUimg_profile_orgfilename(ivo.getAttach().getOriginalFilename());
-					ivo.setUimg_header_orgfilename(ivo.getAttach().getOriginalFilename());
-					// -- 진짜 파일명(강아지.png)   
-					// 사용자가 파일을 업로드 하거나 파일을 다운로드 할때 사용되어지는 파일명
 					
 					fileSize = ivo.getAttach().getSize();
 					// 첨부한 파일의 파일크기인데 리턴타입이 long타입이다.
 					
-					//ivo.setFileSize(String.valueOf(fileSize));
-					// 첨부한 파일의 크기를 String 타입으로 변경해서 저장함.
-					
-					
-					/*ivo.setUimg_profile_filesize(String.valueOf(uimg_profile_filesize));
-					ivo.setUimg_header_filesize(String.valueOf(uimg_header_filesize));*/
-					
+					ivo.setUimg_profile_filesize((int)(long)fileSize);
+					ivo.setUimg_header_filesize((int)(long)fileSize);
 					
 					
 				} catch (Exception e) {
@@ -376,28 +329,19 @@ public class JdhController {
 					e.printStackTrace();
 				} // multipart파일인데 파일 크기를 알아와야 한다.
 				
+			} else {
+				ivo.setFk_login_id(login_id);
+				System.out.println("확인 : " + login_id);
+				
+				ivo.setUimg_profile_filename("profile0.png");
+				ivo.setUimg_header_filename("header0.png");
+				
+				ivo.setUimg_profile_orgfilename("profile0.png");
+				ivo.setUimg_header_orgfilename("header0.png");
+				
+				ivo.setUimg_profile_filesize(20673);
+				ivo.setUimg_header_filesize(20019);
 			}
-			
-			// ***** 첨부파일이 있는지 없는지 알아오기 끝 ***** //
-			
-			//	int n = service.add(boardvo);
-			
-			/*==== #136. 파일첨부가 없는 경우 또는 파일첨부가 있는 경우 
-						 Service 단으로 호출하기
-						 먼저 위의 int n = service.add(boardvo);을 주석처리한다.*/
-			
-			int n = 0;
-			if (ivo.getAttach().isEmpty()){
-				// 파일첨부가 없다라면 기본이미지파일 넣어줌.
-				n = service.add_profile(ivo);
-			}
-			
-			else {
-				// 파일첨부가 있다라면
-				n = service.add_withFile(ivo);
-			}
-			
-			req.setAttribute("n", n);
 			
 			
 			
@@ -416,7 +360,7 @@ public class JdhController {
 			return "msg.notiles";	
 		}
 		
-		// 공지사항
+		// 관리자 공지사항
 		
 		@RequestMapping(value="/noticeAdmMain.re", method={RequestMethod.GET})
 		public String adminNotice(HttpServletRequest req, HttpSession session){
@@ -426,12 +370,139 @@ public class JdhController {
 			noticeList = service.getNoticeList();
 			
 			req.setAttribute("noticeList", noticeList);
-			
-			
-			
+						
 			return "jdh/admNotice.tiles";
 		}
 		
+		// 관리자 공지사항 디테일 뿌리기
+		
+		@RequestMapping(value="/noticeDetail.re", method={RequestMethod.GET})
+		public String helpDetail(HttpServletRequest req, HttpSession session) {
+			HashMap<String, String> map = new HashMap<String, String>(); // xml에 키값을 주기위한 조치
+			
+			String seq = req.getParameter("seq");
+			map.put("seq", seq);
+			
+			NoticeVO nvo = service.getNoticeDetail(map);
+			
+			req.setAttribute("vo", nvo);
+			return "jdh/admNoticeDetail.tiles2";
+		}
+		
+		// 공지사항 등록하기
+		@RequestMapping(value="/noticeregister.re", method={RequestMethod.GET}) 
+			public String noticeRegister(HttpServletRequest req){
+			
+			
+			
+			
+			return "jdh/noticeRegister.tiles2"; 
+		}
+		
+		// 공지사항 등록하기
+		@RequestMapping(value="/noticeregisterEnd.re", method={RequestMethod.POST}) 
+		public String noticeRegisterEnd(HttpServletRequest req){
+			String notice_title = req.getParameter("notice_title");
+			String notice_content = req.getParameter("notice_content");
+			String notice_cate = req.getParameter("notice_cate");
+			
+			NoticeVO nvo = new NoticeVO();
+			
+			nvo.setNotice_title(notice_title);
+			nvo.setNotice_content(notice_content);
+			nvo.setNotice_cate(Integer.parseInt(notice_cate));
+			
+			int n = service.noticeRegister(nvo);
+			
+			
+			if (n == 1) {
+				String msg = "공지사항이 등록되었습니다.";
+				String loc = "/resns/noticeAdmMain.re";
+				
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
+				
+			}
+			
+			return "msg.notiles";
+		}
+		
+		// 공지사항 삭제하기
+		@RequestMapping(value="noticeDelete.re", method={RequestMethod.POST})
+		public String deleteNotice(HttpServletRequest req){	//, HttpSession session
+			
+			String seq = req.getParameter("seq");
+			// System.out.println(seq);
+			/*String login_id = req.getParameter("loginid");
+			
+			LoginVO loginUser = (LoginVO) session.getAttribute("loginUser");
+			
+			String sessionid = "";
+			
+			if (loginUser != null) {	// 유저라면
+				if (!login_id.equals(sessionid) && loginUser.getLogin_status() != 9) {
+					req.setAttribute("msg", "삭제는 관리자만 가능합니다.");
+					req.setAttribute("loc", "/resns/noticeAdmMain.re?seq=" + seq);
+													
+					return "msg.notiles2";
+				}
+			}
+			
+			else {
+				req.setAttribute("msg", "삭제는 관리자만 가능합니다.");
+				req.setAttribute("loc", "/resns/noticeAdmMain.re?seq=" + seq);
+				
+				return "msg.notiles2";
+			}*/
+			
+			
+			
+			int n = service.updateNoticeDelete(seq);	// 공지사항 삭제
+			
+			if (n > 0) {
+				req.setAttribute("msg", "공지사항 삭제 성공");
+				req.setAttribute("loc", "/resns/noticeAdmMain.re");
+			}
+			else {
+				req.setAttribute("msg", "게시물 삭제 실패");
+				req.setAttribute("loc", "/resns/noticeAdmMain.re");
+			}
+				
+			return "msg.notiles2";
+			
+		}// end of public String modifyNotice(HttpServletRequest req, HttpSession session)
+		
+		// 공지사항 수정하기
+		@RequestMapping(value="noticeModify.re", method={RequestMethod.POST})
+		public String noticeModify(HttpServletRequest req){
+			
+			HashMap<String, Object> notimodiMap = new HashMap<String, Object>();
+			
+			String seq_tbl_notice = req.getParameter("seq_tbl_notice");
+			String notice_title = req.getParameter("notice_title");
+			String notice_content = req.getParameter("notice_content");
+			String notice_date = req.getParameter("notice_date");
+			String notice_cate = req.getParameter("notice_cate");
+			
+			notimodiMap.put("seq_tbl_notice", seq_tbl_notice);
+			notimodiMap.put("notice_title", notice_title);
+			notimodiMap.put("notice_content", notice_content);
+			notimodiMap.put("notice_date", notice_date);
+			notimodiMap.put("notice_cate", notice_cate);
+			
+			int n = 0;
+			
+			n = service.noticeModify(notimodiMap);
+			
+			
+			if (n > 0) {
+				req.setAttribute("msg", "수정 완료!");
+				req.setAttribute("loc", "/resns/noticeAdmMain.re");
+			}
+			
+			return "askEnd.notiles2";
+			
+		}
 		
 		
 		

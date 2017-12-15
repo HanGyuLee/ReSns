@@ -5,7 +5,7 @@ public class NoticeVO {
 	int seq_tbl_notice;
 	String notice_title;
 	String notice_content;
-	int notice_date;
+	String notice_date;
 	int notice_status;
 	int notice_cate;
 	
@@ -13,7 +13,7 @@ public class NoticeVO {
 	public NoticeVO(){}
 	
 	
-	public NoticeVO(int seq_tbl_notice, String notice_title, String notice_content, int notice_date, int notice_status,
+	public NoticeVO(int seq_tbl_notice, String notice_title, String notice_content, String notice_date, int notice_status,
 			int notice_cate) {
 		
 		this.seq_tbl_notice = seq_tbl_notice;
@@ -55,12 +55,12 @@ public class NoticeVO {
 	}
 
 
-	public int getNotice_date() {
+	public String getNotice_date() {
 		return notice_date;
 	}
 
 
-	public void setNotice_date(int notice_date) {
+	public void setNotice_date(String notice_date) {
 		this.notice_date = notice_date;
 	}
 
