@@ -42,6 +42,10 @@ public interface InterPmhDAO {
 
 	List<HashMap<String, String>> getReportPg(HashMap<String, String> searchMap); // DB에서 신고정보를 가져오는 메소드(페이징처리)
 	
+	int insertReporting(HashMap<String, String> reportMap); // 신고하는 메소드
+	
+	int checkPreReporting(HashMap<String, String> reportMap); // 이미 신고가 된 글인지 알아오는 메소드
+	
 	/////////////////////////////// 신고게시판 DAO 끝 ////////////////////////////////////////
 	
 	/////////////////////////////// 문의게시판 DAO 시작 ////////////////////////////////////////
@@ -78,5 +82,26 @@ public interface InterPmhDAO {
 
 	int selectAskFile(HashMap<String, Object> helpMap); // update 문을 실행시키기 위해 해당하는 row 가 있는지 검사하는 메소드
 
+	int getHelpTotalCountDelete2(HashMap<String, String> searchMap); // 검색결과 포함 삭제된 게시물이 몇 개 있는지 알아오는 메소드
+
+	int getHelpTotalCountDelete1(); // 삭제된 게시물이 몇 개 있는지 알아오는 메소드
+
 	/////////////////////////////// 문의게시판 DAO 끝 ////////////////////////////////////////
+	
+	/////////////////////////////// FAQ 게시판 DAO 시작 ////////////////////////////////////////
+	List<FaqVO> getFaqListByInput(String searchInput); // 검색된 FAQ 리스트 가져오는 메소드
+
+	List<FaqVO> getFaqListByBtn(); // 버튼으로 FAQ 리스트 전체를 가져오는 메소드
+
+	List<FaqVO> getFaqListByBtn(String searchBtn); // 버튼으로 FAQ 리스트중 선택된 것만 가져오는 메소드
+
+	int insertFaq(HashMap<String, String> faqMap); // FAQ를 입력하는 메소드
+
+	List<FaqVO> getFaqList(); // FAQ 리스트 전체를 가져오는 메소드
+
+	int delSelectedFaq(List<String> faqchkList); // FAQ 게시물 중 선택한 것을 삭제하는 메소드
+
+	int actSelectedFaq(List<String> faqchkList); // FAQ 게시물 중 선택한 것을 활성화하는 메소드
+	
+	/////////////////////////////// FAQ 게시판 DAO 시작 ////////////////////////////////////////
 }

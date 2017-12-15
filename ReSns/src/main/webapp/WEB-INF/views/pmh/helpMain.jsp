@@ -8,6 +8,15 @@
 <title>문의게시판 메인</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/jquery.textillate.js"></script>
+<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
 	table { font-size: 16px;
 			text-align: center;
@@ -26,7 +35,7 @@
 &nbsp;<br>
 
 <div class="main1" align="center" >
-	${currentShowPageNo} / ${pageNo} 페이지, 총 게시글 ${totalCount} 개
+	${currentShowPageNo}  / ${totalPage} 페이지, 총 게시글 ${totalCountExceptDelete} 개
 </div>
 
 <div class="container">
@@ -47,29 +56,41 @@
 					<tbody>
 						<c:if test="${helpList ne null}">
 							<c:forEach var="help" items="${helpList}" varStatus="status">
-								<tr>
-									<td width="10%">${help.seq_tbl_ask}</td>
-									<td width="10%">${help.ask_cate}</td>
-									<td width="10%">
-										<c:if test="${help.ask_secret eq 0}">
-											<img src="<%= request.getContextPath() %>/resources/images/lock.png" width="20px"  height="15px"/>
+								<c:choose>
+								<c:when test="${help.ask_status eq 1}">
+									<tr>
+										<td width="10%">${help.seq_tbl_ask}</td>
+										<td width="10%">${help.ask_cate}</td>
+										<td width="10%">
+											<c:if test="${help.ask_secret eq 0}">
+												<img src="<%= request.getContextPath() %>/resources/images/lock.png" width="20px"  height="15px"/>
+											</c:if>
+										</td>
+										<td style="text-align: left;" width="30%">
+											<c:if test="${help.ask_depthno eq 0}">
+												<span style="cursor: pointer;" onclick="goDetail('${help.seq_tbl_ask}');">${help.ask_title}</span>
+											</c:if>
+											<c:if test="${help.ask_depthno > 0}">
+												<span style="font-style: italic; padding-left: ${help.ask_depthno*20}px; cursor: pointer;" onclick="goDetail('${help.seq_tbl_ask}');">┗re ${help.ask_title}</span>
+											</c:if>
+										&nbsp;
+										<c:if test="${help.ask_newest eq 1}">
+											<img src="<%= request.getContextPath() %>/resources/images/pmh_newest.png" width="30px"  height="15px"/>
 										</c:if>
-									</td>
-									<td style="text-align: left;" width="30%">
-										<c:if test="${help.ask_depthno eq 0}">
-											<span style="cursor: pointer;" onclick="goDetail('${help.seq_tbl_ask}');">${help.ask_title}</span>
-										</c:if>
-										<c:if test="${help.ask_depthno > 0}">
-											<span style="font-style: italic; padding-left: ${help.ask_depthno*20}px; cursor: pointer;" onclick="goDetail('${help.seq_tbl_ask}');">┗re ${help.ask_title}</span>
-										</c:if>
-									&nbsp;
-									<c:if test="${help.ask_newest eq 1}">
-										<img src="<%= request.getContextPath() %>/resources/images/pmh_newest.png" width="30px"  height="15px"/>
-									</c:if>
-									</td>
-									<td width="10%">${help.fk_login_id}</td>
-									<td width="15%">${help.ask_date1}</td>
-								</tr>
+										</td>
+										<td width="10%">${help.fk_login_id}</td>
+										<td width="15%">${help.ask_date1}</td>
+									</tr>
+								</c:when>
+								<c:when test="${help.ask_status eq 0}">
+									<tr>
+										<td>${help.seq_tbl_ask}</td>
+										<td width="10%"></td>
+										<td width="10%"></td>
+										<td colspan="3" style="text-align: left;"><span style="color: red;">삭제된 글입니다</span></td>
+									</tr>							
+								</c:when>
+								</c:choose>
 							</c:forEach>
 						</c:if>
 						

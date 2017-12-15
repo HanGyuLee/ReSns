@@ -8,6 +8,15 @@
 <title>문의게시판 글쓰기 페이지</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/jquery.textillate.js"></script>
+<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
 	div.intro {
 		align: center;
@@ -18,7 +27,7 @@
 	legend { text-align: center;
 			margin-bottom: 10px auto;
 	}
-	div.thumb{ margin-left: 517px; }
+	div.thumb{ margin-left: 34%; }
 	
 </style>
 </head>
@@ -140,7 +149,7 @@
 	
 		<button type="button" id="writeBtn" onclick="goWrite();">작성</button>
 
-		<button type="button" style="margin-left: 100px;" onclick="goReset(this.form);">전부삭제</button>
+		<button type="button" style="margin-left: 100px;" onclick="goReset(this.form);">비우기</button>
 </div>
 
 </fieldset>
@@ -197,7 +206,7 @@
 	}
 	
 	function goReset(frm) {
-		$('[type=text], select , textarea', frm).val('');
+		$('[type=text], select, textarea', frm).val('');
 		$('[type=checkbox]:checked', frm).prop('checked', false);
 		document.getElementById("fk_login_id").value = "${avo.fk_login_id}";
 	}

@@ -14,6 +14,7 @@ import com.spring.pek.model.BoardVO;
 import com.spring.pek.model.ReVO;
 import com.spring.pmh.model.AimageVO;
 import com.spring.pmh.model.AskVO;
+import com.spring.pmh.model.FaqVO;
 import com.spring.pmh.model.InterPmhDAO;
 
 @Service
@@ -139,6 +140,21 @@ public class PmhService implements InterPmhService {
 		List<HashMap<String, String>> rvoList = pdao.getReportPg(searchMap);
 		return rvoList;
 	}
+	
+	// 신고하는 메소드
+	@Override
+	public int insertReporting(HashMap<String, String> reportMap) {
+		int n = pdao.insertReporting(reportMap);
+		return n;
+	}
+	
+	// 이미 신고가 된 글인지 알아오는 메소드
+	@Override
+	public int checkPreReporting(HashMap<String, String> reportMap) {
+		int n = pdao.checkPreReporting(reportMap);
+		return n;
+	}
+
 	////////////////////////////////// 신고게시판 서비스 끝 ///////////////////////////////////////////
 
 	////////////////////////////////// 문의게시판 서비스 시작 ///////////////////////////////////////////
@@ -256,6 +272,67 @@ public class PmhService implements InterPmhService {
 		
 		return n1+n2+n3+n4;
 	}
+
+	@Override
+	public int getHelpTotalCountDelete2(HashMap<String, String> searchMap) {
+		int n = pdao.getHelpTotalCountDelete2(searchMap);
+		return n;
+	}
+
+	@Override
+	public int getHelpTotalCountDelete1() {
+		int n = pdao.getHelpTotalCountDelete1();
+		return n;
+	}
 	
-	//////////////////////////////////문의게시판 서비스 끝 ///////////////////////////////////////////
+	////////////////////////////////// 문의게시판 서비스 끝 ///////////////////////////////////////////
+	
+	////////////////////////////////// FAQ 게시판 서비스 시작 ////////////////////////////////////////
+	
+	@Override
+	public List<FaqVO> getFaqListByInput(String searchInput) {
+		List<FaqVO> faqList = pdao.getFaqListByInput(searchInput);
+		return faqList;
+	}
+
+	@Override
+	public List<FaqVO> getFaqListByBtn(String searchBtn) {
+		
+		List<FaqVO> faqList = null;
+		
+		if (searchBtn.equals("0")) {
+			faqList = pdao.getFaqListByBtn();
+		}
+		else {
+			faqList = pdao.getFaqListByBtn(searchBtn);
+		}
+		
+		return faqList;
+	}
+
+	@Override
+	public int insertFaq(HashMap<String, String> faqMap) {
+		int n = pdao.insertFaq(faqMap);
+		return n;
+	}
+
+	@Override
+	public List<FaqVO> getFaqList() {
+		List<FaqVO> faqList = pdao.getFaqList();
+		return faqList;
+	}
+
+	@Override
+	public int delSelectedFaq(List<String> faqchkList) {
+		int n = pdao.delSelectedFaq(faqchkList);
+		return n;
+	}
+
+	@Override
+	public int actSelectedFaq(List<String> faqchkList) {
+		int n = pdao.actSelectedFaq(faqchkList);
+		return n;
+	}
+	
+	////////////////////////////////// FAQ 게시판 서비스 끝 ////////////////////////////////////////
 }

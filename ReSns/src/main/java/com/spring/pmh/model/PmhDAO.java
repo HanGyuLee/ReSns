@@ -126,6 +126,21 @@ public class PmhDAO implements InterPmhDAO {
 		return rvoList;
 	}
 
+	// 신고하는 메소드
+	@Override
+	public int insertReporting(HashMap<String, String> reportMap) {
+		int n = sqlsession.insert("pmhresns.insertReporting", reportMap);
+		return n;
+	}
+	
+	// 이미 신고가 된 글인지 알아오는 메소드
+	@Override
+	public int checkPreReporting(HashMap<String, String> reportMap) {
+		int n = sqlsession.selectOne("pmhresns.checkPreReporting", reportMap);
+		return n;
+	}
+
+
 	////////////////////////////////////// 신고게시판 DAO 끝 //////////////////////////////////////////
 
 	/////////////////////////////// 문의게시판 DAO 시작 ////////////////////////////////////////
@@ -226,8 +241,64 @@ public class PmhDAO implements InterPmhDAO {
 		return count;
 	}
 
+	@Override
+	public int getHelpTotalCountDelete2(HashMap<String, String> searchMap) {
+		int count = sqlsession.selectOne("pmhresns.getHelpTotalCountDelete2", searchMap);
+		return count;
+	}
 
-	
+	@Override
+	public int getHelpTotalCountDelete1() {
+		int count = sqlsession.selectOne("pmhresns.getHelpTotalCountDelete1");
+		return count;
+	}
+
 	/////////////////////////////// 문의게시판 DAO 끝 ////////////////////////////////////////
 
+	/////////////////////////////// FAQ 게시판 DAO 시작 ////////////////////////////////////////
+
+	@Override
+	public List<FaqVO> getFaqListByInput(String searchInput) {
+		 List<FaqVO> faqList = sqlsession.selectList("pmhresns.getFaqListByInput", searchInput);
+		 return faqList;
+	}
+
+	@Override
+	public List<FaqVO> getFaqListByBtn() {
+		List<FaqVO> faqList = sqlsession.selectList("pmhresns.getFaqListByBtnAll");
+		 return faqList;
+	}
+
+	@Override
+	public List<FaqVO> getFaqListByBtn(String searchBtn) {
+		List<FaqVO> faqList = sqlsession.selectList("pmhresns.getFaqListByBtn", searchBtn);
+		 return faqList;
+	}
+
+	@Override
+	public int insertFaq(HashMap<String, String> faqMap) {
+		int n = sqlsession.insert("pmhresns.insertFaq", faqMap);
+		return n;
+	}
+
+	@Override
+	public List<FaqVO> getFaqList() {
+		List<FaqVO> faqList = sqlsession.selectList("pmhresns.getFaqList");
+		 return faqList;
+	}
+
+	@Override
+	public int delSelectedFaq(List<String> faqchkList) {
+		int n = sqlsession.update("pmhresns.delSelectedFaq", faqchkList);
+		return n;
+	}
+
+	@Override
+	public int actSelectedFaq(List<String> faqchkList) {
+		int n = sqlsession.update("pmhresns.actSelectedFaq", faqchkList);
+		return n;
+	}
+	
+	
+	/////////////////////////////// FAQ 게시판 DAO 끝 ////////////////////////////////////////
 }

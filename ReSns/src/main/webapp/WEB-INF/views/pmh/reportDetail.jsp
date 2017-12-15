@@ -9,7 +9,15 @@
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script src="<%= request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
-
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/jquery.textillate.js"></script>
+<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
 
 	table { width: 40%;

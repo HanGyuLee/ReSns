@@ -28,19 +28,15 @@ public class PmhPaging {
 		else {
 			currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
 		}
-		
-		
+				
 		startRno = ((currentShowPageNo - 1)*sizePerPage) + 1;
 		endRno = startRno + sizePerPage - 1;
-		
-		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; 
-	
+				
 		map.put("startRno", String.valueOf(startRno));
 		map.put("endRno", String.valueOf(endRno));
 		map.put("sizePerPage", String.valueOf(sizePerPage));
 		map.put("currentShowPageNo", String.valueOf(currentShowPageNo));
 		map.put("blockSize", String.valueOf(blockSize));
-		map.put("pageNo", String.valueOf(pageNo));
 		
 		return map;
 		
@@ -51,8 +47,7 @@ public class PmhPaging {
 		int sizePerPage = Integer.parseInt(step1map.get("sizePerPage"));
 		int blockSize = Integer.parseInt(step1map.get("blockSize"));
 		int currentShowPageNo = Integer.parseInt(step1map.get("currentShowPageNo"));
-		
-		
+				
 		int totalPage = (int)Math.ceil( (double)totalCount/sizePerPage );
 		
 		String pagebar = "<ul>";

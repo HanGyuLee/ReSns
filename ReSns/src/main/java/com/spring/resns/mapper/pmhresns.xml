@@ -47,22 +47,22 @@
 	</select> -->
 	
 		<resultMap type="java.util.HashMap" id="getReportDetailMap">
-		<result property="seq_tbl_report" column="seq_tbl_report" javaType="String" />	
-		<result property="report_cate" column="report_cate" javaType="String" />	
-		<result property="reporting_name" column="reporting_name" javaType="String" />	
-		<result property="reporting_id" column="reporting_id" javaType="String" />	
-		<result property="report_name" column="report_name" javaType="String" />	
-		<result property="report_id" column="report_id" javaType="String" />	
-		<result property="report_date1" column="report_date1" javaType="String" />	
-		<result property="report_date2" column="report_date2" javaType="String" />	
-		<result property="report_status" column="report_status" javaType="String" />	
-		<result property="fk_seq_tbl_board" column="fk_seq_tbl_board" javaType="String" />	
-		<result property="report_content" column="report_content" javaType="String" />	
+		<result property="seq_tbl_report"	 column="seq_tbl_report"	 javaType="String" />	
+		<result property="report_cate"		 column="report_cate"		 javaType="String" />	
+		<result property="reporting_name"	 column="reporting_name"	 javaType="String" />	
+		<result property="reporting_id"		 column="reporting_id"		 javaType="String" />	
+		<result property="report_name"		 column="report_name"		 javaType="String" />	
+		<result property="report_id"		 column="report_id"			 javaType="String" />	
+		<result property="report_date1"		 column="report_date1"		 javaType="String" />	
+		<result property="report_date2"		 column="report_date2"		 javaType="String" />	
+		<result property="report_status"	 column="report_status"		 javaType="String" />	
+		<result property="fk_seq_tbl_board"	 column="fk_seq_tbl_board"	 javaType="String" />	
+		<result property="report_content" 	 column="report_content"	 javaType="String" />	
 	</resultMap>
 	<select id="getReportDetail" parameterType="String" resultMap="getReportDetailMap">
 		select seq_tbl_report, report_cate, reporting_name, reporting_id, report_name, report_id, report_date1, report_date2, report_status, fk_seq_tbl_board, report_content
 		from view_report_detail
-		where fk_seq_tbl_board = #{seq}
+		where seq_tbl_report = #{seq}
 	</select>
 	
 	<select id="getBoardContent" parameterType="String" resultType="com.spring.pek.model.BoardVO">
@@ -103,7 +103,7 @@
 	</update>
 	
 	<update id="updateBoardContentStatusAct" parameterType="String" >
-		update tbl_board set board_status = 1
+		update tbl_board set board_status = 0
 		where seq_tbl_board = #{seq}
 	</update>
 	
@@ -114,7 +114,7 @@
 	
 	<update id="updateReportStatusAct" parameterType="String" >
 		update tbl_report set report_date2 = null
-       			            , report_status = 2
+       			            , report_status = 1
 		where fk_seq_tbl_board = #{seq}
 	</update>
 	
@@ -135,7 +135,16 @@
 	    where ${searchType} like '%' || #{searchInput} || '%'
 	</select>
 	
+	<insert id="insertReporting" parameterType="HashMap">
+		insert into tbl_report(fk_seq_tbl_board, fk_login_id, report_user, seq_tbl_report, report_content, report_cate, report_date1, report_date2, report_status)
+		values(#{fk_seq_tbl_board}, #{fk_login_id}, #{report_user}, seq_report.nextval, #{report_content}, #{report_cate}, default, null, default)
+	</insert>
 	
+	<select id="checkPreReporting" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_report
+		where fk_seq_tbl_board = #{fk_seq_tbl_board} and fk_login_id = #{fk_login_id} and report_user = #{report_user}
+	</select>
 	<!-- //////////////// 신고게시판 mapper 끝 ////////////////// -->
 	
 	<!-- //////////////// 문의게시판 mapper 시작 ////////////////// -->
@@ -158,7 +167,6 @@
 		select rno, seq_tbl_ask, ask_cate, ask_title, fk_login_id, ask_date1, ask_status, ask_secret, ask_groupno, ask_fk_seq, ask_depthno, ask_newest
 		from view_help_main
 		where rno >= #{startRno} and rno <= #{endRno}
-		and ask_status = 1
 		and ${searchType} like '%'||#{searchInput}||'%'
 		start with ask_fk_seq = 0
 		connect by prior seq_tbl_ask = ask_fk_seq
@@ -171,7 +179,6 @@
 		select rno, seq_tbl_ask, ask_cate, ask_title, fk_login_id, ask_date1, ask_status, ask_secret, ask_groupno, ask_fk_seq, ask_depthno, ask_newest
 		from view_help_main
 		where rno >= #{startRno} and rno <= #{endRno}
-		and ask_status = 1
 		start with ask_fk_seq = 0
 		connect by prior seq_tbl_ask = ask_fk_seq
 		order siblings by ask_groupno desc, seq_tbl_ask asc
@@ -258,5 +265,73 @@
 		from tbl_aimage
 		where aimg_category = 1 and aimg_seq = #{seq}
 	</select>
+	
+	<select id="getHelpTotalCountDelete2" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_ask
+		where ask_status = 0
+		and ask_content like '%'||#{searchInput}||'%';
+	</select>
+	
+	<select id="getHelpTotalCountDelete1" resultType="int">
+		select count(*)
+		from tbl_ask
+		where ask_status = 0
+	</select>
 	<!-- //////////////// 문의게시판 mapper 끝 ////////////////// -->
+	
+	<!-- //////////////// FAQ 게시판 mapper 시작 ////////////////// -->
+	
+	<select id="getFaqListByInput" parameterType="String" resultType="com.spring.pmh.model.FaqVO">
+		select seq_tbl_faq, faq_category, faq_title, to_char(faq_content) as faq_content, to_char(faq_answer) as faq_answer, faq_status
+		from tbl_faq
+		where faq_title like '%'||#{searchInput}||'%' or to_char(faq_content) like '%'||#{searchInput}||'%' or to_char(faq_answer) like '%'||#{searchInput}||'%'
+		and faq_status = 1
+	</select>
+	
+	<select id="getFaqListByBtnAll" resultType="com.spring.pmh.model.FaqVO">
+		select seq_tbl_faq, faq_category, faq_title, faq_content, faq_answer, faq_status
+		from tbl_faq
+		where faq_status = 1
+	</select>
+	
+	<select id="getFaqListByBtn" parameterType="String" resultType="com.spring.pmh.model.FaqVO">
+		select seq_tbl_faq, faq_category, faq_title, faq_content, faq_answer, faq_status
+		from tbl_faq
+		where faq_category = #{searchBtn}
+		and faq_status = 1
+	</select>
+	
+	<insert id="insertFaq" parameterType="HashMap">
+		insert into tbl_faq(seq_tbl_faq, faq_category, faq_title, faq_content, faq_answer, faq_status)
+		values(seq_tbl_faq.nextval, #{faq_category}, #{faq_title}, #{faq_content}, #{faq_answer}, default)
+	</insert>
+	
+	<select id="getFaqList" resultType="com.spring.pmh.model.FaqVO">
+		select seq_tbl_faq, faq_category, faq_title, faq_content, faq_answer, faq_status
+		from tbl_faq
+		order by faq_category, seq_tbl_faq
+	</select>
+	
+	<update id="delSelectedFaq" parameterType="list">
+		<if test="list != null">
+		update tbl_faq set faq_status = 0
+			where seq_tbl_faq in 
+			<foreach collection="list" item="faq" open="(" close=")" separator=",">
+				#{faq}
+			</foreach>
+		</if>
+	</update>
+	
+		<update id="actSelectedFaq" parameterType="list">
+		<if test="list != null">
+		update tbl_faq set faq_status = 1
+			where seq_tbl_faq in 
+			<foreach collection="list" item="faq" open="(" close=")" separator=",">
+				#{faq}
+			</foreach>
+		</if>
+	</update>
+	
+	<!-- //////////////// FAQ 게시판 mapper 끝 ////////////////// -->
 </mapper>

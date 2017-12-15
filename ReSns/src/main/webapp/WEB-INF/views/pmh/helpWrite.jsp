@@ -8,6 +8,15 @@
 <title>문의게시판 글쓰기 페이지</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+<script src="<%= request.getContextPath() %>/resources/textillate-master/jquery.textillate.js"></script>
+<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
 	div.intro {
 		align: center;
@@ -103,6 +112,7 @@
   <label class="col-md-4 control-label" for="aimg_category">파일첨부</label>
   <div class="col-md-4">
     <input id="aimg_category" name="file" class="input-file" type="file">
+     <span class="help-block">첨부파일은 gif, jpg, jpeg, png 확장자만 가능합니다.</span>  
   </div>
 </div>
 
@@ -128,7 +138,7 @@
 	
 		<button type="button" id="writeBtn" onclick="goWrite();">작성</button>
 
-		<button type="reset" style="margin-left: 100px;">취소</button>
+		<button type="reset" style="margin-left: 100px;">비우기</button>
 </div>
 
 </fieldset>
@@ -145,6 +155,21 @@
 	
 	function goWrite() {
 		
+		var file = writeFrm.file.value;
+		
+		if (file != "") {
+			
+			var fileExt = file.substring(file.lastIndexOf(".") + 1);
+			
+			var reg = /gif|jpg|jpeg|png/i;
+			
+			if (reg.test(fileExt) == false) {
+				alert("첨부파일은 gif, jpg, jpeg, png 확장자만 가능합니다.");
+				
+				return;
+			} 
+		}
+		
 		var checked = document.getElementById("ask_statusCheck").checked;
 				
 		if (checked) {
@@ -160,6 +185,8 @@
 		frm.action = "<%= request.getContextPath() %>/helpWriteEnd.re";
 		frm.submit();
 	}
+	
+	
 
 	document.title ="문의게시판 글쓰기 페이지";
 </script>

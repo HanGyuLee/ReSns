@@ -2,11 +2,13 @@ package com.spring.pmh.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.Multipart;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.spring.pek.model.BoardVO;
 import com.spring.pek.model.ReVO;
 import com.spring.pmh.model.AimageVO;
 import com.spring.pmh.model.AskVO;
+import com.spring.pmh.model.FaqVO;
 import com.spring.pmh.service.InterPmhService;
 
 @Controller
@@ -170,6 +173,93 @@ public class PmhController {
 		}
 		return "msg.notiles2";
 	}
+	
+	@RequestMapping(value="/reportingBoard.re", method={RequestMethod.GET})
+	public String requireLogin2_reportingBoard(HttpServletRequest req, HttpServletResponse res, HttpSession ses) {
+		
+		String fk_login_id = req.getParameter("fk_login_id");
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
+		
+		LoginVO loginUser = (LoginVO) ses.getAttribute("loginUser");
+		
+		if (loginUser == null) {
+			
+			req.setAttribute("msg", "회원전용 메뉴입니다. 로그인을 해 주세요.");
+			req.setAttribute("loc", "/resns/login.re");
+			
+			String url = MyUtil.getCurrentURL(req);
+			ses.setAttribute("gobackURL", url);
+			
+			return "msg.notiles2";
+		}
+		
+		HashMap<String, String> reportMap = new HashMap<String, String>();
+		
+		reportMap.put("fk_login_id", fk_login_id);
+		reportMap.put("fk_seq_tbl_board", seq_tbl_board);
+		reportMap.put("report_user", loginUser.getLogin_id());
+		
+		int n1 = service.checkPreReporting(reportMap);
+		
+		if (n1 > 0) {
+			String msg = "이미 신고한 글입니다.";
+			String loc = "/resns/index.re";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "msg.notiles2";
+		}
+						
+		req.setAttribute("fk_login_id", fk_login_id);
+		req.setAttribute("seq_tbl_board", seq_tbl_board);
+		req.setAttribute("loginUser", loginUser);
+				
+		return "pmh/reportingBoard.tiles2";
+	}
+	
+	@RequestMapping(value="/reportingBoardHandler.re", method={RequestMethod.POST})
+	public String reportingBoardHandler(HttpServletRequest req, HttpServletResponse res, HttpSession ses) {
+		
+		String fk_login_id = req.getParameter("fk_login_id"); // pek94
+		String fk_seq_tbl_board = req.getParameter("fk_seq_tbl_board"); // 31
+		String report_user = req.getParameter("report_user"); // admin89
+		String report_content = req.getParameter("report_content"); // 신고합니다
+		String report_cate = req.getParameter("report_cate"); // 1
+	
+		HashMap<String, String> reportMap = new HashMap<String, String>();
+		
+		reportMap.put("fk_login_id", fk_login_id);
+		reportMap.put("fk_seq_tbl_board", fk_seq_tbl_board);
+		reportMap.put("report_user", report_user);
+		reportMap.put("report_content", report_content);
+		reportMap.put("report_cate", report_cate);
+		
+		int n1 = service.insertReporting(reportMap);
+		
+		if (n1 > 0) {
+			try {
+				res.sendRedirect("reportBoardEnd.re");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			String msg = "신고에 실패하였습니다.";
+			String loc = "/resns/index.re"; 
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+		}
+		return "msg.notiles2";
+		
+	}
+	
+	@RequestMapping(value="/reportBoardEnd.re")
+	public String reportBoardEnd() {
+		
+		return "pmh/reportingBoardEnd.tiles2";
+	}
 /////////////////////////////////////////// 신고게시판 컨트롤러 끝 //////////////////////////////////////////////////
 	
 /////////////////////////////////////////// 문의게시판 컨트롤러 시작 /////////////////////////////////////////////////
@@ -205,16 +295,22 @@ public class PmhController {
 		
 		// 총게시물 건수를 구한다.
 		int totalCount = 0;
+		int totalCountDelete = 0;
 		if (searchInput != null && !searchInput.trim().isEmpty()) { // 검색어가 있는 경우
 			    totalCount = service.getHelpTotalCount2(searchMap);
+			    totalCountDelete = service.getHelpTotalCountDelete2(searchMap);
 			}
 			
 		else { // 검색어가 없는 경우
 			    totalCount = service.getHelpTotalCount1();
+			    totalCountDelete = service.getHelpTotalCountDelete1();
 		} 
 		
 		String destination = "help.re";
 		String step2bar = ppgg.makePageBarStep2(step1map, totalCount, searchType, searchInput, destination);
+		
+		int totalPage = (int)Math.ceil( (double)totalCount/Integer.parseInt(step1map.get("sizePerPage")));
+		int totalCountExceptDelete = totalCount - totalCountDelete;
 		
 		req.setAttribute("pagebar", step2bar);
 		
@@ -225,6 +321,8 @@ public class PmhController {
 		req.setAttribute("currentShowPageNo", step1map.get("currentShowPageNo"));
 		req.setAttribute("pageNo", step1map.get("pageNo"));
 		req.setAttribute("totalCount", totalCount);
+		req.setAttribute("totalPage", totalPage);
+		req.setAttribute("totalCountExceptDelete", totalCountExceptDelete);
 		
 		String url = MyUtil.getCurrentURL(req);
 		ses.setAttribute("gobackURL", url);
@@ -399,6 +497,8 @@ public class PmhController {
 		if (aivo != null)
 			req.setAttribute("aivo", aivo);
 		
+		req.setAttribute("loginUser", loginUser);
+		
 		ses.setAttribute("gobackURL", "helpDetail.re?seq=" + seq);
 		
 		return "pmh/helpDetail.tiles2";
@@ -560,11 +660,131 @@ public class PmhController {
 	
 /////////////////////////////////////////// 자주묻는질문 게시판 컨트롤러 시작 /////////////////////////////////////////////////
 	@RequestMapping(value="faq.re", method={RequestMethod.GET})
-	public String faqMain(HttpServletRequest req) {
+	public String faqMain(HttpServletRequest req, HttpSession ses) {
 		
+		LoginVO loginUser = (LoginVO) ses.getAttribute("loginUser");
+		
+		if (loginUser != null)
+			req.setAttribute("loginUser", loginUser);
 		
 		return "pmh/faqMain.tiles2";
 	}
+	
+	@RequestMapping(value="faqSearchInput.re", method={RequestMethod.GET})
+	public String faqSearchInput(HttpServletRequest req) {
+		
+		List<FaqVO> faqList = null;
+		
+		String searchInput = req.getParameter("searchInput");
+		String searchBtn = req.getParameter("searchBtn");
+		
+		if (searchInput != null) {
+			faqList = service.getFaqListByInput(searchInput);
+		}
+		else if (searchBtn != null) {
+			faqList = service.getFaqListByBtn(searchBtn);
+		}
+		
+		req.setAttribute("faqList", faqList);
+		
+		return "faqContent.notiles2";
+	}
+	
+	@RequestMapping(value="faqWrite.re", method={RequestMethod.GET})
+	public String faqWrite() {
+		
+		return "pmh/faqWrite.tiles2";
+	}
+	
+	@RequestMapping(value="faqWriteEnd.re", method={RequestMethod.POST})
+	public String faqWriteEnd(HttpServletRequest req) {
+		
+		String faq_category = req.getParameter("faq_category");
+		String faq_title = req.getParameter("faq_title");
+		String faq_content = req.getParameter("faq_content");
+		String faq_answer = req.getParameter("faq_answer");
+		
+		HashMap<String, String> faqMap = new HashMap<String, String>();
+		faqMap.put("faq_category", faq_category);
+		faqMap.put("faq_title", faq_title);
+		faqMap.put("faq_content", faq_content);
+		faqMap.put("faq_answer", faq_answer);
+		
+		int n = service.insertFaq(faqMap);
+		
+		if (n > 0) {
+			req.setAttribute("msg", "FAQ 작성 성공!");
+			req.setAttribute("loc", "/resns/faq.re");
+		}
+		else {
+			req.setAttribute("msg", "FAQ 작성 실패!");
+			req.setAttribute("loc", "/resns/faq.re");
+		}
+		
+		return "msg.notiles2";
+	}
+	
+	@RequestMapping(value="faqModifyDelete.re", method={RequestMethod.GET})
+	public String faqModifyDelete(HttpServletRequest req) {
+		
+		List<FaqVO> faqList = service.getFaqList();
+		
+		req.setAttribute("faqList", faqList);
+		
+		return "pmh/faqModifyDelete.tiles2";
+	}
+	
+	@RequestMapping(value="faqDeleteEnd.re", method={RequestMethod.POST})
+	public String faqDeleteEnd(HttpServletRequest req) {
+		
+		String[] faqchkArr = req.getParameterValues("faqchk");
+		
+		List<String> faqchkList = new ArrayList<String>();
+		
+		if (faqchkArr != null) {
+			for (int i = 0; i < faqchkArr.length; i++) {
+				faqchkList.add(faqchkArr[i]); 
+			}
+					
+			int n = service.delSelectedFaq(faqchkList);
+			
+			req.setAttribute("msg", n + "개의 게시물이 삭제되었습니다.");
+			req.setAttribute("loc", "/resns/faqModifyDelete.re");
+		}
+		else {
+			req.setAttribute("msg", "게시물 삭제에 실패하였습니다.");
+			req.setAttribute("loc", "/resns/faqModifyDelete.re");
+		}
+						
+		return "msg.notiles2";
+	}
+	
+	@RequestMapping(value="faqActivateEnd.re", method={RequestMethod.POST})
+	public String faqActivateEnd(HttpServletRequest req) {
+		
+		String[] faqchkArr = req.getParameterValues("faqchk");
+		
+		List<String> faqchkList = new ArrayList<String>();
+		
+		if (faqchkArr != null) {
+			for (int i = 0; i < faqchkArr.length; i++) {
+				faqchkList.add(faqchkArr[i]); 
+			}
+					
+			int n = service.actSelectedFaq(faqchkList);
+			
+			req.setAttribute("msg", n + "개의 게시물이 활성화되었습니다.");
+			req.setAttribute("loc", "/resns/faqModifyDelete.re");
+		}
+		else {
+			req.setAttribute("msg", "게시물 활성화에 실패하였습니다.");
+			req.setAttribute("loc", "/resns/faqModifyDelete.re");
+		}
+						
+		return "msg.notiles2";
+	}
+	
+
 	
 /////////////////////////////////////////// 자주묻는질문 게시판 컨트롤러 끝 /////////////////////////////////////////////////
 	
