@@ -424,7 +424,7 @@ $(function(){
 				<h1 class="text-center" >　Gyu Lee's Page</h1>
 				<ul class="list-inline text-center" style="font-size:20pt; font-weight:bold;">
 					<li>　　게시물　|　</li>
-					<li><a href="/resns/music.re">유투브　|</a></li>
+					<li><a href="/resns/music.re?fk_login_id=${fk_login_id}">유투브　|</a></li>
 					<li>문   답</li>
 				</ul>
 			</div>

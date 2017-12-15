@@ -7,7 +7,7 @@
 <script type="text/javascript">
 <c:if test="${n == 1}">
 	alert("글삭제 성공:D");
-	location.href="<%= request.getContextPath() %>/music.re";       
+	location.href="<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}&seq_tbl_music=${seq_tbl_music}";       
 </c:if>
 
 <c:if test="${n != 1}">

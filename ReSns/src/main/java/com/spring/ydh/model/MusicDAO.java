@@ -109,15 +109,15 @@ public class MusicDAO implements InterMusicDAO {
 
 
 	@Override//글하나보여주기
-	public MusicVO mview(String seq_tbl_music) {
-		MusicVO mvo = sqlsession.selectOne("ydhresns.mview",seq_tbl_music);
+	public MusicVO mview(HashMap<String, String> map) {
+		MusicVO mvo = sqlsession.selectOne("ydhresns.mview",map);
 		return mvo;
 	}
 
 	
 	@Override//글수정폼띄우기
-	public MusicVO mupdate(String seq_tbl_music) {
-		MusicVO mvo = sqlsession.selectOne("ydhresns.mupdate",seq_tbl_music);
+	public MusicVO mupdate(HashMap<String, String> map) {
+		MusicVO mvo = sqlsession.selectOne("ydhresns.mupdate",map);
 		return mvo;
 	}
 
@@ -130,15 +130,18 @@ public class MusicDAO implements InterMusicDAO {
 
 
 	@Override//글삭제
-	public int mdel(String seq_tbl_music) {
-			int n = sqlsession.delete("ydhresns.mdel", seq_tbl_music);
+	public int mdel(HashMap<String, String> map) {
+			int n = sqlsession.delete("ydhresns.mdel", map);
 		return n;
 	}
 
 
 	@Override//체크박스글삭제
-	public int delcheckbox(String seq_tbl_music) {
-		int n = sqlsession.delete("ydhresns.delcheckbox",seq_tbl_music);
+	public int delcheckbox(HashMap<String,Object> map) {
+		
+		int n = sqlsession.delete("ydhresns.delcheckbox",map);
+		System.out.println("DAO::"+n);
+		System.out.println("DAO SEQ::"+map);
 		return n;
 	}
 
@@ -192,11 +195,31 @@ public class MusicDAO implements InterMusicDAO {
 	}
 
 
-	@Override//tx처리 댓글달린 부모글 업뎃
+	@Override//TX처리 댓글달린 부모글 업뎃
 	public int updateCommentCount(String seq_tbl_music) {
 		int n = sqlsession.insert("ydhresns.updateCommentCount",seq_tbl_music);
 		return n;
 	}
+
+	
+	@Override//댓글삭제
+	public int deletere(MCommentVO commentvo) {
+		int n = sqlsession.delete("ydhresns.deletere", commentvo);
+		return n;
+	}
+	@Override//댓글삭제 TX처리
+	public int updateDelCommentCount(String seq_tbl_music) {
+		int n = sqlsession.insert("ydhresns.updateDelCommentCount",seq_tbl_music);
+		return n;
+	}
+
+	@Override//글하나보여주기
+	public HashMap<String, String> view(String seq_tbl_music) {
+		HashMap<String, String> map = sqlsession.selectOne("ydhresns.view",seq_tbl_music);
+		return map;
+	}
+
+
 
 
 	

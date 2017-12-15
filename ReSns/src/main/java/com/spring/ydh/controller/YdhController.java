@@ -217,8 +217,11 @@ public class YdhController {
 	public String searchJsonMap(HttpServletRequest req){
 		
 		String search = req.getParameter("search");
+		
 		HashMap<String, String> map = new HashMap<String,String>();
 		map.put("search", search);
+		
+		
 		
 		
 		String jMap = service.jMap(map);//지도검색
@@ -245,10 +248,12 @@ public class YdhController {
 	
 	//글목록보기
 	@RequestMapping(value="/music.re", method={RequestMethod.GET})
-	public String music(HttpServletRequest req){
+	public String music(HttpServletRequest req, HttpSession session){
 		
 		//List<String>  mlist = service.mlist();//글조회 페이징(X)
 		
+		//LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String fk_login_id = req.getParameter("fk_login_id");
 		List<String> mlist = null;
 		
 		String gobackURL = MyUtil.getCurrentURL(req);
@@ -261,6 +266,7 @@ public class YdhController {
 		HashMap<String, String> map = new HashMap<String,String>();
 		map.put("colname", colname);
 		map.put("search", search);
+		map.put("fk_login_id", fk_login_id);
 		
 		//페이징처리
 		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
@@ -292,9 +298,11 @@ public class YdhController {
     		(!colname.equals("null") && !search.equals("null"))
     	   ){
     		mlist = service.mlist(map);//검색어가 있는 페이징
+    		//System.out.println("mlist::"+mlist);
     	}
-    	    mlist = service.mlist2(map);//검색어가 없는 페이징
-		
+    	else{
+    		mlist = service.mlist2(map);//검색어가 없는 페이징
+    	}
     	    //페이지바 : 총갯수 구하기
     	    if((colname != null && search != null) && 
 	    	   (!colname.trim().isEmpty() && !search.trim().isEmpty()) &&
@@ -315,13 +323,13 @@ public class YdhController {
 	    	pagebar += "<ul>";
 	    	
 	    	req.setAttribute("pagebar", pagebar);
-	    	
 	    	req.setAttribute("mlist", mlist);
 	    	req.setAttribute("colname", colname);//검색어 keeping위해 키값 넘김
 	    	req.setAttribute("search", search);//검색어 keeping위해 키값 넘김
-		
-		
-		    return "ydh/music.tiles2";
+	    	req.setAttribute("fk_login_id", fk_login_id);
+	  
+		    	return "ydh/music.tiles2";
+		    
 	}//music.re
 	
 	//유튭 검색 자동완성
@@ -348,10 +356,14 @@ public class YdhController {
 	//글쓰기폼페이지요청
 	@RequestMapping(value="/mwrite.re", method={RequestMethod.GET})
 	public String mwrite(HttpServletRequest req){
+	    
+		String fk_login_id = req.getParameter("fk_login_id");
+		
 		   //댓글포함
-		 String seq_remusic = req.getParameter("seq_remusic");
-		 req.setAttribute("seq_remusic", seq_remusic);
-			
+		 String seq_tbl_remusic = req.getParameter("seq_tbl_remusic");
+		 req.setAttribute("seq_tbl_remusic", seq_tbl_remusic);
+		req.setAttribute("fk_login_id", fk_login_id);
+
 		  
 		return "ydh/mwrite.tiles2";
 	}//write()
@@ -359,14 +371,16 @@ public class YdhController {
 	//글쓰기
 	@RequestMapping(value="/mwriteEnd.re", method={RequestMethod.POST})
 	public String mwriteEnd(HttpServletRequest req, HttpSession ses, MusicVO mvo){//나중에aop추가
-		 
-		 int n = service.mwrite(mvo);//유튭글insert
+		   
+		   String fk_login_id = req.getParameter("fk_login_id");
+		    int n = service.mwrite(mvo);//유튭글insert
+			req.setAttribute("n", n);
+			req.setAttribute("fk_login_id", fk_login_id);
+			return "ydh/mwriteEnd.tiles2";
+		 }
+		    
 	
-		  req.setAttribute("n", n);
-		  
-		return "ydh/mwriteEnd.tiles2";
 	
-	}
 	
 	 // 댓글 쓰기 
     @RequestMapping(value="/addComment.re", method={RequestMethod.GET})
@@ -377,12 +391,15 @@ public class YdhController {
     				동시에 두 테이블에 변화가 있어야함으로 TX가 필요하다. (TX발생함으로 throws Throwable처리를 해준다.)
     	*/
     	
-    	String gobackURL = req.getParameter("gobackURL");
     	
-    	if(req.getParameter("login_id").isEmpty() ){
-
+    	
+    	String fk_login_id = req.getParameter("fk_login_id");
+    
+    	//String gobackURL = req.getParameter("gobackURL");
+    	if(req.getParameter("re_login_id").isEmpty() ){
+              
     		String msg = "";
-    		String loc = gobackURL;
+    		String loc = "/resns/mview.re";
     		req.setAttribute("msg", msg);
     		req.setAttribute("loc", loc);
     		
@@ -403,7 +420,9 @@ public class YdhController {
     		String seq_tbl_music = commentvo.getSeq_tbl_music();
     		
     		req.setAttribute("seq_tbl_music", seq_tbl_music);
-    		req.setAttribute("gobackURL", "mview.re");
+    		req.setAttribute("fk_login_id", fk_login_id);
+    	
+    		//req.setAttribute("gobackURL", "mview.re");
     		
     	return "ydh/addComment.tiles2";
     	// /WEB-INF/views2/board/addCommentEnd.jsp파일을 생성한다.
@@ -411,6 +430,39 @@ public class YdhController {
 	
     
     //댓글삭제
+    @RequestMapping(value="/remdel.re", method={RequestMethod.GET})
+	public String remdel(HttpServletRequest req, MCommentVO commentvo)
+	throws Throwable{
+
+    	
+    	int n = service.deletere(commentvo);//댓글삭제
+	    
+    	
+    	
+    	if(n > 0 ){
+    		
+    			req.setAttribute("msg", "댓글삭제 완료!!");
+    	}else{
+    			
+    			req.setAttribute("msg", "댓글삭제 실패ㅠㅠ");
+    	}
+    		
+    	
+    		String seq_tbl_music = commentvo.getSeq_tbl_music();
+    		String seq_tbl_remusic = commentvo.getSeq_tbl_remusic();
+        	String re_login_id =commentvo.getRe_login_id();
+        	String fk_login_id =req.getParameter("fk_login_id");
+        	
+    		req.setAttribute("seq_tbl_music", seq_tbl_music);
+    		req.setAttribute("fk_login_id", fk_login_id);
+    		req.setAttribute("re_login_id", re_login_id);
+    		req.setAttribute("seq_tbl_remusic", seq_tbl_remusic);
+    		
+    	     req.setAttribute("n", n);
+
+    	
+    	return "ydh/remdel.tiles2";
+    }
     
     
 	//글한개보기
@@ -418,7 +470,9 @@ public class YdhController {
 	public String mview(HttpServletRequest req,HttpSession session){
 		 
 		String seq_tbl_music = req.getParameter("seq_tbl_music");//글번호
+		String fk_login_id = req.getParameter("fk_login_id");
 		MusicVO mvo = null;
+		
 		
 		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
     	String userid = null;
@@ -426,8 +480,11 @@ public class YdhController {
         	if(loginUser != null ){
         		userid = loginUser.getLogin_id();
         	}
-		
-        	mvo =service.mview(seq_tbl_music,userid);//글하나보여주기
+		    HashMap<String,String> map = new HashMap<String,String>();
+		    map.put("seq_tbl_music", seq_tbl_music);
+		    map.put("fk_login_id", fk_login_id);
+		   
+        	mvo =service.mview(map,userid);//글하나보여주기
 		  
         	//글쓸때 엔터
             String music_content = mvo.getMusic_content();
@@ -435,10 +492,16 @@ public class YdhController {
             mvo.setMusic_content(music_content);
             
 		   req.setAttribute("mvo", mvo);
+		   req.setAttribute("fk_login_id", fk_login_id);
+		   req.setAttribute("seq_tbl_music", seq_tbl_music);
 		   
+		
+		//test
+        // HashMap<String,String> view = service.view(seq_tbl_music,userid);
 		   //댓글
 		   List<HashMap<String, String> > commentList = service.commentList(seq_tbl_music);
 		   req.setAttribute("commentList", commentList);
+		   //req.setAttribute("view", view);
 		
 		return "ydh/mview.tiles2";
 	
@@ -450,10 +513,17 @@ public class YdhController {
 	public String meditEnd(HttpServletRequest req,HttpSession session){
 		 
 		String seq_tbl_music = req.getParameter("seq_tbl_music");
+		String fk_login_id = req.getParameter("fk_login_id");
 		
-		MusicVO mvo = service.mupdate(seq_tbl_music);//글수정폼띄우기
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("seq_tbl_music", seq_tbl_music);
+		map.put("fk_login_id", fk_login_id);
+		
+		MusicVO mvo = service.mupdate(map);//글수정폼띄우기
+		
 		req.setAttribute("mvo", mvo);
-		
+		req.setAttribute("fk_login_id", fk_login_id);
+		req.setAttribute("seq_tbl_music", seq_tbl_music);
 		return "ydh/medit.tiles2";
 	
 	}
@@ -462,20 +532,29 @@ public class YdhController {
 		@RequestMapping(value="/meditEnd.re", method={RequestMethod.POST})
 		public String medit(MusicVO mvo , HttpServletRequest req ){
 			
+			String fk_login_id = req.getParameter("fk_login_id");
+			String seq_tbl_music = req.getParameter("seq_tbl_music");
+			
 			HashMap<String,String> map = new HashMap<String,String>();
 			map.put("music_name", mvo.getMusic_name());
 			map.put("music_content", mvo.getMusic_content());
 			map.put("music_link", mvo.getMusic_link());
 			map.put("seq_tbl_music", mvo.getSeq_tbl_music());
+			map.put("fk_login_id", mvo.getFk_login_id());
 		
 			
-			int n = service.mupdateEnd(map);
-			if(n<0){
+				int n = service.mupdateEnd(map);
+			
+			   
+			
 				System.out.println("n::"+n);
 				
-			}
+			
 			req.setAttribute("n", n);//글수정(update)
-		    req.setAttribute("seq_tbl_music", mvo.getSeq_tbl_music());
+		    //req.setAttribute("seq_tbl_music", mvo.getSeq_tbl_music());
+		    req.setAttribute("seq_tbl_music", seq_tbl_music);
+		    req.setAttribute("fk_login_id", fk_login_id);
+		    
 			return "ydh/meditEnd.tiles2";
 		
 		}
@@ -485,11 +564,17 @@ public class YdhController {
 	public String mdel(HttpServletRequest req){
 			  
 		String seq_tbl_music =   req.getParameter("seq_tbl_music");
-	    
-			  
-		int n = service.mdel(seq_tbl_music);//글삭제
+	    String fk_login_id =  req.getParameter("fk_login_id"); 
+		
+	    HashMap<String,String> map = new HashMap<String,String>();
+		map.put("seq_tbl_music", seq_tbl_music);
+		map.put("fk_login_id", fk_login_id);
+		
+		int n = service.mdel(map);//글삭제
 	      
 		  req.setAttribute("n", n);
+		  req.setAttribute("seq_tbl_music", seq_tbl_music);
+		  req.setAttribute("fk_login_id", fk_login_id);
 			  
 		  return "ydh/mdel.tiles2";
 		
@@ -498,39 +583,39 @@ public class YdhController {
 	//글삭제checkbox
 	@RequestMapping(value="/mdelChckbox.re", method={RequestMethod.POST})
 	public String mdelcheckbox(HttpServletRequest req){
-			 
+			 //split(",");
+		
+		String fk_login_id = req.getParameter("fk_login_id");
 	    String[] delchckboxArr = req.getParameterValues("delChkbox");
-	    System.out.println("delchckboxArr1::::"+delchckboxArr);
-	    System.out.println("test1");
-	    
-	   String str_seq_tbl_music = "";
+	    System.out.println("delchckboxArr controller::"+delchckboxArr);
+	    String str_seq_tbl_music = "";
         
         for (int i=0; i<delchckboxArr.length; i++) {
-        	 System.out.println("test2"+delchckboxArr);
-        	 System.out.println("test3::"+i);
-        	int index = delchckboxArr[i].indexOf(",");
-           System.out.println("index::"+index);
-           String seq = delchckboxArr[i].substring(0);
-           System.out.println("seq::"+seq);
-           if (i > 0) {
-        	   str_seq_tbl_music += ","+seq;
-              System.out.println("str_seq::"+str_seq_tbl_music);
+     
+           String seq = delchckboxArr[i];
+          
+           if (seq.length() >0) {
+
+        		   str_seq_tbl_music += seq+",";
            }
-           else{
-        	   str_seq_tbl_music += "("+seq;
-           }
+
         } // end of for---------------------------
             
-        str_seq_tbl_music += ")";
-        System.out.println("seq_tbl_music::::"+str_seq_tbl_music);
+       
+        String[] seq_tbl_musicArr = str_seq_tbl_music.split(",");
+        
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        map.put("seq_tbl_musicArr", seq_tbl_musicArr);
+        
 	    
         String seq_tbl_music = str_seq_tbl_music;
-        
-        
-	    int n = service.delcheckbox(seq_tbl_music);//체크박스글삭제
-	    System.out.println("testtest::"+n);
+      
+	     int n = service.delcheckbox(map);//체크박스글삭제
+       
+	  
 	    req.setAttribute("n", n);
-	   
+	    req.setAttribute("seq_tbl_music", seq_tbl_music);
+	    req.setAttribute("fk_login_id", fk_login_id);
 			
 		return "ydh/mdelChckbox.tiles2";
 		

@@ -7,13 +7,14 @@
 <script type="text/javascript">
 <c:if test="${n == 1}">
 	alert("글수정 성공:D");
-	location.href="<%= request.getContextPath() %>/mview.re?seq_tbl_music=${seq_tbl_music}";       
+	location.href="<%= request.getContextPath() %>/mview.re?seq_tbl_music=${seq_tbl_music}&fk_login_id=${fk_login_id}";       
 </c:if>
 
 <c:if test="${n != 1}">
-	alert("글수정 실패");
+	alert("글수정 실패!");
 	history.back();
 </c:if>
+
 
 
 </script>

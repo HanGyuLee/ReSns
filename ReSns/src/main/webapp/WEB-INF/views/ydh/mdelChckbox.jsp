@@ -5,12 +5,12 @@
 <title>글수정</title>
 
 <script type="text/javascript">
-<c:if test="${n == 1}">
+<c:if test="${n > 0}">
 	alert("글삭제 성공:D");
-	location.href="<%= request.getContextPath() %>/music.re";       
+	location.href="<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}";       
 </c:if>
 
-<c:if test="${n != 1}">
+<c:if test="${n < 1}">
 	alert("글삭제 실패");
 	history.back();
 </c:if>

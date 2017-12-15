@@ -58,7 +58,7 @@ $(document).ready(function(){
 						var jnameCnt = entry.jnameCnt
 						
 						
-						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -300px;'>별명검색</span> "+"<span style='cursor:pointer;'><a href='searchEndName.re?search="+jsonName+"'>"+"&nbsp;&nbsp;"+sname +"</a>"+jnameCnt+"</span><br/>"; 
+						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -300px;'>별명검색</span> "+"<span style='cursor:pointer;'><a href='searchEndName.re?search="+sname+"'>"+"&nbsp;&nbsp;"+sname +"</a>"+jnameCnt+"</span><br/>"; 
 						
 					});
 					

@@ -34,15 +34,15 @@ public interface InterMusicService {
 
 	//List<String> mlist();//글조회 페이징(X),검색(X)
 
-	MusicVO mview(String seq_tbl_music ,String userid);//글하나보여주기
+	MusicVO mview(HashMap<String, String> map ,String userid);//글하나보여주기
 
-	MusicVO mupdate(String seq_tbl_music);//글수정폼띄우기
+	MusicVO mupdate(HashMap<String, String> map);//글수정폼띄우기
 	
 	int mupdateEnd(HashMap<String,String> map);//글수정(update)
 
-	int mdel(String seq_tbl_music);//글삭제
+	int mdel(HashMap<String, String> map);//글삭제
 
-	int delcheckbox(String seq_tbl_music);//체크박스글삭제
+	int delcheckbox(HashMap<String,Object> map);//체크박스글삭제
 
 	List<String> mlist(HashMap<String, String> map);//검색어가 있는 페이징
 
@@ -56,8 +56,14 @@ public interface InterMusicService {
 
 	List<HashMap<String, String>> commentList(String seq_tbl_music);//댓글
 
-	int addComment(MCommentVO commentvo);//댓글쓰기
+	int addComment(MCommentVO commentvo) throws Throwable;//댓글쓰기
 	
+	int deletere(MCommentVO commentvo) throws Throwable;//댓글삭제
+
+	HashMap<String, String> view(String seq_tbl_music, String userid);//글하나보여주기test
+
+	
+
 	
 
 	

@@ -21,12 +21,14 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+	
 		//전체삭제
 		$("#allCheckbox").click(function(){
-			
 			$(".delChkbox").prop("checked", $(this).is(":checked"));
-			
 		});
+		
+		
+	
 		
 		searchKeeping();
 		
@@ -103,13 +105,42 @@
 			$("#displayList").hide();
 			
 		});
-	
+		
+		
+		$(".delChkbox").click(function(){
+			var tagId = $(this).attr('id');	
+			//alert("테스트");
+			var frm = document.deltest;
+			frm.test01.value = tagId;		
+		});
+		
+		
+		$("#delete").click(function(){
+		var delfrm = document.deltest;
+		var id = delfrm.test01.value;
+		
+		if(id == ""){
+			 alert("삭제할 게시물을 선택해 주세요.");
+		}
+		
+		else {
+	    var frm = document.delfrm;
+		frm.method ="POST";
+		frm.action ="/resns/mdelChckbox.re";
+		frm.submit(); 
+			
+		}
+		
+			
+		})
+		
 	});// end of $(document).ready()----------------------
 	
-	function goView(seq_tbl_music){
-		
+	function goView(seq_tbl_music,fk_login_id){
+
 		var frm = document.seqFrm;
 		frm.seq_tbl_music.value = seq_tbl_music;
+		frm.fk_login_id.value= fk_login_id;
 		//frm.gobackURL.value=gobackURL;
 		
 		frm.method="get";
@@ -118,14 +149,26 @@
 	
 	}//goView
 	
-	function mDel(){
+/*  	function mDel(){
+	   var del = "";	
+	   var del = $("#delChkbox").val();
+	   var len = del.length;
+	  
+	   alert(del);
+	   alert(len);
+
+	   
+	   if(del==""){
+		   alert("삭제할 게시물을 선택해 주세요.");
+	   } 
+	        
+		    var frm = document.delfrm;
+			frm.method ="POST";
+			frm.action ="/resns/mdelChckbox.re";
+			frm.submit(); 
+	 
 		
-		var frm = document.delfrm;
-		frm.method ="POST";
-		frm.action ="/resns/mdelChckbox.re";
-		frm.submit();
-		
-	}//mdel
+	}//mdel  */
 	
 	function searchKeeping(){
 		<c:if test="${(colname != 'null' && not empty colname) && (search != 'null' && not empty search)}" >
@@ -148,13 +191,13 @@
   			alert("검색어를 입력하세요.");
   			return;
   		}else{
-  			alert("searchtest222::"+search);
+  			
   			frm.submit();
   		}
 
   	}	
 	
-	
+
 </script>
 
 <div align="center" style="padding-left: 10%; border: solid 0px red;">
@@ -177,21 +220,39 @@
 
 <table id="table">
 	
-	<thead>
-		<div style="margin-left:750px; margin-bottom:5px;">
-			<button onClick="javascript:location.href='/resns/mwrite.re'">글쓰기</button>&nbsp;
-			<button type="button" style=" margin-top:20px; margin-bottom:10px;" onClick="mDel();">삭제</button>&nbsp;
-		</div>
-			<tr align="center">
+<thead>
+<c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+	  <div style="margin-left:750px; margin-bottom:5px;">
+		 <button onClick="javascript:location.href='/resns/mwrite.re'">글쓰기</button>&nbsp;
+		 <button type="button" style=" margin-top:20px; margin-bottom:10px;" id="delete"> <!-- onClick="mDel(); "> -->삭제</button>&nbsp;	
+	  </div>
+	  </c:if>
+	  
+	  <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+	   <div style="margin-top: 20px;">
+		  <tr align="center" >
 			<th style="width: 70px;">글번호</th>
 			<th style="width: 360px;">제목</th>
 			<th style="width: 70px;">날짜</th>
 			<th style="width: 70px;"><span style="font-size:9pt; color:red;"><label for ="allCheckbox">전체선택&nbsp;</label></span>&nbsp;<input type="checkbox" id="allCheckbox" /></th>
-		</tr>
-	 </thead>	
- 	
-	<tbody>
-	
+		 </tr>
+	    </div>
+	  </c:if> 
+	  
+	  <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
+	   <div style="margin-top: 20px;">
+		  <tr align="center" >
+			<th style="width: 70px;">글번호</th>
+			<th style="width: 360px;">제목</th>
+			<th style="width: 70px;">날짜</th>
+		 </tr>
+	    </div>
+	  </c:if>
+</thead>	
+
+	 
+	 
+<tbody>	
 	<c:if test="${mlist == null || empty mlist }">
 	 <tr>
 	   <td align="center" colspan="4"><span style="color:red; font-weight:bold;">등록된 게시물이 없습니다.</span></td>
@@ -199,18 +260,22 @@
 	</c:if>
 
 	<form name="delfrm">
-
 	 <c:forEach var="m" items="${mlist}" varStatus="status"> 
 			<tr>
-			<td align="center" style="width: 70px;">${m.RNO}</td>
+			<input type="hidden" name="fk_login_id" value="${m.FK_LOGIN_ID}"/>
+			<td align="center" style="width: 70px;">${m.SEQ_TBL_MUSIC}</td>
 			<c:if test="${m.MUSIC_COMMENTCOUNT != 0}">
-			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}');">${m.MUSIC_NAME}&nbsp;<span style="font-style: italic; color:red;">[${m.MUSIC_COMMENTCOUNT}]</span></span></td>
+			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}','${m.FK_LOGIN_ID}');">${m.MUSIC_NAME}&nbsp;<span style="font-style: italic; color:red;">[${m.MUSIC_COMMENTCOUNT}]</span></span></td>
 			</c:if>
 			<c:if test="${m.MUSIC_COMMENTCOUNT == 0}">
-			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}');">${m.MUSIC_NAME}</span></td>
+			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}','${m.FK_LOGIN_ID}');">${m.MUSIC_NAME}</span></td>
 			</c:if>
 			<td align="center" style="width: 70px;">${m.MUSIC_DATE}</td>
-			<td align="center" style="width: 70px;">&nbsp;&nbsp;<input type="checkbox" class="delChkbox" name="delChkbox" value="${m.SEQ_TBL_MUSIC}"    /></td>
+			<c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+			  <td align="center" style="width: 70px;">&nbsp;&nbsp;<input type="checkbox" class="delChkbox" name="delChkbox" id="delChkbox${status.count}" value="${m.SEQ_TBL_MUSIC}"/></td>
+			</c:if>
+			<c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
+			</c:if>
 			</tr>
      </c:forEach>
     </form>	
@@ -222,7 +287,8 @@
 
 	<form name="seqFrm">
 		<input type="hidden" name="seq_tbl_music" />
-		<input type="hidden" name="gobackURL" />
+		<input type="hidden" name="fk_login_id" />
+		<!-- <input type="hidden" name="gobackURL" /> -->
 	</form>
 	<br/>
 
@@ -232,18 +298,14 @@
 	</div>
 	<br/>
 	
-	
-	
-			
-			
-	   
-			
-		
-	</form>
+
+</form>
 
 </div>
 
-
+<form name="deltest">
+<input type="text" id="test01"/>
+</form>
 
 
 

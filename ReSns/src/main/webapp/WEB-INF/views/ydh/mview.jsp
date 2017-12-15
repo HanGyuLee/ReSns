@@ -20,33 +20,39 @@
 
 <script type="text/javascript">
   
-function goWrite(){
-	var addWriteFrm = document.addWriteFrm;
-	addWriteFrm.submit();
+ function goWrite(){
+  
+	 var ycontent = $("#re_ycontent").val();
+	 if(ycontent==""){
+		 alert("댓글을 써주세요.");
+	 }
+	 else{
+		 var addWriteFrm = document.addWriteFrm;
+			addWriteFrm.action = "/resns/addComment.re";
+			addWriteFrm.method = "get";
+			addWriteFrm.submit();
+	 }
 }
-  
-  
+   
 </script>
 
 <div style="padding-left: 10%; border: solid 0px red;">
 	<h1>글내용보기</h1>
-	
 	<table id="table">
 		<tr>
 			<th>글번호</th>
-			<td>${mvo.seq_tbl_music}</td>
+			<td><input type="hidden" name="seq_tbl_music" value="${mvo.seq_tbl_music}"/>${mvo.seq_tbl_music}</td>
 		</tr>
-		<tr>
-			<th>성명</th>
-			<td>${sessionScope.loginUser.login_name}</td>
-		</tr>
+		
+			<input type="hidden" name="fk_login_id" value="${mvo.fk_login_id}"/>
+		
 		<tr>
            	<th>제목</th>
            	<td>${mvo.music_name}</td>
         	</tr>
 		<tr>
 			<th>내용</th>
-			<td>${mvo.music_content}</td>
+				<td>${mvo.music_content}</td>
 		</tr>
 		<tr>
 			<th>날짜</th>
@@ -62,27 +68,29 @@ function goWrite(){
 	</table>
     <br/><br/>
     <div style="margin-left: 200px;">
-    <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re'">되돌아가기</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/medit.re?seq_tbl_music=${mvo.seq_tbl_music}'">수정</button>
-	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/mdel.re?seq_tbl_music=${mvo.seq_tbl_music}'">삭제</button>
+    <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}'">되돌아가기</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/medit.re?seq_tbl_music=${mvo.seq_tbl_music}&fk_login_id=${fk_login_id}'">수정</button>
+	<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/mdel.re?seq_tbl_music=${mvo.seq_tbl_music}&fk_login_id=${fk_login_id}'">삭제</button>
 	<br/><br/>
 	</div>
 	
-	<!-- 댓글쓰기 -->
-	      <%--   성명 : <input type="text" name="name" value="${sessionScope.loginUser.login_name}" class="short" readonly />
-		      <br/><br/>
-		댓글 : <input type="text" name="content" class="long" placeholder="  바른말 고운말을 씁시다:)"/>&nbsp;&nbsp;<button>확인</button> --%>
-	 
+	
+	
+	<!-- === #83. 댓글 쓰기 폼 추가 === -->
+	
 	<form	name="addWriteFrm" action="<%=request.getContextPath()%>/addComment.re" method="get">
-			 <input type="hidden" name="login_id" value="${sessionScope.logiUuser.login_id}" />
+			 <input type="hidden" name="re_login_id" value="${sessionScope.loginUser.login_id}" />
 		성명 : <input type="text" name="login_name" value="${sessionScope.loginUser.login_name}" class="short" readonly />
 		      <br/><br/>
-		댓글 : <input type="text" name="re_ycontent" class="long" placeholder="  바른말 고운말을 씁시다:)" />
-			 <!-- 게시물시퀀스에 달린 댓글 -->
+		댓글 : <input type="text" name="re_ycontent" id="re_ycontent" class="long" />
+			 <!-- 댓글에 달리는 원게시물 글번호 (즉, 댓글의 부모글) -->
 			 <input type="hidden" name="seq_tbl_music" value="${seq_tbl_music}" />
+			<input type="hidden" name="fk_login_id" value="${fk_login_id}" />
+	
+	
 		  
 			 <!-- 돌아갈 글 목록 페이지 -->
-		<%--  <input type="hidden" name="gobackURL" value="${gobackURL}"/>  --%>
+			 <%-- <input type="hidden" name="gobackURL" value="${gobackURL}"/> --%>
 		&nbsp;&nbsp;<button type="button" onClick="goWrite();">쓰기</button>
 	</form>
 	
@@ -92,15 +100,30 @@ function goWrite(){
 		<table id="table2">
 			<c:forEach var="cvo" items="${commentList}">
 				<tr>
-				
+			      	<td><input text="hidden" name="seq_tbl_remusic" value="${cvo.SEQ_TBL_REMUSIC}"/>${cvo.SEQ_TBL_REMUSIC}</td>
+				    <td><input text="hidden" name="re_login_id" value="${cvo.RE_LOGIN_ID}"/>${cvo.RE_LOGIN_ID}</td>
+				    <td><input text="hidden" name="seq_tbl_music" value="${cvo.SEQ_TBL_MUSIC}"/>${cvo.SEQ_TBL_MUSIC}</td>
+				     <td><input text="hidden" name="fk_login_id" value="${fk_login_id}"/>${fk_login_id}</td>
 				    <td>${cvo.LOGIN_NAME}</td>
-					<td>${cvo. RE_LOGIN_ID}</td>
 					<td>${cvo.RE_YCONTENT}</td>
 					<td>${cvo.RE_YDATE}</td>
+					<c:if test="${sessionScope.loginUser.login_id == cvo.RE_LOGIN_ID}">
+					  <td type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/remdel.re?seq_tbl_music=${seq_tbl_music}&re_login_id=${cvo.RE_LOGIN_ID}&seq_tbl_remusic=${cvo.SEQ_TBL_REMUSIC}&fk_login_id=${fk_login_id}'"><button>삭제</button></td>
+					</c:if>
+					<c:if test="${sessionScope.loginUser.login_id != cvo.RE_LOGIN_ID}">
+					</c:if>
 				</tr>
+				
 			</c:forEach>
 		</table>
 	</c:if> 
 
 </div>	
 	
+		<form name="seqFrm">
+		<input type="hidden" name="seq_tbl_music" />
+		<input type="hidden" name="fk_login_id" />
+		<input type="hidden" name="seq_tbl_remusic" />
+		<input type="hidden" name="re_login_id" />
+		<!-- <input type="hidden" name="gobackURL" /> -->
+	</form>

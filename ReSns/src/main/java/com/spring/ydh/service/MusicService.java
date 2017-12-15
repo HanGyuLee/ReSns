@@ -162,18 +162,26 @@ public class MusicService implements InterMusicService {
 
 	@Override//유튭글insert
 	public int mwrite( MusicVO mvo) {
-		/*String id = mvo.getFk_login_id();
+		
+		
+		String id = mvo.getFk_login_id();
 		String co = mvo.getMusic_content();
 		String na = mvo.getMusic_name();
 		String url = mvo.getMusic_link();
+		String seq = mvo.getSeq_tbl_music();
 		
 		System.out.println("id확인"+id);
 		System.out.println("co확인"+co);
 		System.out.println("na확인"+na);
-		System.out.println("url확인"+url);*/
-		
-	      int n = dao.mwrite(mvo);
+		System.out.println("url확인"+url);
+		System.out.println("seq확인"+seq);
+
+	
+		int  n = dao.mwrite(mvo);
+	   
+		System.out.println("n test 글쓰기::"+n);
 		return n;
+		
 	}
 
 
@@ -191,32 +199,36 @@ public class MusicService implements InterMusicService {
 
 
 	@Override//글하나보여주기
-	public MusicVO mview(String seq_tbl_music, String userid) {
-		MusicVO mvo = dao.mview(seq_tbl_music); 
+	public MusicVO mview(HashMap<String, String> map, String userid) {
+		MusicVO mvo = dao.mview(map); 
 		return mvo;
 	}
 
 
 	@Override//글수정폼띄우기
-	public MusicVO mupdate(String seq_tbl_music) {
-		MusicVO mvo = dao.mupdate(seq_tbl_music);
+	public MusicVO mupdate(HashMap<String, String> map) {
+		MusicVO mvo = dao.mupdate(map);
 		return mvo;
 	}
 	
 	
 	@Override//글수정(update)
 	public int mupdateEnd(HashMap<String,String> map) {
-		  int n = dao.mupdateEnd(map);
+		
+			 int n = dao.mupdateEnd(map);
+		
+			System.out.println("Fail");
+		 
 		  System.out.println("n test::"+n);
-		return n;
+		     return n;
 	}
 
 
 
 	@Override//글삭제
-	public int mdel(String seq_tbl_music) {
-		  //System.out.println("service");
-		  int n =  dao.mdel(seq_tbl_music);
+	public int mdel(HashMap<String, String> map) {
+		  System.out.println("service");
+		  int n =  dao.mdel(map);
 		  //System.out.println("n:"+n);
 		return n;
 	}
@@ -224,8 +236,11 @@ public class MusicService implements InterMusicService {
 
 
 	@Override//체크박스글삭제
-	public int delcheckbox(String seq_tbl_music) {
-		int n = dao.delcheckbox(seq_tbl_music);
+	public int delcheckbox(HashMap<String,Object> map) {
+		System.out.println("service seq::"+map);
+		int n = dao.delcheckbox(map);
+		System.out.println("service n ::"+n);
+		
 		return n;
 	}
 
@@ -293,7 +308,7 @@ public class MusicService implements InterMusicService {
 
 	//댓글TX
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
-	public int addComment(MCommentVO commentvo) {
+	public int addComment(MCommentVO commentvo)throws Throwable{
 		
 		int result = 0;
 		
@@ -308,6 +323,35 @@ public class MusicService implements InterMusicService {
 		
 		return result;
 	}
+
+
+	 //댓글삭제
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int deletere(MCommentVO commentvo)throws Throwable{
+		
+		int result = 0;
+		
+		//1.insert를해준다. => 성공하면 n == 1
+		int n = 0;
+		 n = dao.deletere(commentvo);
+		
+		if(n==1){
+			//2.update를 해준다.
+			result = dao.updateDelCommentCount(commentvo.getSeq_tbl_music());//부모글(tblBoard)의 글번호	
+		}
+		
+		return result;
+	}
+
+
+
+	@Override//글하나보여주기test
+	public HashMap<String, String> view(String seq_tbl_music, String userid) {
+		HashMap<String,String> map = dao.view(seq_tbl_music);
+		return map;
+	}
+
+
 
 
 

@@ -212,13 +212,15 @@ order by seq_tbl_music desc
   <result property="music_date" 			column="T.music_date" 		  javaType="String"/>
   <result property="music_commentcount" 	column="T.music_commentcount" javaType="String"/>
   <result property="seq_tbl_music" 		    column="T.seq_tbl_music" 	  javaType="String"/>
-  <result property="music_content" 		   column="T.music_content" 	  javaType="String"/>
+  <result property="music_content" 		    column="T.music_content" 	  javaType="String"/>
+  <result property="fk_login_id" 		    column="T.fk_login_id" 	      javaType="String"/>
+  <result property="rno" 		   column="T.rno" 	  javaType="String"/>
 </resultMap>
 <select id="mlist" parameterType="HashMap" resultMap="list">
- select T.music_name, T.music_date, T.music_commentcount, T.seq_tbl_music, T.music_content
+ select T.music_name, T.music_date, T.music_commentcount, T.seq_tbl_music, T.music_content, T.rno, T.fk_login_id
  from
  (
-  select V.rno, V.music_name, V.music_date, V.music_commentcount, V.seq_tbl_music, V.music_content
+  select V.rno, V.music_name, V.music_date, V.music_commentcount, V.seq_tbl_music, V.music_content, V.fk_login_id
   from
 (
   select rownum as rno 
@@ -227,6 +229,7 @@ order by seq_tbl_music desc
                   ,case when length(music_content)>7 then substr(music_content,1,5)||'..' else music_content end as music_content
                   ,to_char(music_date,'yyyy-mm-dd') as music_date
                   ,music_commentcount
+                  ,fk_login_id
   from tbl_music
   where lower(${colname}) like '%'|| lower (#{search}) ||'%'
   order by seq_tbl_music desc
@@ -244,9 +247,10 @@ where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	 <result property="music_commentcount" 		column="V.music_commentcount" 	        javaType="String"/>
 	 <result property="seq_tbl_music" 			column="V.seq_tbl_music" 				javaType="String"/>
 	 <result property="music_content" 			column="V.music_content" 				javaType="String"/> 
+	 <result property="fk_login_id" 			column="V.fk_login_id" 				    javaType="String"/>
 	</resultMap>
 <select id="mlist2" parameterType="HashMap" resultMap="list2">
-	select V.rno, V.music_name, V.music_date, V.music_commentcount, V.seq_tbl_music, V.music_content
+	select V.rno, V.music_name, V.music_date, V.music_commentcount, V.seq_tbl_music, V.music_content,V.fk_login_id
 	from
 	(
 	  select rownum as rno 
@@ -255,7 +259,9 @@ where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	                  ,music_content
 	                  ,to_char(music_date,'yyyy-mm-dd') as music_date
 	                  ,music_commentcount
+	                  ,fk_login_id
 	  from tbl_music
+	  where fk_login_id = #{fk_login_id}
 	  order by seq_tbl_music desc
 	)V
 	where V.rno >= #{startRno} and V.rno <![CDATA[<=]]> #{endRno}
@@ -296,18 +302,51 @@ from tbl_music
 
 
 <!-- 글한개보이기 -->
-<select id="mview" parameterType="String" resultType="com.spring.ydh.model.MusicVO">
-select seq_tbl_music, music_name,to_char(music_date,'yyyy-mm-dd hh24:mi:ss') as music_date , music_content, music_link
+<select id="mview" parameterType="HashMap" resultType="com.spring.ydh.model.MusicVO">
+select seq_tbl_music, music_name,to_char(music_date,'yyyy-mm-dd hh24:mi:ss') as music_date , music_content, music_link, fk_login_id
 from tbl_music
 where seq_tbl_music = #{seq_tbl_music}
+and fk_login_id = #{fk_login_id}
 </select>
+ 
 
-
+<!-- 글한개보이기 test -->
+<!-- <resultMap id="test" type="HashMap">
+  <result property="login_name"       column="A.login_name"      javaType="String"/>
+  <result property="music_date"       column="B.music_date"      javaType="String"/>
+  <result property="music_content"    column="B.music_content"   javaType="String"/>
+  <result property="music_link"       column="B.music_link"      javaType="String"/>
+  <result property="fk_login_id"      column="B.fk_login_id"     javaType="String"/>
+  <result property="seq_tbl_remusic"  column="C.seq_tbl_remusic" javaType="String"/>
+  <result property="re_ycontent"      column="C.re_ycontent"     javaType="String"/>
+  <result property="re_ydate"         column="C.re_ydate"        javaType="String"/>
+  <result property="re_login_id"      column="C.re_login_id"     javaType="String"/>
+  <result property="seq_tbl_music"    column="C.seq_tbl_music"   javaType="String"/>
+</resultMap>
+<select id="view" parameterType="HashMap" resultMap="test">
+select A.login_name
+       ,B.music_date
+       ,B.music_content
+       ,B.music_link
+       ,B.fk_login_id
+       ,C.seq_tbl_remusic
+       ,C.re_ycontent
+       ,C.re_ydate
+       ,C.re_login_id
+       ,C.seq_tbl_music
+from tbl_login A join tbl_music B
+on A.login_id = B.fk_login_id
+join tbl_remusic C
+on B.seq_tbl_music = C.seq_tbl_music
+where B.seq_tbl_music = #{seq_tbl_music}
+</select>
+ -->
 <!-- 글수정할때 원글띄어주기 -->
-<select id="mupdate" parameterType="String" resultType="com.spring.ydh.model.MusicVO"> 
+<select id="mupdate" parameterType="HashMap" resultType="com.spring.ydh.model.MusicVO"> 
 select seq_tbl_music, music_name,to_char(music_date,'yyyy-mm-dd hh24:mi:ss') as music_date , music_content, music_link
 from tbl_music
 where seq_tbl_music = #{seq_tbl_music}
+and fk_login_id = #{fk_login_id}
 </select>
 
 <!-- 글수정(update)해주기 -->
@@ -316,18 +355,23 @@ update tbl_music set music_name = #{music_name}
                     ,music_content = #{music_content}
                     ,music_link= #{music_link}
 where seq_tbl_music = #{seq_tbl_music}
+and fk_login_id = #{fk_login_id}
 </update>
 
 <!-- 글삭제(delete) -->
 <delete id="mdel" parameterType="String">
 delete from tbl_music
 where seq_tbl_music = #{seq_tbl_music}
+and fk_login_id = #{fk_login_id}
 </delete>
 
 <!-- 체크박스글삭제 -->
-<delete id="delcheckbox" parameterType="String">
+<delete id="delcheckbox" parameterType="HashMap">
 delete from tbl_music
-where seq_tbl_music in #{seq_tbl_music}
+where seq_tbl_music in 
+<foreach collection="seq_tbl_musicArr" index="i" open="(" separator="," close=")">
+${seq_tbl_musicArr[i]}
+</foreach>
 </delete>
 
 
@@ -360,11 +404,21 @@ values(seq_tbl_remusic.nextval, #{re_ycontent}, default,  #{re_login_id} , #{seq
 <!-- TX처리  댓글달렸을때 원글 업뎃  -->
 <update id="updateCommentCount" parameterType="String">
 update tbl_music set music_commentcount = music_commentcount + 1
-where seq_tbl_music = seq_tbl_music
+where seq_tbl_music = #{seq_tbl_music}
 </update>
 
+<!-- 댓글삭제 -->
+<delete id="deletere" parameterType="com.spring.ydh.model.MCommentVO">
+delete from tbl_remusic
+where seq_tbl_remusic = #{seq_tbl_remusic}
+and seq_tbl_music=#{seq_tbl_music}
+and re_login_id = #{re_login_id}
+</delete>
 
-
-
+<!-- 댓글삭제 TX -->
+<update id="updateDelCommentCount" parameterType="String">
+update tbl_music set music_commentcount = music_commentcount - 1
+where seq_tbl_music = #{seq_tbl_music}
+</update>
 
 </mapper>
