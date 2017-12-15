@@ -9,6 +9,13 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-ui.js"></script> 
+
+
 
 <title>resns</title>
 
@@ -68,15 +75,95 @@ cursor: pointer;
 <script type="text/javascript">
 
 $(document).ready(function(){
-
 /* 	$(document).on("click","#ekerl", function(event) {	
 
 		var desc = $(".desc");
-		desc.slideUp();
-		
+		desc.slideUp();	
 
 	}); */
 	
+
+		
+	var retval = []	
+	$(".heart").each(function(){
+	 var heartse = retval.push($(this).attr('id'));
+	
+	 if (heartse != null){
+		 
+			$("#hearted"+heartse).hide();
+			$("#heart"+heartse).show();
+
+	 var form_data = {"login_id" : $("#login_id"+heartse).val(), "seq_tbl_board" : $("#seq_tbl_board"+heartse).val()};	  
+	 $.ajax({
+			
+			url: "/resns/heartCheck.re",
+			type: "GET",
+			data: form_data,  
+			dataType: "JSON", 
+			success: function(data) {
+				
+				if (data.fk_login_id == null) {	// 데이터가 없으면 흰 하트
+					$("#hearted"+heartse).hide();
+					$("#heart"+heartse).show();
+					
+				}
+				else if (data.fk_login_id != null) {	// 하트 찍은 적이 있으면 까만 하트
+					$("#heart"+heartse).hide();
+					$("#hearted"+heartse).show();
+				
+					
+				}
+			
+			
+			}, error: function() {
+				
+			}
+		});	  
+	 }
+	})
+	
+
+	
+	/*
+	
+ 	var tagId = $(this).attr('id');
+
+	alert(tagId);
+
+	 
+
+
+		
+			var form_data = {"login_id" : $("#login_id"+statuscount).val(), "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val()};
+			
+			
+			$.ajax({
+				
+				url: "/resns/heartCheck.re",
+				type: "GET",
+				data: form_data,  
+				dataType: "JSON", 
+				success: function(data) {
+					
+					if (data.fk_login_id == null) {	// 데이터가 없으면 흰 하트
+						$("#hearted"+statuscount).hide();
+						$("#heart"+statuscount).show();
+						
+					}
+					else if (data.fk_login_id != null) {	// 하트 찍은 적이 있으면 까만 하트
+						$("#heart"+statuscount).hide();
+						$("#hearted"+statuscount).show();
+					
+						
+					}
+				
+				
+				}, error: function() {
+					
+				}
+			});
+			 */
+
  
  });
 
@@ -99,7 +186,8 @@ desc.slideUp('fast');
 
 function goVeiwContent(statuscount){
 	var statuscount = statuscount;
-	VeiwConTag(statuscount);
+	VeiwCon(statuscount);
+	VeiwTag(statuscount);
 
 }
 
@@ -111,48 +199,37 @@ function goVeiwContent(statuscount){
 	}
   
   
-  
-  
-  function VeiwConTag(statuscount){
-	
-	  
-	  var form_data = {"seq_tbl_board" : $("#contentTagView"+statuscount).val()}  
+  function VeiwCon(statuscount){
+	  var form_data = {"seq_tbl_board" : $("#contentTagView"+statuscount).val()};
 	  
 	 $("#too"+statuscount).hide();
 	 $("#thebogi"+statuscount).hide();
 	
   $.ajax({
-			url: "/resns/followmainConTag.re",
+			url: "<%= request.getContextPath()%>/followmainCon.re",
 			type: "GET",
 			data: form_data,
 			dataType: "JSON", 
 			success: function(data) {
-			
 				var resultHTML = "";
+			
+				if(data != null) { 
 				
-				if(data.length > 0) { 
-					
-					var resultHTML = "";
-
-					$.each(data, function(entryIndex, entry){
-						var board_content = entry.content;
-						var tag = entry.tag;
-						var contag= "";
-					
-						
-						contag += "<span style=''>"+board_content+"</span>";	
-						
-						if(tag != null){
-						contag += "<span><br/><br/>"+tag+"</span><br/>"
-						}
-
-					    resultHTML += contag;				   
-					    
-					});	
-					var test ="<span id='ekerl2' class='closeEnd' onClick='contagClose("+statuscount+");'>닫기</span>";		
-					resultHTML += "<br/>"+test;	
+				   var content = data.content;
+				   
+				   resultHTML += "<span>"+content+"</span>";
+										
+					var tag ="<div id='tag"+statuscount+"'></div>"
+					var test ="<br/><span id='ekerl2' class='closeEnd' onClick='contagClose("+statuscount+");'>닫기</span>";		
+					resultHTML += "<br/>"+tag+test;	
 					$("#displayContent"+statuscount).html(resultHTML);
 					$("#displayContent"+statuscount).show();				
+				}
+				
+				else{
+					var resultHTML = "";
+					$("#displayContent"+statuscount).html(resultHTML);
+					$("#displayContent"+statuscount).show();	
 				}
 				
 			
@@ -169,9 +246,50 @@ function goVeiwContent(statuscount){
   
   
   
+  function VeiwTag(statuscount){
+	  var form_data = {"seq_tbl_board" : $("#contentTagView"+statuscount).val()};
+	  
+	 $("#too"+statuscount).hide();
+	 $("#thebogi"+statuscount).hide();
+	
+	$.ajax({
+			
+			url: "/resns/followmainTag.re",
+			type: "GET",
+			data: form_data,  
+			dataType: "JSON", 
+			success: function(data) {
+			
+				if (data.length != null) {
+
+					var result = "<br/><br/>";
+					
+					$.each(data, function(entryIndex, entry){
+						
+						var seq_tbl_tag = entry.seq_tbl_tag;
+						var tag_content = entry.tag_content;
+						
+						var sub_tag_content = tag_content.substring(1);
+
+						result += "<a href='/resns/searchEndTag.re?search="+sub_tag_content+"'>";
+						result += "<span style='font-weight: bold;'>"+tag_content+"</span>";
+						result += "</a>";
+
+						
+					});
+				}
+					
+				$("#tag"+statuscount).html(result);
+				$("#tag"+statuscount).show();	
+				
+			}, error: function() {
+				
+			}
+			
+		});
   
-  
-  
+	  
+  }
   
   
 
@@ -190,17 +308,28 @@ function goVeiwContent(statuscount){
 				
 				if(data.length > 0) { 
 					
-					var resultHTML = "";
 
 					$.each(data, function(entryIndex, entry){
 						var board_seq = entry.seq_tbl_board;
 						var re_seq = entry.re_seq;
 						var re_name = entry.login_name;
-						var re_content = entry.re_content;
+						var re_content = entry.re_content;			
+						var re_id = entry.re_id;
+						var re_date = entry.re_date;
+						var re_status = entry.re_status;
+						var re_fk_seq = entry.re_fk_seq;
+						var re_groupno = entry.re_groupno;
+						var re_depthno = entry.re_depthno;
+						var login_name = entry.login_name;
+						var uimg_profile_filename = entry.uimg_profile_filename;
+									
+						
 						var re= "";
 
-					    re += "<span style='font-weight: bold;'>"+re_name+"</span>&nbsp;&nbsp;&nbsp;";
+					    re += "<img src=''>"
+						re += "<span style='font-weight: bold;'>"+re_name+"</span>&nbsp;&nbsp;&nbsp;";
 					    re += "<span>"+re_content+"</span><br/>"
+					   
 					 						
 					    resultHTML += re;				   
 					    
@@ -232,6 +361,120 @@ function goVeiwContent(statuscount){
 	}//end of function VeiwRe(statuscount)
 
 
+	
+	
+	function addHeart(statuscount) {
+		
+		
+		var form_data = {"fk_login_id" : $("#fk_login_id"+statuscount).val(),
+						"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val()};
+		
+		$.ajax ({
+			
+			url: "/resns/addHeart.re",
+			type: "GET",
+			data: form_data,
+			dataType: "JSON",
+			success: function(data) {
+				
+			$("#heart"+statuscount).hide();
+			$("#hearted"+statuscount).show();
+					
+			swal(data.msg);
+			
+			heartCounting(statuscount);
+			
+				
+			}, error : function () {
+				
+			}
+			
+			
+		});
+		
+		
+	}
+	
+	
+
+	function deleteHeart(statuscount) {
+		
+		var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+
+		 
+		 swal({
+			  title: "취소하시겠습니까?",
+			  text: "하트 취소 후 다시 누를 수 있습니다.",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonClass: "btn-danger",
+			  confirmButtonText: "네, 취소합니다.",
+			  closeOnConfirm: false
+			},
+			function(){
+				 
+				
+				$.ajax ({
+					 
+					 url: "/resns/deleteHeart.re",
+					 type: "GET",
+					 data: form_data,
+					 dataType: "JSON",
+					success: function(data) {
+							
+					swal(data.msg);
+					
+					$("#heart"+statuscount).show();
+					$("#hearted"+statuscount).hide();
+					
+					heartCounting(statuscount);
+						
+					}, error : function () {
+						
+					}
+					 
+				 });
+				 
+			});
+
+	}
+	
+	
+	
+	function heartCounting(statuscount) {
+		
+		var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+		
+		$.ajax ({
+			
+			url: "/resns/heartCounting.re",
+			type: "GET",
+			data: form_data,
+			dataType: "JSON",
+			success: function(data) {
+
+				var board_heart = data.board_heart;
+				
+				//alert(board_heart);
+				
+				var result = "좋아요 "+board_heart+" 개";
+				
+				$("#heartCnt"+statuscount).html(result);
+				
+			}, error : function() {
+				
+			}
+			
+		});
+		
+	}
+	
+	
+	
+	
+	
+	
+
 </script>
 
 
@@ -241,9 +484,31 @@ function goVeiwContent(statuscount){
 <br/>
 <div style="padding-left: 10%;">
 
+
+<c:if test="${followBoard == null}">
+<div align="center" style="margin-top: 15%;">
+<span style="color: gray; font-size: 20pt; font-weight: bold;">
+팔로우 하고 있는 회원이 없습니다.<br/>
+지금 바로  다른 회원을 팔로우 해보세요 :)<br/>
+</span>
+</div>
+</c:if>
+
+
+<c:if test="${empty followBoard && followBoard != null}">
+<div align="center" style="margin-top: 15%;">
+<span style="color: gray; font-size: 20pt; font-weight: bold;">
+내가 팔로우한 회원이 아직 글을 작성하지 않았습니다.<br/>
+더 많은 회원을 팔로우 하여 구독해보세요 :)<br/>
+</span>
+</div>
+</c:if>
+
+
+
 <c:forEach var="vo" items="${followBoard}" varStatus="status">
-<table style="width: 800px; border: solid 0px red; background-color: #EAE7E7;" >
-    
+<table style="width: 800px; border: solid 0px red; background-color: #EAE7E7;" >   
+ 
      <tr>
      <td width="30px">&nbsp;</td>
       <td width="740px" colspan="2" id="redisplay">&nbsp;</td>
@@ -254,6 +519,9 @@ function goVeiwContent(statuscount){
     <tr>
 		<td width="30px" height="50px">&nbsp;</td>
         <td colspan ="2" width="740px" height="50px"><img width="50px" height="50px" class=" img-circle" style="margin-right: 10px;" src="<%= request.getContextPath() %>/resources/images/${vo.follow_proile_image}"/>${vo.follow_name}
+        <input type="hidden" id="seq_tbl_board${status.count}" name="seq_tbl_board" value="${vo.seq_tbl_board}">
+        <input type="hidden" id="fk_login_id${status.count}" name="fk_login_id" value="${vo.follow_id}">
+        <input type="hidden" id="login_id${status.count}" name="login_id" value="${loginUser.login_id}">
         </td>
         <td width="30px" height="50px">&nbsp;</td>
     </tr>
@@ -283,10 +551,19 @@ function goVeiwContent(statuscount){
     <tr>
      	<td width="30px" height="40px">&nbsp;</td>
         <td width="320px" height="40px"></td>
-        <td width="320px" height="40px" style="text-align: right;"><img width="20px" src="<%=request.getContextPath()%>/resources/images/heart.png" /><span style="font-weight: bold;">하트 ${vo.board_heart}개</span> &nbsp;&nbsp;										<img 
-											src="<%=request.getContextPath()%>/resources/images/report.png" 
-											style="width: 18px; height: 18px; margin-right: 80px;" 
-											align="right"/></td>
+        <td width="320px" height="40px" style="text-align: right;"><img
+												src="<%=request.getContextPath()%>/resources/images/hearted.png"
+												id="hearted${status.count}"
+												style="width: 18px; height: 18px; cursor: pointer;"
+												class="hearted" onclick="deleteHeart('${status.count}');" /> 
+											<img
+												src="<%=request.getContextPath()%>/resources/images/heart.png"
+												id="heart${status.count}"
+												style="width: 18px; height: 18px; cursor: pointer;"
+												class="heart"  class="heart" onclick="addHeart('${status.count}');" />
+												<div style="display: inline-block;" id="heartCnt${status.count}"><span style="font-weight: bold;">좋아요 ${vo.board_heart}개</span></div> &nbsp;&nbsp;
+		<a href="/resns/reportingBoard.re?fk_login_id=${vo.follow_id}&seq_tbl_board=${vo.seq_tbl_board}"> <img style="width: 18px; height: 18px; margin-right: 80px;"  src="<%=request.getContextPath()%>/resources/images/report.png" align="right" /> </a>	
+		</td>
         <td width="30px" height="40px">&nbsp;</td>
     </tr>
     
@@ -382,31 +659,12 @@ function goVeiwContent(statuscount){
 
 
 </c:forEach>
+
 </div>
 
 
 <br/>
 <br/>
 
-
-
-<%-- <c:forEach var="vo" items="${followBoard}">
-${vo.follow_name}<br/>
-${vo.follow_proile_image}<br/>
-${vo.follow_id}<br/>
-${vo.seq_tbl_board}<br/>
-${vo.board_content}<br/>
-${vo.board_time}<br/>
-${vo.board_heart}<br/>
-${vo.board_recnt}<br/>
-${vo.board_status}<br/>
-${vo.bimg_filename}<br/>
-${vo.bimg_orgfilename}<br/>
-${vo.bimg_filesize}<br/>
-${vo.map_we}<br/>
-${vo.ma_ky}<br/>
-${vo.map_name}<br/>
-</c:forEach>
- --%>
 </body>
 </html>

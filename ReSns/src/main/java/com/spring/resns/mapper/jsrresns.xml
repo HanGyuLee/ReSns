@@ -55,6 +55,7 @@ select count(*)
 from tbl_follow
 where fk_login_id = #{login_id} and follow_id =  #{follow_id}
 </select>
+
 <!-- 중복팔로우 확인 끝-->
 
 <!-- 팔로우하기 -->
@@ -193,8 +194,8 @@ where seq_tbl_board = #{seq_tbl_board}
 
 
 <!--  태그가져오기 -->
-<select id="getTag2" parameterType="String" resultType="String">
-select tag_content
+<select id="getTag2" parameterType="String" resultType="com.spring.pek.model.TagVO">
+select seq_tbl_tag , tag_content
 from tbl_tag
 where seq_tbl_board = #{seq_tbl_board}
 </select>
@@ -211,17 +212,62 @@ values(seq_tbl_q.nextval,#{fk_login_id},#{q_content},default,default,#{q_askid})
 
 <!-- 백문백답 리스트 불러오기 -->
 <select id="getQuList" parameterType="HashMap" resultType="com.spring.jsr.model.QuestionBoardVO">
-select seq_tbl_q, fk_login_id, q_status, q_date, q_askid
-				,case when length(q_content) > 20
-              then substr(q_content, 1, 10)||'...'
+select rno, seq_tbl_q , fk_login_id, q_status, q_date, q_askid, q_content
+from 
+(
+select rownum as rno, seq_tbl_q, fk_login_id, q_status, q_date, q_askid
+				,case when length(q_content) > 30
+              then substr(q_content, 1, 20)||'...'
               else q_content
               end 
-         	as q_content   
+         	as q_content
 from tbl_q
 where fk_login_id = #{fk_login_id}
-order by seq_tbl_q desc
+)V
+where V.rno >= #{startRno} and V.rno <![CDATA[<=]]> #{endRno}
+order by V.seq_tbl_q desc
 </select>
 <!-- 백문백답 리스트 불러오기 -->
+
+
+<!-- 검색어 있는 백문백답 리스트 불러오기 -->
+<select id="getQuList2" parameterType="HashMap" resultType="com.spring.jsr.model.QuestionBoardVO">
+select rno, seq_tbl_q , fk_login_id, q_status, q_date, q_askid, q_content
+from 
+(
+select rownum as rno, seq_tbl_q, fk_login_id, q_status, q_date, q_askid
+				,case when length(q_content) > 30
+              then substr(q_content, 1, 20)||'...'
+              else q_content
+              end 
+         	as q_content
+from tbl_q
+where fk_login_id = #{fk_login_id}
+and q_content like '%' || #{qsearch} || '%'
+)V
+where V.rno >= #{startRno} and V.rno <![CDATA[<=]]> #{endRno}
+order by V.seq_tbl_q desc
+</select>
+<!-- 검색어 있는 백문백답 리스트 불러오기 -->
+
+<!-- 검색어 없는 토탈 카운트 -->
+<select id="getTotalCount" parameterType="HashMap" resultType="Integer">
+ select count(*)
+ from tbl_q
+ where fk_login_id = #{fk_login_id}
+</select>
+<!-- 검색어 없는 토탈 카운트 끝 -->
+
+<!-- 검색어 있는 토탈 카운트 -->
+<select id="getTotalCount2" parameterType="HashMap" resultType="Integer">
+ select count(*)
+ from tbl_q
+ where fk_login_id = #{fk_login_id}
+ and q_content like '%' || #{qsearch} || '%'
+</select>
+<!-- 검색어 있는 토탈 카운트 끝 -->
+
+
 
 
 <!--  백문백답 답변 가져오기 -->
@@ -283,5 +329,23 @@ update tbl_q set q_status = 0
 where seq_tbl_q = #{fk_seq_tbl_q}
 </update>
 <!--  백문백답 질문 상태값 변경  끝-->
+
+
+<!--  백문백답 자동완성 -->
+<select id="qsearch" parameterType="HashMap" resultType="String">
+select substr(q_content, 0, length(#{qsearch}) + 10) 
+from tbl_q
+where fk_login_id = #{fk_login_id} and lower(q_content) like '%'|| lower(#{qsearch}) || '%'
+</select>
+<!--  백문백답 자동완성  끝-->
+
+
+<!-- 이미 좋아요 눌렀는지 확인하기 -->
+<select id="followheartck" parameterType="HashMap" resultType="int">
+select count(*) as cnt
+from tbl_heart
+where fk_seq_tbl_board = #{seq_tbl_board} and fk_login_id= #{login_id}
+</select>
+
 
 </mapper>

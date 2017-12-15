@@ -132,8 +132,8 @@ public class JsrDAO implements InterJsrDAO {
 
 	//태그 가져오기
 	@Override
-	public List<String> getFollowTag(String seq_tbl_board) {
-		List<String> getFollowTag =  sqlsession.selectList("jsrresns.getTag2",seq_tbl_board);
+	public List<TagVO> getFollowTag(String seq_tbl_board) {
+		List<TagVO> getFollowTag =  sqlsession.selectList("jsrresns.getTag2",seq_tbl_board);
 		return getFollowTag;
 	}
 
@@ -154,6 +154,33 @@ public class JsrDAO implements InterJsrDAO {
 		return list;
 	}
 
+	//검색어가 있는 백문백답 리스트 가져오기
+	@Override
+	public List<QuestionBoardVO> getQeList2(HashMap<String, String> map) {
+		List <QuestionBoardVO> list = sqlsession.selectList("jsrresns.getQuList2",map);
+		return list;
+	}
+	
+	//검색어 없는 토탈 카운트
+	@Override
+	public int getTotalCount(HashMap<String, String> map) {
+		int count = sqlsession.selectOne("jsrresns.getTotalCount",map);
+		return count;
+	}
+
+
+	//검색어 있는 토탈 카운트
+	@Override
+	public int getTotalCount2(HashMap<String, String> map) {
+		int count = sqlsession.selectOne("jsrresns.getTotalCount2",map);
+		return count;
+	}
+
+
+
+	
+	
+	
 	//백문백답 답변 가져오기
 	@Override
 	public QuestionBoardReplyVO getRp(String seq_tbl_q) {
@@ -203,6 +230,36 @@ public class JsrDAO implements InterJsrDAO {
 		int m = sqlsession.update("jsrresns.adelQstaup",fk_seq_tbl_q);
 		return m;
 	}
+
+	//자동완성 백문백답게시판
+	@Override
+	public List<String> wordQSearch(HashMap<String, String> map) {
+		//System.out.println("qsearch::"+map.get("qsearch"));
+		//System.out.println("fk_login_id::"+map.get("fk_login_id"));
+		
+		List<String> list =sqlsession.selectList("jsrresns.qsearch",map);
+		return list;
+	}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------
+	//팔로우 하트 체크하기
+	@Override
+	public int followheartCk(HashMap<String,Object> map2) {
+		int n =  sqlsession.selectOne("jsrresns.followheartck",map2);
+		return n;
+	}
+
+
+	//팔로우 글 확인하기
+	@Override
+	public List<HashMap<String, Object>> getFollowBoardView2(HashMap<String, String> map) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("jsrresns.FollowBoardView",map);
+		return list;
+	}
+
+	
+
+
 
 
 

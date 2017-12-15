@@ -48,6 +48,38 @@ background-color: #fffd95;
 
 .main-btn{ background:black; color:gray;}
 .main-btn:hover{ color:white;}
+
+
+
+
+
+.goQ{
+background-color: black;
+border: black;
+}
+
+.goQ:focus{
+background-color: black;
+border: black;
+}
+
+.goQ:active:hover{
+background-color: black;
+border: black;
+}
+
+.goQ:active:focus{
+background-color: black;
+border: black;
+}
+
+.goQ:hover{
+background-color: black;
+border: black;
+}
+
+
+
 </style>
 
 
@@ -55,7 +87,16 @@ background-color: #fffd95;
 
 $(document).ready(function(){
 	 
-	 });
+    $('#a_contentw').on('keyup', function() {
+        if($(this).val().length > 150) {
+
+            $(this).val($(this).val().substring(0, 150));
+            alert("공백 포함 150자 까지만 쓸 수 있습니다.");
+
+        }
+    });
+	
+	 });//end of document.ready
 
 
 
@@ -126,7 +167,7 @@ function goQReDel(){
 <div style="text-align:right; margin-left:10px; margin-right: 15px;">${replay.a_content}</div>
 </c:if>
 </td>
-<td align="right"><div style="margin-left: 10px;"><img src="<%=request.getContextPath() %>/resources/images/a_board_login_id.png"><input type="hidden" name="fk_login_id" value="${sessionScope.loginUser.login_id}" /></div></td>
+<td align="right"><div style="margin-left: 10px;"><img src="<%=request.getContextPath() %>/resources/images/a_board_login_id.png"></div></td>
 <td width="10px;"></td>
 </tr>
 
@@ -146,10 +187,9 @@ function goQReDel(){
 <tr >
 <td width="10px;"></td>
 <td colspan="2" align="center">
-<div style="margin-left: 10px;"><textarea class="a_content" name="a_content" id="a_content" placeholder="답변을 작성해주세요." style=" height:100px; resize: none;"></textarea>
+<div style="margin-left: 10px;"><textarea class="a_content" name="a_content" id="a_contentw" placeholder="답변을 작성해주세요." style=" height:100px; resize: none;"></textarea>
 </div>
 <td width="10px;"></td>
-</td>
 
 </tr>
 <td width="10px;"></td>
@@ -168,20 +208,23 @@ function goQReDel(){
 </tr>
 <tr style="margin-top: 10px; margin-bottom: 20px;">
 <td colspan="5" align="center"> <button type="button" id="q_board_re"  onClick="goQReDel();" class="delete btn btn-danger">답변 삭제</button></td>
+
 </tr>
 </c:if>
 
 
-
-
-
 </table>
+<br/>
 
 </div>
+
+<button type="button" id="q_ce" class="delete btn btn-danger goQ" onClick="javascript:location.href='<%= request.getContextPath() %>/${gobackURL}'">리스트로 돌아 가기</button>
 </div>
 </div>
 
-<input type="text" id="gobackURL" value="/resns/questionList?currentShowPageNo="${getques.seq_tbl_q}/>
+<input type="hidden" id="gobackURL" name="gobackURL" value="${gobackURL}"/>
+<input type="hidden" id="fk_login_id" name="fk_login_id" value="${getques.fk_login_id}"/>
+
 
 </form>
 

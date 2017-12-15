@@ -1,5 +1,6 @@
 package com.spring.jsr.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.jsr.model.InterJsrDAO;
 import com.spring.jsr.model.QuestionBoardReplyVO;
 import com.spring.jsr.model.QuestionBoardVO;
+import com.spring.pek.model.BoardDAO;
 import com.spring.pek.model.BoardVO;
+import com.spring.pek.model.HeartVO;
+import com.spring.pek.model.TagVO;
 
 
 //service  선언
@@ -24,7 +28,7 @@ public class JsrService implements InterJsrService {
 	//의존객체 주입
 	@Autowired
 	private InterJsrDAO jdao;
-
+	private BoardDAO jbdao;
 	
 	
 	//팔로우 리스트 가져오기
@@ -54,12 +58,24 @@ public class JsrService implements InterJsrService {
 	public int followAdd(HashMap<String, String> map) throws Throwable{
 		
 		int followCheck = 0; //중복팔롱 확인
+		int followCheck2= 0; //내가 나를 팔로우 못하게 막기
 		int followAddlist =0; //팔로우 하기
 		int n = 0;//팔로우 값 1 증가
 		int m = 0;//팔로워 값 1 증가
 		int followAdd = 0; //팔로우 완료
 		
+		
+		//내가 나를 팔로우 하는 것을 막기
+		String login_id = map.get("login_id");
+		String follow_id = map.get("follow_id");
+		
+		if (follow_id.equalsIgnoreCase(login_id)){			
+			followAdd = -4; 
+		}
+			
 		//이미 팔로우가 되어 있는지 확인
+		else 
+		{	
 		followCheck = jdao.followCheck(map);
 		
 		if (followCheck == 1){
@@ -87,6 +103,8 @@ public class JsrService implements InterJsrService {
 
 		}//end of else if followCheck ==0
 			
+		
+		}
 		return followAdd;
 	}
 
@@ -139,22 +157,101 @@ public class JsrService implements InterJsrService {
 	@Override
 	public List<BoardVO> followboard(HashMap<String, String> map) {
 		List<BoardVO> followboard = null;
-
+	
 		List<HashMap<String, String>> followList = jdao.getFollowList(map);
+	
 		
-		if(followList != null){
-			followboard =  jdao.getFollowBoardView(map);
-
-			
+	
+		if(followList.isEmpty()){//팔로우가 없을 때
+		
+			followboard = null;
 			
 		}
 		
+		else if(!(followList.isEmpty()) ){//팔로우가 있으면 게시글이 있는지 확인
+			followboard =  jdao.getFollowBoardView(map);
+		
+				}// 팔로우 보드가 null이 아니라면, 하트수 확인을 한다.
+
+
 		
 		return followboard;
 	}
 
 	
 
+	//팔로우 하는 사람 게시글 가지고 오기
+	@Override
+	public List<HashMap<String,Object>> followboard2(HashMap<String, String> map) {
+
+		List<BoardVO> followboard = null;
+		List<Integer> numlist = new ArrayList<Integer>();
+		List<HashMap<String,Object>> reslutMap = new ArrayList<HashMap<String,Object>>();
+		HashMap<String,Object>map3 = new HashMap<String,Object>();
+		
+		
+		List<HashMap<String, String>> followList = jdao.getFollowList(map);
+	
+		
+	
+		if(followList.isEmpty()){//팔로우가 없을 때
+		
+			followboard = null;
+			
+		}
+		
+		else if(!(followList.isEmpty()) ){//팔로우가 있으면 게시글이 있는지 확인
+			//followboard =  jdao.getFollowBoardView(map);//게시글이 있는지 확인
+			List<HashMap<String, Object>> followboard2 =  jdao.getFollowBoardView2(map);
+			
+			
+			if(followboard2 != null){	
+				
+				for(HashMap<String, Object> vo : followboard2){
+					HashMap<String,Object> map2 = new HashMap<String,Object>();
+					map2.put("seq_tbl_board", vo.get("seq_tbl_board"));
+					map2.put("login_id", map.get("login_id"));
+					
+					int heartck = jdao.followheartCk(map2);
+					System.out.println("heartck"+heartck);
+					
+					
+					
+					map3.put("heartck", heartck);
+					//map3.put("followboard2", followboard2);
+					map3.put("seq_tbl_board", vo.get("seq_tbl_board"));
+					map3.put("follow_name", vo.get("follow_name"));
+					map3.put("follow_id", vo.get("follow_id"));
+					map3.put("board_heart", vo.get("board_heart"));
+					map3.put("board_recnt", vo.get("board_recnt"));
+					map3.put("board_status", vo.get("board_status"));
+					//System.out.println("map3들어왕 ㅠㅠ::"+map3);
+					numlist.add(heartck);
+					reslutMap.add(map3);
+		
+				}// 팔로우 보드가 null이 아니라면, 하트수 확인을 한다.
+				System.out.println("하핳하핳하핳"+numlist);
+				//reslutMap.add(map3);
+				
+				//System.out.println("map3::"+map3);
+				System.out.println("reslutMap확인얌얌><::"+reslutMap);
+				
+				
+				
+			}
+		
+			
+			
+		}
+
+		
+		return reslutMap;
+	}
+
+	
+	
+	
+	
 	
 	
 
@@ -196,32 +293,59 @@ public class JsrService implements InterJsrService {
 	}
 
 
-	//내용과 태그 가져오기
+	//태그 가져오기
 	@Override
-	public String followConTag(String seq_tbl_board) {
+	public String followTag(String seq_tbl_board) {
 		
-		List<String> list = null;
+		List<TagVO> tagList = null;
+		
+
+		tagList = jdao.getFollowTag(seq_tbl_board);
+	
+	JSONArray jsonMap = new JSONArray();
+		
+		if (tagList != null) {
+			for (TagVO tag : tagList) {
+				JSONObject jsonObj = new JSONObject();
+				
+				jsonObj.put("seq_tbl_tag", tag.getSeq_tbl_tag());
+				jsonObj.put("tag_content", tag.getTag_content());
+				
+				jsonMap.put(jsonObj);
+				
+			}
+		}
+		
+		String str_tagList = jsonMap.toString();
+		
+		
+		return str_tagList;
+	}
+	
+	
+	//내용과 가져오기
+	@Override
+	public String followCon(String seq_tbl_board) {
+		
 		
 		String boardCon = "";
 		
 		boardCon = jdao.getConVeiw(seq_tbl_board);
-		
-		list =  jdao.getFollowTag(seq_tbl_board);
-		
-		JSONArray jsonMap = new JSONArray();
-
+	
+	
 		JSONObject jsonObj = new JSONObject();
-		
+
 		jsonObj.put("content", boardCon);
-		jsonObj.put("tag", list);
-		
-		jsonMap.put(jsonObj);
-		
-		String str_jsonMap = jsonMap.toString();
+
+		String str_jsonMap = jsonObj.toString();
 		
 	
 		return str_jsonMap;
 	}
+	
+	
+	
+	
 	
 	/*--------------------------------------------------------------------------------------------------------------------------*/	
 
@@ -242,6 +366,38 @@ public class JsrService implements InterJsrService {
 		List<QuestionBoardVO> list = jdao.getQeList(map);
 		return list;
 	}
+	
+	
+	//검색어가 있는 백문백답 리스트 가져오기
+	@Override
+	public List<QuestionBoardVO> qeBoardList2(HashMap<String, String> map) {
+		 List<QuestionBoardVO> list = jdao.getQeList2(map);
+		return list;
+	}
+	
+	
+	//검색어 없는 토탈 카운트
+	@Override
+	public int getTotalCount(HashMap<String, String> map) {
+		int count = jdao.getTotalCount(map);
+		return count;
+	}
+
+
+	//검색어 있는 토탈 카운트
+	@Override
+	public int getTotalCount2(HashMap<String, String> map) {
+		int count = jdao.getTotalCount2(map);
+		return count;
+	}
+
+
+
+	
+	
+	
+	
+	
 
 	//백문백답 답변 가져오기
 	@Override
@@ -321,9 +477,32 @@ public class JsrService implements InterJsrService {
 		
 		return nm;
 	}
-	
-	
-	
+
+
+	//백문백답 자동검색어 
+	@Override
+	public String wordQSearch(HashMap<String, String> map) {
+		List<String> wordList = jdao.wordQSearch(map);
+		
+		JSONArray jsonMap = new JSONArray();
+		if (wordList != null) {
+			for(String word : wordList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("word", word);
+				
+				jsonMap.put(jsonObj);
+			}
+		}
+		
+		String str_jsonMap = jsonMap.toString();
+
+		
+		return str_jsonMap;
+	}
+
+
+
+
 	
 
 	

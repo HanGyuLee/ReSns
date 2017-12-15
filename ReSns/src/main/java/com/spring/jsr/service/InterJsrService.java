@@ -24,19 +24,40 @@ public interface InterJsrService {
 	//팔로우 하는 사람들 게시글 가지고 오기.
 	List<BoardVO> followboard(HashMap<String, String> map);
 	
+	
+	//팔로우 하는 사람들 게시글 가지고 오기2.
+	List<HashMap<String,Object>> followboard2(HashMap<String, String> map);
+	
 
 	
 	//팔로우 하는 사람 댓글 가져오기
 	String followre(String seq_tbl_board);
 	
-	//내용과 태그 가져오기
-	String followConTag(String seq_tbl_board);
+	//태그 가져오기
+	String followTag(String seq_tbl_board);
 	
+	//내용  가져오기
+	String followCon(String seq_tbl_board);
+	
+
 	//백문백답 질문 작성
 	int queAdd(QuestionBoardVO qboardvo);
 	
+	
 	//백문백답 리스트 불러오기
 	List<QuestionBoardVO> qeBoardList(HashMap<String, String> map);
+	
+	//검색어가 있는 백문백답 가져오기
+	List<QuestionBoardVO> qeBoardList2(HashMap<String, String> map);
+	
+	//토탈 카운트
+	int getTotalCount(HashMap<String, String> map);
+	//검색어 있는 토탈
+	int getTotalCount2(HashMap<String, String> map);
+	
+	
+	
+	
 	//백문백답답변가져오기
 	QuestionBoardReplyVO getReply(String seq_tbl_q);
 	//해당하는 질문내용 가져오기
@@ -50,6 +71,12 @@ public interface InterJsrService {
 	
 	//답변삭제하기
 	int qreplyDel(String fk_seq_tbl_q)throws Throwable;
+	
+	//백문백답 자동검색어
+	String wordQSearch(HashMap<String, String> map);
+	
+
+	
 
 
 

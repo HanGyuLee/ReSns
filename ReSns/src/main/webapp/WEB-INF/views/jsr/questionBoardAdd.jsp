@@ -5,6 +5,15 @@
 <head>
 <meta charset="UTF-8">
 <title>백문백답 게시판</title>
+
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+
+
+
 <style type="text/css">
 .q_content{
 width: 500px;
@@ -32,27 +41,75 @@ outline: 0;
 .q_content-feedback{ line-height:50px;}
 .main-btn{ background:black; color:gray;}
 .main-btn:hover{ color:white;}
+
+
+.goQ{
+background-color: black;
+border: black;
+}
+
+.goQ:focus{
+background-color: black;
+border: black;
+}
+
+.goQ:active:hover{
+background-color: black;
+border: black;
+}
+
+.goQ:active:focus{
+background-color: black;
+border: black;
+}
+
+.goQ:hover{
+background-color: black;
+border: black;
+}
+
+
+
 </style>
 
 
 <script type="text/javascript">
 $(document).ready(function(){
-
 	
+    $('#q_content').on('keyup', function() {
+        if($(this).val().length > 150) {
+
+            $(this).val($(this).val().substring(0, 150));
+            alert("공백 포함 150자 까지만 쓸 수 있습니다.");
+
+        }
+    });
+    
+    
+    $("#q_go").click(function(){
+    	var q_content = $("#q_content").val();
+    	//alert("q_content"+q_content);
+    	 if (q_content == "" || $.trim(q_content) == "") {
+    			alert("질문을 입력하셔야 합니다.");
+    			$("#q_content").focus();
+    	 }
+    	 
+    	 else{
+    		var frm = document.question;
+    		
+    		frm.method = "post";
+    		frm.action = "<%= request.getContextPath()%>/questionAddEnd.re";
+    		frm.submit(); 	 
+    		 
+    		 
+    	 }
+   			
+    });
+
+
 
 });//end of $(document).ready(function()
 
-
-function goQuestion(){
-
-
-var frm = document.question;
-//alert("엔터이벤트 왜떠???");
- frm.method = "post";
-frm.action = "<%= request.getContextPath()%>/questionAddEnd.re";
-frm.submit();
-	
-}
 
 
 </script>
@@ -65,7 +122,8 @@ frm.submit();
 <div align="center">
 <div style="">
 <input type="text" name="q_askid" id="q_askid" value="${sessionScope.loginUser.login_id}"><br/>
-<input type="text" name="fk_login_id" id="fk_login_id" ><br/>
+<input type="text" name="fk_login_id" id="fk_login_id" value="${fk_login_id}" ><br/>
+<input type="text" name="gobackURL" id="gobackURL" value="${gobackURL}" ><br/>
 </div>
 
 <div>
@@ -77,9 +135,9 @@ frm.submit();
 </div>
 <br/>
 <div>
-<button type="button" class="delete btn btn-danger" onClick="goQuestion()">질문하기</button>
+<button type="button" id="q_go" class="delete btn btn-danger goQ">질문하기</button>
+<button type="button" id="q_ce" class="delete btn btn-danger" onClick="javascript:location.href='<%= request.getContextPath() %>/${gobackURL}'">돌아가기</button>
 </div>
-
 </div>
 
 </form>

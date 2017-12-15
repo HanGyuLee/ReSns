@@ -45,7 +45,7 @@ public interface InterJsrDAO {
 	String getConVeiw(String seq_tbl_board);
 	
 	//태그 가져오기
-	List<String> getFollowTag(String seq_tbl_board);
+	List<TagVO> getFollowTag(String seq_tbl_board);
 	
 	
 	//백문백답 게시글 작성하기
@@ -53,6 +53,14 @@ public interface InterJsrDAO {
 	
 	//백문백답 리스트 가져오기
 	List<QuestionBoardVO> getQeList(HashMap<String, String> map);
+	//검색어가 있는 리스트 가져오기
+	List<QuestionBoardVO> getQeList2(HashMap<String, String> map);
+	//검색어 없는 토탈 카운트
+	int getTotalCount(HashMap<String, String> map);
+	//검색어 없는 토탈 카운트
+	int getTotalCount2(HashMap<String, String> map);
+	
+	
 	
 	//백문백답 답변가져오기
 	QuestionBoardReplyVO getRp(String seq_tbl_q);
@@ -72,10 +80,15 @@ public interface InterJsrDAO {
 	//답변 삭제 후 질문 상태값 바꿔주기
 	int adalpUp(String fk_seq_tbl_q);
 	
+	//백문백답 자동완성
+	List<String> wordQSearch(HashMap<String, String> map);
 	
+	//팔로우 하트 체크
+	int followheartCk(HashMap<String,Object> map2);
 	
-
-
+	//팔로우 하트 위해 다시 한번 글 불러오기
+	List<HashMap<String, Object>> getFollowBoardView2(HashMap<String, String> map);
+	
 
 
 	
