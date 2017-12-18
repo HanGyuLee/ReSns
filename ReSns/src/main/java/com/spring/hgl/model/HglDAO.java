@@ -69,6 +69,18 @@ public class HglDAO implements InterHglDAO{
 		List<HashMap<String, Object>> list = sqlsession.selectList("hglresns.myFollowingList",userid);
 		return list;	
 	}
+
+	@Override
+	public int updateMyBg(HashMap<String, Object> bgmap) {
+		int result = sqlsession.update("hglresns.updateMyBg",bgmap);
+		return result;
+	}
+	
+	@Override
+	public int updateMyPf(HashMap<String, Object> pfmap) {
+		int result = sqlsession.update("hglresns.updateMyPf",pfmap);
+		return result;
+	}
 	
 	
 	
