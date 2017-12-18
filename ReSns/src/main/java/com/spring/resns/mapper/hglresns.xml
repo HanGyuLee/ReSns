@@ -7,6 +7,7 @@
 <mapper namespace="hglresns">
 
 
+<!-- 내 게시글 가져오기  -->
 	<resultMap type="HashMap" id="boardMap">
 	 	<result property="seq_tbl_board" 		 column="seq_tbl_board" 		javaType="String"/>
 		<result property="board_content" 		 column="board_content" 		javaType="String"/>
@@ -29,8 +30,12 @@
 		where U.fk_login_id = #{userid}
 		
 	</select>
+
+<!-- 내 게시글 가져오기 끝 -->	
 	
 	
+	
+<!-- 내 페이지에서 프로필사진, 배경사진 가져오기  -->	
 	<resultMap type="HashMap" id="profileMap">
 	 	<result property="fk_login_id" 			 column="fk_login_id" 			javaType="String"/>
 		<result property="uimg_profile_filename" column="uimg_profile_filename" javaType="String"/>
@@ -45,13 +50,19 @@
 			
 	</select>
 	
+<!-- 내 페이지에서 프로필사진, 배경사진 가져오기  끝 -->		
+	
+	
+<!-- 내 페이지에 보여줄 별명 가져오기  -->		
 	<select id="userName" parameterType="String" resultType="String">
 		    select login_name
 		    from tbl_login
 		    where login_id = #{userid}	
 	</select>
+<!-- 내 페이지에 보여줄 별명 가져오기 끝  -->		
 	
 	
+<!-- 내 페이지의 타이틀과 내용이 테이블에 있는지 확인  -->		
 	<select id="existTblMypage" parameterType="String" resultType="int" >	
 	
 		select count(*) as cnt
@@ -59,8 +70,11 @@
 		where fk_login_id =  #{userid}
 			
 	</select>
+<!-- 내 페이지의 타이틀과 내용이 테이블에 있는지 확인  끝 -->	
 	
 	
+	
+<!-- 내 페이지의 타이틀과 내용 가져오기 -->	
 	<resultMap type="HashMap" id="mypageMap">
 		<result property="textinput" 		column="textinput"  	javaType="String"/>
 		<result property="textarea" 		column="textarea" 		javaType="String"/>
@@ -73,20 +87,26 @@
 		where fk_login_id =  #{userid}
 			
 	</select>
+<!-- 내 페이지의 타이틀과 내용 가져오기 끝-->		
 	
-	
-	
+
+<!-- 내 페이지의 타이틀과 내용 변경하기  -->		
 	<update id="updateMyPage" parameterType="HashMap">
 		update tbl_mypage set textinput = #{textinput}, textarea = #{textarea}
 		where fk_login_id = #{userid}
 	</update>
-	
+<!-- 내 페이지의 타이틀과 내용 변경하기 끝  -->	
+
+
+<!-- 내 페이지의 타이틀과 내용이 없으면 기본값으로 insert 하기 -->
 	<insert id="insertMyPage" parameterType="HashMap">
 		insert into tbl_mypage
   		values(#{userid},#{textinput},#{textarea})
 	</insert>
-	
-    
+<!-- 내 페이지의 타이틀과 내용이 없으면 기본값으로 insert 하기  끝 -->	
+   
+   
+<!-- 나를 팔로우하는 사람들 ( 내 팔로워 ) 리스트 가져오기  -->   
     <resultMap type="HashMap" id="followerMap">
 	 	<result property="login_name" 		 		column="login_name" 			javaType="String"/>
 		<result property="uimg_profile_filename" 	column="uimg_profile_filename" 	javaType="String"/>
@@ -106,7 +126,11 @@
 
 		
 	</select>
-	
+<!-- 나를 팔로우하는 사람들 ( 내 팔로워 ) 리스트 가져오기  끝 -->
+
+
+
+<!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 리스트 가져오기  -->	
      <resultMap type="HashMap" id="followingMap">
 	 	<result property="login_name" 		 		column="login_name" 			javaType="String"/>
 		<result property="uimg_profile_filename" 	column="uimg_profile_filename" 	javaType="String"/>
@@ -125,6 +149,28 @@
    		where F.fk_login_id = #{userid} and L.login_status = 1
 		
 	</select>
+	
+<!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 리스트 가져오기  끝 -->	
+	
+	
+	
+<!-- 내 페이지 배경사진 변경하기   -->	
+    <update id="updateMyBg" parameterType="HashMap">
+		update tbl_uimage set uimg_header_filename = #{newFileName}, uimg_header_orgfilename = #{originalFilename},uimg_header_filesize=#{fileSize}
+		where fk_login_id = #{userid}
+	</update>
+<!-- 내 페이지 배경사진 변경하기  끝  -->
+
+
+<!-- 내 페이지 프로필사진 변경하기   -->			
+	 <update id="updateMyPf" parameterType="HashMap">
+		update tbl_uimage set uimg_profile_filename = #{newFileName}, uimg_profile_orgfilename = #{originalFilename},uimg_profile_filesize=#{fileSize}
+		where fk_login_id = #{userid}
+	</update>
+<!-- 내 페이지 프로필사진 변경하기  끝 -->	
+    
+    
+    
     
 
 </mapper>

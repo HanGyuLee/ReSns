@@ -9,29 +9,10 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ribeye">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/style/hglStyle.css">
 
 <style type="text/css">
-.ribeye {   font-family: 'Ribeye';
-        font-size: 48px;  text-shadow: 2px 2px 4px #aaa; }
 
-.tangerine {   font-family: 'Tangerine';
-        font-size: 68px;  text-shadow: 4px 4px 4px #aaa; }
-.back-to-top {
-    cursor: pointer;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display:none;
-}
-
-.navbar {
-	margin-bottom: 0;
-}
-
-section {
-	width: 100%;
-	float: left;
-}
 
 .banner-section {
 	
@@ -46,381 +27,6 @@ section {
 	background-position: 0;
 	
 }
-
-.post-title-block {
-	padding: 100px 0;
-}
-
-.post-title-block h1 {
-	color: #fff;
-	font-size: 85px;
-	font-weight: bold;
-	text-transform: capitalize;
-}
-
-.post-title-block li {
-	font-size: 20px;
-	color: #fff;
-}
-
-.image-block {
-	float: left;
-	width: 100%;
-	margin-bottom: 10px;
-}
-
-.footer-link {
-	float: left;
-	width: 100%;
-	background: #222222;
-	text-align: center;
-	padding: 30px;
-}
-
-.footer-link a {
-	color: #A9FD00;
-	font-size: 18px;
-	text-transform: uppercase;
-}
-
-
-
-
-
-
-@import url(https://fonts.googleapis.com/css?family=Quicksand:400,300);
-body{
-    font-family: 'Quicksand', sans-serif;
-}
-.gal-container{
-	padding: 12px;
-}
-.gal-item{
-	overflow: hidden;
-	padding: 3px;
-}
-.gal-item .box{
-	height: 190px;
-	overflow: hidden;
-}
-.box img{
-	height: 100%;
-	width: 100%;
-	object-fit:cover;
-	-o-object-fit:cover;
-}
-.gal-item a:focus{
-	outline: none;
-}
-.gal-item a:after{
-	content:"\e003";
-	font-family: 'Glyphicons Halflings';
-	opacity: 0;
-	background-color: rgba(0, 0, 0, 0.75);
-	position: absolute;
-	right: 3px;
-	left: 3px;
-	top: 3px;
-	bottom: 3px;
-	text-align: center;
-    line-height: 350px;
-    font-size: 30px;
-    color: #fff;
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
-    transition: all 0.5s ease-in-out 0s;
-}
-.gal-item a:hover:after{
-	opacity: 1;
-}
-.modal-open .gal-container .modal{
-	background-color: rgba(0,0,0,0.4);
-}
-.modal-open .gal-item .modal-body{
-	padding: 0px;
-}
-.modal-open .gal-item button.close{
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    background-color: #000;
-    opacity: 1;
-    color: #fff;
-    z-index: 999;
-    right: -12px;
-    top: -12px;
-    border-radius: 50%;
-    font-size: 15px;
-    border: 2px solid #fff;
-    line-height: 25px;
-    -webkit-box-shadow: 0 0 1px 1px rgba(0,0,0,0.35);
-	box-shadow: 0 0 1px 1px rgba(0,0,0,0.35);
-}
-.modal-open .gal-item button.close:focus{
-	outline: none;
-}
-.modal-open .gal-item button.close span{
-	position: relative;
-	top: -3px;
-	font-weight: lighter;
-	text-shadow:none;
-}
-.gal-container .modal-dialogue{
-	width: 80%;
-}
-.gal-container .description{
-	position: relative;
-	height: 40px;
-	top: -40px;
-	padding: 10px 25px;
-	background-color: rgba(0,0,0,0.5);
-	color: #fff;
-	text-align: left;
-}
-.gal-container .description h4{
-	margin:0px;
-	font-size: 15px;
-	font-weight: 300;
-	line-height: 20px;
-}
-.gal-container .modal.fade .modal-dialog .modal2{
-    -webkit-transform: scale(0.1);
-    -moz-transform: scale(0.1);
-    -ms-transform: scale(0.1);
-    transform: scale(0.1);
-    top: 100px;
-    opacity: 0;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    transition: all 0.3s;
-}
-
-.gal-container .modal.fade.in .modal-dialog {
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-    -webkit-transform: translate3d(0, -100px, 0);
-    transform: translate3d(0, -100px, 0);
-    opacity: 1;
-}
-@media (min-width: 768px) {
-.gal-container .modal-dialog {
-    width: 55%;
-    margin: 50 auto;
-}
-}
-@media (max-width: 768px) {
-    .gal-container .modal-content{
-        height:250px;
-    }
-}
-/* Footer Style */
-i.red{
-    color:#BC0213;
-}
-.gal-container{
-    padding-top :75px;
-    padding-bottom:75px;
-}
-footer{
-    font-family: 'Quicksand', sans-serif;
-}
-footer a,footer a:hover{
-    color: #88C425;
-}
-
-
-@import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
-
-body {
-    padding: 30px 0px 60px;
-}
-.panel > .list-group .list-group-item:first-child {
-    /*border-top: 1px solid rgb(204, 204, 204);*/
-}
-@media (max-width: 767px) {
-    .visible-xs {
-        display: inline-block !important;
-    }
-    .block {
-        display: block !important;
-        width: 100%;
-        height: 1px !important;
-    }
-}
-
-
-
-.c-search > .form-control {
-   border-radius: 0px;
-   border-width: 0px;
-   border-bottom-width: 1px;
-   font-size: 1.3em;
-   padding: 12px 12px;
-   height: 44px;
-   outline: none !important;
-}
-.c-search > .form-control:focus {
-    outline:0px !important;
-    -webkit-appearance:none;
-    box-shadow: none;
-}
-.c-search > .input-group-btn .btn {
-   border-radius: 0px;
-   border-width: 0px;
-   border-left-width: 1px;
-   border-bottom-width: 1px;
-   height: 44px;
-}
-
-
-.c-list {
-    padding: 0px;
-    min-height: 44px;
-}
-.title {
-    display: inline-block;
-    font-size: 1.7em;
-    font-weight: bold;
-    padding: 5px 15px;
-}
-ul.c-controls {
-    list-style: none;
-    margin: 0px;
-    min-height: 44px;
-}
-
-ul.c-controls li {
-    margin-top: 8px;
-    float: left;
-}
-
-ul.c-controls li a {
-    font-size: 1.7em;
-    padding: 11px 10px 6px;   
-}
-ul.c-controls li a i {
-    min-width: 24px;
-    text-align: center;
-}
-
-ul.c-controls li a:hover {
-    background-color: rgba(51, 51, 51, 0.2);
-}
-
-.c-toggle {
-    font-size: 1.7em;
-}
-
-.name {
-    font-size: 1.7em;
-    font-weight: 700;
-}
-
-.c-info {
-    padding: 5px 10px;
-    font-size: 1.25em;
-}
-
-
-
-.mybutton{
- 	-webkit-apppearnace : none;
-    padding: 0;
-    border:0;
-    background:transparent;
-}
-
-
-
-
-
-
-
-
-.tabbable-panel {
-  border:1px solid #eee;
-  padding: 10px;
-}
-
-/* Default mode */
-.tabbable-line > .nav-tabs {
-  border: none;
-  margin: 0px;
-}
-.tabbable-line > .nav-tabs > li {
-  margin-right: 2px;
-}
-.tabbable-line > .nav-tabs > li > a {
-  border: 0;
-  margin-right: 0;
-  color: #737373;
-}
-.tabbable-line > .nav-tabs > li > a > i {
-  color: #a6a6a6;
-}
-.tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
-  border-bottom: 4px solid #fbcdcf;
-}
-.tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
-  border: 0;
-  background: none !important;
-  color: #333333;
-}
-.tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
-  color: #a6a6a6;
-}
-.tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
-  margin-top: 0px;
-}
-.tabbable-line > .nav-tabs > li.active {
-  border-bottom: 4px solid #f3565d;
-  position: relative;
-}
-.tabbable-line > .nav-tabs > li.active > a {
-  border: 0 !important;
-  color: #333333;
-}
-.tabbable-line > .nav-tabs > li.active > a > i {
-  color: #404040;
-}
-.tabbable-line > .tab-content {
-  margin-top: 0px;
-  background-color: transparent;
-  border: 0;
-  border-top: 0px solid #eee;
-  padding:  0;
-}
-.portlet .tabbable-line > .tab-content {
-  padding-bottom: 0;
-}
-
-/* Below tabs mode */
-
-.tabbable-line.tabs-below > .nav-tabs > li {
-  border-top: 4px solid transparent;
-}
-.tabbable-line.tabs-below > .nav-tabs > li > a {
-  margin-top: 0;
-}
-.tabbable-line.tabs-below > .nav-tabs > li:hover {
-  border-bottom: 0;
-  border-top: 4px solid #fbcdcf;
-}
-.tabbable-line.tabs-below > .nav-tabs > li.active {
-  margin-bottom: -2px;
-  border-bottom: 0;
-  border-top: 4px solid #f3565d;
-}
-.tabbable-line.tabs-below > .tab-content {
-  margin-top: -10px;
-  border-top: 0;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 15px;
-}
-
-
 
 </style>
 
@@ -440,23 +46,12 @@ $(function(){
 		goSave();
 	});
 	
-	function goSave(){
-		var frm = document.saveFrm;
-		
-		var textinput = $("#textinput").val();
-		var textarea = $("#textarea").val();
-		if(textinput.trim()==""){
-			alert("마이페이지 타이틀을 입력하세요");
-		}
-		if(textarea.trim()==""){
-			alert("마이페이지 소개글을 입력하세요");
-		}
 	
-		
-		frm.method = "post";
-		frm.action = "/resns/saveEnd.re";
-		frm.submit();
-	} // end of goSearch()
+	$("#btnFollow").click(function(){
+		goFollow();
+	});
+	
+	
 	
 
 	
@@ -520,6 +115,55 @@ $(function(){
 });
 
 
+function goChangeBg() {
+	// 유효성 검사는 생략함.
+	alert("확인");
+	var changeBg = document.changeBg;
+	
+	changeBg.submit();
+}
+
+function goChangePf() {
+	// 유효성 검사는 생략함.
+	alert("확인");
+	var changePf = document.changePf;
+	
+	changePf.submit();
+}
+
+function goFollower(num,followId){
+	
+	alert("확인");
+	var frm = document.follower;
+	var followId = followId;
+	
+	frm.followId.value=followId;
+	frm.method = "post";
+	frm.action = "/resns/followAddEnd.re";
+	frm.submit();
+	
+}
+
+
+
+
+function goSave(){
+	var frm = document.saveFrm;
+	
+	var textinput = $("#textinput").val();
+	var textarea = $("#textarea").val();
+	if(textinput.trim()==""){
+		alert("마이페이지 타이틀을 입력하세요");
+	}
+	if(textarea.trim()==""){
+		alert("마이페이지 소개글을 입력하세요");
+	}
+
+	
+	frm.method = "post";
+	frm.action = "/resns/saveEnd.re";
+	frm.submit();
+} // end of goSearch()
 
 
 </script>
@@ -560,8 +204,8 @@ $(function(){
    </div>
   
   
-  <div id="settings" class="modal fade bs-example-modal-sm hidemodal clickhide" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+  <div id="settings" class="modal fade bs-example-modal-sm hidemodal " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm ">
             <div class="modal-content">
                 <div class="modal-header">
            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -571,16 +215,24 @@ $(function(){
         <div class="modal-body ">
              <ul class="list-group" id="contact-list">
                
-            <li class="list-group-item" id="editInfo">                       
+            <li class="list-group-item clickhide" id="editInfo">                       
                 	내 정보 수정하기                 
              </li>
-             <li class="list-group-item" id="changePf">                       
-               		프로필 사진 바꾸기                 
+             <li class="list-group-item " id="changePf">                       
+               		<form name="changePf" action="<%=request.getContextPath()%>/updateMyPfEnd.re" method="post" enctype="multipart/form-data" >
+           			<input type='file' id='filePf' name='filePf'/><button type="button" id="btnChangePf" class="mybutton" style="margin-right: 10px; cursor: pointer;" onClick="goChangePf();">프로필 사진 선택완료   </button>
+           		
+           		</form>                
              </li>
+             	
              <li class="list-group-item" id="changeBg">                       
-           			배경 사진 바꾸기                
+           		<form name="changeBg" action="<%=request.getContextPath()%>/updateMyBgEnd.re" method="post" enctype="multipart/form-data" >
+           			<input type='file' name='fileBg'/><button type="button" id="btnChangeBg" class="mybutton" style="margin-right: 10px; cursor: pointer;" onClick="goChangeBg();">배경 사진 선택 완료   </button>
+           		
+           		</form>             
              </li>
-               <li class="list-group-item " id="changeBg">                       
+           
+               <li class="list-group-item  clickhide" id="changeMypage">                       
            			<button type="button" class="mybutton" data-toggle="modal" data-target="#mypageEdit">내 페이지 설정 </button>       
              </li>
     
@@ -590,7 +242,6 @@ $(function(){
             </div>
         </div>
     </div>
-    
     
     
     <form name="saveFrm" 
@@ -642,9 +293,8 @@ $(function(){
 		
 	</form>
     
-   
+    
     <div class="container gal-container" style="border:1px solid transparent;margin-top:300px;">
-   
    
    <div style="margin-left:-30px; margin-top:-80px;float: left; width:73%; border:1px solid transparent; background-color:white;">
    <div data-spy="scroll" class="tabbable-panel" style="display:inline; border:1px solid transparent;">
@@ -794,7 +444,7 @@ $(function(){
                 <!--  팔로워 리스트 ~!!~! -->
                 
                 <c:if test="${not empty myFollowerList }">
-                	
+                
                 	<c:forEach var="follower" items="${myFollowerList}" varStatus="status">
                 <c:set var="count" value="${status.count }"></c:set>
                   
@@ -802,10 +452,10 @@ $(function(){
                     
                     
                     
-                     <c:if test="${sessionScope.loginUser.login_id == following.follow_id}">
+                     <c:if test="${sessionScope.loginUser.login_id == follower.fk_login_id}">
                     	<a href="<%=request.getContextPath() %>/mypage.re?fk_login_id=${follower.fk_login_id}">
                     </c:if>
-                    <c:if test="${sessionScope.loginUser.login_id != following.follow_id}">
+                    <c:if test="${sessionScope.loginUser.login_id != follower.fk_login_id}">
                     	<a href="<%=request.getContextPath() %>/otherspage.re?fk_login_id=${follower.fk_login_id}">
                     </c:if>
                     
@@ -815,18 +465,20 @@ $(function(){
                             <img src="<%=request.getContextPath()%>/resources/images/${follower.uimg_profile_filename}" alt="${follower.login_name}" class="img-responsive img-circle" />
                         </div>
                         <div class="col-xs-12 col-sm-9">
-                            <span class="name">${follower.login_name}</span><br/>
-                            <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="5842 Hillcrest Rd"></span>
-                            <span class="visible-xs"> <span class="text-muted">${follower.fk_login_id}</span><br/></span>
+                            <span class="name">${follower.login_name}</span>
+                      </a>          
+                   
+                   <%--  <button type="button" id="btnFollower${status.count}"   style=" background-color: blue;"><img src="<%=request.getContextPath()%>/resources/images/follow_white.png" /></button> --%>
+                    <a class="btn icon-btn btn-success" id="btnFollower" onClick="goFollower('${status.count}','${follower.fk_login_id}');"><span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-success"></span>Follow</a>
+                    <input type="hidden" id="followId" name="followId" value="${follower.fk_login_id}"/>
+                     <br/><span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="5842 Hillcrest Rd"></span>
+                          
                             <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(870) 288-4149"></span>
          
-                        </div>
-                    </a>
+                    </div>
                         <div class="clearfix"></div>
                           
                     </li>
-                 
-                    
                     
                     </c:forEach>
                     <li class="list-group-item"><span style="font-size:13pt; font-weight:bold; color:gray; padding:50px;">count : ${count}</span></li>
@@ -867,11 +519,11 @@ $(function(){
                 
                 <ul class="list-group" id="contact-list">
                 
-                <!--  팔로워 리스트 ~!!~! -->
+                <!--  팔로잉 리스트 ~!!~! -->
                 
                 <c:if test="${not empty myFollowingList }">
-                	
-                	<c:forEach var="following" items="${myFollowingList }" varStatus="status">
+                
+                	 <c:forEach var="following" items="${myFollowingList }" varStatus="status">
                 <c:set var="count" value="${status.count }"></c:set>
                 
                     <li class="list-group-item">
@@ -886,13 +538,16 @@ $(function(){
                             <img src="<%=request.getContextPath()%>/resources/images/${following.uimg_profile_filename}" alt="${following.login_name}" class="img-responsive img-circle" />
                         </div>
                         <div class="col-xs-12 col-sm-9">
-                            <span class="name">${following.login_name}</span><br/>
+                            <span class="name">${following.login_name}</span>
+                            </a>
+                            
+                 
                             <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="5842 Hillcrest Rd"></span>
                             <span class="visible-xs"> <span class="text-muted">${following.follow_id}</span><br/></span>
                             <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(870) 288-4149"></span>
 
                         </div>
-                        </a>
+                        
                         <div class="clearfix"></div>
                     </li>
                     </c:forEach>
@@ -903,24 +558,18 @@ $(function(){
                      	<span style="font-size:13pt; font-weight:bold; color:gray; padding:50px;"> 다른 사람을 팔로잉 해보세요^^ <br/><br/><br/> </span>
 
                     </c:if> 
-                  
-                    
-                     
                 </ul>
             </div>
         </div>
 	</div>
 	
 	
-	
-    
     	<!-- JavaScrip Search Plugin -->
     <script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
  
    		   
 	</div>
 		
-			
 					
 	</div>
     
@@ -928,8 +577,6 @@ $(function(){
     </div>
    
    
- 
-			
 	</div>
 	</div>
 	
@@ -937,6 +584,10 @@ $(function(){
 
 
 <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" ><span class="glyphicon glyphicon-chevron-up"></span></a>
+
+	<form name="follower">
+	<input type="hidden" name="followId"/>	
+	</form>
 
 </body>
 </html>
