@@ -1,6 +1,5 @@
 package com.spring.jsr.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import com.spring.jsr.model.QuestionBoardReplyVO;
 import com.spring.jsr.model.QuestionBoardVO;
 import com.spring.pek.model.BoardDAO;
 import com.spring.pek.model.BoardVO;
-import com.spring.pek.model.HeartVO;
+
 import com.spring.pek.model.TagVO;
 
 
@@ -58,11 +57,13 @@ public class JsrService implements InterJsrService {
 	public int followAdd(HashMap<String, String> map) throws Throwable{
 		
 		int followCheck = 0; //중복팔롱 확인
-		int followCheck2= 0; //내가 나를 팔로우 못하게 막기
+		//int followCheck2= 0; //내가 나를 팔로우 못하게 막기
 		int followAddlist =0; //팔로우 하기
+		String followSeqCheck = "";//팔로우 시퀀스 알아오기
 		int n = 0;//팔로우 값 1 증가
 		int m = 0;//팔로워 값 1 증가
-		int followAdd = 0; //팔로우 완료
+		int followAddEnd = 0; //팔로우 완료
+		int followAlaram = 0;
 		
 		
 		//내가 나를 팔로우 하는 것을 막기
@@ -70,48 +71,55 @@ public class JsrService implements InterJsrService {
 		String follow_id = map.get("follow_id");
 		
 		if (follow_id.equalsIgnoreCase(login_id)){			
-			followAdd = -4; 
+			followAddEnd = -4; 
 		}
 			
-		//이미 팔로우가 되어 있는지 확인
-		else 
+
+		
+		else //내가 나를 팔로우 하고 있지 않은 경우
 		{	
+
+			
+		//이미 팔로우가 되어 있는지 확인
 		followCheck = jdao.followCheck(map);
+			
 		
 		if (followCheck == 1){
 			//이미 팔로우를 한 상태이다.
-			followAdd = -3;		
-		}
-
-		else if (followCheck == 0){
-			followAddlist = jdao.followAdd(map);
-			//팔로우 하기
-
-			if(followAddlist > 0){
-				//팔로우, 팔로워 값 증가하기
-				n = jdao.followupdate(map);
-				m = jdao.followerupdate(map);	
-
-				int nm = n+m;
-
-				if (nm >1){
-					//증가 완료 했다면 팔로우 최종 승인해주기.
-					followAdd = 1;
-				}//end of if nm>1		
-
-			}//end of followAddlist > 0 팔로우 추가 완료
-
-		}//end of else if followCheck ==0
-			
+			followAddEnd = -3;		
+		}//이미 팔로우 한 경우 -3을 리턴!
 		
-		}
-		return followAdd;
+		
+	
+	else if (followCheck == 0){
+			
+			followAddlist = jdao.followAdd(map);
+			//팔로우 하기. 팔로우에 성공하면 0보다 커야함.
+				//팔로우, 팔로워 값 증가하기
+				n = jdao.followupdate(map);//내 프로필 팔로우 수 증가
+				m = jdao.followerupdate(map);//상대방 프로필 팔로워 수 증가
+
+				followSeqCheck = jdao.followSeqCheck(map);
+				if (followSeqCheck !=null){
+		         map.put("follow_seq", followSeqCheck);
+					followAlaram = jdao.followAlaram(map);//알아온 시퀀스를 알람테이블에 인서트
+				}
+	}//else if 끝. 팔로우 한 경우가 아니라면 끝.
+							
+		if( ( followAddlist > 0 && n >0 && m>0 && followSeqCheck != null && followAlaram >0 ) ||
+				( followAddlist == 1 && n == 1 && m == 1 && followSeqCheck != null && followAlaram ==1) )
+		{followAddEnd = 1; }
+		
+	}//내가 팔로우하는 경우가 아니라면 끝
+
+		return followAddEnd;
 	}
 
 
 	//언팔로우하기
 	@Override
-	public int unFollow(HashMap<String, String> map) {
+	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int unFollow(HashMap<String, String> map) throws Throwable{
 		
 		int followCheck = 0; //팔로 상태 확인
 		int unFollowAdd =0; //언팔로우 하기
@@ -124,29 +132,29 @@ public class JsrService implements InterJsrService {
 		
 		
 		if (followCheck == 0){
-			//이미 팔로우를 한 상태이다.
+			//이미 언팔로우를 한 상태이다. 팔로우 상태가 아니다.
 			unFollowAddEnd = -3;		
 		}
 		
-		else if (followCheck == 1){
+		
+		else if (followCheck == 1){ //팔로우 상태일 때
 			unFollowAdd = jdao.unFollow(map);
 			//언팔로우 하기
-
-			if(unFollowAdd > 0){
-				//팔로우, 팔로워 값 증가하기
-				n = jdao.unfollowupdate(map);
-				m = jdao.unfollowerupdate(map);	
-
-				int nm = n+m;
-
-				if (nm >1){
-					//증가 완료 했다면 팔로우 최종 승인해주기.
-					unFollowAddEnd = 1;
-				}//end of if nm>1		
-
-			}//end of followAddlist > 0 팔로우 추가 완료
-
-		}//end of else if followCheck ==0
+			//팔로우, 팔로워 값 증가하기
+			n = jdao.unfollowupdate(map);
+			m = jdao.unfollowerupdate(map);	
+			//감소 완료 했다면 언 팔로우 최종 승인해주기.
+			
+		if ( (unFollowAdd >0 && n>0 && m>0) || (unFollowAdd ==1 && n==1 && m==1) ){ 
+			unFollowAddEnd = 1;}
+		
+		else{
+			unFollowAddEnd =1;
+			
+		}
+			
+			
+		}
 		
 		return unFollowAddEnd;
 	}
@@ -170,89 +178,23 @@ public class JsrService implements InterJsrService {
 		
 		else if(!(followList.isEmpty()) ){//팔로우가 있으면 게시글이 있는지 확인
 			followboard =  jdao.getFollowBoardView(map);
+/*			
+			if(followboard != null && followboard.size()>0){
+				for(BoardVO bvo:followboard){
+					String board_content = bvo.getBoard_content();
+					board_content = board_content.replaceAll("\r\n", "<br/>");
+					bvo.setBoard_content(board_content);
+				}
+			
+			}*/
 		
-				}// 팔로우 보드가 null이 아니라면, 하트수 확인을 한다.
+				}// 
 
 
 		
 		return followboard;
 	}
 
-	
-
-	//팔로우 하는 사람 게시글 가지고 오기
-	@Override
-	public List<HashMap<String,Object>> followboard2(HashMap<String, String> map) {
-
-		List<BoardVO> followboard = null;
-		List<Integer> numlist = new ArrayList<Integer>();
-		List<HashMap<String,Object>> reslutMap = new ArrayList<HashMap<String,Object>>();
-		HashMap<String,Object>map3 = new HashMap<String,Object>();
-		
-		
-		List<HashMap<String, String>> followList = jdao.getFollowList(map);
-	
-		
-	
-		if(followList.isEmpty()){//팔로우가 없을 때
-		
-			followboard = null;
-			
-		}
-		
-		else if(!(followList.isEmpty()) ){//팔로우가 있으면 게시글이 있는지 확인
-			//followboard =  jdao.getFollowBoardView(map);//게시글이 있는지 확인
-			List<HashMap<String, Object>> followboard2 =  jdao.getFollowBoardView2(map);
-			
-			
-			if(followboard2 != null){	
-				
-				for(HashMap<String, Object> vo : followboard2){
-					HashMap<String,Object> map2 = new HashMap<String,Object>();
-					map2.put("seq_tbl_board", vo.get("seq_tbl_board"));
-					map2.put("login_id", map.get("login_id"));
-					
-					int heartck = jdao.followheartCk(map2);
-					System.out.println("heartck"+heartck);
-					
-					
-					
-					map3.put("heartck", heartck);
-					//map3.put("followboard2", followboard2);
-					map3.put("seq_tbl_board", vo.get("seq_tbl_board"));
-					map3.put("follow_name", vo.get("follow_name"));
-					map3.put("follow_id", vo.get("follow_id"));
-					map3.put("board_heart", vo.get("board_heart"));
-					map3.put("board_recnt", vo.get("board_recnt"));
-					map3.put("board_status", vo.get("board_status"));
-					//System.out.println("map3들어왕 ㅠㅠ::"+map3);
-					numlist.add(heartck);
-					reslutMap.add(map3);
-		
-				}// 팔로우 보드가 null이 아니라면, 하트수 확인을 한다.
-				System.out.println("하핳하핳하핳"+numlist);
-				//reslutMap.add(map3);
-				
-				//System.out.println("map3::"+map3);
-				System.out.println("reslutMap확인얌얌><::"+reslutMap);
-				
-				
-				
-			}
-		
-			
-			
-		}
-
-		
-		return reslutMap;
-	}
-
-	
-	
-	
-	
-	
 	
 
 	//팔로우 글 댓글확인 하기 위한 
@@ -345,19 +287,61 @@ public class JsrService implements InterJsrService {
 	
 	
 	
+	@Override
+	public int getFollowMainTotalCount(HashMap<String, String> map) {
+		int count = jdao.getFollowMainTotalCount(map);
+		return count;
+	}
+
 	
 	
 	/*--------------------------------------------------------------------------------------------------------------------------*/	
 
+	
+	
 	//백문백답 작성하기
 	@Override
-	public int queAdd(QuestionBoardVO qboardvo) {
+	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int queAdd(QuestionBoardVO qboardvo) throws Throwable{
 
-		int n = jdao.queAdd(qboardvo);
+		int n = 0;
+		int m = 0;
+		String seq_tbl_q = "";
+		int a = 0;
+		
+		m= jdao.queAdd(qboardvo);
+		
+		seq_tbl_q = jdao.queseqGet(qboardvo);
+		
+		
+		if (seq_tbl_q !=null){
+			//System.out.println("seq_tbl_q확인3::"+seq_tbl_q);
+			HashMap<String,String> map = new HashMap<String,String>();
+			map.put("q_askid",qboardvo.getQ_askid());
+			map.put("fk_login_id", qboardvo.getFk_login_id());
+			map.put("q_content", qboardvo.getQ_content());
+			map.put("seq_tbl_q", seq_tbl_q);
+			
+		a = jdao.queAlaram(map);
+		}
+		
+		
+		if( (m>0 && seq_tbl_q !=null && a >0) ||  (m==1 && seq_tbl_q !=null && a ==1) ){
+			
+			n=1;//모두 성공하면 1값을 리턴
+		}
+		
+		
 		
 		
 		return n;
 	}
+	
+	
+	
+	
+	
+	
 
 	//백문백답 리스트 불러오기
 	@Override
@@ -414,30 +398,41 @@ public class JsrService implements InterJsrService {
 	}
 
 
+	
+	//답변 작성
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
-	public int QboardRe(QuestionBoardReplyVO qbrvo) throws Throwable {
-		int a = 0;
-		int n = 0;
-		int c =0;
+	public int QboardRe(QuestionBoardReplyVO qbrvo, String q_askid) throws Throwable {
+		int reEnd = 0; //답변 최종등록 상태
+		int m = 0;//답변 작성
+		int c =0;// 질문 상태값 변경
+		int alaram=0;//알람 주기
 		
-	    int m = jdao.QboardRe(qbrvo);
-		if(m == 1){
+	    m = jdao.QboardRe(qbrvo);
+		
 		String Fk_seq_tbl_q = qbrvo.getFk_seq_tbl_q();
-		c= jdao.Qstaup(Fk_seq_tbl_q);		
-		n= m+c;
-		if(n==2){
-		a=1;	
-		}	
 		
+		c= jdao.Qstaup(Fk_seq_tbl_q);//질문 상태값 변경
+			
+			HashMap<String,String> map = new HashMap<String,String>();
+			map.put("q_askid",q_askid);
+			map.put("fk_login_id", qbrvo.getFk_login_id());
+			map.put("fk_seq_tbl_q", Fk_seq_tbl_q);
+		
+			alaram =  jdao.Qrealaram(map);
+		
+		
+		if( (m >0 && Fk_seq_tbl_q !=null && c >0 && alaram >0) || 
+				(m  ==1 && Fk_seq_tbl_q !=null && c == 1 && alaram ==1)   ){
+			reEnd = 1;		
 		}
 		
 		else{
-		a=0;
+			reEnd=0;
 		}
 		
 		
-		return a;
+		return reEnd;
 	}
 
 
@@ -455,21 +450,19 @@ public class JsrService implements InterJsrService {
 	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	public int qreplyDel(String fk_seq_tbl_q)throws Throwable  {
 	
-		int n=0;
-		int m=0;
-		int nm=0;
+		int n=0;//답변삭제
+		int m=0;//답변 삭제후 상태값 변경
+		int nm=0;//답변 삭제 최종
+		
 		n = jdao.adal(fk_seq_tbl_q);
 		
-		if(n == 1){
+		
 		m = jdao.adalpUp(fk_seq_tbl_q);	
 		
-		if (m == 1){
-			
-		nm =1;	
+		if ( (n>0 && m>0) || (n==1 && m==1) ){
+			nm=1;
 		}
-		
-		}
-		
+
 		else{
 			nm=-3;
 		}
@@ -499,6 +492,19 @@ public class JsrService implements InterJsrService {
 		
 		return str_jsonMap;
 	}
+
+
+	
+	/*--------------------------------------------------------------------------------------------------------------------------*/	
+	
+	//차단체크
+	@Override
+	public int followblock(HashMap<String,String> map) {
+		int n = jdao.followblock(map);
+
+		return n;
+	}
+
 
 
 

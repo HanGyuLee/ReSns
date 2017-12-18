@@ -82,8 +82,6 @@ $(document).ready(function(){
 
 	}); */
 	
-
-		
 	var retval = []	
 	$(".heart").each(function(){
 	 var heartse = retval.push($(this).attr('id'));
@@ -118,52 +116,12 @@ $(document).ready(function(){
 			}, error: function() {
 				
 			}
-		});	  
-	 }
-	})
-	
-
-	
-	/*
-	
- 	var tagId = $(this).attr('id');
-
-	alert(tagId);
-
-	 
-
-
+		});//end of ajax
+		heartCounting(heartse);
 		
-			var form_data = {"login_id" : $("#login_id"+statuscount).val(), "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val()};
-			
-			
-			$.ajax({
-				
-				url: "/resns/heartCheck.re",
-				type: "GET",
-				data: form_data,  
-				dataType: "JSON", 
-				success: function(data) {
-					
-					if (data.fk_login_id == null) {	// 데이터가 없으면 흰 하트
-						$("#hearted"+statuscount).hide();
-						$("#heart"+statuscount).show();
-						
-					}
-					else if (data.fk_login_id != null) {	// 하트 찍은 적이 있으면 까만 하트
-						$("#heart"+statuscount).hide();
-						$("#hearted"+statuscount).show();
-					
-						
-					}
-				
-				
-				}, error: function() {
-					
-				}
-			});
-			 */
-
+	 }//end of  if hearts not null
+	});//end of heart each
+	
  
  });
 
@@ -294,7 +252,7 @@ function goVeiwContent(statuscount){
   
 
 	function VeiwRe(statuscount){
-		
+
 		var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val()}
 		
 		$.ajax({
@@ -304,17 +262,19 @@ function goVeiwContent(statuscount){
 			dataType: "JSON", 
 			success: function(data) {
 			
+				
 				var resultHTML = "";
 				
-				if(data.length > 0) { 
+				if(data.length != null) { 
 					
-
 					$.each(data, function(entryIndex, entry){
-						var board_seq = entry.seq_tbl_board;
+
+						 
+						var entryIndex = entryIndex;
+						
 						var re_seq = entry.re_seq;
-						var re_name = entry.login_name;
-						var re_content = entry.re_content;			
 						var re_id = entry.re_id;
+						var re_content = entry.re_content;
 						var re_date = entry.re_date;
 						var re_status = entry.re_status;
 						var re_fk_seq = entry.re_fk_seq;
@@ -322,24 +282,66 @@ function goVeiwContent(statuscount){
 						var re_depthno = entry.re_depthno;
 						var login_name = entry.login_name;
 						var uimg_profile_filename = entry.uimg_profile_filename;
-									
-						
+						var board_seq = entry.seq_tbl_board;
+			
 						var re= "";
+						re +="<div>";
 
-					    re += "<img src=''>"
-						re += "<span style='font-weight: bold;'>"+re_name+"</span>&nbsp;&nbsp;&nbsp;";
-					    re += "<span>"+re_content+"</span><br/>"
-					   
+						if(re_depthno == 0){ //원 댓글
+							re += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
+							re += "<span style='font-weight: bold;'>"+login_name+"</span>";
+							re += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
+							re += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' />"; //신고 아직 안됨
+							re += "</a>";
+							
+							if ('${sessionScope.loginUser.login_id}' == re_id){//원댓글 아이디가 로그인 아이디이면
+								re +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px; cursor: pointer;' align='right' />";
+							}//원 댓글이 로그인한 회원과 같으면	
+							
+						
+							re += "<img src='resources/images/reoption.png' align='right' style='width: 15px; height: 15px; cursor: pointer;' onclick='runEffect("+entryIndex+")' /><br/>";
+							re += re_content;
+							re += "<div style='display: none' id='reReply"+entryIndex+"'>";
+							re += "<input type='text' id='reReValue"+entryIndex+"' />";
+							re += "<button onclick='writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+")'>입력</button>";
+							re += "</div>";
+							
+						}//원 댓글 끝
+						
+						
+						
+						
+						else if (re_depthno == 1){//대댓글이라면
+							
+							re += "<div style='margin-left: 15px;'>";
+							re += "<img src='resources/images/rere.png' style='width: 10px; height: 10px;' />";
+							re += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;' />";
+							re += "<span style='font-weight: bold;'>"+login_name+"</span>";
+							
+							if ('${sessionScope.loginUser.login_id}' == re_id){
+								re +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px;' align='right' />";
+							}
+							
+							re += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
+							re += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' /><br/>";
+							re += "</a>";
+							re += "<div style='margin-left: 20px;'>"+re_content+"</div>";
+							re += "</div>";	
+							
+						}//대댓글이라면 끝
+						
+						re += "</div>";
 					 						
 					    resultHTML += re;				   
 					    
-					});
+					});//end of each
 
 					var test ="<span id='ekerl' class='closeEnd' onClick='reclose("+statuscount+");' >댓글 닫기</span>";		
 					resultHTML += "<br/>"+test;				
 					$("#display"+statuscount).html(resultHTML);
-					$("#display"+statuscount).show();				
-				}
+					$("#display"+statuscount).show();	
+					
+				}//end of data>0
 				
 				else {
 				//alert("검색데이터 없음");
@@ -360,7 +362,19 @@ function goVeiwContent(statuscount){
 		
 	}//end of function VeiwRe(statuscount)
 
+	function runEffect(entryIndex) {
 
+	    // Most effect types need no options passed by default
+	    var options = {};
+	    
+	    // Run the effect
+
+	   $( "#reReply"+entryIndex ).toggle("blind", options, 500 ); 
+
+	    
+	    
+	  };
+	  
 	
 	
 	function addHeart(statuscount) {
@@ -471,8 +485,145 @@ function goVeiwContent(statuscount){
 	
 	
 	
+
+
+	function writeRe(statuscount) {
+		
+		
+		if (${sessionScope.loginUser != null}) {
+			
+			var form_data = {"re_content" : $("#re_content"+statuscount).val(),
+							 "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+
+			$.ajax({
+				
+				url: "/resns/writeReply.re",
+				type: "GET",
+				data: form_data,
+				dataType: "JSON",
+				success: function(data) {
+					
+					swal(data.msg);
+					
+					$("#re_content"+statuscount).val("");
+					
+					VeiwRe(statuscount);
+					reCounting(statuscount);
+				}, error: function() {
+					
+				}
+				
+			});
+		}
+		else if (${sessionScope.loginUser == null}) {
+			location.href="/resns/writeReply.re";
+		}
+	}
+
 	
 	
+	function reCounting(statuscount) {
+		
+		var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+		
+		$.ajax ({
+			
+			url: "/resns/reCounting.re",
+			type: "GET",
+			data: form_data,
+			dataType: "JSON",
+			success: function(data) {
+
+				var board_recnt = data.board_recnt;
+				
+				//alert(board_heart);
+				
+				var result = "댓글 "+board_recnt+" 개";
+				
+				$("#reCnt"+statuscount).html(result);
+				
+			}, error : function() {
+				
+			}
+			
+		});
+		
+	}
+	
+	
+	function deleteRe(re_seq, re_groupno, re_depthno, statuscount) {
+		
+		form_data = {"re_seq" : re_seq, "re_groupno" : re_groupno, "re_depthno" : re_depthno, 
+				"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val()};
+		
+		$.ajax({
+			
+			url: "/resns/deleteReply.re",
+			data: form_data,
+			type: "GET",
+			dataType: "JSON",
+			success: function(data) {
+				
+				swal(data.msg);
+				
+				VeiwRe(statuscount);
+				reCounting(statuscount);
+				
+			}, error: function() {
+				
+			}
+			
+		});
+		
+	}
+	
+	
+	
+	function writeReRe(entryIndex, statuscount, re_groupno, re_seq) {
+		
+		var rereValue = $("#reReValue"+entryIndex).val();
+		
+		if (${sessionScope.loginUser == null}) {
+			
+			location.href="/resns/writeReRe.re";
+			
+		}
+		
+		
+		if ($.trim(rereValue) == "") {
+			
+			swal("내용을 입력하세요.");
+			
+			event.preventDefault();
+			
+		}
+		
+
+		var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
+					"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue
+					};
+		  
+		  $.ajax({
+			  
+			  url: "/resns/writeReRe.re",
+			  type: "GET",
+			  data: form_data,
+			  dataType: "JSON",
+			  success: function(data) {
+				  
+				swal(data.msg);
+				  
+				VeiwRe(statuscount);
+				reCounting(statuscount);
+				  
+			  }, error: function() {
+				  
+			  }
+			  
+			  
+		  }); 
+	}
+
 	
 
 </script>
@@ -615,7 +766,7 @@ function goVeiwContent(statuscount){
     <tr>
     <td width="30px">&nbsp;</td>
     <td width="740px" colspan="2" class="readMore">
-	<strong>댓글 ${vo.board_recnt}개</strong>
+	<strong id="reCnt${status.count}">댓글${vo.board_recnt}개</strong>
 	<span id="spreadBtn" class="remore" onClick="goVeiwRe('${status.count}');">&nbsp;&nbsp;모두 보기</span>
 	<input type="hidden" id="seq_tbl_board${status.count}" value="${vo.seq_tbl_board}">
 	<div id="display${status.count}" style="padding-top: 10px;" class="desc"></div>
@@ -640,7 +791,7 @@ function goVeiwContent(statuscount){
     </tr>
     <tr>
         <td width="30px">&nbsp;</td>
-        <td width="740px" colspan="2"><input class="reSubmit" type="text"/>&nbsp;&nbsp;<button type="button" class="rebutton">댓글쓰기</button></td>
+        <td width="740px" colspan="2"><input class="reSubmit" type="text" id="re_content${status.count}"/>&nbsp;&nbsp;<button  type="button" class="rebutton" onclick="writeRe('${status.count}');">댓글쓰기</button></td>
         <td width="30px">&nbsp;</td>
     </tr>
     
@@ -661,7 +812,9 @@ function goVeiwContent(statuscount){
 </c:forEach>
 
 </div>
-
+<div style="position: relative; left: 30%; ">
+${pagebar}
+</div>
 
 <br/>
 <br/>

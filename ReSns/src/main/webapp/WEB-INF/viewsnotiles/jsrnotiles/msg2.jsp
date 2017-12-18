@@ -28,9 +28,9 @@
     } 
     </script>
     
-    
+    로딩중...
     <form name="goback">
-    <input type="text" name="gobackURL" value="${gobackURL}">
-    <input type="text" name="seq_tbl_q" value="${seq_tbl_q}">
-    <input type="text" name="fk_login_id" value="${fk_login_id}">
+    <input type="hidden" name="gobackURL" value="${gobackURL}">
+    <input type="hidden" name="seq_tbl_q" value="${seq_tbl_q}">
+    <input type="hidden" name="fk_login_id" value="${fk_login_id}">
     </form>

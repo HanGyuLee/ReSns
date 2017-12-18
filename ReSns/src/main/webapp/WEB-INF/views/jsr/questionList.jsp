@@ -216,13 +216,22 @@ $(document).ready(function(){
 	}
 	
 	
-	function goQAdd(){
-	var frm = document.wFrm;
-
-	frm.method = "post";
-	frm.action = "<%= request.getContextPath()%>/questionBoardAdd.re";
-	frm.submit(); 
+	function goQAdd(fk_login_id){
 		
+	var fk_login_id = fk_login_id;
+	
+	var frm = document.wFrm;
+	var ask_id = frm.q_askid.value;
+	if (fk_login_id == ask_id ){
+		alert("스스로에게 질문할 수 없습니다 x(");
+	}
+	
+	else{
+		frm.method = "post";
+		frm.action = "<%= request.getContextPath()%>/questionBoardAdd.re";
+		frm.submit(); 	
+	}
+	
 	}
 	
 	function goSearch(){
@@ -276,17 +285,23 @@ $(document).ready(function(){
 </form>
 </div>
 
-<div class="container"">
+<div class="container">
 	<div class="row">
 <span style="margin-top: -10px;"><img src="<%= request.getContextPath()%>/resources/images/q_board_count.png "> ${totalcount}개의 질문이 있습니다.</span>
 	
-		<table class="table table-hover table-responsive" style="width: 800px">
+		<table class="table table-hover table-responsive" style="width: 800px;">
 		    <thead>
 		        <tr>
 		          <%--  <th><span style="margin-left: 30%;">번호</span></th> --%>
 		            <th><span style="margin-left: 50%; text-align: center;">질문내용</span></th>
-		            <th><span style="margin-left: 10%;">질문날짜</span>
-		            </th>
+		            <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
+		            <th colspan="2"><span style="margin-left: 10%;">질문날짜</span></th>
+		            </c:if>              
+		            	<c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+		            	<th><span style="margin-left: 10%;">질문날짜</span></th>
+		            <th style="width: 40px; text-align: center;">삭제</th>
+		            	</c:if>
+		            	
 <!-- 		            <th>시퀀스</th>
 		            <th>상태값</th>
 		            <th>수정</th>
@@ -303,25 +318,26 @@ $(document).ready(function(){
  					<span style="font-size: 9pt; color: gray;">답변이 달려있어요.</span>
  					</c:if>
 		            </td>
-		            <td id="l1" width="110px" style="margin-right: 0%;">${qvo.q_date}
+		            <td id="l1" width="100px" style="margin-right: 0%;">${qvo.q_date}
 		            <input type="hidden" id="review${status.count}" value="${qvo.seq_tbl_q}"/>
 		            <input type="hidden"  class="cfk_login_id" value="${qvo.fk_login_id}"/>
 		            <input type="hidden" value="${qvo.q_askid}"/>
 		            <input type="hidden" value="${qvo.q_status}"/>
+		            <td>
+ 					<td style="width: 40px;">
  					<c:if test="${qvo.fk_login_id == sessionScope.loginUser.login_id}">
  					<!-- <button type="button" data-toggle="modal" data-target="#edit" data-uid="1" class="update btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></button> -->
- 					<button style="margin-left: 20%;" type="button" class="delete btn btn-danger" onClick="goDel('${qvo.seq_tbl_q}','${status.count}');">Delete<%-- <span class="glyphicon glyphicon-trash"></span> --%></button>
+ 					<button style="" type="button" class="delete btn btn-danger" onClick="goDel('${qvo.seq_tbl_q}','${status.count}');">Delete<%-- <span class="glyphicon glyphicon-trash"></span> --%></button>
  					</c:if>
+					</td>
 
-		            
-		            </td>  
 		            
 		        </tr>	        
 
 		    </c:forEach>
 		    </tbody>
 		</table>
-		<div align="right" style="margin-right: 20px;"><button style="" type="button" class="delete btn btn-danger goQ" onClick="goQAdd();">질문하기</button>
+		<div align="right" style="margin-right: 20px;"><button style="" type="button" class="delete btn btn-danger goQ" onClick="goQAdd('${fk_login_id}');">질문하기</button>
 		<button style="" type="button" class="delete btn btn-danger goQ" onClick="javascript:location.href='<%= request.getContextPath() %>/questionList.re?fk_login_id=${fk_login_id}'">전체목록</button>
 		</div>
 	</div>
@@ -336,6 +352,7 @@ ${pagebar}
 </div>
 <form name="qViewFrm">
 <input type="hidden" name="seq_tbl_q"/>
+<input type="hidden" id="totalcount" name="totalcount" value="${totalcount}"/>
 <input type="hidden" id="gobackURL" name="gobackURL" value="${gobackURL}"/>
 </form>
 

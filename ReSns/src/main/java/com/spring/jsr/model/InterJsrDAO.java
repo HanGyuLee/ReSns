@@ -23,7 +23,12 @@ public interface InterJsrDAO {
 	//팔로우 후 팔로워, 팔로우 수 증가
 	int followupdate(HashMap<String, String> map);
 	int followerupdate(HashMap<String, String> map);
-
+	//팔로우 Seq알아오기
+	String followSeqCheck(HashMap<String, String> map);
+	
+	
+	//팔로우 후 알람테이블 인서트
+	int followAlaram(HashMap<String, String> map);
 
 	
 	//언팔로우 하기
@@ -34,7 +39,8 @@ public interface InterJsrDAO {
 	
 	//내 팔로우 보드 리스트 불러오기
 	List<BoardVO> getFollowBoardView(HashMap<String, String> map);
-	
+	//내 팔로우 메인 토탈카운트
+	int getFollowMainTotalCount(HashMap<String, String> map);
 	
 	//내 팔로우 보드 댓글 불러오기2
 	List<HashMap<String, String>> followRe(String seq_tbl_board);
@@ -50,6 +56,11 @@ public interface InterJsrDAO {
 	
 	//백문백답 게시글 작성하기
 	int queAdd(QuestionBoardVO qboardvo);
+	//알람 위해 게시글 시퀀스 가져오기
+	String queseqGet(QuestionBoardVO qboardvo);
+	//알람 테이블에 인서트
+	int queAlaram(HashMap<String,String> map);
+	
 	
 	//백문백답 리스트 가져오기
 	List<QuestionBoardVO> getQeList(HashMap<String, String> map);
@@ -71,6 +82,8 @@ public interface InterJsrDAO {
 	int QboardRe(QuestionBoardReplyVO qbrvo);
 	//질문 상태값 변경
 	int Qstaup(String fk_seq_tbl_q);
+	//답변에 대한 알람주기
+	int Qrealaram(HashMap<String,String> map);
 	
 	//글삭제하기
 	int qdel(String seq_tbq_q);
@@ -86,12 +99,18 @@ public interface InterJsrDAO {
 	//팔로우 하트 체크
 	int followheartCk(HashMap<String,Object> map2);
 	
-	//팔로우 하트 위해 다시 한번 글 불러오기
-	List<HashMap<String, Object>> getFollowBoardView2(HashMap<String, String> map);
+	
+	//차단체크
+	int followblock(HashMap<String,String> map);
+	
+	
+	
 	
 
+	
 
 	
+
 
 	
 	

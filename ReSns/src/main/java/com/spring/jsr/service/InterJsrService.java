@@ -19,17 +19,13 @@ public interface InterJsrService {
 	int followAdd(HashMap<String, String> map) throws Throwable;
 
 	//언팔로우
-	int unFollow(HashMap<String, String> map);
+	int unFollow(HashMap<String, String> map)throws Throwable;
 	
 	//팔로우 하는 사람들 게시글 가지고 오기.
 	List<BoardVO> followboard(HashMap<String, String> map);
-	
-	
-	//팔로우 하는 사람들 게시글 가지고 오기2.
-	List<HashMap<String,Object>> followboard2(HashMap<String, String> map);
-	
+	//토탈 카운트 가져오기
+	int getFollowMainTotalCount(HashMap<String, String> map);
 
-	
 	//팔로우 하는 사람 댓글 가져오기
 	String followre(String seq_tbl_board);
 	
@@ -41,7 +37,7 @@ public interface InterJsrService {
 	
 
 	//백문백답 질문 작성
-	int queAdd(QuestionBoardVO qboardvo);
+	int queAdd(QuestionBoardVO qboardvo)throws Throwable;
 	
 	
 	//백문백답 리스트 불러오기
@@ -64,7 +60,7 @@ public interface InterJsrService {
 	QuestionBoardVO getQView(String seq_tbl_q);
 	
 	//답변달기
-	int QboardRe(QuestionBoardReplyVO qbrvo) throws Throwable;
+	int QboardRe(QuestionBoardReplyVO qbrvo, String q_askid) throws Throwable;
 	
 	//백문백답 질문삭제하기
 	int qdel(String seq_tbq_q);
@@ -75,7 +71,16 @@ public interface InterJsrService {
 	//백문백답 자동검색어
 	String wordQSearch(HashMap<String, String> map);
 	
-
+	
+	//차단체크 클래스에서 넘어온 차단 체크
+	int followblock(HashMap<String,String> map);
+	
+	
+/*	//블락테이블 인서트
+	int blockAdd(HashMap<String, String> map);
+	
+	
+*/
 	
 
 

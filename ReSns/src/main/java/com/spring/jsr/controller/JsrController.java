@@ -89,7 +89,7 @@ public class JsrController {
 	
 
 	HashMap<String, String> map = new HashMap<String, String>();
-	map.put("follow_id", follow_id.trim());
+	map.put("follow_id", follow_id);
 	map.put("login_id", login_id);
 	
 	
@@ -201,23 +201,71 @@ public class JsrController {
 		}
 
 		}
+	
 		
 		
-		System.out.println("login_id확인::"+login_id);
+		
+		//System.out.println("login_id확인::"+login_id);
 		
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("login_id", login_id);
 		
+		
+		String str_Showp = req.getParameter("cShowp");
+		
+		int totalcount = 0; //총 게시물 건수
+		int sizep = 3 ;//한페이지당 보여줄 게시물 수
+		int cShowp = 0; //현재 보여줄 페이지 번호 
+		int totalPage = 0;//총 페이지수(웹브라우저상에 보여줄 총 페이지수)
+		int startRno = 0;//시작번호
+		int endRno = 0;//끝 행 번호
+		int blockSize = 5;//"페이지바"에 보여줄 페이지의 갯수
+		
+		if(str_Showp == null){
+			cShowp =1;
+			//검색화면 초기화
+		}
+		
+		else{
+			cShowp =  Integer.parseInt(str_Showp);
+			//null이 아니면 현재 보고 있는 페이지 숫자를 넣어주겠다.
+		}
+		startRno = ( (cShowp-1)*sizep) +1;
+		endRno = startRno +sizep -1;
+		
+		map.put("startRno", String.valueOf(startRno));
+		map.put("endRno", String.valueOf(endRno));
+		
+		//System.out.println("startRno확인"+startRno);
+		//System.out.println("endRno확인"+endRno);
+		
 		//내가 팔로우 하는 사람 글목록 가져오기
 		List<BoardVO> followBoard = service.followboard(map);
-		List<HashMap<String,Object>> followBoard2 =  service.followboard2(map);
+
 		
-		System.out.println("확인ㅎ"+followBoard2);
 		
-		//List<HashMap<String,Object>> followBoard = service.followboard2(map);
+		totalcount = service.getFollowMainTotalCount(map);
+			
 		
-	
+		totalPage = (int)Math.ceil((double) totalcount/sizep);
+		
+		String pagebar = "<ul>";
+		pagebar += JsrUtill.getPageBarFallowMain(totalcount, sizep, cShowp, totalPage, blockSize, "followmain.re");
+		//pagebar += MyUtil.getPageBarWithSearch(sizep, blockSize, totalPage, cShowp, null, qsearch, null, "questionList.re");
+		pagebar += "</ul>";
+		
+		
+		String gobackURL = "followmain.re?cShowp="+cShowp+"&sizep="+sizep;
+		
+		
+		req.setAttribute("pagebar", pagebar);
+		req.setAttribute("totalcount", totalcount);
+		req.setAttribute("login_id", login_id);
+		//req.setAttribute("sizep", sizep);
+		//req.setAttribute("cShowp", cShowp);
+		req.setAttribute("gobackURL", gobackURL);
+		
 		req.setAttribute("followBoard", followBoard);
 		
 		
@@ -308,7 +356,7 @@ public class JsrController {
 	String gobackURL = req.getParameter("gobackURL");
 
 	
-	System.out.println("gobackURL 확인"+gobackURL);
+	//System.out.println("gobackURL 확인"+gobackURL);
 	req.setAttribute("fk_login_id", fk_login_id);	
 	req.setAttribute("gobackURL", gobackURL);	
 	req.setAttribute("ask_id", login_id);	
@@ -320,7 +368,7 @@ public class JsrController {
 	
 	//백문백답 게시판 질문 작성 완료 요청
 	@RequestMapping(value="/questionAddEnd.re", method={RequestMethod.POST})
-	public String questionAddEnd(QuestionBoardVO qboardvo, HttpServletRequest req,HttpSession session){
+	public String questionAddEnd(QuestionBoardVO qboardvo, HttpServletRequest req,HttpSession session)throws Throwable{
 
 	
 	
@@ -489,6 +537,7 @@ public class JsrController {
 		
 		String seq_tbl_q = req.getParameter("seq_tbl_q");
 		String gobackURL = req.getParameter("gobackURL");
+		String totalcount =  req.getParameter("totalcount");
 		//System.out.println("테스트seq"+seq_tbl_q);
 
 
@@ -543,6 +592,7 @@ public class JsrController {
 		
 		req.setAttribute("getques", getques);
 		req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("totalcount",totalcount);
 
 		
 		return "jsr/questionView.tiles2";
@@ -569,13 +619,14 @@ public class JsrController {
 		
 		String seq_tbl_q = req.getParameter("fk_seq_tbl_q");
 		String gobackURL =  req.getParameter("gobackURL");
+		String q_askid = req.getParameter("q_askid");
 		
 		
 		System.out.println(qbrvo.getA_content());
 		System.out.println(qbrvo.getFk_login_id());
 		System.out.println(qbrvo.getFk_seq_tbl_q());
 		
-		int result = service.QboardRe(qbrvo);
+		int result = service.QboardRe(qbrvo,q_askid);
 		
 		
 		if(result >0){
@@ -588,7 +639,7 @@ public class JsrController {
 			
 		}
          
-		String reflasyVeiw= "/questionView.re?seq_tbl_q="+seq_tbl_q;
+		String reflasyVeiw= "/resns/questionView.re?seq_tbl_q="+seq_tbl_q;
 		req.setAttribute("loc", reflasyVeiw);
 		
 		req.setAttribute("seq_tbl_q", seq_tbl_q);
@@ -617,7 +668,7 @@ public class JsrController {
 		
 		String fk_seq_tbl_q = req.getParameter("fk_seq_tbl_q");
 		String gobackURL = req.getParameter("gobackURL");
-		String reflasyVeiw= "resns/questionView.re?seq_tbl_q="+fk_seq_tbl_q;
+		String reflasyVeiw= "/resns/questionView.re?seq_tbl_q="+fk_seq_tbl_q;
 		String fk_login_id= req.getParameter("fk_login_id");
 		
 		if(login_id.equalsIgnoreCase(fk_login_id)){
@@ -736,22 +787,42 @@ public class JsrController {
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 	
-	//하트 찍었는지 아닌지 알아보기
-/*	
-	@RequestMapping(value="/followHeart.re", method={RequestMethod.GET})
-	public String followma(HttpServletRequest req, HttpSession session) {	
-		
-
-		String seq_tbl_board = req.getParameter("seq_tbl_board");
-
-		
-		//댓글 내용 가져오기
-		String str_jsonMap = service.followTag(seq_tbl_board);
-		
-		req.setAttribute("str_jsonMap",str_jsonMap);
+	//은경씨에게 이야기 할거----> 게시글 비공개 처리 하면서 태그랑 지워버리고, 그 후에 다시  글 공개로 돌리면 태그는 null이 되면서 리스트가 이상해짐 ㅠㅠ...
+	// 대댓글 접기 가능!
+	//규리씨에게 이야기 할거--> 알람 테이블이 자식테이블이여서 글을 삭제 할수가 없음...ㅠㅠ......fk할 때 온케스케이드를 붙이거나, 참조가 아니게 하기.
 	
-	return "jsrnotiles/followHeartJSON.notiles";
-	}*/
+	
+	
+	//블락 하기!!!!
+
+	@RequestMapping(value="/followBlock.re", method={RequestMethod.GET})
+	public String followma(HttpServletRequest req, HttpSession session) {	
+	
+		String block_id = req.getParameter("fk_login_id");	
+		
+		Object obj = session.getAttribute("loginUser");
+		
+		String login_id = null;	
+		if (obj != null) {
+			LoginVO loginUser = (LoginVO)obj;
+		
+		if(loginUser != null){
+			login_id = loginUser.getLogin_id();
+		}
+
+		}
+
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("block_id", block_id);
+		map.put("login_id", login_id);
+		
+		//int n = service.blockAdd(map);
+		
+		
+	
+	return "";
+	}
 	
 	
 	

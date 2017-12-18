@@ -77,6 +77,21 @@ public class JsrDAO implements InterJsrDAO {
 		return m;
 	}
 
+	
+	//팔로우 시퀀스 알아오기
+	@Override
+	public String followSeqCheck(HashMap<String, String> map) {
+		 String seq = sqlsession.selectOne("jsrresns.followSeqCheck",map);
+		return seq;
+	}
+	
+	
+	//팔로우 후 알람테이블 인서트
+	@Override
+	public int followAlaram(HashMap<String, String> map) {
+		int a = sqlsession.insert("jsrresns.followalaram",map);
+		return a;
+	}
 /*--------------------------------------------------------------------------------------------------------------------------*/	
 	
 	//언팔하기
@@ -147,6 +162,24 @@ public class JsrDAO implements InterJsrDAO {
 		return n;
 	}
 
+	//질문 작성 위해 시퀀스 알아오기
+	
+	@Override
+	public String queseqGet(QuestionBoardVO qboardvo) {
+		String seq_tbl_q = sqlsession.selectOne("jsrresns.seqGet",qboardvo);
+		return seq_tbl_q;
+	}
+
+	//알람테이블에 인서트
+	@Override
+	public int queAlaram(HashMap<String,String> map) {
+		int a = sqlsession.insert("jsrresns.questionAlaram",map);
+		return a;
+	}
+	
+	
+	
+	
 	//백문백답 리스트 작성하기
 	@Override
 	public List<QuestionBoardVO> getQeList(HashMap<String, String> map) {
@@ -195,12 +228,17 @@ public class JsrDAO implements InterJsrDAO {
 		return list;
 	}
 
+
+
+	
+
 	//답변달기
 	@Override
 	public int QboardRe(QuestionBoardReplyVO qbrvo) {
 		int n = sqlsession.insert("jsrresns.QboardRe",qbrvo);
 		return n;
 	}
+	
 
 	//질문상태값 변경
 	@Override
@@ -208,6 +246,18 @@ public class JsrDAO implements InterJsrDAO {
 		int m = sqlsession.update("jsrresns.Qstaup",fk_seq_tbl_q);
 		return m;
 	}
+	
+	//답변 알람주귀
+	@Override
+	public int Qrealaram(HashMap<String,String> map) {
+		int a = sqlsession.insert("jsrresns.quesReAlaram",map);
+		return a;
+	}
+	
+	
+	
+	
+	
 
 	//백문백답 질문 삭제
 	@Override
@@ -250,14 +300,34 @@ public class JsrDAO implements InterJsrDAO {
 	}
 
 
-	//팔로우 글 확인하기
+	//팔로우 메인 토탈 카운트 가져오기
 	@Override
-	public List<HashMap<String, Object>> getFollowBoardView2(HashMap<String, String> map) {
-		List<HashMap<String, Object>> list = sqlsession.selectList("jsrresns.FollowBoardView",map);
-		return list;
+	public int getFollowMainTotalCount(HashMap<String, String> map) {
+		int count = sqlsession.selectOne("jsrresns.getFollowMainTotalCount",map);
+		return count;
 	}
 
+
 	
+	//차단체크
+	@Override
+	public int followblock(HashMap<String,String> map) {
+		int n =  sqlsession.selectOne("jsrresns.followblock",map);
+		return n;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

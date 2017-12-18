@@ -73,6 +73,20 @@ where fk_login_id = #{login_id}
 update tbl_user set user_ed = user_ed+1
 where fk_login_id = #{follow_id}
 </update>
+
+<!-- 팔로우 시퀀스 알아오기 위해서 -->
+<select id="followSeqCheck" parameterType="HashMap" resultType="String">
+select follow_seq
+from tbl_follow
+where fk_login_id = #{login_id} and follow_id = #{follow_id}
+</select> 
+
+ <insert id="followalaram" parameterType="HashMap">
+insert into tbl_alarm(seq_tbl_alarm,fk_follow_seq,fk_login_id,alarm_userid,alarm_type,alarm_status,alarm_time)
+values(seq_tbl_alarm.nextval,#{follow_seq},#{login_id},#{follow_id},4,default,default)
+</insert> 
+
+
 <!-- 팔로우하기  끝-->
 
 
@@ -119,8 +133,27 @@ where fk_login_id = #{follow_id}
 </resultMap>
 
 <select id="FollowBoardView" parameterType="HashMap" resultMap="FollowBoardMap">
-select L.login_name as follow_name
-      ,nvl(M.uimg_profile_filename,'profile0.png') as follow_proile_image
+select follow_name
+, follower_proile_image
+,follow_id
+,seq_tbl_board
+,board_content
+,title
+,board_time
+,board_heart
+,board_recnt
+,board_status
+,bimg_filename
+,bimg_orgfilename
+,bimg_orgfilename
+,bimg_filesize
+,map_we
+,ma_ky
+,map_name
+from
+(
+select  rownum as rno , L.login_name as follow_name
+      ,nvl(M.uimg_profile_filename,'profile.png') as follower_proile_image
       ,F.follow_id as follow_id
       ,B.seq_tbl_board as seq_tbl_board
       ,B.board_content as board_content
@@ -150,8 +183,11 @@ on F.follow_id = L.login_id
 join tbl_uimage M
 on F.follow_id = M.fk_login_id
 where F.fk_login_id = #{login_id}
-and B.board_status = 0
 order by B.seq_tbl_board desc
+)V
+where V.rno >= #{startRno} and V.rno <![CDATA[<=]]> #{endRno}
+and V.board_time >= sysdate - 20
+order by V.board_time desc
 </select>
 <!--  팔로우 게시글 리스트 가져오기 끝 -->
 
@@ -178,7 +214,10 @@ from tbl_re R left join tbl_login L
 on R.re_id = L.login_id
 left join tbl_uimage U
 on L.login_id = U.fk_login_id
-where seq_tbl_board = #{seq_tbl_board}
+where seq_tbl_board = #{seq_tbl_board} and R.re_status = 1
+start with R.re_fk_seq = 0
+connect by prior R.re_seq = R.re_fk_seq
+order siblings by R.re_groupno asc, R.re_seq asc
 </select> 
 <!-- 팔로우 게시글 댓글 가져오기 끝 -->
 
@@ -207,6 +246,22 @@ where seq_tbl_board = #{seq_tbl_board}
 insert into tbl_q(seq_tbl_q, fk_login_id, q_content, q_status, q_date,q_askid)
 values(seq_tbl_q.nextval,#{fk_login_id},#{q_content},default,default,#{q_askid})
 </insert>
+
+
+<!-- 시퀀스 알아오기 -->
+<select id="seqGet" parameterType="com.spring.jsr.model.QuestionBoardVO" resultType="String">
+select seq_tbl_q
+from tbl_q
+where fk_login_id = #{fk_login_id} and q_askid = #{q_askid} and q_content = #{q_content}
+</select> 
+
+
+<insert id="questionAlaram" parameterType="HashMap">
+insert into tbl_alarm(seq_tbl_alarm,fk_seq_tbl_q,fk_login_id,alarm_userid,alarm_type,alarm_status,alarm_time)
+values(seq_tbl_alarm.nextval,#{seq_tbl_q},#{q_askid},#{fk_login_id},5,default,default)
+</insert>
+
+
 <!-- 백문백답 인서트하기 -->
 
 
@@ -268,8 +323,6 @@ order by V.seq_tbl_q desc
 <!-- 검색어 있는 토탈 카운트 끝 -->
 
 
-
-
 <!--  백문백답 답변 가져오기 -->
 <select id="getRp" parameterType="String" resultType="com.spring.jsr.model.QuestionBoardReplyVO">
 select fk_seq_tbl_q, fk_login_id, a_content, a_date
@@ -305,6 +358,15 @@ update tbl_q set q_status = 1
 where seq_tbl_q = #{fk_seq_tbl_q}
 </update>
 <!--  백문백답 질문 상태값 변경  끝-->
+
+
+<!-- 백문백답 답변에 대한 알람주기 -->
+ <insert id="quesReAlaram" parameterType="HashMap">
+insert into tbl_alarm(seq_tbl_alarm,fk_seq_tbl_q,fk_login_id,alarm_userid,alarm_type,alarm_status,alarm_time)
+values(seq_tbl_alarm.nextval,#{fk_seq_tbl_q},#{fk_login_id},#{q_askid},6,default,default)
+</insert> 
+<!-- 백문백답 답변에 대한 알람주기 -->
+
 
 
 <!-- 백문백답  질문 삭제하기 -->
@@ -347,5 +409,34 @@ from tbl_heart
 where fk_seq_tbl_board = #{seq_tbl_board} and fk_login_id= #{login_id}
 </select>
 
+
+
+
+<!--  팔로우 메인 토탈 카운트 가져오기  -->
+<select id="getFollowMainTotalCount"  parameterType="HashMap" resultType="Integer">
+select  count(*)
+from tbl_board B join tbl_bimage I
+on B.seq_tbl_board = I.seq_tbl_board
+left outer join tbl_map M
+on B.seq_tbl_board = M.fk_seq_tbl_board 
+join tbl_follow F
+on B.fk_login_id = F.follow_id
+join tbl_login L
+on F.follow_id = L.login_id
+join tbl_uimage M
+on F.follow_id = M.fk_login_id
+where F.fk_login_id = #{login_id}
+</select>
+
+<!--  가져오기 끝 -->
+
+
+
+<!--  차단 체크 시작 -->
+<select id="followblock" parameterType="HashMap" resultType="int">
+select count(*)
+from tbl_block
+where fk_login_id = #{fk_login_id} and block_id = #{login_id}
+</select>
 
 </mapper>
