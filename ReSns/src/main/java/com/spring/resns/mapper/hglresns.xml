@@ -9,25 +9,57 @@
 
 <!-- 내 게시글 가져오기  -->
 	<resultMap type="HashMap" id="boardMap">
+		<result property="rno" 		 			 column="rno" 					javaType="String"/>
+		<result property="login_name" 		 	 column="login_name" 			javaType="String"/>
+		<result property="uimg_profile_filename" column="uimg_profile_filename" javaType="String"/>
+		<result property="login_id" 		 	 column="login_id" 				javaType="String"/>
+		<result property="title" 		 		 column="title" 				javaType="String"/>
+		<result property="board_recnt" 		 	 column="board_recnt" 			javaType="String"/>
+		<result property="board_status" 		 column="board_status" 			javaType="String"/>
+		<result property="bimg_orgfilename" 	 column="bimg_orgfilename" 		javaType="String"/>
+		<result property="bimg_filesize" 		 column="bimg_filesize" 		javaType="String"/>
+		<result property="map_we" 		 		 column="map_we" 				javaType="String"/>
+		<result property="ma_ky" 		 		 column="ma_ky" 				javaType="String"/>		
 	 	<result property="seq_tbl_board" 		 column="seq_tbl_board" 		javaType="String"/>
 		<result property="board_content" 		 column="board_content" 		javaType="String"/>
 		<result property="board_time" 	 		 column="board_time" 			javaType="String"/>
 		<result property="bimg_filename" 		 column="bimg_filename" 		javaType="String"/>
-		<result property="fk_login_id" 			 column="fk_login_id" 			javaType="String"/>
-		<result property="board_heart" 			 column="board_heart" 			javaType="String"/>
-		
+		<result property="map_name" 			 column="map_name" 				javaType="String"/>
+		<result property="board_heart" 			 column="board_heart" 			javaType="String"/>	
  	</resultMap>
  	
 			
-	<select id="myBoardList" parameterType="String" resultMap="boardMap" >	
-	
-		select  B.seq_tbl_board as seq_tbl_board,T.board_content board_content,
-				T.board_time board_time,B.bimg_filename bimg_filename,U.fk_login_id fk_login_id,T.board_heart
-		from tbl_board T join tbl_bimage B
-		on T.seq_tbl_board = B.seq_tbl_board
-		join tbl_uimage U
-		on T.fk_login_id = U.fk_login_id
-		where U.fk_login_id = #{userid}
+	<select id="myBoardList" parameterType="String" resultMap="boardMap" >		
+		
+		select rownum as rno , L.login_name as login_name
+		      ,M.uimg_profile_filename as uimg_profile_filename
+		      ,L.login_id as login_id
+		      ,B.seq_tbl_board as seq_tbl_board
+		      ,B.board_content as board_content
+		      ,case when length(B.board_content) > 10
+		              then substr(B.board_content, 1, 10)||'...'
+		              else B.board_content
+		              end 
+		         as title   
+		      ,B.board_time as board_time
+		      ,B.board_heart as board_heart
+		      ,B.board_recnt as board_recnt
+		      ,B.board_status as board_status
+		      ,I.bimg_filename as bimg_filename
+		      ,I.bimg_orgfilename as bimg_orgfilename
+		      ,I.bimg_filesize as bimg_filesize
+		      ,M.map_we as map_we
+		      ,M.map_ky as ma_ky
+		      ,M.map_name as map_name
+		from tbl_board B join tbl_bimage I
+		on B.seq_tbl_board = I.seq_tbl_board
+		left outer join tbl_map M
+		on B.seq_tbl_board = M.fk_seq_tbl_board 
+		join tbl_login L
+		on B.fk_login_id = L.login_id
+		join tbl_uimage M
+		on B.fk_login_id = M.fk_login_id
+		where B.fk_login_id =  #{userid}
 		
 	</select>
 
@@ -124,7 +156,6 @@
 	    on F.fk_login_id = U.fk_login_id
 	    where F.follow_id =  #{userid} and L.login_status  = 1
 
-		
 	</select>
 <!-- 나를 팔로우하는 사람들 ( 내 팔로워 ) 리스트 가져오기  끝 -->
 
@@ -132,6 +163,7 @@
 
 <!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 리스트 가져오기  -->	
      <resultMap type="HashMap" id="followingMap">
+     
 	 	<result property="login_name" 		 		column="login_name" 			javaType="String"/>
 		<result property="uimg_profile_filename" 	column="uimg_profile_filename" 	javaType="String"/>
 		<result property="follow_id" 			 	column="follow_id" 			javaType="String"/>
@@ -151,6 +183,37 @@
 	</select>
 	
 <!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 리스트 가져오기  끝 -->	
+
+
+<!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 이름리스트 가져오기   -->	
+	<select id="getFollowingName" parameterType="String" resultType="String" >	
+	    select L.login_name
+	    from tbl_follow F join tbl_login L 
+	    on F.follow_id = L.login_id
+	    left join tbl_uimage U 
+	    on F.follow_id = U.fk_login_id
+	    where F.fk_login_id = #{loginId} and L.login_status = 1
+	</select>
+<!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 이름리스트 가져오기  끝 -->
+
+
+<!-- 나를 팔로우하는 사람들 ( 내 팔로워 ) 명수 가져오기   -->	
+	<select id="getmyFollowerCnt" parameterType="String" resultType="int" >	
+	    select count(*) as cnt
+	    from tbl_follow 
+	    where follow_id = #{userid}
+	</select>
+<!-- 나를 팔로우하는 사람들 ( 내 팔로워 ) 명수  가져오기  끝 -->	
+	
+	
+	
+<!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 명수 가져오기  -->	
+	<select id="getmyFollowingCnt" parameterType="String" resultType="int"  >	
+		select count(*) as cnt
+	    from tbl_follow 
+	    where fk_login_id = #{userid}
+    </select>
+<!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 명수 가져오기  끝 -->		
 	
 	
 	

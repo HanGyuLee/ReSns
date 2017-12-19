@@ -104,5 +104,26 @@ public class HglService implements InterHglService {
 	}
 
 
+	@Override
+	public int getmyFollowerCnt(String userid) {
+		int cnt = dao.getmyFollowerCnt(userid);
+		return cnt;
+	}
+
+
+	@Override
+	public int getmyFollowingCnt(String userid) {
+		int cnt = dao.getmyFollowingCnt(userid);
+		return cnt;
+	}
+
+
+	@Override
+	public List<String> getFollowingName(String loginId) {
+		List<String> list = dao.getFollowingName(loginId);
+		return list;
+	}
+
+
 
 }// end of HglService

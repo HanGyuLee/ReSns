@@ -27,5 +27,11 @@ public interface InterHglDAO {
 	int updateMyBg(HashMap<String, Object> bgmap);
 
 	int updateMyPf(HashMap<String, Object> pfmap);
+
+	int getmyFollowerCnt(String userid);
+	
+	int getmyFollowingCnt(String userid);
+
+	List<String> getFollowingName(String loginId);
 	
 }

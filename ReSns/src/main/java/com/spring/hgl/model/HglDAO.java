@@ -81,6 +81,24 @@ public class HglDAO implements InterHglDAO{
 		int result = sqlsession.update("hglresns.updateMyPf",pfmap);
 		return result;
 	}
+
+	@Override
+	public int getmyFollowerCnt(String userid) {
+		int cnt = sqlsession.selectOne("hglresns.getmyFollowerCnt",userid);
+		return cnt;
+	}
+
+	@Override
+	public int getmyFollowingCnt(String userid) {
+		int cnt = sqlsession.selectOne("hglresns.getmyFollowingCnt",userid);
+		return cnt;
+	}
+
+	@Override
+	public List<String> getFollowingName(String loginId) {
+		List<String> list = sqlsession.selectList("hglresns.getFollowingName",loginId);
+		return list;
+	}
 	
 	
 	

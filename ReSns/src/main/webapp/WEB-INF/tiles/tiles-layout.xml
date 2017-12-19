@@ -30,6 +30,21 @@
 	<!-- 회원 메인 레이아웃 설정 끝  -->
 	
 	
+	<!-- 마이페이지 레이아웃 -->
+	<definition name="layout-mypage" template="/WEB-INF/tiles/layout/layout-mypage.jsp"> 
+		
+	</definition>
+	<definition name="*.mypage" extends="layout-tiles">
+		<put-attribute name="content" value="/WEB-INF/views/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.mypage" extends="layout-tiles">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.mypage" extends="layout-tiles">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 마이페이지 레이아웃 끝  -->
+	
 	<!-- 회원 개인페이지, 친구 페이지 , 관리자 레이아웃  설정 시작  -->
 	<definition name="layout-tiles2"     template="/WEB-INF/tiles/layout/layout-tiles2.jsp"> 
 		<put-attribute name="header"    value="/WEB-INF/tiles/tile/header.jsp" />

@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.common.FileManager;
-import com.spring.common.ThumbnailManager;
 import com.spring.hgl.service.InterHglService;
 import com.spring.jdh.model.LoginVO;
 import com.spring.jsr.controller.JsrController;
@@ -58,9 +57,14 @@ public class HglController {
 		List<HashMap<String, Object>> myFollowerList = service.getmyFollowerList(userid);
 		List<HashMap<String, Object>> myFollowingList = service.getmyFollowingList(userid);
 		
+		int myFollowerCnt = service.getmyFollowerCnt(userid);
+		int myFollowingCnt = service.getmyFollowingCnt(userid);
+		int myBoardCnt = myBoardList.size();
+		
 		HashMap<String,String> profile = service.getMyProfile(userid);
 		HashMap<String,String> mypage =  null;
 		HashMap<String,String> insertMypage =  new HashMap<String,String>();
+		
 		
 		String textinput = loginUser.getLogin_name() + "'s Page";
 		String textarea = loginUser.getLogin_name() + "의 페이지 입니다";
@@ -78,7 +82,9 @@ public class HglController {
 			mypage = insertMypage;
 		
 		}
-		
+		req.setAttribute("myBoardCnt", myBoardCnt);
+		req.setAttribute("myFollowerCnt", myFollowerCnt);
+		req.setAttribute("myFollowingCnt", myFollowingCnt);
 		req.setAttribute("mypage", mypage);
 		req.setAttribute("profile", profile);
 		req.setAttribute("myBoardList", myBoardList);
@@ -319,14 +325,17 @@ public class HglController {
 		
 	// 다른 사용자 페이지
 	@RequestMapping(value="/otherspage.re", method={RequestMethod.GET})
-	public String BlockCk_otherspage(HttpServletRequest req,HttpServletResponse response,HttpSession session){		
+	public String otherspage(HttpServletRequest req,HttpServletResponse response,HttpSession session){		
 		
+		String userid  = req.getParameter("fk_login_id"); // 페이지주인
 		
-		String userid  = req.getParameter("fk_login_id");
+		String loginId = null; // 나
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");		
+		loginId = loginUser.getLogin_id();	
+				
+		String username = service.getUsername(userid); // 페이지주인 이름
 			
-		
-		String username = service.getUsername(userid);
-			
+		List<String> loginUserFollowingName  = service.getFollowingName(loginId);
 		
 		List<HashMap<String, Object>> myBoardList = service.getMyBoardList(userid);
 		List<HashMap<String, Object>> myFollowerList = service.getmyFollowerList(userid);
@@ -335,6 +344,17 @@ public class HglController {
 		HashMap<String,String> profile = service.getMyProfile(userid);			
 		HashMap<String,String> mypage =  null;
 		HashMap<String,String> insertMypage =  new HashMap<String,String>();
+		HashMap<String,String> blockmap = new HashMap<String,String>();
+		
+		blockmap.put("fk_login_id",userid);
+		blockmap.put("login_id",loginId);
+		
+		int n = JsrService.followblock(blockmap);
+		int myFollowerCnt = myFollowerList.size();
+		int myFollowingCnt = myFollowingList.size();
+		int myBoardCnt = myBoardList.size();
+		
+	
 		
 		String textinput =username+ "'s Page";
 		String textarea = username+ "의 페이지 입니다";
@@ -353,14 +373,21 @@ public class HglController {
 			mypage = insertMypage;
 			
 		}
-	
+		req.setAttribute("loginUserFollowingName", loginUserFollowingName);
 		req.setAttribute("mypage", mypage);	
 		req.setAttribute("userid", userid);
 		req.setAttribute("profile", profile);
+		req.setAttribute("username", username);
+		
+		req.setAttribute("myFollowerCnt", myFollowerCnt);
+		req.setAttribute("myFollowingCnt", myFollowingCnt);		
+		req.setAttribute("myBoardCnt", myBoardCnt);
+		
+		if(n<1){
 		req.setAttribute("myBoardList", myBoardList);
 		req.setAttribute("myFollowerList", myFollowerList);
 		req.setAttribute("myFollowingList", myFollowingList);
-		
+		}
 		
 		return  "hgl/otherspage.tiles2";
 		

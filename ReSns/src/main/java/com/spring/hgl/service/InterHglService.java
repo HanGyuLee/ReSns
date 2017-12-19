@@ -38,5 +38,16 @@ public interface InterHglService {
 
 	// 내 페이지 프로필사진 변경하기
 	int updateMyPf(HashMap<String, Object> pfmap);
+
+	// 내 팔로워 수 구하기
+	int getmyFollowerCnt(String userid);
+
+	// 내 팔로잉 수 구하기
+	int getmyFollowingCnt(String userid);
+
+	// 로그인하고있는 사람의 팔로잉리스트(팔로우당하는사람의 이름리스트) 얻어오기
+	// 다른 사람 페이지를 가거나 다른사람의 팔로우 목록을 봤을때도 내가 팔로우 하고 있는 사람 언팔하기로 표시되도록
+	List<String> getFollowingName(String loginId);
+
 	
 } // end of InterHglService
