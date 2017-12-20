@@ -270,7 +270,7 @@
 		select count(*)
 		from tbl_ask
 		where ask_status = 0
-		and ask_content like '%'||#{searchInput}||'%';
+		and ask_content like '%'||#{searchInput}||'%'
 	</select>
 	
 	<select id="getHelpTotalCountDelete1" resultType="int">
@@ -333,5 +333,129 @@
 		</if>
 	</update>
 	
+	<update id="updateFaqModify" parameterType="HashMap">
+		update tbl_faq set faq_category=#{faq_category}, faq_title = #{faq_title},  faq_content = #{faq_content}, faq_answer = #{faq_answer}
+		where seq_tbl_faq = #{seq_tbl_faq}
+	</update>
+	
+	<select id="getFaqOne" parameterType="String" resultType="com.spring.pmh.model.FaqVO">
+		select seq_tbl_faq, faq_category, faq_title, faq_content, faq_answer, faq_status
+		from tbl_faq
+		where seq_tbl_faq = #{seq}
+	</select>
 	<!-- //////////////// FAQ 게시판 mapper 끝 ////////////////// -->
+	
+	<!-- //////////////// 통계 mapper 시작 ////////////////// -->
+	
+	<resultMap type="java.util.HashMap" id="agelinePct">
+		<result property="ageline"	 column="ageline"	javaType="String" />
+		<result property="pct"		 column="pct" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getAgelinePctAll" resultMap="agelinePct">
+		select ageline,
+		trunc(count(*)/(select count(*)
+		from view_statistics_age), 4)*100 as pct
+		from view_statistics_age
+		group by ageline
+		order by ageline
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="ageDetail">
+		<result property="age" column="age" javaType="String"/>
+		<result property="pct" column="pct" javaType="String"/>
+	</resultMap>
+	
+	<select id="getAgeDetail" parameterType="String" resultMap="ageDetail">
+		select age, trunc(count(age)/(select count(*)
+		from view_statistics_age), 4)*100 as pct
+		from view_statistics_age
+		where ageline = #{ageline}
+		group by age, ageline
+		order by ageline, age
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="genderInfo">
+		<result property="gendername" column="gendername" javaType="String"/>
+		<result property="cnt"		  column="cnt" 		  javaType="String" />
+	</resultMap>
+	
+	<select id="getGenderInfo" resultMap="genderInfo">
+		select gendername, cnt
+		from view_statistics_gender
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="BoardCountChartWeekInfo">
+		<result property="weekdate" column="weekdate" javaType="String"/>
+		<result property="cnt" 		column="cnt" 	  javaType="String"/>
+	</resultMap>
+	
+	<select id="getBoardCountChartWeekInfo" parameterType="String" resultMap="BoardCountChartWeekInfo">
+		select to_char(D.weekdate, 'yyyy-mm-dd') as weekdate, count(B.fk_login_id) as cnt
+		from tbl_board B
+		right join (
+		select trunc(sysdate-7) as weekdate
+		from dual
+		union
+		select trunc(sysdate-6)
+		from dual
+		union
+		select trunc(sysdate-5)
+		from dual
+		union
+		select trunc(sysdate-4)
+		from dual
+		union
+		select trunc(sysdate-3)
+		from dual
+		union
+		select trunc(sysdate-2)
+		from dual
+		union
+		select trunc(sysdate-1)
+		from dual
+		) D
+		on trunc(B.board_time) = D.weekdate
+		where nvl(fk_login_id, '-9999') in (#{loginid}, '-9999')
+		group by D.weekdate, B.fk_login_id
+		order by D.weekdate
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="BoardCountChartPreWeekInfo">
+		<result property="weekdate" column="weekdate" javaType="String"/>
+		<result property="cnt" 		column="cnt" 	  javaType="String"/>
+	</resultMap>
+	
+	<select id="getBoardCountChartPreWeekInfo" parameterType="String" resultMap="BoardCountChartPreWeekInfo">
+		select to_char(D.weekdate, 'yyyy-mm-dd') as weekdate, count(B.fk_login_id) as cnt
+		from tbl_board B
+		right join (
+		select trunc(sysdate-14) as weekdate
+		from dual
+		union
+		select trunc(sysdate-13)
+		from dual
+		union
+		select trunc(sysdate-12)
+		from dual
+		union
+		select trunc(sysdate-11)
+		from dual
+		union
+		select trunc(sysdate-10)
+		from dual
+		union
+		select trunc(sysdate-9)
+		from dual
+		union
+		select trunc(sysdate-8)
+		from dual
+		) D
+		on trunc(B.board_time) = D.weekdate
+		where nvl(fk_login_id, '-9999') in (#{loginid}, '-9999')
+		group by D.weekdate, B.fk_login_id
+		order by D.weekdate
+	</select>
+	
+	<!-- //////////////// 통계 mapper 끝 ////////////////// -->
 </mapper>

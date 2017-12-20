@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -784,8 +785,88 @@ public class PmhController {
 		return "msg.notiles2";
 	}
 	
+	@RequestMapping(value="faqModifyEnd.re", method={RequestMethod.POST})
+	public String faqModifyEnd(HttpServletRequest req) {
+		
+		String seq_tbl_faq = req.getParameter("seq_tbl_faq"); // 2
+		String faq_category = req.getParameter("faq_category"); // 1
+		String faq_title = req.getParameter("faq_title"); // 회원가입 방법
+		String faq_content = req.getParameter("faq_content"); // 회원가입은 어떻게 하나요?
+		String faq_answer = req.getParameter("faq_answer"); // 회원가입 버튼을 누른 후 양식에 맞춰 정보를 입력하신 후 입력 버튼을 누르시면 됩니다.
+		
+		HashMap<String, String> faqMap = new HashMap<String, String>();
+		faqMap.put("seq_tbl_faq", seq_tbl_faq);
+		faqMap.put("faq_category", faq_category);
+		faqMap.put("faq_title", faq_title);
+		faqMap.put("faq_content", faq_content);
+		faqMap.put("faq_answer", faq_answer);
 
+		String result = service.updateFaqModify(faqMap);
+		
+		req.setAttribute("result", result);
+		
+		return "faqModifyJSON.notiles2";
+	}
 	
-/////////////////////////////////////////// 자주묻는질문 게시판 컨트롤러 끝 /////////////////////////////////////////////////
+	/////////////////////////////////////////// 자주묻는질문 게시판 컨트롤러 끝 //////////////////////////////////////////
 	
+	/////////////////////////////////////////// 통계 페이지 컨트롤러 시작 ///////////////////////////////////////////////
+
+	@RequestMapping(value="statistics.re", method={RequestMethod.GET})
+	public String statisticsMain(HttpServletRequest req, HttpSession ses) {
+		
+		HashMap<String, Object> agelinePct = service.getAgelinePctAll();
+		
+		LoginVO loginUser = (LoginVO) ses.getAttribute("loginUser");
+		
+		req.setAttribute("agelinePct", agelinePct);
+		req.setAttribute("loginUser", loginUser);
+		
+		return "pmh/statisticsMain.tiles2";
+	}
+	
+	@RequestMapping(value="getAgeDetail.re", method={RequestMethod.POST})
+	public String getAgeDetail(HttpServletRequest req) {
+		
+		String ageline = req.getParameter("ageline");
+		
+		HashMap<String, Object> ageDetail = service.getAgeDetail(ageline);
+		
+		req.setAttribute("ageDetail", ageDetail);
+		
+		return "ageDetail.notiles2";
+	}
+	
+	@RequestMapping(value="getGenderChartJson.re", method={RequestMethod.GET})
+	public String getGenderChartJson(HttpServletRequest req) {
+		
+		String jsonData = service.getGenderInfo();
+		
+		req.setAttribute("jsonData", jsonData);
+		return "jsonData.notiles2";
+	}
+	
+	@RequestMapping(value="getBoardCountChartWeekJson.re", method={RequestMethod.GET})
+	public String getBoardCountChartWeekJson(HttpServletRequest req) {
+		
+		String loginid = req.getParameter("loginid");
+		System.out.println(loginid);
+		String jsonData = service.getBoardCountChartWeekInfo(loginid);
+		System.out.println(jsonData);
+		req.setAttribute("jsonData", jsonData);
+		return "jsonDataWeek.notiles2";
+	}
+	
+	@RequestMapping(value="getBoardCountChartPreWeekJson.re", method={RequestMethod.GET})
+	public String getBoardCountChartPreWeekJson(HttpServletRequest req) {
+		
+		String loginid = req.getParameter("loginid");
+		System.out.println(loginid);
+		String jsonData = service.getBoardCountChartPreWeekInfo(loginid);
+		System.out.println(jsonData);
+		req.setAttribute("jsonData", jsonData);
+		return "jsonDataPreWeek.notiles2";
+	}
+	
+	/////////////////////////////////////////// 통계 페이지 컨트롤러 끝 ///////////////////////////////////////////////
 }

@@ -298,7 +298,53 @@ public class PmhDAO implements InterPmhDAO {
 		int n = sqlsession.update("pmhresns.actSelectedFaq", faqchkList);
 		return n;
 	}
-	
+
+	@Override
+	public int updateFaqModify(HashMap<String, String> faqMap) {
+		int n = sqlsession.update("pmhresns.updateFaqModify", faqMap);
+		return n;
+	}
+
+	@Override
+	public FaqVO getFaqOne(String seq) {
+		FaqVO fvo = sqlsession.selectOne("pmhresns.getFaqOne", seq);
+		return fvo;
+	}
 	
 	/////////////////////////////// FAQ 게시판 DAO 끝 ////////////////////////////////////////
+	
+	/////////////////////////////// 통계 DAO 시작 ///////////////////////////////////////////
+	
+	@Override
+	public List<HashMap<String, String>> getAgelinePctAll() {
+		List<HashMap<String, String>> agelinePctList = sqlsession.selectList("pmhresns.getAgelinePctAll"); 
+		return agelinePctList;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getAgeDetail(String ageline) {
+		List<HashMap<String, String>> agelineDetailList = sqlsession.selectList("pmhresns.getAgeDetail", ageline);
+		return agelineDetailList;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getGenderInfo() {
+		List<HashMap<String, String>> list = sqlsession.selectList("pmhresns.getGenderInfo");
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getBoardCountChartWeekInfo(String loginid) {
+		List<HashMap<String, String>> list = sqlsession.selectList("pmhresns.getBoardCountChartWeekInfo", loginid);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getBoardCountChartPreWeekInfo(String loginid) {
+		List<HashMap<String, String>> list = sqlsession.selectList("pmhresns.getBoardCountChartPreWeekInfo", loginid);
+		return list;
+	}
+
+	
+	/////////////////////////////// 통계 DAO 끝 ///////////////////////////////////////////
 }

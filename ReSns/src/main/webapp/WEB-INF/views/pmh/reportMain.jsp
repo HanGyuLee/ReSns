@@ -131,7 +131,8 @@
 	});// end of $(document).ready()------------
 	
 	function enterkey() {
-        if (window.event.keyCode == 13) {
+		var event = event || window.event;
+        if (event.keyCode == 13) {
  
         	goSearch();
         }

@@ -102,6 +102,24 @@ public interface InterPmhDAO {
 	int delSelectedFaq(List<String> faqchkList); // FAQ 게시물 중 선택한 것을 삭제하는 메소드
 
 	int actSelectedFaq(List<String> faqchkList); // FAQ 게시물 중 선택한 것을 활성화하는 메소드
-	
+
+	int updateFaqModify(HashMap<String, String> faqMap); // FAQ 게시물을 수정하는 메소드
+
+	FaqVO getFaqOne(String seq); // FAQ 게시물 하나를 가져오는 메소드
+
 	/////////////////////////////// FAQ 게시판 DAO 시작 ////////////////////////////////////////
+	
+	/////////////////////////////// 통계 DAO 시작 /////////////////////////////////////////
+	
+	List<HashMap<String, String>> getAgelinePctAll();
+
+	List<HashMap<String, String>> getAgeDetail(String ageline);
+
+	List<HashMap<String, String>> getGenderInfo();
+
+	List<HashMap<String, String>> getBoardCountChartWeekInfo(String loginid);
+
+	List<HashMap<String, String>> getBoardCountChartPreWeekInfo(String loginid);
+	
+	/////////////////////////////// 통계 DAO 끝 ///////////////////////////////////////////
 }

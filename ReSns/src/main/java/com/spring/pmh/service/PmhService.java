@@ -3,12 +3,14 @@ package com.spring.pmh.service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.json.JSONObject;
 import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.BoardVO;
 import com.spring.pek.model.ReVO;
@@ -333,6 +335,118 @@ public class PmhService implements InterPmhService {
 		int n = pdao.actSelectedFaq(faqchkList);
 		return n;
 	}
+
+	@Override
+	public String updateFaqModify(HashMap<String, String> faqMap) {
+		String result = "";
+		int n = pdao.updateFaqModify(faqMap);
+		
+		if (n > 0) {
+			FaqVO fvo = pdao.getFaqOne(faqMap.get("seq_tbl_faq"));
+			JSONObject obj = new JSONObject();
+			obj.put("seq", fvo.getSeq_tbl_faq());
+			obj.put("cate", fvo.getFaq_category());
+			obj.put("title", fvo.getFaq_title());
+			obj.put("content", fvo.getFaq_content());
+			obj.put("answer", fvo.getFaq_answer());
+			obj.put("status", fvo.getFaq_status());
+			
+			result = obj.toString();
+		}
+		
+		return result;
+	}
+
 	
 	////////////////////////////////// FAQ 게시판 서비스 끝 ////////////////////////////////////////
+	
+	////////////////////////////////// 통계 서비스 시작 //////////////////////////////////////////
+
+	@Override
+	public HashMap<String, Object> getAgelinePctAll() {
+		List<HashMap<String, String>> agelinePctList = pdao.getAgelinePctAll();
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("agelinePctList", agelinePctList);
+		
+		return map;
+	}
+
+	@Override
+	public HashMap<String, Object> getAgeDetail(String ageline) {
+		List<HashMap<String, String>> ageDetailList = pdao.getAgeDetail(ageline);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("ageDetailList", ageDetailList);
+
+		return null;
+	}
+
+	@Override
+	public String getGenderInfo() {
+		List<HashMap<String, String>> list = pdao.getGenderInfo();
+		
+		JSONArray array = new JSONArray();
+		String info = "";
+		
+		if (list != null && list.size() > 0) {
+			for (HashMap<String, String> map : list) {
+				JSONObject obj = new JSONObject();
+				obj.put("gendername", map.get("gendername"));
+				obj.put("cnt", map.get("cnt"));
+				
+				array.put(obj);
+			}
+		}
+		
+		info = array.toString();
+		
+		return info;
+	}
+
+	@Override
+	public String getBoardCountChartWeekInfo(String loginid) {
+		List<HashMap<String, String>> list = pdao.getBoardCountChartWeekInfo(loginid);
+		
+		JSONArray array = new JSONArray();
+		String info = "";
+		
+		if (list != null && list.size() > 0) {
+			for (HashMap<String, String> map : list) {
+				JSONObject obj = new JSONObject();
+				obj.put("weekdate", map.get("weekdate"));
+				obj.put("cnt", map.get("cnt"));
+				
+				array.put(obj);
+			}
+		}
+		
+		info = array.toString();
+		
+		return info;
+	}
+
+	@Override
+	public String getBoardCountChartPreWeekInfo(String loginid) {
+		List<HashMap<String, String>> list = pdao.getBoardCountChartPreWeekInfo(loginid);
+		
+		JSONArray array = new JSONArray();
+		String info = "";
+		
+		if (list != null && list.size() > 0) {
+			for (HashMap<String, String> map : list) {
+				JSONObject obj = new JSONObject();
+				obj.put("weekdate", map.get("weekdate"));
+				obj.put("cnt", map.get("cnt"));
+				
+				array.put(obj);
+			}
+		}
+		
+		info = array.toString();
+		
+		return info;
+	}
+	
+	////////////////////////////////// 통계 서비스 끝 //////////////////////////////////////////
 }

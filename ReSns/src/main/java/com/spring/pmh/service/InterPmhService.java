@@ -85,6 +85,24 @@ public interface InterPmhService {
 
 	int actSelectedFaq(List<String> faqchkList); // FAQ 게시물 중 선택한 것을 활성화하는 메소드
 
+	String updateFaqModify(HashMap<String, String> faqMap); // FAQ 게시물을 수정하는 메소드
+
+	
+
 	////////////////////// FAQ 게시판 서비스 끝 /////////////////////////
+	
+	////////////////////// 통계 서비스 시작 ////////////////////////////
+	
+	HashMap<String, Object> getAgelinePctAll();
+
+	HashMap<String, Object> getAgeDetail(String ageline);
+
+	String getGenderInfo();
+
+	String getBoardCountChartWeekInfo(String loginid);
+
+	String getBoardCountChartPreWeekInfo(String loginid);
+	
+	////////////////////// 통계 서비스 끝 /////////////////////////////
 	
 }
