@@ -23,7 +23,7 @@ public interface InterPekService {
 
 	String showLoc(String seq_tbl_board);		// 게시글의 위치주소 보기
 
-	int addHeart(HashMap<String, String> map);	// 좋아요 누르기
+	int addHeart(HashMap<String, String> map) throws Throwable;	// 좋아요 누르기
 
 	int HeartedUser(HashMap<String, String> map);	// 이미 좋아요 눌렀는지 확인하기
 
@@ -33,13 +33,13 @@ public interface InterPekService {
 
 	String heartCounting(String seq_tbl_board);		// 하트 갯수 갱신하기
 
-	int writeReply(HashMap<String, String> map);	// 댓글 쓰기
+	int writeReply(HashMap<String, String> map) throws Throwable;	// 댓글 쓰기
 
 	String maxGroupno();	// 최대 groupno 알아오기
 
 	String reCounting(String seq_tbl_board);		// 댓글 갯수 갱신하기
 
-	int writeReRe(HashMap<String, String> map);		// 대댓글 쓰기
+	int writeReRe(HashMap<String, String> map) throws Throwable;		// 대댓글 쓰기
 
 	int deleteReply(HashMap<String, String> map);		// 댓글 삭제
 
@@ -66,5 +66,9 @@ public interface InterPekService {
 	HashMap<String, String> msgDetail(String seq_tbl_msg);		// 쪽지 상세 보기
 
 	List<HashMap<String, String>> sendedMsg(String login_id);	// 한 회원이 보낸 쪽지 보기
+
+	int writeMsg(HashMap<String, String> map) throws Throwable;		// 쪽지 쓰기
+
+	int deleteMsg(String seq_tbl_msg);		// 쪽지 지우기
 
 }

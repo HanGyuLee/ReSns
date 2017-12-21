@@ -60,4 +60,16 @@ public interface BoardDAO {
 
 	List<HashMap<String, String>> sendedMsg(String login_id);	// 한 회원이 보낸 쪽지 보기
 
+	int writeMsg(HashMap<String, String> map);		// 쪽지 쓰기
+
+	int deleteMsg(String seq_tbl_msg);			// 쪽지 지우기
+
+	int insertAlert(HashMap<String, String> map);		// 덧글 알림
+
+	int maxSeqMsg();		// 가장 최근 쓴 쪽지 알기
+
+	int insertAlertMsg(HashMap<String, String> map);	// 쪽지 알림
+
+	int insertAlertReRe(HashMap<String, String> map);	// 대댓글 알림
+
 }

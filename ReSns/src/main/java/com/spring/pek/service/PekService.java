@@ -7,6 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.BoardDAO;
@@ -136,9 +139,17 @@ public class PekService implements InterPekService {
 
 	// 좋아요 누르기
 	@Override
-	public int addHeart(HashMap<String, String> map) {
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int addHeart(HashMap<String, String> map) throws Throwable {
 		
 		int n = dao.addHeart(map);
+		
+		String fk_login_id = map.get("fk_login_id");
+		String login_id = map.get("login_id");
+		
+		if (n == 1 && !login_id.equals(fk_login_id)) {
+			n = dao.insertAlert(map);
+		}
 		
 		return n;
 	}
@@ -202,9 +213,18 @@ public class PekService implements InterPekService {
 	
 	// 댓글 쓰기
 	@Override
-	public int writeReply(HashMap<String, String> map) {
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int writeReply(HashMap<String, String> map) throws Throwable {
 	
 		int n = dao.writeReply(map);
+		
+		String fk_login_id = map.get("fk_login_id");
+		String login_id = map.get("login_id");
+		
+		if (n==1 && !login_id.equals(fk_login_id)) {
+			
+			n = dao.insertAlert(map);
+		}
 		
 		return n;
 	}
@@ -238,9 +258,25 @@ public class PekService implements InterPekService {
 	
 	// 대댓글 쓰기
 	@Override
-	public int writeReRe(HashMap<String, String> map) {
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int writeReRe(HashMap<String, String> map) throws Throwable {
 		
 		int n = dao.writeReRe(map);
+		
+		String fk_login_id = map.get("fk_login_id");
+		String login_id = map.get("login_id");
+		
+		if (n == 1 && !login_id.equals(fk_login_id)) {
+			
+			n = dao.insertAlert(map);
+			
+			String re_id = map.get("re_id");
+			
+			if (n == 1 && !login_id.equals(re_id)) {
+				
+				n = dao.insertAlertReRe(map);
+			}
+		}
 		
 		return n;
 	}
@@ -373,12 +409,42 @@ public class PekService implements InterPekService {
 		return oneMsg;
 	}
 
+	// 한 회원이 보낸 쪽지 보기
 	@Override
 	public List<HashMap<String, String>> sendedMsg(String login_id) {
 		
 		List<HashMap<String, String>> msgList = dao.sendedMsg(login_id);
 		
 		return msgList;
+	}
+
+	
+	// 쪽지 쓰기
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int writeMsg(HashMap<String, String> map) throws Throwable {
+		
+		int n = dao.writeMsg(map);
+		
+		if (n == 1) {
+			
+			int seq = dao.maxSeqMsg();
+			
+			map.put("seq_tbl_msg", String.valueOf(seq));
+			
+			n = dao.insertAlertMsg(map);
+			
+		}
+		
+		return n;
+	}
+
+	@Override
+	public int deleteMsg(String seq_tbl_msg) {
+		
+		int n = dao.deleteMsg(seq_tbl_msg);
+		
+		return n;
 	}
 
 }

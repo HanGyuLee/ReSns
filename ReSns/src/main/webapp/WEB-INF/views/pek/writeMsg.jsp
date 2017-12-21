@@ -115,23 +115,43 @@ body {
 </style>
 <script type="text/javascript">
 
-	$(document).ready(function(){
+$(document).ready(function(){
+	
+	
+	$("#msg_content").on('keyup', function() {
+        if($(this).val().length > 500) {
+
+            $(this).val($(this).val().substring(0, 500));
+            alert("공백 포함 500자 까지만 보낼 수 있습니다.");
+
+        }
+    });
+	
+	
+	$("#sendMsg").click(function(){
 		
-		$("#deleteMsg").click(function(){
-			
-			var result = confirm("정말 삭제하시겠습니까?");
-			
-			if (result) {
-				// 확인
-				
-				location.href="/resns/deleteMsg.re?seq_tbl_msg=${oneMsg.SEQ_TBL_MSG}";
-				
-			}
-			
-			
-		});
+		var msg_content = $("#msg_content").val();
 		
+		if (msg_content == "") {
+			
+			alert("글 내용을 입력하셔야 합니다.");
+			$("#msg_content").focus();
+			
+		}
+		else {
+			
+			var frm = document.msgFrm;
+			
+			frm.method = "POST";
+			frm.action = "/resns/writeMsgEnd.re";
+			frm.submit();
+			
+		}
+
 	});
+	
+});
+
 
 </script>
 
@@ -146,26 +166,49 @@ body {
 
 <div class="container">
   <div class="card">
-
-    <div class="loading-icon perpetuum-mobile" style="margin-left: 10px; padding: 10px;">
-    <img src="<%=request.getContextPath()%>/resources/images/${oneMsg.UIMG_PROFILE_FILENAME}" style="width: 30px; height: 30px;" class="img-circle" /><br/>
-    <span style="font-size: 9pt; font-weight: bold; margin-top: 9px; text-align: left;">${oneMsg.LOGIN_NAME}</span>
-    </div>
-    <div class="description">
-    <div style="font-size: 9pt;">쪽지 보낸 날짜: ${oneMsg.MSG_DATE}</div>
-    <span style="font-size: 9pt; margin-top: 9px; text-align: center;">쪽지 내용:</span><br/>
-      <div class="name">${oneMsg.MSG_CONTENT}</div><br/><br/>
-    </div>
-  </div>
-  <div class="card">
-  <div class="loading-icon perpetuum-mobile" style="margin-left: 20px; padding: 10px;"></div>
-  <c:if test="${oneMsg.MSG_SEND != sessionScope.loginUser.login_id}">
-  	<div class="description" style="float: left;">
-  		<a href="/resns/writeMsg.re?login_name=${oneMsg.LOGIN_NAME}&msg_send=${oneMsg.MSG_SEND}" class="btn btn-default">답장하기</a>
-  	</div>
-  </c:if>	
-  	<div class="description" style="float: left;">
-  	<a href="#" class="btn btn-default" id="deleteMsg">삭제하기</a>
+  	<div class="description" style="margin-left: 10pt;">
+		<form class="form-horizontal" name="msgFrm">
+		<fieldset>
+		
+		<!-- Form Name -->
+		<legend>쪽지작성</legend>
+		
+		<!-- Select Basic -->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="fk_login_id">보낼 사람</label>
+		  <div class="col-md-1">
+		    <select id="fk_login_id" name="fk_login_id" class="form-control">
+		    	<c:if test="${login_name == ''}">
+			    	<c:forEach items="${followList}" var="follow">
+			    	<option value="${follow.follow_id}">${follow.follow_name}</option>
+			    	</c:forEach>
+		    	</c:if>
+		    	<c:if test="${login_name != ''}">
+		    		<option value="${msg_send}">${login_name}</option>
+		    	</c:if>
+		    </select>
+		  </div>
+		</div>
+		
+		<!-- Textarea -->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="msg_content"></label>
+		  <div class="col-md-4">                     
+		    <textarea class="form-control" id="msg_content" name="msg_content" placeholder="500자까지 가능합니다." style="width: 300px; min-height: 300px; overflow: auto;"></textarea>
+		  </div>
+		</div>
+		
+		<!-- Button -->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="sendMsg"></label>
+		  <div class="col-md-4">
+		    <button id="sendMsg" name="sendMsg" class="btn btn-default">보내기</button>
+		  </div>
+		</div>
+		
+		</fieldset>
+		</form>
+  		
   	</div>
   </div>
 </div>

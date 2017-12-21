@@ -84,7 +84,7 @@ $(document).ready(function() {
 	  
   	 var board_content = $("#board_content").val();
 	  
-	 if (board_content == "" || $.trim(board_content) == "") {
+	 if (board_content == "" && $.trim(board_content) == "") {
 		  
 		swal("글 내용을 입력하셔야 합니다.");
 		  

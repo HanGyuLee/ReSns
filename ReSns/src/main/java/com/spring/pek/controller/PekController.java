@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.spring.common.FileManager;
+import com.spring.common.MyUtil;
 import com.spring.jdh.model.LoginVO;
+import com.spring.jsr.service.InterJsrService;
+import com.spring.jsr.service.JsrService;
 import com.spring.pek.model.BimageVO;
 import com.spring.pek.model.MessageVO;
 import com.spring.pek.model.TagVO;
@@ -34,6 +37,9 @@ public class PekController {
 	
 	@Autowired
 	private FileManager fileManager;
+	
+	@Autowired
+	private InterJsrService jsrervice;
 	
 	// 글 목록 보기 (인기페이지)
 	@RequestMapping(value = "/index.re", method = {RequestMethod.GET})
@@ -358,6 +364,7 @@ public class PekController {
 		String login_id = loginUser.getLogin_id();	
 		String seq_tbl_board = req.getParameter("seq_tbl_board");
 		String re_content = req.getParameter("re_content");
+		String fk_login_id = req.getParameter("fk_login_id");
 		
 		String maxGroupno = service.maxGroupno(); 
 		
@@ -367,8 +374,18 @@ public class PekController {
 		map.put("re_content", re_content);
 		map.put("login_id", login_id);
 		map.put("maxGroupno", maxGroupno);
+		map.put("fk_login_id", fk_login_id);
+		map.put("status", "2");
 		
-		int n = service.writeReply(map);
+		int n = 0;
+		
+		try {
+			
+			n = service.writeReply(map);
+		
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		
 		JSONObject jsonObj = new JSONObject();
 		
@@ -381,7 +398,7 @@ public class PekController {
 			
 			req.setAttribute("str_writeReply", str_writeReply);
 			
-			System.out.println("====> 댓글insert 함");
+			//System.out.println("====> 댓글insert 함");
 
 		}	
 		
@@ -399,6 +416,11 @@ public class PekController {
 		String re_content = req.getParameter("re_content");
 		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
 		String login_id = loginUser.getLogin_id();
+		String fk_login_id = req.getParameter("fk_login_id");
+		String re_id = req.getParameter("re_id");
+		
+		System.out.println("====================================");
+		System.out.println(re_id);
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
@@ -407,14 +429,22 @@ public class PekController {
 		map.put("seq_tbl_board", seq_tbl_board);
 		map.put("re_content", re_content);
 		map.put("login_id", login_id);
+		map.put("fk_login_id", fk_login_id);
+		map.put("re_id", re_id);
+		map.put("status", "2");
 		
-		int n = service.writeReRe(map);
+		int n = 0;
+		try {
+			
+			n = service.writeReRe(map);
+			
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		
 		JSONObject jsonObj = new JSONObject();
 		
 		if (n == 1) {
-			
-			
 			
 			jsonObj.put("msg", "댓글 쓰기에 성공하였습니다.");
 			
@@ -508,9 +538,17 @@ public class PekController {
 		map.put("seq_tbl_board", seq_tbl_board);
 		map.put("fk_login_id", fk_login_id);
 		map.put("login_id", login_id);
+		map.put("status", "1");
 		
 		
-		int n = service.addHeart(map);
+		int n = 0;
+		try {
+			
+			n = service.addHeart(map);
+			
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		
 		JSONObject jsonObj = new JSONObject();
 		
@@ -586,8 +624,6 @@ public class PekController {
 		}
 	}
 	
-	
-	
 
 	// 받은 메세지 보기
 	@RequestMapping (value="/message.re", method={RequestMethod.GET})
@@ -611,6 +647,10 @@ public class PekController {
 		
 		HashMap<String, String> oneMsg = service.msgDetail(seq_tbl_msg);
 		
+		String msg_content = oneMsg.get("MSG_CONTENT");
+		
+		oneMsg.put("MSG_CONTENT", msg_content.replaceAll("\r\n", "<br/>"));
+		
 		req.setAttribute("oneMsg", oneMsg);
 		
 		return "/pek/msgDetail.notiles";
@@ -629,6 +669,86 @@ public class PekController {
 		req.setAttribute("msgList", msgList);
 		
 		return "/pek/sendedMsg.notiles";
-	}	
+	}
+	
+	// 메세지 폼 호출
+	@RequestMapping (value="/writeMsg.re", method={RequestMethod.GET})
+	public String writeMsg(HttpServletRequest req, HttpSession session) {
+		
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("login_id", login_id);
+		
+		String login_name = req.getParameter("login_name");
+		String msg_send = req.getParameter("msg_send");
+		
+		if (login_name == null) {
+			
+			List<HashMap<String, String>> followList = jsrervice.followList(map);
+			
+			req.setAttribute("followList", followList);
+			
+			req.setAttribute("login_name", "");
+
+		}
+		else {
+			req.setAttribute("login_name", login_name);
+			req.setAttribute("msg_send", msg_send);
+		}
+		
+		return "/pek/writeMsg.notiles";
+	}
+	
+	
+	// 메세지 쓰기 
+	@RequestMapping (value="/writeMsgEnd.re", method={RequestMethod.POST})
+	public String writeMsgEnd(HttpServletRequest req, HttpServletResponse response, HttpSession session) {
+		
+		String fk_login_id = req.getParameter("fk_login_id");
+		String msg_content = req.getParameter("msg_content");
+		
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+		String login_id = loginUser.getLogin_id();
+		
+		//System.out.println("보내는 사람 아이디: "+login_id);
+		//System.out.println("받는 사람 아이디: "+fk_login_id);
+		//System.out.println("쪽지내용: "+msg_content);
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("fk_login_id", fk_login_id);
+		map.put("msg_content", msg_content);
+		map.put("login_id", login_id);
+		map.put("status", "8");
+		
+		int n= 0;
+		
+		try {
+			
+			n = service.writeMsg(map);
+			
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
+		req.setAttribute("n", n);
+		
+		return "/pek/writeMsgEnd.notiles";
+	}
+	
+	
+	// 쪽지 지우기
+	@RequestMapping (value="/deleteMsg.re", method={RequestMethod.GET})
+	public String deleteMsg(HttpServletRequest req, HttpSession session) {
+		
+		String seq_tbl_msg = req.getParameter("seq_tbl_msg");
+		
+		int n = service.deleteMsg(seq_tbl_msg);
+		
+		req.setAttribute("n", n);
+		
+		return "/pek/deleteMsgEnd.notiles";
+	}
 
 }

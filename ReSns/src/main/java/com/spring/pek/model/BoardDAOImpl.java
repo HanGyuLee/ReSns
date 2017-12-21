@@ -368,4 +368,63 @@ public class BoardDAOImpl implements BoardDAO {
 		return msgList;
 	}
 
+	
+	// 쪽지 쓰기
+	@Override
+	public int writeMsg(HashMap<String, String> map) {
+		
+		int n = sqlsession.insert("pekresns.wirteMsg", map);
+		
+		return n;
+	}
+
+	
+	// 쪽지 지우기
+	@Override
+	public int deleteMsg(String seq_tbl_msg) {
+		
+		int n = sqlsession.delete("pekresns.deleteMsg", seq_tbl_msg);
+		
+		return n;
+	}
+
+	
+	// 덧글 알림
+	@Override
+	public int insertAlert(HashMap<String, String> map) {
+		
+		int n = sqlsession.insert("pekresns.insertAlert", map);
+		
+		return n;
+	}
+
+	
+	// 가장 최근 쓴 쪽지 알기
+	@Override
+	public int maxSeqMsg() {
+		
+		int seq = sqlsession.selectOne("pekresns.maxSeqMsg");
+		
+		return seq;
+	}
+
+	// 쪽지 알림
+	@Override
+	public int insertAlertMsg(HashMap<String, String> map) {
+		
+		int n = sqlsession.insert("pekresns.insertAlertMsg", map);
+		
+		return n;
+	}
+
+	
+	// 대댓글 알림
+	@Override
+	public int insertAlertReRe(HashMap<String, String> map) {
+		
+		int n = sqlsession.insert("pekresns.insertAlertReRe", map);
+		
+		return n;
+	}
+
 }

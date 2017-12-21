@@ -5,10 +5,6 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<style type="text/css">
-	${demo.css}
-</style>
-
 <script src="<%= request.getContextPath() %>/resources/highcharts/code/highcharts.js"></script>        <!-- 차트그리기 --> 
 <script src="<%= request.getContextPath() %>/resources/highcharts/code/modules/wordcloud.js"></script>
 <style type="text/css">
@@ -25,8 +21,9 @@
 
 	$(document).ready(function() {
 		loopshowNowTime();
-		
+
 		$("#tagList").hide();
+		
 		
 		$.ajax({
 			url: "/resns/showAllTag.re",
@@ -60,7 +57,7 @@
 		
 		setTimeout(function() {
 						loopshowNowTime();	
-					}, 1000);
+					}, 10000);
 		
 	}// end of loopshowNowTime() --------------------------
 	
@@ -95,7 +92,6 @@
 		        text: '인기 해시 태그'
 		    }
 		});
-		
 	}
 </script>
 
@@ -106,6 +102,11 @@
 </div> -->
 
 <body>
+
+
+
+
+
 
 <span id="tagList"></span>
 <div id="container"></div>

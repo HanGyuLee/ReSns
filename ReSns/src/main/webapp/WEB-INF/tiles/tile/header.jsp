@@ -132,7 +132,7 @@ function show() {
    
    <c:if test="${sessionScope.loginUser != null}">
    
-	    <div class="container">
+	    <div class="header container">
 	      <!-- left nav top -->
 	      <ul class="nav navbar-nav pull-left">
 	        <!-- <li><a href="#"><span class="glyphicon glyphicon-thumbs-up text-white"></span></a></li>
@@ -150,7 +150,7 @@ function show() {
     </c:if>
     <c:if test="${sessionScope.loginUser == null}">
     
-    	<div class="container">
+    	<div class="header container">
 	      <!-- left nav top -->
 	      <ul class="nav navbar-nav pull-left">
 	        <!-- <li><a href="#"><span class="glyphicon glyphicon-thumbs-up text-white"></span></a></li>
@@ -170,16 +170,15 @@ function show() {
   </nav>
   <!-- down nav -->
   <nav class="navbar navbar-down">
-    <div class="container">
+    <div class="header container">
       <div class="flex-container">  
         <div class="navbar-header flex-item">
           <div class="navbar-brand" onclick="show();" style="cursor: pointer;">Remeber Eemember</div>
         </div>
-        <!-- <ul class="nav navbar-nav flex-item hidden-xs">
-          <li><a href="#">Projects</a></li>
-          <li><a href="#">Pricing</a></li> 
-          <li><a href="#">TheTeam</a></li> 
-        </ul> -->
+        <ul class="nav navbar-nav flex-item">
+          <li><a><img src="<%=request.getContextPath()%>/resources/images/search.png" class="menuicon" />
+          	<input type="text" name="text" style="background-color:transparent; border: 0px;"></a></li>
+        </ul>
         
         <c:if test="${sessionScope.loginUser == null}">
         

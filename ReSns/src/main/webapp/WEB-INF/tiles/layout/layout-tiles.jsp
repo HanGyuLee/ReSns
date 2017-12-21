@@ -20,8 +20,8 @@
  <style type="text/css" >
  	#myheader		{ height:120px; background-color:black; }
  	#mycontainer	{ margin:0 auto; }
-	#mycontent		{ float:left; width:75%; background-color:#F5F5F5; min-height:800px; padding-top: 40px;}
-	#mysideinfo		{ float:left; width:25%;}
+	#mycontent		{ float:left; width:75%; min-height:800px; padding-top: 40px;}
+	#mysideinfo		{ float:left; width:25%; }
  
  </style>    
 

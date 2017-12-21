@@ -9,7 +9,7 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-ui.js"></script> 
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-ui.js"></script>
 
 <title>Insert title here</title>
 <style type="text/css">
@@ -198,7 +198,7 @@ $(document).ready(function(){
 			      $(this).removeClass("hover");
 			    }
 			  );
-	
+	 
 });
 
 
@@ -313,8 +313,26 @@ function showDetail(statuscount) {
 						result += "<div>";
 						
 						if(re_depthno == 0) {
+							
 							result += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
-							result += "<span style='font-weight: bold;'>"+login_name+"</span>";
+							
+							if ('${sessionScope.loginUser.login_id}' == re_id){
+								
+							result += "<span style='font-weight: bold; cursor: pointer;'>";
+							result += "<a href='/resns/mypage.re?fk_login_id="+re_id+"'>"+login_name+"</a>";
+							result += "</span>";
+							
+							}
+							
+							if ('${sessionScope.loginUser.login_id}' != re_id){
+								
+							result += "<span style='font-weight: bold; cursor: pointer;'>";
+							result += "<a href='/resns/mypage.re?fk_login_id="+re_id+"'>"+login_name+"</a>";
+							result += "</span>";
+							
+							}
+							
+							
 							result += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
 							result += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' />";
 							result += "</a>";
@@ -324,9 +342,9 @@ function showDetail(statuscount) {
 							}
 							
 							result += "<img src='resources/images/reoption.png' align='right' style='width: 15px; height: 15px; cursor: pointer;' onclick='runEffect("+entryIndex+")' /><br/>";
-							result += "<div id='reReply"+entryIndex+"'>";
-							result += "<input type='text' id='reReValue"+entryIndex+"' />";
-							result += "<button onclick='writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+")'>입력</button>";
+							result += "<div style='display: none; background-color: #FAFAFA;' id='reReply"+entryIndex+"'>";
+							result += "<br/><input style='width: 190px; height: 25px;' class='form-control input-md' type='text' id='reReValue"+entryIndex+"' />";
+							result += "<button class='btn btn-default' onclick='writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+","+re_id+");'>입력</button>";
 							result += "</div>";
 							result += re_content;
 						}
@@ -338,7 +356,7 @@ function showDetail(statuscount) {
 							result += "<span style='font-weight: bold;'>"+login_name+"</span>";
 							
 							if ('${sessionScope.loginUser.login_id}' == re_id){
-								result +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px;' align='right' />";
+								result +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px; cursor: pointer;' align='right' />";
 							}
 							
 							result += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
@@ -561,8 +579,20 @@ function writeRe(statuscount) {
 	
 	if (${sessionScope.loginUser != null}) {
 		
-		var form_data = {"re_content" : $("#re_content"+statuscount).val(),
-						 "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+		var re_content = $("#re_content"+statuscount).val();
+		
+		if ($.trim(re_content) == "") {
+			
+			swal("내용을 입력하세요.");
+			
+			event.preventDefault();
+			
+		}
+		
+		
+		var form_data = {"re_content" : re_content,
+						 "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
+						 "fk_login_id" : $("#fk_login_id"+statuscount).val() };
 
 		$.ajax({
 			
@@ -589,7 +619,7 @@ function writeRe(statuscount) {
 	}
 }
 
-function writeReRe(entryIndex, statuscount, re_groupno, re_seq) {
+function writeReRe(entryIndex, statuscount, re_groupno, re_seq, re_id) {
 	
 	var rereValue = $("#reReValue"+entryIndex).val();
 	
@@ -610,7 +640,8 @@ function writeReRe(entryIndex, statuscount, re_groupno, re_seq) {
 	
 
 	var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
-				"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue
+				"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue, "re_id" : re_id,
+				"fk_login_id" : $("#fk_login_id"+statuscount).val()
 				};
 	  
 	  $.ajax({
@@ -744,17 +775,20 @@ function modalClose(statuscount) {
 						<div class="modal-dialog" role="document">
 							<div class="modal-content" style="width: 800px; height: 500px;">
 								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">
-									<span aria-hidden="true" onclick="modalClose('${status.count}');">×</span>
+									aria-label="Close">×
+									<!-- <span aria-hidden="true"></span> -->
 								</button>
 								<div class="modal-body">
 									<div
 										style="width: 68%; height: 350px; border: 0px solid blue; float: left;">
 										<div id="showUser${status.count}" align="left"></div>
-										<img
-											src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}"
-											style="width: 400px; height: 300px; margin-top: 10px;">
-
+										<c:if test="${map.BIMG_FILENAME != null}">
+											<img
+												src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}"
+												style="width: 400px; height: 300px; margin-top: 10px;">
+										</c:if>
+										<c:if test="${map.BIMG_FILENAME == null}">
+										</c:if>
 
 									</div>
 									<div
@@ -801,8 +835,11 @@ function modalClose(statuscount) {
 									<div
 										style="border: 0px solid purple; width: 30%; height: 120px; float: right;">
 									<%-- <c:if test="${loginUser.login_id != null}"> --%>
-										<button onclick="writeRe('${status.count}');">입력</button>
-										<input type="text" id="re_content${status.count}" />
+										  <div class="col-md-2" style="border: 0px solid red;">
+										  <input id="re_content${status.count}" type="text" class="form-control input-md"
+										  		style="width: 200px; height: 80px;">
+										  <button onclick="writeRe('${status.count}');" class="btn btn-default">입력</button>
+										  </div>
 									<%-- </c:if> --%>	
 
 									</div>

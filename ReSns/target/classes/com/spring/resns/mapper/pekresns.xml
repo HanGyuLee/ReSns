@@ -361,5 +361,44 @@
 			where M.msg_send = #{login_id}
 		order by M.seq_tbl_msg desc
 	</select>
+	
+	
+	
+	<!-- 쪽지 쓰기 -->
+	<insert id="wirteMsg" parameterType="HashMap">
+		insert into tbl_msg (seq_tbl_msg, fk_login_id, msg_content, msg_send, msg_date)
+			values (seq_tbl_msg.nextval, #{fk_login_id}, #{msg_content}, #{login_id}, default)
+	</insert>
+	
+	<!-- 쪽지 지우기 -->
+	<delete id="deleteMsg" parameterType="String">
+		delete from tbl_msg
+		where seq_tbl_msg = #{seq_tbl_msg}
+	</delete>
 
+
+
+	<!-- 알림 -->
+	<insert id="insertAlert" parameterType="HashMap">
+		insert into tbl_alarm(seq_tbl_alarm, fk_seq_tbl_board, fk_login_id, alarm_userid, alarm_type, alarm_status, alarm_time)
+			values(seq_tbl_alarm.nextval, #{seq_tbl_board}, #{login_id}, #{fk_login_id}, #{status}, default, default)
+	</insert>
+	
+	<!-- 가장 최근에 쓴 메세지 알기 -->
+	<select id="maxSeqMsg" resultType="int">
+		select max(seq_tbl_msg)
+		from tbl_msg
+	</select>
+	<!-- 쪽지 알림 -->
+	<insert id="insertAlertMsg" parameterType="HashMap">
+		insert into tbl_alarm(seq_tbl_alarm, fk_seq_tbl_msg, fk_login_id, alarm_userid, alarm_type, alarm_status, alarm_time)
+			values(seq_tbl_alarm.nextval, #{seq_tbl_msg}, #{login_id}, #{fk_login_id}, #{status}, default, default)
+	</insert>
+	
+	<!-- 대댓글 알림 -->
+	<insert id="insertAlertReRe" parameterType="HashMap">
+		insert into tbl_alarm(seq_tbl_alarm, fk_seq_tbl_board, fk_login_id, alarm_userid, alarm_type, alarm_status, alarm_time)
+			values(seq_tbl_alarm.nextval, #{seq_tbl_board}, #{login_id}, #{re_id}, 3, default, default)
+	</insert>
+	
 </mapper>
