@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -394,5 +396,217 @@ public class HglController {
 		
 	}// end of otherspage	
 		
+	
+	// 알람리스트 받아오기
+	@SuppressWarnings("null")
+	@RequestMapping(value="/myalarm.re", method={RequestMethod.GET})
+	public String requireLogin2_myAlarm(HttpServletRequest req,HttpServletResponse response,HttpSession session){		
+		
+		//List<Integer> theSeq = null;
+		
+		
+		String userid = null;
+	//	String alarmMsg = null;
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");		
+		
+		userid = loginUser.getLogin_id();			
+		
+		List<HashMap<String, Object>> myAlarmList = service.getMyAlarmList(userid);
+		
+		String theSeq= "";
+	
+		JSONArray jsonMap = new JSONArray();
+		
+		if (myAlarmList != null) {
+			for (HashMap<String, Object> alarm : myAlarmList) {
+				JSONObject jsonObj = new JSONObject();
+				
+				String board = (String) alarm.get("fk_seq_tbl_board");
+						
+				String follow = (String) alarm.get("fk_follow_seq");
+				String q = (String) alarm.get("fk_seq_tbl_q");
+				String music = (String) alarm.get("fk_seq_tbl_music");
+				String msg = (String) alarm.get("fk_seq_tbl_msg");
+				
+				if(!"0".equals(board)){
+					//theSeq.add(board);
+					theSeq = board;
+				}else if(!"0".equals(follow)){
+					//theSeq.add(follow);
+					theSeq = follow;
+				}else if(!"0".equals(q)){
+					//theSeq.add(q);
+					theSeq = q;
+				}else if(!"0".equals(music)){
+					//theSeq.add(music);
+					theSeq = music;
+				}else if(!"0".equals(msg)){
+					//theSeq.add(music);
+					theSeq = msg;
+				}
+				
+				String alarm_type = (String) alarm.get("alarm_type");
+				String url = "";
+				switch(alarm_type){
+				case "1": 
+					alarm_type =" 누가 내 게시물 하트";
+					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
+					break;
+				case "2": 
+					alarm_type ="누가 내 게시물 댓글";
+					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
+					break;
+				case "3": 
+					alarm_type ="누가 내 댓글에 대댓글 ";
+					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
+					break;
+				case "4": 
+					alarm_type =" 누가 나를 팔로우";
+					url = "/resns/otherspage.re?fk_login_id=";
+					break;
+				case "5": 
+					alarm_type ="누가 내 문답게시판에 질문 ";
+					url = "/resns/";
+					break;
+				case "6": 
+					alarm_type ="내가 남긴 질문에 답변";
+					url = "";
+					break;
+				case "7": 
+					alarm_type =" 누가 내 동영상에 댓글";
+					url = "";
+					break;
+				case "8": 
+					alarm_type =" 누가 나에게 메세지";
+					url = "";
+					break;
+				
+				}
+				
+				jsonObj.put("theSeq",theSeq);
+				jsonObj.put("alarm_type",alarm_type);
+				jsonObj.put("fk_login_id",alarm.get("fk_login_id"));
+				jsonObj.put("alarm_userid",alarm.get("alarm_userid"));
+				jsonObj.put("alarm_time",alarm.get("alarm_time"));
+				jsonObj.put("alarm_status",alarm.get("alarm_status"));
+				
+				
+				
+				
+				jsonMap.put(jsonObj);
+				
+			}
+		}
+		
+		String alarmList = jsonMap.toString();
+		
+		
+		
+		
+		/*List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		
+		
+		
+		
+		System.out.println("/////"+myAlarmList);
+		int j=0;
+		for(int i=0; i<myAlarmList.size(); i++){
+				
+			String board = (String) myAlarmList.get(i).get("fk_seq_tbl_board");
+			String follow = (String) myAlarmList.get(i).get("fk_follow_seq");
+			String q = (String) myAlarmList.get(i).get("fk_seq_tbl_q");
+			String music = (String) myAlarmList.get(i).get("fk_seq_tbl_music");
+			
+			
+			System.out.println("board  " + board);
+			System.out.println("follow  " + follow);
+			System.out.println("q  " + q);
+			System.out.println("music  " + music);
+			
+			
+			
+			if(!"0".equals(board)){
+				//theSeq.add(board);
+				theSeq = board;
+			}else if(!"0".equals(follow)){
+				//theSeq.add(follow);
+				theSeq = follow;
+			}else if(!"0".equals(q)){
+				//theSeq.add(q);
+				theSeq = q;
+			}else if(!"0".equals(music)){
+				//theSeq.add(music);
+				theSeq = music;
+			}
+			
+			System.out.println("theSeq  " + theSeq);
+			
+			String fk_login_id = (String) myAlarmList.get(i).get("fk_login_id");
+			String alarm_userid = (String) myAlarmList.get(i).get("alarm_userid");
+			String alarm_type = (String) myAlarmList.get(i).get("alarm_type");
+			String alarm_time = (String) myAlarmList.get(i).get("alarm_time");
+			String alarm_status = (String) myAlarmList.get(i).get("alarm_status");
+			
+			switch(alarm_type){
+			case "1": 
+				alarm_type =" 누가 내 게시물 하트";
+				break;
+			case "2": 
+				alarm_type ="누가 내 게시물 댓글";
+				break;
+			case "3": 
+				alarm_type ="누가 내 댓글에 대댓글 ";
+				break;
+			case "4": 
+				alarm_type =" 누가 나를 팔로우 	";
+				break;
+			case "5": 
+				alarm_type ="누가 내 문답게시판에 질문 	";
+				break;
+			case "6": 
+				alarm_type ="내가 남긴 질문에 답변";
+				break;
+			case "7": 
+				alarm_type =" 누가 내 동영상에 댓글";
+				break;
+			
+			
+			}// end of switch
+			
+			
+			map.put("fk_login_id", fk_login_id);
+			map.put("alarm_userid", alarm_userid);
+			map.put("alarm_type", alarm_type);
+			map.put("alarm_time", alarm_time);
+			map.put("alarm_status", alarm_status);
+			map.put("theSeq",theSeq);
+			
+		// System.out.println("j  "+j);
+		
+		//	map.put
+			
+			list.add(j, map);
+			
+			//System.out.println("j  "+j + ",map" + map);
+		//	list.add(map);
+			System.out.println("/////"+list);
+			
+		} // end of for
+		//list.add(map);
+		System.out.println("-------/////"+list);
+		*/
+		
+		req.setAttribute("list", alarmList);
+		
+		
+		return  "hgl/myalarm.notiles";
+		
+		
+	}// end of alarm
+		
+	
+	
 	
 }// end of HglController

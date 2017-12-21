@@ -6,6 +6,15 @@
 <head>
 <meta charset="UTF-8">
 <title>MY PAGE</title>
+
+
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-ui.js"></script> 
+
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ribeye">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
@@ -21,7 +30,9 @@
     display:none;
 }
 
-
+.container{
+ font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+} 
 .banner-section {
 	
 	background-image: 
@@ -31,7 +42,7 @@
 	height: 380px;
 	left: 0;
 	position: absolute;
-	top: 128px;
+	top: 8px;
 	background-position: 0;
 	
 }
@@ -786,6 +797,53 @@ function goVeiwContent(statuscount){
 
 /* ------------------------------------------------------------------- */
 
+ function VeiwTag(statuscount){
+	  var form_data = {"theSeq" : $("#contentTagView"+statuscount).val()};
+	  
+	 $("#too"+statuscount).hide();
+	 $("#thebogi"+statuscount).hide();
+	
+	$.ajax({
+			
+			url: "/resns/myalarm.re",
+			type: "GET",
+			data: form_data,  
+			dataType: "JSON", 
+			success: function(data) {
+			
+				if (data.length != null) {
+
+					var result = "<br/><br/>";
+					
+					$.each(data, function(entryIndex, entry){
+						
+						var seq_tbl_tag = entry.seq_tbl_tag;
+						var tag_content = entry.tag_content;
+						
+						var sub_tag_content = tag_content.substring(1);
+
+						result += "<a href='/resns/searchEndTag.re?search="+sub_tag_content+"'>";
+						result += "<span style='font-weight: bold;'>"+tag_content+"</span>";
+						result += "</a>";
+
+						
+					});
+				}
+					
+				$("#tag"+statuscount).html(result);
+				$("#tag"+statuscount).show();	
+				
+			}, error: function() {
+				
+			}
+			
+		});
+  
+	  
+  }
+
+
+
 
 </script>
 
@@ -932,7 +990,22 @@ function goVeiwContent(statuscount){
 	</form>
     
     
-    
+          <ul class="nav  navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">나의 알림 <span class="glyphicon glyphicon-user pull-right"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Account Settings <span class="glyphicon glyphicon-cog pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="#">User stats <span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="#">Messages <span class="badge pull-right"> 42 </span></a></li>
+            <li class="divider"></li>
+            <li><a href="#">Favourites Snippets <span class="glyphicon glyphicon-heart pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="#">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+          </ul>
+        </li>
+      </ul>
     
     
     <div class="container gal-container" style="border:1px solid transparent;margin-top:300px;">
@@ -1191,40 +1264,28 @@ ${pagebar}
     
     </c:if>
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-            </div>
+           
+            
+                        </div>
             <div class="tab-pane" id="tab_default_3">
-              <p>
-                	준비중
-              </p>
+              <div id="question">
+              <iframe style="width: 100%; height: 800px;" src="music.re?fk_login_id=${sessionScope.loginUser.login_id}"></iframe>
+              
+              </div>
              
             </div>
              <div class="tab-pane" id="tab_default_4" >
               <div id="question">
-              
+              <iframe style="width: 100%; height: 800px;" src="questionList.re?fk_login_id=${sessionScope.loginUser.login_id}"></iframe>
               
               </div>
             </div>
           </div>
         </div>
       </div>
+  
+            
+          
   
   
   

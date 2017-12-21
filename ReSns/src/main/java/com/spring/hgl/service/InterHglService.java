@@ -49,5 +49,8 @@ public interface InterHglService {
 	// 다른 사람 페이지를 가거나 다른사람의 팔로우 목록을 봤을때도 내가 팔로우 하고 있는 사람 언팔하기로 표시되도록
 	List<String> getFollowingName(String loginId);
 
+	// 내 알람 리스트 받아오기
+	List<HashMap<String, Object>> getMyAlarmList(String userid);
+
 	
 } // end of InterHglService

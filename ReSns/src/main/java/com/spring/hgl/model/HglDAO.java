@@ -99,6 +99,12 @@ public class HglDAO implements InterHglDAO{
 		List<String> list = sqlsession.selectList("hglresns.getFollowingName",loginId);
 		return list;
 	}
+
+	@Override
+	public List<HashMap<String, Object>> getMyAlarmList(String userid) {
+		List<HashMap<String, Object>> list = sqlsession.selectList("hglresns.myAlarmList",userid);
+		return list;	
+	}
 	
 	
 	

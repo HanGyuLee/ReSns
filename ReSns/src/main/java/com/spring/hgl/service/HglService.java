@@ -125,5 +125,12 @@ public class HglService implements InterHglService {
 	}
 
 
+	@Override
+	public List<HashMap<String, Object>> getMyAlarmList(String userid) {
+		List<HashMap<String, Object>> list = dao.getMyAlarmList(userid);
+		return list;
+	}
+
+
 
 }// end of HglService

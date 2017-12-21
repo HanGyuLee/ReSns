@@ -233,6 +233,41 @@
 <!-- 내 페이지 프로필사진 변경하기  끝 -->	
     
     
+<!-- 내 알람리스트 가져오기  -->
+	<resultMap type="HashMap" id="alarmMap">
+		<result property="fk_seq_tbl_board"  column="fk_seq_tbl_board" 	javaType="String"/>
+		<result property="fk_follow_seq" 	 column="fk_follow_seq" 	javaType="String"/>
+		<result property="fk_seq_tbl_q"		 column="fk_seq_tbl_q" 		javaType="String"/>
+		<result property="fk_seq_tbl_music"  column="fk_seq_tbl_music" 	javaType="String"/>
+		<result property="fk_seq_tbl_msg" 	 column="fk_seq_tbl_msg" 	javaType="String"/>
+		<result property="fk_login_id" 		 column="fk_login_id" 		javaType="String"/>
+		<result property="alarm_userid" 	 column="alarm_userid" 		javaType="String"/>
+		<result property="alarm_type" 		 column="alarm_type" 		javaType="String"/>
+		<result property="alarm_status" 	 column="alarm_status" 		javaType="String"/>
+		<result property="alarm_time" 		 column="alarm_time" 		javaType="String"/>
+	</resultMap>
+ 	
+			
+	<select id="myAlarmList" parameterType="String" resultMap="alarmMap" >		
+		
+		select nvl(fk_seq_tbl_board,0) as fk_seq_tbl_board , 
+		       nvl(fk_follow_seq,0) as fk_follow_seq,
+		       nvl(fk_seq_tbl_q,0) as fk_seq_tbl_q,
+		       nvl(fk_seq_tbl_music,0) as fk_seq_tbl_music,
+		       nvl(fk_seq_tbl_msg,0) as fk_seq_tbl_msg,
+		       fk_login_id,alarm_userid,
+		       alarm_type,
+		       alarm_status,
+		       to_char(alarm_time,'yyyy-mm-dd hh24:mi:ss')as alarm_time
+		from tbl_alarm
+		where alarm_userid = #{userid}
+		order by alarm_time desc
+		
+	</select>
+
+<!-- 내 알람 리스트 가져오기 끝 -->	
+	
+    
     
     
 
