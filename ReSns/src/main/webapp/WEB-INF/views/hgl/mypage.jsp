@@ -84,17 +84,16 @@ $(function(){
 	
 	
 	
-	
 	var retval = []	
 	$(".heart").each(function(){
 	 var heartse = retval.push($(this).attr('id'));
-	
+	alert(heartse);
 	 if (heartse != null){
 		 
 			$("#hearted"+heartse).hide();
 			$("#heart"+heartse).show();
 
-	 var form_data = {"login_id" : $("#login_id"+heartse).val(), "seq_tbl_board" : $("#seq_tbl_board"+heartse).val()};	  
+	 var form_data = {"login_id" : ${sessionScope.loginUser.login_id}, "seq_tbl_board" : $("#seq_tbl_board"+heartse).val()};	  
 	 $.ajax({
 			
 			url: "/resns/heartCheck.re",
@@ -798,7 +797,7 @@ function goVeiwContent(statuscount){
 /* ------------------------------------------------------------------- */
 
 
-
+/* 
  function goAlarm(userid){
 	
 	  var form_data = {"userid" : userid};
@@ -822,13 +821,15 @@ function goVeiwContent(statuscount){
 						var alarm_type = entry.alarm_type;
 						var alarm_time = entry.alarm_time;
 						var url = entry.url;
-						
-						
+						var login_name = entry.login_name;
+						var imgsrc = entry.imgsrc;
 						
 						result += "<li><a href='"+url+"' style='text-decoration:none;'>";
-						result += "<span style='font-weight: bold;'>"+fk_login_id+" 님이 "+alarm_type+"</span><br/>";
+						result += "<img src='resources/images/profile0.png' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
 						result += alarm_time +"</a> </li><li class='divider'></li>";
-
+ 
+ 
+ 						result=fk_login_id;
 						
 					});
 				}
@@ -844,9 +845,58 @@ function goVeiwContent(statuscount){
   
 	  
   }
+ */
+ 
+ 
+ 
 
+ function goAlarm(userid){
+   
+     var form_data = {"userid" : userid};
+     
+   $.ajax({
+         
+         url: "/resns/myalarm.re",
+         type: "GET",
+         data: form_data,  
+         dataType: "JSON", 
+         success: function(data) {
+         
+            if (data.length != null) {
 
+               var result = "";
+               
+               $.each(data, function(entryIndex, entry){
+                  
+                  
+                  var fk_login_id = entry.fk_login_id;
+                  var alarm_type = entry.alarm_type;
+                  var alarm_time = entry.alarm_time;
+                  var url = entry.url;
+                  
+                  
+                  
+                  result += "<li><a href='"+url+"' style='text-decoration:none;'>";
+                  result += "<span style='font-weight: bold;'>"+fk_login_id+" 님이 "+alarm_type+"</span><br/>";
+                  result += alarm_time +"</a> </li><li class='divider'></li>";
 
+                  
+               });
+            }
+               
+            $("#alarm").html(result);
+            $("#alarm").show();   
+            
+         }, error: function() {
+            
+         }
+         
+      });
+  
+     
+  }
+
+ 
 
 </script>
 
@@ -994,8 +1044,7 @@ function goVeiwContent(statuscount){
 		
 	</form>
     
-    
-          <ul class="nav  navbar-nav">
+         <ul class="nav  navbar-nav">
         <li class="dropdown">
           <a href="#" onClick="goAlarm('${sessionScope.loginUser.login_id}')" class="dropdown-toggle" data-toggle="dropdown">나의 알림 <span class="glyphicon glyphicon-user pull-right"></span></a>
           
@@ -1103,11 +1152,11 @@ function goVeiwContent(statuscount){
     
     <tr>
 		<td width="30px" height="50px">&nbsp;</td>
-        <%-- <td colspan ="2" width="740px" height="50px"><img width="50px" height="50px" class=" img-circle" style="margin-right: 10px;" src="<%= request.getContextPath() %>/resources/images/${vo.follow_proile_image}"/>${vo.follow_name}
+        <td colspan ="2" width="740px" height="50px"><img width="50px" height="50px" class=" img-circle" style="margin-right: 10px;" src="<%= request.getContextPath() %>/resources/images/${vo.follow_proile_image}"/>${vo.follow_name}
         <input type="hidden" id="seq_tbl_board${status.count}" name="seq_tbl_board" value="${vo.seq_tbl_board}">
-        <input type="hidden" id="fk_login_id${status.count}" name="fk_login_id" value="${vo.follow_id}">
+        <input type="hidden" id="fk_login_id${status.count}" name="fk_login_id" value="${vo.login_id}">
         <input type="hidden" id="login_id${status.count}" name="login_id" value="${loginUser.login_id}">
-        </td>--%>      
+        </td>    
         <td width="30px" height="50px">&nbsp;</td>
     </tr>
         <tr>

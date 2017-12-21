@@ -235,33 +235,46 @@
     
 <!-- 내 알람리스트 가져오기  -->
 	<resultMap type="HashMap" id="alarmMap">
-		<result property="fk_seq_tbl_board"  column="fk_seq_tbl_board" 	javaType="String"/>
-		<result property="fk_follow_seq" 	 column="fk_follow_seq" 	javaType="String"/>
-		<result property="fk_seq_tbl_q"		 column="fk_seq_tbl_q" 		javaType="String"/>
-		<result property="fk_seq_tbl_music"  column="fk_seq_tbl_music" 	javaType="String"/>
-		<result property="fk_seq_tbl_msg" 	 column="fk_seq_tbl_msg" 	javaType="String"/>
-		<result property="fk_login_id" 		 column="fk_login_id" 		javaType="String"/>
-		<result property="alarm_userid" 	 column="alarm_userid" 		javaType="String"/>
-		<result property="alarm_type" 		 column="alarm_type" 		javaType="String"/>
-		<result property="alarm_status" 	 column="alarm_status" 		javaType="String"/>
-		<result property="alarm_time" 		 column="alarm_time" 		javaType="String"/>
+		<result property="fk_seq_tbl_board"  	 column="fk_seq_tbl_board" 			javaType="String"/>
+		<result property="fk_follow_seq" 	 	 column="fk_follow_seq" 			javaType="String"/>
+		<result property="fk_seq_tbl_q"		 	 column="fk_seq_tbl_q" 				javaType="String"/>
+		<result property="fk_seq_tbl_music"  	 column="fk_seq_tbl_music" 			javaType="String"/>
+		<result property="fk_seq_tbl_msg" 	 	 column="fk_seq_tbl_msg" 			javaType="String"/>
+		<result property="fk_login_id" 		 	 column="fk_login_id" 				javaType="String"/>
+		<result property="alarm_userid" 	 	 column="alarm_userid" 				javaType="String"/>
+		<result property="alarm_type" 		 	 column="alarm_type" 				javaType="String"/>
+		<result property="alarm_status" 	 	 column="alarm_status" 				javaType="String"/>
+		<result property="alarm_time" 		 	 column="alarm_time" 				javaType="String"/>
+		<result property="fk_rere_id" 		 	 column="fk_rere_id" 				javaType="String"/>
+		<result property="uimg_profile_filename" column="uimg_profile_filename" 	javaType="String"/>
+		<result property="login_name" 			 column="login_name" 				javaType="String"/>
+		
 	</resultMap>
  	
 			
 	<select id="myAlarmList" parameterType="String" resultMap="alarmMap" >		
 		
-		select nvl(fk_seq_tbl_board,0) as fk_seq_tbl_board , 
-		       nvl(fk_follow_seq,0) as fk_follow_seq,
-		       nvl(fk_seq_tbl_q,0) as fk_seq_tbl_q,
-		       nvl(fk_seq_tbl_music,0) as fk_seq_tbl_music,
-		       nvl(fk_seq_tbl_msg,0) as fk_seq_tbl_msg,
-		       fk_login_id,alarm_userid,
-		       alarm_type,
-		       alarm_status,
-		       to_char(alarm_time,'yyyy-mm-dd hh24:mi:ss')as alarm_time
-		from tbl_alarm
-		where alarm_userid = #{userid}
+		
+
+	select   L.login_name, nvl(U.uimg_profile_filename,'profile0.png')as uimg_profile_filename,
+          	 nvl(A.fk_seq_tbl_board,0) as fk_seq_tbl_board , 
+		       nvl(A.fk_follow_seq,0) as fk_follow_seq,
+		       nvl(A.fk_seq_tbl_q,0) as fk_seq_tbl_q,
+		       nvl(A.fk_seq_tbl_music,0) as fk_seq_tbl_music,
+		       nvl(A.fk_seq_tbl_msg,0) as fk_seq_tbl_msg,
+		       A.fk_login_id,A.alarm_userid,
+		       nvl(A.fk_rere_id,'none') as fk_rere_id,
+		       A.alarm_type,
+		       A.alarm_status,
+		       to_char(A.alarm_time,'yyyy-mm-dd hh24:mi:ss')as alarm_time
+	
+     from tbl_alarm A  join tbl_login L 
+    	on A.fk_login_id = L.login_id
+    	left join tbl_uimage U 
+   	 	on A.fk_login_id = U.fk_login_id
+   		where A.alarm_userid =#{userid} and L.login_status = 1
 		order by alarm_time desc
+		
 		
 	</select>
 

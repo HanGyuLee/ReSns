@@ -333,18 +333,21 @@ public class HglController {
 		String username = service.getUsername(userid); // 페이지주인 이름
 		
 		int n=0;
-		if((LoginVO)session.getAttribute("loginUser")!=null){
+		if(session.getAttribute("loginUser")!=null){
+		
 		String loginId = null; // 나
 		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");		
 		loginId = loginUser.getLogin_id();	
 		List<String> loginUserFollowingName  = service.getFollowingName(loginId);
 			
 		
-	HashMap<String,String> blockmap = new HashMap<String,String>();
-		n = JsrService.followblock(blockmap);
-		blockmap.put("fk_login_id",userid);
-		blockmap.put("login_id",loginId);
-		req.setAttribute("loginUserFollowingName", loginUserFollowingName);
+		HashMap<String,String> blockmap = new HashMap<String,String>();
+			
+			blockmap.put("fk_login_id",userid);
+			blockmap.put("login_id",loginId);
+			
+			n = JsrService.followblock(blockmap);
+			req.setAttribute("loginUserFollowingName", loginUserFollowingName);
 		
 			
 		}
@@ -391,6 +394,7 @@ public class HglController {
 		req.setAttribute("myFollowerCnt", myFollowerCnt);
 		req.setAttribute("myFollowingCnt", myFollowingCnt);		
 		req.setAttribute("myBoardCnt", myBoardCnt);
+		
 		if(n<1){
 			req.setAttribute("myBoardList", myBoardList);
 			req.setAttribute("myFollowerList", myFollowerList);
@@ -417,7 +421,7 @@ public class HglController {
 		
 		userid = loginUser.getLogin_id();			
 		
-		System.out.println(userid + "유저넘어옴");
+	//	System.out.println(userid + "유저넘어옴");
 		List<HashMap<String, Object>> myAlarmList = service.getMyAlarmList(userid);
 		
 		String theSeq= "";
@@ -456,39 +460,74 @@ public class HglController {
 				String url = "";
 				switch(alarm_type){
 				case "1": 
-					alarm_type =" 내 게시물 하트";
+					alarm_type =" 게시물을 좋아합니다";
 					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
 					break;
 				case "2": 
-					alarm_type =" 내 게시물 댓글";
+					alarm_type =" 게시물에 댓글을 남겼습니다 ";
 					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
 					break;
 				case "3": 
-					alarm_type =" 내 댓글에 대댓글 ";
-					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
+					alarm_type =" 내 댓글에 대댓글을 남겼습니다";
+					url = "/resns/mypage.re?fk_login_id="+alarm.get("fk_rere_id")+"&fk_seq_tbl_board="+theSeq;
 					break;
 				case "4": 
-					alarm_type =" 나를 팔로우";
+					alarm_type =" 나를 팔로우합니다";
 					url = "/resns/otherspage.re?fk_login_id="+alarm.get("fk_login_id");
 					break;
 				case "5": 
-					alarm_type =" 내 문답게시판에 질문 ";
-					url = "/resns/questionList.re?fk_login_id="+userid;
+					alarm_type =" 문답게시판에 질문을 남겼습니다";
+					url = "/resns/questionList.re?fk_login_id="+theSeq;
 					break;
 				case "6": 
-					alarm_type =" 내가 남긴 질문에 답변";
-					url = "/resns/questionList.re?fk_login_id="+userid;
+					alarm_type =" 내가 남긴 질문에 답변을 남겼습니다";
+					url = "/resns/questionList.re?fk_login_id="+theSeq;
 					break;
 				case "7": 
-					alarm_type =" 내 동영상에 댓글";
-					url = "/resns/music.re?fk_login_id="+userid;
+					alarm_type =" 동영상에 댓글을 남겼습니다";
+					url = "/resns/music.re?fk_login_id="+theSeq;
 					break;
 				case "8": 
-					alarm_type =" 나에게 메세지";
-					url = "/resns/msgDetail.re?seq_tbl_msg="+userid;
+					alarm_type =" 나에게 메세지를 보냈습니다";
+					url = "/resns/msgDetail.re?seq_tbl_msg="+theSeq;
 					break;
 				
 				}
+			/*	switch(alarm_type){
+				case "1": 
+					alarm_type =" <span style='color:red;'>게시물을 좋아합니다";
+					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
+					break;
+				case "2": 
+					alarm_type =" <span style='color:darkblue;'>게시물에 댓글을 남겼습니다 ";
+					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
+					break;
+				case "3": 
+					alarm_type =" <span style='color:darkgrey;'>내 댓글에 대댓글을 남겼습니다";
+					url = "/resns/mypage.re?fk_login_id="+alarm.get("fk_rere_id")+"&fk_seq_tbl_board="+theSeq;
+					break;
+				case "4": 
+					alarm_type =" <span style='skyblue;'>나를 팔로우합니다";
+					url = "/resns/otherspage.re?fk_login_id="+alarm.get("fk_login_id");
+					break;
+				case "5": 
+					alarm_type =" <span style='color:orange;'>문답게시판에 질문을 남겼습니다";
+					url = "/resns/questionList.re?fk_login_id="+theSeq;
+					break;
+				case "6": 
+					alarm_type =" <span style='color:red;'>내가 남긴 질문에 답변을 남겼습니다";
+					url = "/resns/questionList.re?fk_login_id="+theSeq;
+					break;
+				case "7": 
+					alarm_type =" <span style='color:blue;'>동영상에 댓글을 남겼습니다";
+					url = "/resns/music.re?fk_login_id="+theSeq;
+					break;
+				case "8": 
+					alarm_type =" <span style='color:green;'>나에게 메세지를 보냈습니다";
+					url = "/resns/msgDetail.re?seq_tbl_msg="+theSeq;
+					break;
+				
+				}*/
 				
 				jsonObj.put("theSeq",theSeq);
 				jsonObj.put("url",url);
@@ -497,7 +536,9 @@ public class HglController {
 				jsonObj.put("alarm_userid",alarm.get("alarm_userid"));
 				jsonObj.put("alarm_time",alarm.get("alarm_time"));
 				jsonObj.put("alarm_status",alarm.get("alarm_status"));
-				
+				jsonObj.put("login_name",alarm.get("login_name"));
+				jsonObj.put("imgsrc",alarm.get("uimg_profile_filename"));
+				jsonObj.put("fk_rere_id",alarm.get("fk_rere_id"));
 				
 				
 				
