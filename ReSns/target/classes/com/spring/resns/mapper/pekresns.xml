@@ -398,8 +398,8 @@
 	
 	<!-- 대댓글 알림 -->
 	<insert id="insertAlertReRe" parameterType="HashMap">
-		insert into tbl_alarm(seq_tbl_alarm, fk_seq_tbl_board, fk_login_id, alarm_userid, alarm_type, alarm_status, alarm_time)
-			values(seq_tbl_alarm.nextval, #{seq_tbl_board}, #{login_id}, #{re_id}, 3, default, default)
+		insert into tbl_alarm(seq_tbl_alarm, fk_seq_tbl_board, fk_login_id, alarm_userid, alarm_type, alarm_status, alarm_time, fk_rere_id)
+			values(seq_tbl_alarm.nextval, #{seq_tbl_board}, #{login_id}, #{re_id}, 3, default, default, #{fk_login_id})
 	</insert>
 	
 </mapper>

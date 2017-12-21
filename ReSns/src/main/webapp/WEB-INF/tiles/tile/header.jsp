@@ -147,6 +147,292 @@
 
 <script type="text/javascript">
 
+
+$(document).ready(function(){
+	
+	
+	//SEARCHNAME
+	$("#displayList").hide();
+
+	$("#search").keyup(function() {
+		
+		var form_data = { "search"  : $("#search").val() };
+		 
+		$.ajax({
+			url: "/resns/searchJsonName.re",
+			type: "GET",
+			data: form_data, 
+			dataType: "JSON", 
+			success: function(data) {
+				
+				
+				if(data.length > 0) { // 검색된 데이터가 있는 경우라면
+					
+					
+					
+					var resultHTML = "";
+				
+					$.each(data, function(entryIndex, entry){
+						var jsonName = entry.jresult[entryIndex].loginName;
+						var sname = entry.sname;
+						var jnameCnt = entry.jnameCnt
+						
+						
+						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -300px;'>별명검색</span> "+"<span style='cursor:pointer;'><a href='searchEndName.re?search="+sname+"'>"+"&nbsp;&nbsp;"+sname +"</a>"+jnameCnt+"</span><br/>"; 
+						
+					});
+					
+					$("#displayList").html(resultHTML);
+					$("#displayList").show();
+				}
+				else {
+					// 검색된 데이터가 존재하지 않는 경우라면
+					$("#displayList").hide();
+					
+				} // end of if ~ else ----------------
+				
+			}, // end of success: function()----------
+			
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+		
+	}); // end of keyup(function(){})-----------------
+	
+	$("#displayList").click(function(event){
+		alert("Test");
+		var jName = "";
+		var $target = $(event.target);
+
+		if($target.is(".first")) {
+			jName = $target.text() + $target.next().text() + $target.next().next().text();
+			
+		}
+		else if($target.is(".second")) {
+			jName = $target.prev().text() + $target.text() + $target.next().text();
+			
+		}
+		else if($target.is(".third")) {
+			jName = $target.prev().prev().text() + $target.prev().text() + $target.text();	
+		}
+		
+		$("#search").val(jName); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+		$("#displayList").hide();
+	});
+	
+	// SEARCHTAG
+	$("#displayListTag").hide();
+
+	$("#search").keyup(function() {
+		
+		var form_data = { "search"  : $("#search").val() };
+		 
+		$.ajax({
+			url: "/resns/searchJsonTag.re",
+			type: "GET",
+			data: form_data, 
+			dataType: "JSON", 
+			success: function(data) {
+				
+				
+				if(data.length > 0) { // 검색된 데이터가 있는 경우라면
+					
+					
+					
+					var resultHTML = "";
+				
+					$.each(data, function(entryIndex, entry){
+						var jtag = entry.jTagList;
+						var stag = entry.stag;
+						var jtagCnt = entry.jtagCnt
+						
+						
+						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -50px;'>#</span>"+"<span style='cursor:pointer;'><a href='searchEndTag.re?search="+stag+"'>"+"&nbsp;&nbsp;"+stag+"</a>"+"&nbsp;&nbsp;"+jtagCnt+"</span><br/>"; 
+						
+					});
+					
+					$("#displayListTag").html(resultHTML);
+					$("#displayListTag").show();
+				}
+				else {
+					// 검색된 데이터가 존재하지 않는 경우라면
+					$("#displayListTag").hide();
+					
+				} // end of if ~ else ----------------
+				
+			}, // end of success: function()----------
+			
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+		
+	}); // end of keyup(function(){})-----------------
+	
+
+	$("#displayListTag").click(function(event){
+		var jTagList = "";
+		var $target = $(event.target);
+		
+		if($target.is(".first")) {
+			jTagList = $target.text() + $target.next().text() + $target.next().next().text();
+		}
+		else if($target.is(".second")) {
+			jTagList = $target.prev().text() + $target.text() + $target.next().text();
+		}
+		else if($target.is(".third")) {
+			jTagList = $target.prev().prev().text() + $target.prev().text() + $target.text();
+		}
+		
+		$("#search").val(jTagList); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+		$("#displayListTag").hide();
+	});
+
+	
+	// SEARCHMAP
+	$("#displayListMap").hide();
+
+	$("#search").keyup(function() {
+		
+		var form_data = { "search"  : $("#search").val() };
+		 
+		$.ajax({
+			url: "/resns/searchJsonMap.re",
+			type: "GET",
+			data: form_data, 
+			dataType: "JSON", 
+			success: function(data) {
+				
+				
+				if(data.length > 0) { // 검색된 데이터가 있는 경우라면
+					
+					
+					
+					var resultHTML = "";
+				
+					$.each(data, function(entryIndex, entry){
+						var jmaplist = entry.jMapList[entryIndex].mapName;
+						var smap = entry.smap;
+						var jMapCnt = entry.jMapCnt
+						
+						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -120px;'>지도검색</span>"+"<span style='cursor:pointer;'><a href='searchEndMap.re?search="+smap+"'>"+"&nbsp;&nbsp;"+smap+"&nbsp;&nbsp;"+"</a>"+"&nbsp;&nbsp;"+jMapCnt+"</span><br/>"; 
+					
+					});
+					
+					$("#displayListMap").html(resultHTML);
+					$("#displayListMap").show();
+				}
+				else {
+					// 검색된 데이터가 존재하지 않는 경우라면
+					$("#displayListMap").hide();
+					
+				} // end of if ~ else ----------------
+				
+			}, // end of success: function()----------
+			
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+		
+	}); // end of keyup(function(){})-----------------
+	
+
+	$("#displayListMap").click(function(event){
+		var jmap = "";
+		var $target = $(event.target);
+		
+		if($target.is(".first")) {
+			jmap = $target.text() + $target.next().text() + $target.next().next().text();
+		}
+		else if($target.is(".second")) {
+			jmap = $target.prev().text() + $target.text() + $target.next().text();
+		}
+		else if($target.is(".third")) {
+			jmap = $target.prev().prev().text() + $target.prev().text() + $target.text();
+		}
+		
+		$("#search").val(jmap); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+		$("#displayListMap").hide();
+	});
+	
+	
+	////////////////////////////////////////////////////////////////////////////
+	// SEARCH ALL NAMEs (WHEN YOU SELECT ONE PERSON ON LIST!)
+	$("#displayListAllName").hide();
+
+	$("#search").keyup(function() {
+		
+		var form_data = { "search"  : $("#search").val() };
+		 
+		$.ajax({
+			url: "/resns/searchJsonNameOne.re",
+			type: "GET",
+			data: form_data, 
+			dataType: "JSON", 
+			success: function(data) {
+				
+				
+				if(data.length > 0) { // 검색된 데이터가 있는 경우라면
+					
+					
+					
+					var resultHTML = "";
+				
+					$.each(data, function(entryIndex, entry){
+						var jnone = entry.jnone;
+						
+						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -120px;'>별명검색</span>"+"<span style='cursor:pointer;'><a href='searchEndNameOne.re?search="+jnone+"'>"+jnone+"</a>"+"</span><br/>"; 
+					
+					});
+					
+					$("#displayListAllName").html(resultHTML);
+					$("#displayListAllName").show();
+				}
+				else {
+					// 검색된 데이터가 존재하지 않는 경우라면
+					$("#displayListAllName").hide();
+					
+				} // end of if ~ else ----------------
+				
+			}, // end of success: function()----------
+			
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); // end of $.ajax()------------------------
+		
+	}); // end of keyup(function(){})-----------------
+	
+
+	$("#displayListAllName").click(function(event){
+		var jmap = "";
+		var $target = $(event.target);
+		
+		if($target.is(".first")) {
+			jmap = $target.text() + $target.next().text() + $target.next().next().text();
+		}
+		else if($target.is(".second")) {
+			jmap = $target.prev().text() + $target.text() + $target.next().text();
+		}
+		else if($target.is(".third")) {
+			jmap = $target.prev().prev().text() + $target.prev().text() + $target.text();
+		}
+		
+		$("#search").val(jmap); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+		$("#displayListAllName").hide();
+	});
+	
+	
+
+
+});//document
+
+
+
+
+
 //toggle class scroll 
 $(window).scroll(function() {
     if($(this).scrollTop() > 50)
@@ -293,7 +579,17 @@ function goAlarm(userid){
         </div>
         <ul class="nav navbar-nav flex-item">
           <li><a><img src="<%=request.getContextPath()%>/resources/images/search.png" class="menuicon" />
-          	<input type="text" name="text" style="background-color:transparent; border: 0px;"></a></li>
+          	<input name="search" id="search" style="background-color:transparent; border: 0px;"></a></li>
+          	 <div style="padding-top: 49px ">
+		         <div id="displayList" style="width:312px; margin-left:70px; border-top: 0px; border: solid gray 0px;">
+				</div>
+				<div id="displayListTag" style="width:312px; margin-left:57px; border-top: 0px; border: solid gray 0px;">
+				</div>
+				<div id="displayListMap" style="width:312px; margin-left:-100px; border-top: 0px; border: solid gray 0px;">
+				</div>
+				<div id="displayListAllName" style="width:312px; margin-left:-100px; border-top: 0px; border: solid gray 0px;">
+				</div>
+		      </div>
         </ul>
         
         <c:if test="${sessionScope.loginUser == null}">

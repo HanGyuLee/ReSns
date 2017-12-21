@@ -18,7 +18,7 @@
   <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
  
  <style type="text/css" >
- 	#myheader		{ height:120px; background-color:black; }
+ 	#myheader		{ height:120px; background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png"); }
  	#mycontainer	{ margin:0 auto; }
 	#mycontent		{ float:left; width:75%; min-height:800px; padding-top: 40px;}
 	#mysideinfo		{ float:left; width:25%; }

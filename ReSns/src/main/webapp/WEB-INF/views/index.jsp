@@ -431,7 +431,7 @@ function showDetail(statuscount) {
 								result +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px; cursor: pointer;' align='right' />";
 							}
 							
-							result += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
+							result += "<a href='/resns/reportingUser.re?re_id="+re_id+"'>";
 							result += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' /><br/>";
 							result += "</a>";
 							result += "<div style='margin-left: 20px;'>"+re_content+"</div>";
@@ -702,7 +702,7 @@ function writeRe(statuscount) {
 
 function writeReRe(entryIndex, statuscount, re_groupno, re_seq, re_id) {
 	
-	alert(re_id);
+	//alert(re_id);
 	
 	var rereValue = $("#reReValue"+entryIndex).val();
 	

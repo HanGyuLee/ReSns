@@ -419,8 +419,8 @@ public class PekController {
 		String fk_login_id = req.getParameter("fk_login_id");
 		String re_id = req.getParameter("re_id");
 		
-		System.out.println("====================================");
-		System.out.println(re_id);
+		/*System.out.println("====================================");
+		System.out.println(re_id);*/
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
