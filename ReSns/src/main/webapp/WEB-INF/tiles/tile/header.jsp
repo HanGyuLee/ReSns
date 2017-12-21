@@ -64,7 +64,7 @@
 .navbar-doublerow .navbar-down ul>li>a:hover{
 	border-bottom: 1px solid #fff;
 	color: #fff;
-}
+}/* 
 .navbar-doublerow .navbar-down .dropdown{
     padding: 5px;
     color: #000;
@@ -73,7 +73,7 @@
 .navbar-doublerow .navbar-down .dropdown ul>li>a:hover{
   color: #000;
   border-bottom: none;
-}
+} */
 .navbar-doublerow.navbar-trans.afterscroll {
 }	
 .navbar-doublerow.navbar-trans.afterscroll {
@@ -100,6 +100,49 @@
 }
 
 
+
+
+.nav>li>a:hover, .nav>li>a:focus, .nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
+    background: transparent;
+}
+.dropdown {
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius:4px;
+    width:300px ;    
+}
+.dropdown-menu>li>a {
+    color:#428bca;
+}
+.dropdown ul.dropdown-menu {
+    border-radius:4px;
+    box-shadow:none;
+    margin-top:20px;
+    width:300px ;
+}
+.dropdown ul.dropdown-menu:before {
+    content: "";
+    border-bottom: 10px solid #fff;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    z-index: 10;
+}
+.dropdown ul.dropdown-menu:after {
+    content: "";
+    border-bottom: 12px solid #ccc;
+    border-right: 12px solid transparent;
+    border-left: 12px solid transparent;
+    position: absolute;
+    top: -12px;
+    right: 14px;
+    z-index: 9;
+}
+
+
+
 </style>
 
 <script type="text/javascript">
@@ -122,6 +165,54 @@ function show() {
 }
 
 
+function goAlarm(userid){
+	   
+    var form_data = {"userid" : userid};
+    
+  $.ajax({
+        
+        url: "/resns/myalarm.re",
+        type: "GET",
+        data: form_data,  
+        dataType: "JSON", 
+        success: function(data) {
+        
+           if (data.length != null) {
+
+              var result = "";
+              
+              $.each(data, function(entryIndex, entry){
+                 
+                 
+                 var fk_login_id = entry.fk_login_id;
+                 var alarm_type = entry.alarm_type;
+                 var alarm_time = entry.alarm_time;
+                 var url = entry.url;
+                 
+                 
+                 
+                 result += "<li><a href='"+url+"' style='text-decoration:none;'>";
+                 result += "<span style='font-weight: bold;'>"+fk_login_id+" 님이 "+alarm_type+"</span><br/>";
+                 result += alarm_time +"</a> </li><li class='divider'></li>";
+
+                 
+              });
+           }
+              
+           $("#alarm").html(result);
+           $("#alarm").show();   
+           
+        }, error: function() {
+           
+        }
+        
+     });
+ 
+    
+ }
+
+
+
 </script>
 
 <nav class="navbar navbar-default navbar-doublerow navbar-trans navbar-fixed-top">
@@ -133,13 +224,38 @@ function show() {
    <c:if test="${sessionScope.loginUser != null}">
    
 	    <div class="header container">
-	      <!-- left nav top -->
+	    
+	     <ul class="nav  navbar-nav pull-left">
+        <li>
+          <a href="#" onClick="goAlarm('${sessionScope.loginUser.login_id}')" class="dropdown-toggle" data-toggle="dropdown">
+          <img src="<%=request.getContextPath()%>/resources/images/alarm_white.png" class="menuicon">
+          </a>
+          
+          <ul class="dropdown-menu dropdown">
+          <li id="alarm">
+          
+          
+          </li>
+          
+          </ul>
+        </li>
+         <li><a href="#"><span class="text-white">${sessionScope.loginUser.login_name} 님 환영합니다.</span></a></li>
+      </ul>
+	   
+	    
+	      <%-- <!-- left nav top -->
 	      <ul class="nav navbar-nav pull-left">
-	        <!-- <li><a href="#"><span class="glyphicon glyphicon-thumbs-up text-white"></span></a></li>
-	        <li><a href="#"><span class="glyphicon glyphicon-globe text-white"></span></a></li> -->
-	        <li><a href="#"><img src="<%=request.getContextPath()%>/resources/images/alarm_white.png" class="menuicon"></a></li>
+	       <ul class="nav  navbar-nav">
+        <li class="dropdown">
+	        <li><a href="#" onClick="goAlarm('${sessionScope.loginUser.login_id}')" class="dropdown-toggle" data-toggle="dropdown"><img src="<%=request.getContextPath()%>/resources/images/alarm_white.png" class="menuicon"></a></li>
+	       <ul class="dropdown-menu">
+          <li id="alarm">
+          </li>
+          </ul>
+        </li>
+      </ul>
 	        <li><a href="#"><span class="text-white">${sessionScope.loginUser.login_name} 님 환영합니다.</span></a></li>
-	      </ul>
+	      </ul> --%>
 	      <!-- right nav top -->
 	      <!-- <ul class="nav navbar-nav pull-right">
 	        <li><a href="#" class="text-white">About Us</a></li>

@@ -65,9 +65,10 @@
 	<resultMap type="java.util.HashMap" id="showUserMap">
 		<result property="LOGIN_NAME" 	column="login_name" 	javaType="String" />
 		<result property="UIMG_PROFILE_FILENAME" 	column="uimg_profile_filename" 	javaType="String" />
+		<result property="LOGIN_ID" 	column="login_id" 	javaType="String" />
 	</resultMap>
 	<select id="showUser" parameterType="String" resultMap="showUserMap">
-		select L.login_name, U.uimg_profile_filename
+		select L.login_name, U.uimg_profile_filename, L.login_id
 				from tbl_login L join tbl_uimage U 
 				on L.login_id = U.fk_login_id
 		where L.login_id = #{fk_login_id}

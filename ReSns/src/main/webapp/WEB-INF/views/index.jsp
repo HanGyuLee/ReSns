@@ -269,8 +269,27 @@ function showDetail(statuscount) {
 				
 				var login_name = data.login_name;
 				var uimg_profile_filename = data.uimg_profile_filename;
+				var login_id = data.login_id;
 				
-				var result = "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 30px; height: 30px;'>&nbsp;&nbsp;"+login_name;
+				var result = "";
+				
+					result += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 30px; height: 30px;'>&nbsp;";
+					
+					if ('${sessionScope.loginUser.login_id}' == login_id){
+						
+						result += "&nbsp;<span style='font-weight: bold; cursor: pointer; font-size: 9pt;'>";
+						result += "<a href='/resns/mypage.re?fk_login_id="+login_id+"'>"+login_name+"</a>";
+						result += "</span>";
+						
+						}
+						
+						if ('${sessionScope.loginUser.login_id}' != login_id){
+							
+						result += "&nbsp;<span style='font-weight: bold; cursor: pointer; font-size: 9pt;'>";
+						result += "<a href='/resns/otherspage.re?fk_login_id="+login_id+"'>"+login_name+"</a>";
+						result += "</span>";
+						
+						}
 				
 				$("#showUser"+statuscount).html (result);
 				
@@ -363,7 +382,7 @@ function showDetail(statuscount) {
 							result += "<img src='resources/images/reoption.png' align='right' style='width: 15px; height: 15px; cursor: pointer;' onclick='runEffect("+entryIndex+")' /><br/>";
 							result += "<div style='display: none; background-color: #FAFAFA;' id='reReply"+entryIndex+"'>";
 							result += "<br/><input style='width: 190px; height: 25px;' class='form-control input-md' type='text' id='reReValue"+entryIndex+"' />";
-							result += "<button class='btn btn-default' onclick='writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+","+re_id+");'>입력</button>";
+							result += "<button class='btn btn-default' onclick=\"writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+",'"+re_id+"');\">입력</button>";
 							result += "</div>";
 							result += re_content;
 						}
@@ -683,6 +702,8 @@ function writeRe(statuscount) {
 
 function writeReRe(entryIndex, statuscount, re_groupno, re_seq, re_id) {
 	
+	alert(re_id);
+	
 	var rereValue = $("#reReValue"+entryIndex).val();
 	
 	if (${sessionScope.loginUser == null}) {
@@ -702,9 +723,12 @@ function writeReRe(entryIndex, statuscount, re_groupno, re_seq, re_id) {
 	
 
 	var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
-				"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue, "re_id" : re_id,
-				"fk_login_id" : $("#fk_login_id"+statuscount).val()
-				};
+					"re_groupno" : re_groupno, 
+					"re_seq" : re_seq, 
+					"re_content" : rereValue, 
+					"re_id" : re_id,
+					"fk_login_id" : $("#fk_login_id"+statuscount).val()
+					};
 	  
 	  $.ajax({
 		  
@@ -865,14 +889,6 @@ function modalClose(statuscount) {
 												src="<%=request.getContextPath()%>/resources/images/user_location_black.png"
 												style="width: 16px; height: 16px;" /> <span
 												id="showLoc${status.count}"></span>
-											
-										<c:if test="${loginUser.login_id == map.FK_LOGIN_ID}">
-											<a href="/resns/deleteBoard.re?seq_tbl_board=${map.SEQ_TBL_BOARD}">
-											<img
-												src="<%=request.getContextPath()%>/resources/images/delete.png"
-												style="width: 18px; height: 18px;" align="right" />
-											</a>	
-										</c:if>
 										<%-- <c:if test="${loginUser.login_id != null}"> --%>
 												
 											<img
@@ -889,6 +905,13 @@ function modalClose(statuscount) {
 										</div>
 										<div id="heartCnt${status.count}" align="right" style="font-weight: bold; margin-left: 2px; float: left; font-size: 8pt;"></div>
 										<div style="float: left; margin-left: 6px;">
+										<c:if test="${loginUser.login_id == map.FK_LOGIN_ID}">
+											<a href="/resns/deleteBoard.re?seq_tbl_board=${map.SEQ_TBL_BOARD}">
+											<img
+												src="<%=request.getContextPath()%>/resources/images/delete.png"
+												style="width: 18px; height: 18px;" align="right" />
+											</a>	
+										</c:if>
 										<a href="/resns/reportingBoard.re?fk_login_id=${map.FK_LOGIN_ID}&seq_tbl_board=${map.SEQ_TBL_BOARD}">
 												<img
 													src="<%=request.getContextPath()%>/resources/images/report.png"

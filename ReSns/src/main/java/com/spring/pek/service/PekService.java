@@ -48,6 +48,7 @@ public class PekService implements InterPekService {
 			
 			jsonObj.put("login_name", userHashMap.get("LOGIN_NAME"));
 			jsonObj.put("uimg_profile_filename", userHashMap.get("UIMG_PROFILE_FILENAME"));
+			jsonObj.put("login_id", userHashMap.get("LOGIN_ID"));
 			
 		}
 		
