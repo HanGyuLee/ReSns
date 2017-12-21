@@ -31,14 +31,16 @@ where substr(tag_content,2) = #{search}
 <resultMap type="HashMap" id="searchMap"></resultMap>
 <select id="searchMap" parameterType="HashMap" resultMap="searchMap">
 select A.login_id, A.login_name, c.board_content, c.seq_tbl_board, D.map_we, D.map_ky, D.map_name, E.bimg_filename
-from tbl_login A left join tbl_user B
+from tbl_login A  join tbl_user B
 on A.login_id = B.fk_login_id 
-join tbl_board C
+left join tbl_board C
 on A.login_id = C.fk_login_id
-join tbl_map D
+left join tbl_map D
 on C.seq_tbl_board = D.fk_seq_tbl_board
-join tbl_bimage E
+left join tbl_bimage E
 on D.fk_seq_tbl_board = E.seq_tbl_board
+left join tbl_map M
+on E.seq_tbl_board = M.fk_seq_tbl_board
 where lower(D.map_name) like '%'||lower(#{search})||'%'
 </select>
 
@@ -185,8 +187,25 @@ and login_status = 1
    where V.rno between ${startno}  and ${endrno}
 </select>
  -->
-
-
+<resultMap id="displaytag" type="HashMap">
+	<result property="bimg_filename"  column="V.bimg_filename" javaType="String"/>
+	<result property="tag_content"    column="V.tag_content"   javaType="String"/>
+	<result property="seq_tbl_board"  column="V.seq_tbl_board" javaType="String"/>
+</resultMap>
+<select id="displayTagmore" resultMap="displaytag">
+select  V.login_name, V.login_id, V.seq_tbl_board, V.board_content, V.tag_content, V.bimg_filename      
+from      
+(     
+  select rownum as rno , A.login_name, A.login_id, B.seq_tbl_board, B.board_content, C.tag_content, D.bimg_filename
+  from tbl_login A left join tbl_board B
+  on A.login_id = B.fk_login_id
+  left join tbl_tag C
+  on B.seq_tbl_board = C.seq_tbl_board
+  left join tbl_bimage D
+  on C.seq_tbl_board = D.seq_tbl_board
+)V
+where V.rno between #{startrno} and #{endrno}
+</select>
 
 
 
@@ -232,6 +251,7 @@ order by seq_tbl_music desc
                   ,fk_login_id
   from tbl_music
   where lower(${colname}) like '%'|| lower (#{search}) ||'%'
+   and fk_login_id = #{fk_login_id}
   order by seq_tbl_music desc
 )V
 )T
@@ -274,13 +294,15 @@ where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 <select id="getTotalCount2" parameterType="HashMap" resultType="int">
 select count(*) as CNT
 from tbl_music
-where ${colname} like '%'||#{search}||'%'
+where lower(${colname}) like '%'||lower(#{search})||'%'
+and fk_login_id = #{fk_login_id}
 </select>
 
 <!-- 검색어 없음 -->			
-<select id="getTotalCount1" resultType="int">
+<select id="getTotalCount1" parameterType="String" resultType="int">
 select count(*) as CNT
 from tbl_music
+where fk_login_id = #{fk_login_id}
 </select>
 
 <!-- MUSIC페이지 ajax 검색 -->
@@ -288,7 +310,8 @@ from tbl_music
    <if test='colname.equals("music_name")'>
     	select music_name
          from tbl_music
-         where lower(music_name) like '%'||lower(#{search})||'%'
+          where fk_login_id = #{fk_login_id} 
+         and lower(music_name) like '%'||lower(#{search})||'%'
    </if>
    <if test='colname.equals("music_content")'>   		
 		select case when length(music_content)>7 
@@ -296,7 +319,8 @@ from tbl_music
 		       else music_content
 		       end as music_content
 		from tbl_music
-		where lower(music_content) like '%'|| lower(#{search}) || '%'
+		where fk_login_id = #{fk_login_id} 
+		and lower(music_content) like '%'|| lower(#{search}) || '%'
    </if>
 </select>
 
@@ -407,6 +431,12 @@ update tbl_music set music_commentcount = music_commentcount + 1
 where seq_tbl_music = #{seq_tbl_music}
 </update>
 
+<!-- 댓글알람 -->
+<insert id="Musicalarm" parameterType="HashMap">
+insert into tbl_alarm(seq_tbl_alarm, fk_seq_tbl_music, fk_login_id , alarm_userid, alarm_type, alarm_status, alarm_time)
+values(seq_tbl_alarm.nextval, #{seq_tbl_music}, #{re_login_id} , #{fk_login_id}, 7, default, default )
+</insert> 
+
 <!-- 댓글삭제 -->
 <delete id="deletere" parameterType="com.spring.ydh.model.MCommentVO">
 delete from tbl_remusic
@@ -420,5 +450,12 @@ and re_login_id = #{re_login_id}
 update tbl_music set music_commentcount = music_commentcount - 1
 where seq_tbl_music = #{seq_tbl_music}
 </update>
+
+
+<!-- map지도보기 -->
+<select id="mapList" resultType="com.spring.pek.model.MapVO">
+select fk_seq_tbl_board, map_we, map_ky, map_name
+from tbl_map
+</select>
 
 </mapper>

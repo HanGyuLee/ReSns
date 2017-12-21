@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.pek.model.MapVO;
+import com.spring.pek.model.TagVO;
 import com.spring.ydh.model.InterMusicDAO;
 import com.spring.ydh.model.MCommentVO;
 import com.spring.ydh.model.MusicDAO;
@@ -271,8 +274,8 @@ public class MusicService implements InterMusicService {
 
 
 	@Override//검색어가 없는 경우
-	public int getTotalCount1() {
-		 int n = dao.getTotalCount1();
+	public int getTotalCount1(String fk_login_id) {
+		 int n = dao.getTotalCount1(fk_login_id);
 		return n;
 	}
 
@@ -307,25 +310,48 @@ public class MusicService implements InterMusicService {
 
 
 	//댓글TX
+	@Override
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	public int addComment(MCommentVO commentvo)throws Throwable{
-		
-		int result = 0;
-		
 		//1.insert를해준다. => 성공하면 n == 1
-		int n = 0;
-		n = dao.addComment(commentvo);
+		int n = 0;//답변작성
+		int result = 0;//update해줌
+		int alarm = 0;//알람
+		int end = 0;//댓글최종상태
 		
-		if(n==1){
+		n = dao.addComment(commentvo);//1.댓글insert
+		
+		String seq_tbl_music = commentvo.getSeq_tbl_music();
+		
 			//2.update를 해준다.
-			result = dao.updateCommentCount(commentvo.getSeq_tbl_music());//부모글(tblBoard)의 글번호	
-		}
+			result = dao.updateCommentCount(seq_tbl_music);//부모글(tblBoard)의 글번호	
+			
+			HashMap<String,String> map = new HashMap<String,String>();
+			map.put("seq_tbl_remusic", commentvo.getSeq_tbl_remusic());
+			map.put("re_ycontent", commentvo.getRe_ycontent());
+			map.put("re_login_id", commentvo.getRe_login_id());
+			map.put("seq_tbl_music", commentvo.getSeq_tbl_music());
+			map.put("fk_login_id", commentvo.getFk_login_id());
+			
+			alarm = dao.Musicalarm(map);
+			
+			if( ( n> 0 && seq_tbl_music != null && result>0 && alarm>0)
+			|| (n == 1 && seq_tbl_music != null && result == 1 && alarm == 1) )
+			{
+				end = 1;
+			}else{
+				end = 0;
+			}
+
+			
 		
-		return result;
+		
+		return end;
 	}
 
 
 	 //댓글삭제
+	@Override
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
 	public int deletere(MCommentVO commentvo)throws Throwable{
 		
@@ -352,6 +378,52 @@ public class MusicService implements InterMusicService {
 	}
 
 
+
+	@Override//지도보여주기
+	public List<MapVO> getMapLocations() {
+		List<MapVO> mapList = dao.mapList();
+		return mapList;
+	}
+
+
+
+	@Override//tag더보기
+	public List<HashMap<String,String>> displayTagmore(int startrno, int endrno, HttpServletRequest req) {
+		System.out.println("확인1");
+		String start = req.getParameter("start");
+		String len= req.getParameter("len");
+         System.out.println("확인2");
+		if(start.trim().isEmpty()){
+			start = "1";
+		}
+		if(len.trim().isEmpty()){
+			len = "1";
+		}
+		
+		 startrno = Integer.parseInt(start);					//시작행번호
+		 endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
+		
+		List<HashMap<String,String>> taglist = dao.displayTagmore(startrno,endrno);
+        
+		
+		JSONArray jasonList = new JSONArray();
+		if(taglist != null && taglist.size()>0 ){
+			
+			for(HashMap<String, String>  tvo : taglist){
+				
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("tvo", tvo);
+				
+				jasonList.put(jsonObj);
+				
+				String str_displaytagmore =jasonList.toString();
+				req.setAttribute("str_displaytagmore", str_displaytagmore);
+				
+			}//end of for
+			
+		}
+		return taglist;
+	}
 
 
 

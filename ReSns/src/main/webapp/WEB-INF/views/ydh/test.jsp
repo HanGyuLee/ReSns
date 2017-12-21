@@ -196,7 +196,7 @@ $(document).ready(function(){
 						var smap = entry.smap;
 						var jMapCnt = entry.jMapCnt
 						
-						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -120px;'>지도검색</span>"+"<span style='cursor:pointer;'><a href='searchEndMap.re?search="+jmaplist+"'>"+"&nbsp;&nbsp;"+smap+"&nbsp;&nbsp;"+"</a>"+"&nbsp;&nbsp;"+jMapCnt+"</span><br/>"; 
+						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -120px;'>지도검색</span>"+"<span style='cursor:pointer;'><a href='searchEndMap.re?search="+smap+"'>"+"&nbsp;&nbsp;"+smap+"&nbsp;&nbsp;"+"</a>"+"&nbsp;&nbsp;"+jMapCnt+"</span><br/>"; 
 					
 					});
 					

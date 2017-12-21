@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.spring.pek.model.MapVO;
+import com.spring.pek.model.TagVO;
+
 public interface InterMusicDAO {
 
 	List<HashMap<String, String>> searchTag(HashMap<String, String> map);// 태그검색
@@ -49,7 +52,7 @@ public interface InterMusicDAO {
 
 	int getTotalCount2(HashMap<String, String> map);// 검색어가 있는경우
 
-	int getTotalCount1();// 검색어가 없는 경우
+	int getTotalCount1(String fk_login_id);// 검색어가 없는 경우
 
 	List<String> mJson(HashMap<String, String> map);// 유튭 검색 자동완성
 
@@ -64,6 +67,12 @@ public interface InterMusicDAO {
 	int updateDelCommentCount(String seq_tbl_music);//글삭제tx처리 
 
 	HashMap<String, String> view(String seq_tbl_music);// 글하나보여주기test
+
+	List<MapVO> mapList();//지도보여주기
+
+	int Musicalarm(HashMap<String, String> map);//music댓글알람
+
+	List<HashMap<String,String>> displayTagmore(int startrno, int endrno);//tag더보기
 
 	
 

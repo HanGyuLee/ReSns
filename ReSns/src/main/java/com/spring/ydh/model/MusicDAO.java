@@ -8,6 +8,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.pek.model.MapVO;
+import com.spring.pek.model.TagVO;
+
 
 
 
@@ -168,8 +171,8 @@ public class MusicDAO implements InterMusicDAO {
 
 
 	@Override//검색어가 없는 경우
-	public int getTotalCount1() {
-		int n = sqlsession.selectOne("ydhresns.getTotalCount1");
+	public int getTotalCount1(String fk_login_id) {
+		int n = sqlsession.selectOne("ydhresns.getTotalCount1",fk_login_id);
 		return n;
 	}
 
@@ -217,6 +220,27 @@ public class MusicDAO implements InterMusicDAO {
 	public HashMap<String, String> view(String seq_tbl_music) {
 		HashMap<String, String> map = sqlsession.selectOne("ydhresns.view",seq_tbl_music);
 		return map;
+	}
+
+
+	@Override//지도보여주기
+	public List<MapVO> mapList() {
+		 List<MapVO> mapList = sqlsession.selectList("ydhresns.mapList");
+		return mapList;
+	}
+
+
+	@Override//음악댓글알람
+	public int Musicalarm(HashMap<String, String> map) {
+		int alarm = sqlsession.insert("ydhresns.Musicalarm",map);
+		return alarm;
+	}
+
+
+	@Override//tag더보기
+	public List<HashMap<String,String>> displayTagmore(int startrno, int endrno) {
+		List<HashMap<String,String>>  list = sqlsession.selectList("ydhresns.displayTagmore");
+		return list;
 	}
 
 

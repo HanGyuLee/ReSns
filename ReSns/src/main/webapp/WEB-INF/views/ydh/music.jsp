@@ -38,7 +38,8 @@
 		$("#search").keyup(function() {
 			
 			var form_data = { "colname" : $("#colname").val(),   // 키값 : 밸류값 
-							  "search"  : $("#search").val()     // 키값 : 밸류값
+							  "search"  : $("#search").val(),     // 키값 : 밸류값
+							  "fk_login_id" : $("#fk_login_id").val()
 							};
 			
 			$.ajax({
@@ -213,8 +214,10 @@
 		</select>
 			<input type="text" name="search" id="search" size="40px"/>
 			<button type="button" onClick="goSearch();">검색</button> 
+			<input type="hidden" name="fk_login_id" id="fk_login_id" value="${fk_login_id}" />
 			<!-- ===== Ajax로 검색어 입력시 자동글 완성하기 ===== -->
 		   <div id="displayList" style="width:312px; margin-left: 57px; border-top: 0px; border: solid gray 1px;">
+		  
 		   </div>
 	</form>
 
@@ -223,7 +226,7 @@
 <thead>
 <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
 	  <div style="margin-left:750px; margin-bottom:5px;">
-		 <button onClick="javascript:location.href='/resns/mwrite.re'">글쓰기</button>&nbsp;
+		 <button onClick="javascript:location.href='/resns/mwrite.re?fk_login_id=${fk_login_id}'">글쓰기</button>&nbsp;
 		 <button type="button" style=" margin-top:20px; margin-bottom:10px;" id="delete"> <!-- onClick="mDel(); "> -->삭제</button>&nbsp;	
 	  </div>
 	  </c:if>
@@ -264,7 +267,7 @@
 			<tr>
 			<input type="hidden" name="fk_login_id" value="${m.FK_LOGIN_ID}"/>
 			<td align="center" style="width: 70px;">${m.SEQ_TBL_MUSIC}</td>
-			<c:if test="${m.MUSIC_COMMENTCOUNT != 0}">
+	 		<c:if test="${m.MUSIC_COMMENTCOUNT != 0}">
 			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}','${m.FK_LOGIN_ID}');">${m.MUSIC_NAME}&nbsp;<span style="font-style: italic; color:red;">[${m.MUSIC_COMMENTCOUNT}]</span></span></td>
 			</c:if>
 			<c:if test="${m.MUSIC_COMMENTCOUNT == 0}">
@@ -288,7 +291,7 @@
 	<form name="seqFrm">
 		<input type="hidden" name="seq_tbl_music" />
 		<input type="hidden" name="fk_login_id" />
-		<!-- <input type="hidden" name="gobackURL" /> -->
+	<!--  <input type="hidden" name="gobackURL" />  -->
 	</form>
 	<br/>
 

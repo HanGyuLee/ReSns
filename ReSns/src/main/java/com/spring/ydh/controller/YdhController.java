@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.internal.matchers.SubstringMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -16,7 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.spring.common.FileManager;
 import com.spring.common.MyUtil;
+import com.spring.common.YdhUtil;
 import com.spring.jdh.model.LoginVO;
+import com.spring.pek.model.BoardVO;
+import com.spring.pek.model.MapVO;
+import com.spring.pek.model.TagVO;
 import com.spring.ydh.model.MCommentVO;
 import com.spring.ydh.model.MusicVO;
 import com.spring.ydh.service.InterMusicService;
@@ -28,9 +35,7 @@ public class YdhController {
 	@Autowired
 	private InterMusicService service;
 	
-	@Autowired
-	private FileManager fileManager;
-	
+
 	
 	@RequestMapping(value="/search.re", method={RequestMethod.GET})
 	public String main(HttpServletRequest req){
@@ -236,7 +241,17 @@ public class YdhController {
 	
 	/*==================================<더보기버튼>====================================*/
 	
+	@RequestMapping(value="/displaymoreJsonTag.re", method={RequestMethod.GET})
+	public String displaymoreJsonTag(int startrno, int endrno, HttpServletRequest req){
 	
+		System.out.println("displayMORETAGs");
+		List<HashMap<String,String>> boardList = service.displayTagmore(startrno, endrno,req);//tag더보기
+
+	    req.setAttribute("boardList", boardList);
+		
+		return "ydhnotiles/displaymoreJsonTag.notiles";
+		
+	}
 	/*==================================<음악LIST>====================================*/
 	@RequestMapping(value="/musicBegin.re", method={RequestMethod.GET})
 	public String requireLogin2_musicBegin(HttpServletRequest req,HttpServletResponse response,HttpSession session){
@@ -254,10 +269,9 @@ public class YdhController {
 		
 		//LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
 		String fk_login_id = req.getParameter("fk_login_id");
+		String seq_tbl_music = req.getParameter("seq_tbl_music");
 		List<String> mlist = null;
 		
-		String gobackURL = MyUtil.getCurrentURL(req);
-		req.setAttribute("gobackURL", gobackURL);
 		
 		//검색어 포함
 		String search = req.getParameter("search");
@@ -309,26 +323,44 @@ public class YdhController {
     		   (!colname.equals("null") && !search.equals("null")) 
     		   ){ 
     		      totalCount = service.getTotalCount2(map);//검색어가 있는경우
+    		      
     		   }
     		   else{ 
-    		    	totalCount = service.getTotalCount1();//검색어가 없는 경우
+    		    	totalCount = service.getTotalCount1(fk_login_id);//검색어가 없는 경우
     		    }
 		
             totalPage = (int)Math.ceil( (double)totalCount/sizePerPage );
 	    	
 	    	String pagebar = "<ul>";
 	    	
-	    	pagebar = MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "music.re");
+	    	String url = "music.re?fk_login_id="+fk_login_id;
 	    	
+	    	
+	    	pagebar = YdhUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, url);
+	  
 	    	pagebar += "<ul>";
+	    	
+	    	//String gobackURL ="music.re?fk_login_id="+fk_login_id+"currentShowPageNo="+currentShowPageNo+"blockSize"+blockSize+"sizePerPage"+sizePerPage+"totalPage"+totalPage+"colname"+colname+"search"+search;
+	    	
+	    	System.out.println("totalCount::"+totalCount);
+	    	System.out.println("sizePerPage::"+sizePerPage);
+	    	System.out.println("currentShowPageNo::"+currentShowPageNo);
+	    	System.out.println("totalPage::"+totalPage);
+	    	System.out.println("startRno::"+startRno);
+	    	System.out.println("endRno::"+endRno);
+	    	System.out.println("blockSize::"+blockSize);
+	    	
 	    	
 	    	req.setAttribute("pagebar", pagebar);
 	    	req.setAttribute("mlist", mlist);
 	    	req.setAttribute("colname", colname);//검색어 keeping위해 키값 넘김
 	    	req.setAttribute("search", search);//검색어 keeping위해 키값 넘김
 	    	req.setAttribute("fk_login_id", fk_login_id);
-	  
-		    	return "ydh/music.tiles2";
+	    	req.setAttribute("seq_tbl_music", seq_tbl_music);
+	    	//req.setAttribute("gobackURL", gobackURL);
+		    
+	    	
+	    	return "ydh/music.tiles2";
 		    
 	}//music.re
 	
@@ -338,15 +370,19 @@ public class YdhController {
 		
 		String colname = req.getParameter("colname");
 		String search = req.getParameter("search");
+		String fk_login_id = req.getParameter("fk_login_id");
+		
 		HashMap<String, String> map = new HashMap<String,String>();
 		map.put("search", search);
 		map.put("colname", colname);
+		map.put("fk_login_id", fk_login_id);
 		
 		String mJson = service.mJson(map);
 		
 		
 	
 		req.setAttribute("mJson", mJson);
+		req.setAttribute("fk_login_id", fk_login_id);
 
 		
 		return "ydhnotiles/msearchJson.notiles";
@@ -355,27 +391,39 @@ public class YdhController {
 	
 	//글쓰기폼페이지요청
 	@RequestMapping(value="/mwrite.re", method={RequestMethod.GET})
-	public String mwrite(HttpServletRequest req){
-	    
-		String fk_login_id = req.getParameter("fk_login_id");
+	public String mwrite(HttpServletRequest req, HttpSession session){
 		
-		   //댓글포함
-		 String seq_tbl_remusic = req.getParameter("seq_tbl_remusic");
-		 req.setAttribute("seq_tbl_remusic", seq_tbl_remusic);
-		req.setAttribute("fk_login_id", fk_login_id);
+		String fk_login_id = req.getParameter("fk_login_id");
 
-		  
+		
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");
+    	String userid = null;
+    	
+        	if(loginUser != null ){
+        		userid = loginUser.getLogin_id();
+        	
+        	}
+ 		   //댓글포함
+  		  String seq_tbl_remusic = req.getParameter("seq_tbl_remusic");
+  		
+  		  req.setAttribute("seq_tbl_remusic", seq_tbl_remusic);
+  		  req.setAttribute("fk_login_id", fk_login_id);
+  
+  		  
+		
+
 		return "ydh/mwrite.tiles2";
 	}//write()
 	
 	//글쓰기
 	@RequestMapping(value="/mwriteEnd.re", method={RequestMethod.POST})
 	public String mwriteEnd(HttpServletRequest req, HttpSession ses, MusicVO mvo){//나중에aop추가
-		   
+		   String seq_tbl_music = req.getParameter("seq_tbl_music");
 		   String fk_login_id = req.getParameter("fk_login_id");
 		    int n = service.mwrite(mvo);//유튭글insert
 			req.setAttribute("n", n);
 			req.setAttribute("fk_login_id", fk_login_id);
+			req.setAttribute("seq_tbl_music", seq_tbl_music);
 			return "ydh/mwriteEnd.tiles2";
 		 }
 		    
@@ -394,7 +442,7 @@ public class YdhController {
     	
     	
     	String fk_login_id = req.getParameter("fk_login_id");
-    
+   
     	//String gobackURL = req.getParameter("gobackURL");
     	if(req.getParameter("re_login_id").isEmpty() ){
               
@@ -421,7 +469,7 @@ public class YdhController {
     		
     		req.setAttribute("seq_tbl_music", seq_tbl_music);
     		req.setAttribute("fk_login_id", fk_login_id);
-    	
+   
     		//req.setAttribute("gobackURL", "mview.re");
     		
     	return "ydh/addComment.tiles2";
@@ -620,5 +668,18 @@ public class YdhController {
 		return "ydh/mdelChckbox.tiles2";
 		
 		}	
+	
+	//====================================< MAP 지도 보여주기>========================================
+	@RequestMapping(value="/mapLocation.re", method={RequestMethod.GET})
+	public String map(HttpServletRequest req){
+		
+		List<MapVO> mapList = service.getMapLocations();//지도보여주기
+		
+		req.setAttribute("mapList", mapList);
+		
+		return "ydh/mapLocation.tiles2";
+		
+	}//map
+	
 	
 }//MAIN

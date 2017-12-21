@@ -24,13 +24,24 @@ $(document).ready(function(){
 	
 
 	
-	
 });
 
 
-
+	//글자수 제한 체크 
+	function len_chk(){  
+	  var frm = document.writeFrm.music_content; 
+	    
+	  if(frm.value.length > 500){  
+	       alert("글자수는 영문500, 한글500자로 제한됩니다.!");  
+	       frm.value = frm.value.substring(0,500);  
+	       frm.focus();  
+	  } 
+	
+	} 
+	
+    //글쓰기
 	function goWrite() {
-		
+
 		var link = $("#music_link").val();
 		var content = $("#music_content").val();
 		var subject = $("#music_name").val();
@@ -38,13 +49,16 @@ $(document).ready(function(){
 			alert("내용을 입력해주세요:D");
 			
 		}else{
-		var writeFrm = document.writeFrm;
-		writeFrm.action = "<%= request.getContextPath() %>/mwriteEnd.re";
-		writeFrm.method = "POST";
-		writeFrm.submit(); 
+			var writeFrm = document.writeFrm;
+			writeFrm.action = "<%= request.getContextPath() %>/mwriteEnd.re";
+			writeFrm.method = "POST";
+			writeFrm.submit(); 
 		
 		}
 	}
+	
+	
+	
 </script>
 
 
@@ -54,6 +68,9 @@ $(document).ready(function(){
 
 <div style="margin-top:100px; padding-left: 10%; border: solid 0px red; ">
   <h2>♥MAKE YOUR OWN COLLECTION♥</h2>
+  <div style="margin-top:20px; margin-bottom:20px; ">
+      <a href="http://www.youtube.com/" target="_blank">LINK TO YOUTUBE</a>
+  </div>
   <form name="writeFrm" enctype="multipart/form-data" >
 		<table id="table">
 			<tr>
@@ -69,9 +86,8 @@ $(document).ready(function(){
 			</tr>
 			<tr>
             	<th>내용</th>
-            	<td><textarea name="music_content" id="music_content" class="long" style="height: 200px;"></textarea></td>
+            	<td><textarea   onKeyup="len_chk()" name="music_content" id="music_content" class="long" style="height: 200px; "></textarea></td>
          	</tr>
-         	<input type="hidden" name="seq_tbl_music" value="${seq_tbl_music}"/>
          	<!-- 유튭링크 -->
          	<tr>
          		<th>youtube-URL</th>

@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import com.spring.pek.model.MapVO;
+import com.spring.pek.model.TagVO;
 import com.spring.ydh.model.MCommentVO;
 import com.spring.ydh.model.MusicDAO;
 import com.spring.ydh.model.MusicVO;
@@ -50,7 +53,7 @@ public interface InterMusicService {
 
 	int getTotalCount2(HashMap<String, String> map);//검색어가 있는경우
 
-	int getTotalCount1();//검색어가 없는 경우
+	int getTotalCount1(String fk_login_id);//검색어가 없는 경우
 
 	String mJson(HashMap<String, String> map);//유튭 검색 자동완성
 
@@ -61,6 +64,10 @@ public interface InterMusicService {
 	int deletere(MCommentVO commentvo) throws Throwable;//댓글삭제
 
 	HashMap<String, String> view(String seq_tbl_music, String userid);//글하나보여주기test
+
+	List<MapVO> getMapLocations();//지도보여주기
+
+	List<HashMap<String, String>> displayTagmore(int startrno, int endrno,HttpServletRequest req);//tag더보기
 
 	
 
