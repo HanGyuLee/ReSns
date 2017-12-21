@@ -87,7 +87,7 @@ $(function(){
 	var retval = []	
 	$(".heart").each(function(){
 	 var heartse = retval.push($(this).attr('id'));
-	alert(heartse);
+	
 	 if (heartse != null){
 		 
 			$("#hearted"+heartse).hide();
@@ -848,7 +848,7 @@ function goVeiwContent(statuscount){
  */
  
  
- 
+ /* 
 
  function goAlarm(userid){
    
@@ -896,7 +896,7 @@ function goVeiwContent(statuscount){
      
   }
 
- 
+  */
 
 </script>
 
@@ -1043,7 +1043,7 @@ function goVeiwContent(statuscount){
 	
 		
 	</form>
-    
+    <%-- 
          <ul class="nav  navbar-nav">
         <li class="dropdown">
           <a href="#" onClick="goAlarm('${sessionScope.loginUser.login_id}')" class="dropdown-toggle" data-toggle="dropdown">나의 알림 <span class="glyphicon glyphicon-user pull-right"></span></a>
@@ -1055,7 +1055,7 @@ function goVeiwContent(statuscount){
           </li>
           </ul>
         </li>
-      </ul>
+      </ul> --%>
     
     
     <div class="container gal-container" style="border:1px solid transparent;margin-top:300px;">
@@ -1388,6 +1388,8 @@ ${pagebar}
                
         <div class="modal-body" style="padding:10px;padding-top:30px;">
             <div class="container" style="margin-top:100px;">
+
+
 
     <div class="row">
         <div class="col-xs-12 col-sm-offset-3 col-sm-4">

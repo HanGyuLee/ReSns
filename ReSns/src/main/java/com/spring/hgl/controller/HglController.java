@@ -477,15 +477,15 @@ public class HglController {
 					break;
 				case "5": 
 					alarm_type =" 문답게시판에 질문을 남겼습니다";
-					url = "/resns/questionList.re?fk_login_id="+theSeq;
+					url = "/resns/questionList.re?fk_login_id="+userid;
 					break;
 				case "6": 
 					alarm_type =" 내가 남긴 질문에 답변을 남겼습니다";
-					url = "/resns/questionList.re?fk_login_id="+theSeq;
+					url = "/resns/questionList.re?fk_login_id="+userid;
 					break;
 				case "7": 
 					alarm_type =" 동영상에 댓글을 남겼습니다";
-					url = "/resns/music.re?fk_login_id="+theSeq;
+					url = "/resns/music.re?fk_login_id="+userid;
 					break;
 				case "8": 
 					alarm_type =" 나에게 메세지를 보냈습니다";
@@ -493,6 +493,7 @@ public class HglController {
 					break;
 				
 				}
+				
 			/*	switch(alarm_type){
 				case "1": 
 					alarm_type =" <span style='color:red;'>게시물을 좋아합니다";

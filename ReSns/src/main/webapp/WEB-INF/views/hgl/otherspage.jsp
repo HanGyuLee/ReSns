@@ -6,11 +6,18 @@
 <head>
 <meta charset="UTF-8">
 <title>Someone's PAGE</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ribeye">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-ui.js"></script> 
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ribeye">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
- <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/style/hglStyle.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/style/hglStyle.css">
 
 <style type="text/css">
 
@@ -24,7 +31,7 @@
 	height: 380px;
 	left: 0;
 	position: absolute;
-	top: 128px;
+	top: 8px;
 	background-position: 0;
 	
 }
@@ -930,11 +937,11 @@ function goVeiwContent(statuscount){
     
     <tr>
 		<td width="30px" height="50px">&nbsp;</td>
-        <%-- <td colspan ="2" width="740px" height="50px"><img width="50px" height="50px" class=" img-circle" style="margin-right: 10px;" src="<%= request.getContextPath() %>/resources/images/${vo.follow_proile_image}"/>${vo.follow_name}
+         <td colspan ="2" width="740px" height="50px">
         <input type="hidden" id="seq_tbl_board${status.count}" name="seq_tbl_board" value="${vo.seq_tbl_board}">
-        <input type="hidden" id="fk_login_id${status.count}" name="fk_login_id" value="${vo.follow_id}">
+        <input type="hidden" id="fk_login_id${status.count}" name="fk_login_id" value="${userid}">
         <input type="hidden" id="login_id${status.count}" name="login_id" value="${loginUser.login_id}">
-        </td>--%>      
+        </td>
         <td width="30px" height="50px">&nbsp;</td>
     </tr>
         <tr>
@@ -1093,19 +1100,20 @@ ${pagebar}
     </c:if>
 
 
-            </div>
+            
+                        </div>
             <div class="tab-pane" id="tab_default_3">
-              <p>
-                	준비중
-              </p>
+              <div id="music">
+              <iframe style="border-style:none; width: 100%; height: 800px;" src="music.re?fk_login_id=${userid}"></iframe>
+              
+              </div>
              
             </div>
-             <div class="tab-pane" id="tab_default_4">
-              <p>
-              	 준비중
-
-              </p>
-               
+             <div class="tab-pane" id="tab_default_4" >
+              <div id="question">
+              <iframe style="border-style:hidden; width: 100%; height: 800px;" src="questionList.re?fk_login_id=${userid}"></iframe>
+              
+              </div>
             </div>
           </div>
         </div>
