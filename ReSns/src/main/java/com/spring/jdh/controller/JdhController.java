@@ -294,7 +294,7 @@ public class JdhController {
 			String root = session.getServletContext().getRealPath("/");
 			String path = root + "resources" +File.separator+ "files";
 			
-			System.out.println("===> 확인용 path => " + path);
+			//System.out.println("===> 확인용 path => " + path);
 			
 			// 2. 파일첨부를 위한 변수의 설정 및 값을 초기화한 후 파일올리기
 				String newFileName = "";
@@ -331,7 +331,7 @@ public class JdhController {
 				
 			} else {
 				ivo.setFk_login_id(login_id);
-				System.out.println("확인 : " + login_id);
+				// System.out.println("확인 : " + login_id);
 				
 				ivo.setUimg_profile_filename("profile0.png");
 				ivo.setUimg_header_filename("header0.png");
@@ -360,17 +360,60 @@ public class JdhController {
 			return "msg.notiles";	
 		}
 		
+		//////////////////////////////////// 공지사항 ////////////////////////////////////////
+		
 		// 관리자 공지사항
 		
 		@RequestMapping(value="/noticeAdmMain.re", method={RequestMethod.GET})
 		public String adminNotice(HttpServletRequest req, HttpSession session){
 			
-			List<HashMap<String, String>> noticeList = null;
+			HashMap<String, String> map = new HashMap<String, String>();
 			
-			noticeList = service.getNoticeList();
+				String str_currentShowPageNo = req.getParameter("currentShowPageNo");
+			
+				
+				int totalCount = service.noticePage();
+				
+			
+			int sizePerPage = 5;			// 한페이지당 보여줄 게시물수
+			
+			int totalPage = (int)Math.ceil( (double)totalCount/sizePerPage );
+			
+			int currentShowPageNo = 0;		// 현재 보여주는 페이지번호로서, 초기치는 1페이지로 한다.
+			
+			int blockSize = 3;				// "페이지바"에 보여줄 페이지의 갯수
+			
+			
+			
+			if (str_currentShowPageNo == null) {
+				// 게시판의 초기화면
+				currentShowPageNo = 1;
+			}
+			else {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+			}
+			
+			
+			int startRno = ((currentShowPageNo - 1)*sizePerPage) + 1;
+			int endRno = startRno + sizePerPage - 1;
+			//System.out.println("확인용"+startRno);
+			//System.out.println("확인용"+endRno);
+			
+			// ===== #109. 페이징처리를 위해서 startRno , endRno 를 map 에 추가하여 
+			//				파라미터로 넘겨서 select 되도록 한다.
+			map.put("startRno",String.valueOf(startRno));
+			map.put("endRno", String.valueOf(endRno));
+			/////////////////////////////////////////////////////////////// 페이징
+			
+			List <NoticeVO> noticeList = null;
+			
+			noticeList = service.getNoticeList(map);
+			String pageBar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "noticeAdmMain.re");
 			
 			req.setAttribute("noticeList", noticeList);
-						
+			req.setAttribute("pageBar", pageBar);
+			
+			
 			return "jdh/admNotice.tiles";
 		}
 		
@@ -389,11 +432,85 @@ public class JdhController {
 			return "jdh/admNoticeDetail.tiles2";
 		}
 		
+		
+		// 회원용 공지사항
+		
+		@RequestMapping(value="/noticeMemMain.re", method={RequestMethod.GET})
+		public String memberNotice(HttpServletRequest req, HttpSession session){
+			
+			
+			
+			HashMap<String, String> map = new HashMap<String, String>();
+			
+			String str_currentShowPageNo = req.getParameter("currentShowPageNo");
+		
+			
+			int totalCount = service.noticePage();
+			
+		
+		int sizePerPage = 5;			// 한페이지당 보여줄 게시물수
+		
+		int totalPage = (int)Math.ceil( (double)totalCount/sizePerPage );
+		
+		int currentShowPageNo = 0;		// 현재 보여주는 페이지번호로서, 초기치는 1페이지로 한다.
+		
+		int blockSize = 3;				// "페이지바"에 보여줄 페이지의 갯수
+		
+		
+		
+		if (str_currentShowPageNo == null) {
+			// 게시판의 초기화면
+			currentShowPageNo = 1;
+		}
+		else {
+			currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+		}
+		
+		
+		int startRno = ((currentShowPageNo - 1)*sizePerPage) + 1;
+		int endRno = startRno + sizePerPage - 1;
+		//System.out.println("확인용"+startRno);
+		//System.out.println("확인용"+endRno);
+		
+		// ===== #109. 페이징처리를 위해서 startRno , endRno 를 map 에 추가하여 
+		//				파라미터로 넘겨서 select 되도록 한다.
+		map.put("startRno",String.valueOf(startRno));
+		map.put("endRno", String.valueOf(endRno));
+		
+		/////////////////////////////페이징 ///////////////////////////////////////
+			
+			List <NoticeVO> noticeList = null;
+			
+			noticeList = service.getMemNotice(map);
+			
+			String pageBar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "noticeMemMain.re");
+			
+			req.setAttribute("noticeList", noticeList);
+			req.setAttribute("pageBar", pageBar);
+						
+			return "jdh/memNotice.tiles";
+		}
+		
+		// 회원용 공지사항 디테일
+		
+		@RequestMapping(value="/MemnoticeDetail.re", method={RequestMethod.GET})
+		public String memberNotiDetail(HttpServletRequest req, HttpSession session){
+			
+			HashMap<String, String> map = new HashMap<String, String>();
+			
+			String seq = req.getParameter("seq");
+			
+			map.put("seq", seq);
+			
+			NoticeVO nvo = service.getMemNoticeDe(map);
+			
+			req.setAttribute("vo", nvo);
+			return "jdh/memNoticeDe.tiles2";
+		}
+		
 		// 공지사항 등록하기
 		@RequestMapping(value="/noticeregister.re", method={RequestMethod.GET}) 
 			public String noticeRegister(HttpServletRequest req){
-			
-			
 			
 			
 			return "jdh/noticeRegister.tiles2"; 
@@ -432,7 +549,7 @@ public class JdhController {
 		public String deleteNotice(HttpServletRequest req){	//, HttpSession session
 			
 			String seq = req.getParameter("seq");
-			// System.out.println(seq);
+			
 			/*String login_id = req.getParameter("loginid");
 			
 			LoginVO loginUser = (LoginVO) session.getAttribute("loginUser");
@@ -454,8 +571,6 @@ public class JdhController {
 				
 				return "msg.notiles2";
 			}*/
-			
-			
 			
 			int n = service.updateNoticeDelete(seq);	// 공지사항 삭제
 			
@@ -500,9 +615,206 @@ public class JdhController {
 				req.setAttribute("loc", "/resns/noticeAdmMain.re");
 			}
 			
-			return "askEnd.notiles2";
+			return "msg.notiles2";
 			
 		}
+		
+		////////////////////////////회원관리 /////////////////////////////////////////////////////
+		
+		// 회원관리 리스트 뽑기
+		
+		/*@RequestMapping(value="memberSupervise.re", method={RequestMethod.GET, RequestMethod.POST})
+		public String memberSV(HttpServletRequest req){
+			
+			
+			List<HashMap<String, String>> memList = null;
+			
+			memList = service.getMemList();
+			
+			req.setAttribute("memList", memList);
+			
+			
+			String colname = req.getParameter("colname");
+			String search = req.getParameter("search");
+			
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("colname", colname);
+			map.put("search", search);
+			
+			String str_currentShowPageNo = req.getParameter("currentShowPageNo");
+			
+			int totalCount = 0; 			// 총게시물 건수
+			int sizePerPage = 5;			// 한페이지당 보여줄 게시물수
+			int currentShowPageNo = 0;		// 현재 보여주는 페이지번호로서, 초기치는 1페이지로 한다.
+			int totalPage = 0;				// 총 페이지수(웹브라우저상에 보여줄 총 페이지수)
+			
+			int startRno = 0;				// 시작 행 번호
+			int endRno = 0;					// 끝 행 번호
+			
+			int blockSize = 10;				// "페이지바"에 보여줄 페이지의 갯수
+			
+			if (str_currentShowPageNo == null) {
+				// 게시판의 초기화면
+				currentShowPageNo = 1;
+			}
+			else {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+			}
+			
+			
+			startRno = ((currentShowPageNo - 1)*sizePerPage) + 1;
+			endRno = startRno + sizePerPage - 1;
+			
+			// ===== #109. 페이징처리를 위해서 startRno , endRno 를 map 에 추가하여 
+			//				파라미터로 넘겨서 select 되도록 한다.
+			map.put("startRno",String.valueOf(startRno));
+			map.put("endRno", String.valueOf(endRno));
+			
+			if ( (colname != null && search != null) &&
+					(!colname.trim().isEmpty() && !search.trim().isEmpty() ) && 
+					(!colname.equals("null") && !search.equals("null") )
+					) {	// 검색어가 있는 경우
+				memList = service.memberList2(map);
+					}
+			
+			else {// 검색어가 없는 경우
+				memList = service.memberList1(map);
+			}
+			
+			
+			===== #111. 페이지바 만들기(먼저 페이지바에 나타낼 총 페이지 갯수 구하기) =====
+			
+				검색조건이 없을때의 총 페이지 수와 
+				검색조건이 있을때의 총 페이지 수를 구해야 한다.
+				
+				검색조건이 없을때의 총 페이지수 ---> colname 과 search 의 값이 없는 경우이다.
+				검색조건이 있을때의 총 페이지수 ---> colname 과 search 의 값이 있는 경우이다.
+			
+			
+			// 총 게시물 건수를 구한다.
+			
+			if ( (colname != null && search != null) &&
+					(!colname.trim().isEmpty() && !search.trim().isEmpty() ) && 
+					(!colname.equals("null") && !search.equals("null") )
+					) {	// 검색어가 있는 경우
+					totalCount = service.getTotalCount2(map);
+					}
+			
+			else {// 검색어가 없는 경우
+					totalCount = service.getTotalCount1();
+					}
+			
+			// totalPage 구하기
+			
+			totalPage = (int)Math.ceil( (double)totalCount/sizePerPage );
+			
+			String pagebar = "<ul>";
+			
+			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "list.action");
+			
+			pagebar += "</ul>";
+			
+			req.setAttribute("pagebar", pagebar);
+			
+			req.setAttribute("memList", memList);
+			req.setAttribute("colname", colname);
+			req.setAttribute("search", search);
+			
+			
+			return "jdh/memberSV.tiles";
+		}*/
+		
+		
+		// 회원관리 회원 삭제하기
+		@RequestMapping(value="/memberDelete.re", method={RequestMethod.POST, RequestMethod.GET})
+		public String MemDelete(HttpServletRequest req){
+			
+			String method = req.getMethod();
+			//System.out.println("method : " + method);
+			String id = req.getParameter("id");
+			//System.out.println("id : " + id);
+			/*String login_id = req.getParameter("loginid");
+			
+			LoginVO loginUser = (LoginVO) session.getAttribute("loginUser");
+			
+			String sessionid = "";
+			
+			if (loginUser != null) {	// 유저라면
+				if (!login_id.equals(sessionid) && loginUser.getLogin_status() != 9) {
+					req.setAttribute("msg", "삭제는 관리자만 가능합니다.");
+					req.setAttribute("loc", "/resns/noticeAdmMain.re?seq=" + seq);
+													
+					return "msg.notiles2";
+				}
+			}
+			
+			else {
+				req.setAttribute("msg", "삭제는 관리자만 가능합니다.");
+				req.setAttribute("loc", "/resns/noticeAdmMain.re?seq=" + seq);
+				
+				return "msg.notiles2";
+			}*/
+			
+			int n = service.updateMemberDelete(id);	// 회원 삭제
+			
+			if (n > 0) {
+				req.setAttribute("msg", "회원 삭제 성공");
+				req.setAttribute("loc", "/resns/memberSupervise.re");
+			}
+			
+			return "msg.notiles2";
+		}
+		
+		
+		// 회원정보 수정하기
+		@RequestMapping(value="memberEdit.re", method={RequestMethod.POST})
+		public String MemEdit(HttpServletRequest req){
+		
+			
+		HashMap<String, Object> editMemberMap = new HashMap<String, Object>();
+		
+		String login_id = req.getParameter("login_id");
+		String login_name = req.getParameter("login_name");
+			
+		editMemberMap.put("login_id", login_id);
+		editMemberMap.put("login_name", login_name);
+		
+		int n = 0;
+		
+		n = service.memberEdit(editMemberMap);
+		
+		if (n > 0) {
+			req.setAttribute("msg", "수정 완료!");
+			req.setAttribute("loc", "/resns/memberSupervise.re");
+		}
+		
+		return "msg.notiles2";
+		}
+		
+		
+		// 회원 복원
+		@RequestMapping(value="memberRestore.re", method={RequestMethod.POST, RequestMethod.GET})
+		public String MemRestore(HttpServletRequest req){
+			
+			String method = req.getMethod();
+			
+			String id = req.getParameter("id");
+			
+			int n = service.updateMemberRestore(id);	// 회원 삭제
+			
+			if (n > 0) {
+				req.setAttribute("msg", "회원 복구 성공");
+				req.setAttribute("loc", "/resns/memberSupervise.re");
+			}
+			
+			return "msg.notiles2";
+			
+		}
+		
+		
+		
+		
+		
 		
 		
 		

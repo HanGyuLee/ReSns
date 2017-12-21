@@ -54,18 +54,8 @@ textarea.form-control{
    <script type="text/javascript">
    
    function goBack() {
-		location.href="/resns/noticeAdmMain.re";
+		location.href="/resns/noticeMemMain.re";
 	}	
-   
-   function goEdit() {
-	   
-	   var frm = document.noticeDetail;
-	   
-	   frm.action = "<%= request.getContextPath() %>/noticeModify.re";
-	   frm.method = "POST";
-	   frm.submit();
-	   
-   }
 
 	document.title = "관리자 공지사항 상세";
    
@@ -74,35 +64,33 @@ textarea.form-control{
     <div class="container">
      <form class="well span8" id="noticeDetail" name="noticeDetail">
      
-     	<input type="hidden" id="seq" name="seq_tbl_notice" value="${vo.seq_tbl_notice}">  
+     	<input type="hidden" id="seq" name="seq" value="${vo.seq_tbl_notice}">  
      	
         <div class="row">
-        	
             <div class="span3">
-                <th>제목<input class="span3" name="notice_title" type="text" value="${vo.notice_title}" style="width: 50%;"></th>&nbsp;
-                <th>게시날짜<input class="span3" name="notice_date" type="text" value="${vo.notice_date}" readonly></th>&nbsp;
+                <th>제목<input class="span3" type="text" value="${vo.notice_title}" readonly style="width: 50%;"></th>&nbsp;
+                <th>게시날짜<input class="span3" type="text" value="${vo.notice_date}" readonly></th>&nbsp;
                 <th>분류
-                <select name="notice_cate">
+                <select>
                 	<option value="0">기타</option>
 	                <option value="1">업데이트</option>
     	            <option value="2">긴급</option>
                 </select></th>&nbsp;
                 
             </div>
-  
+   
    			<br/><br/>
             <div class="span5">
                 <label>내용</label>
                
-                  <textarea class="input-xlarge span5" id="notice_content" name="notice_content"
-                              rows="10" style="width: 90%;">${vo.notice_content}
+                  <textarea class="input-xlarge span5" id="message" name="message"
+                              rows="10" readonly style="width: 90%;">${vo.notice_content}
                   </textarea> 
                  
             </div>
            
             <div class="btn_area">
        
-        <a style="margin-left: 350px" onclick="goEdit();">수정</a>&nbsp;&nbsp;&nbsp;&nbsp;
         <a onclick="goBack();">확인(뒤로 가기)</a>
        
 			</div>

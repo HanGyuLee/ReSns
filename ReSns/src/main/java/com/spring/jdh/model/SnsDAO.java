@@ -106,19 +106,19 @@ public class SnsDAO implements InterSnsDAO {
 
 				// 공지사항 리스트
 				@Override
-				public List<HashMap<String, String>> getNoticeList() {
+				public List<NoticeVO> getNoticeList(HashMap<String, String> map) {
 					
-					 List<HashMap<String, String>> noticeList = sqlsession.selectList("jdhresns.getNoticeList");
+					List<NoticeVO> noticeList = sqlsession.selectList("jdhresns.getNoticeList", map);
 					
 					return noticeList;
 				}
 
-				// 공지사항 
+				// 공지사항 디테일 뿌리기
 				@Override
 				public NoticeVO getNoticeDetail(HashMap<String, String> map) {
-					// System.out.println("============nvo=============="+map.get("seq"));
+					
 					NoticeVO nvo = sqlsession.selectOne("jdhresns.getNoticeDetail", map);
-					// System.out.println("============nvo=============="+nvo.getNotice_cate());
+					
 					return nvo;
 				}
 
@@ -131,6 +131,7 @@ public class SnsDAO implements InterSnsDAO {
 					return n;
 				}
 
+				// 공지사항 삭제하기
 				@Override
 				public int getNoticeDelete(String seq) {
 					int n = sqlsession.update("jdhresns.getNoticeDelete", seq);
@@ -140,10 +141,111 @@ public class SnsDAO implements InterSnsDAO {
 				// 공지사항 수정하기
 				@Override
 				public int getNoticeModify(HashMap<String, Object> notimodiMap) {
+					 System.out.println("확인용"+notimodiMap.get("notice_title"));
 					int n = sqlsession.update("jdhresns.getNoticeModify", notimodiMap);
+					
+					return n;
+				}
+
+				// 유저용 공지사항 리스트
+				@Override
+				public List<NoticeVO> getMemNotiList(HashMap<String, String> map) {
+					
+					// System.out.println("확인용");
+					List<NoticeVO> memnoticeList = sqlsession.selectList("jdhresns.getMemNotiList", map);
+					
+					return memnoticeList;
+				}
+
+				// 유저용 공지사항
+				@Override
+				public NoticeVO getMemNoticeDe(HashMap<String, String> map) {
+					
+					NoticeVO nvo = sqlsession.selectOne("jdhresns.getMemNoticeDe", map);
+					
+					return nvo;
+				}
+
+				// 회원리스트 불러오기
+				@Override
+				public List<HashMap<String, String>> getMemList() {
+					
+					List<HashMap<String, String>> memList = sqlsession.selectList("jdhresns.getMemList");
+					
+					return memList;
+				}
+
+				// 페이징
+				@Override
+				public int getNoticePaging() {
+					
+					int n = sqlsession.selectOne("jdhresns.getNoticePaging");
+					
+					return n;
+				}
+
+				// 회원 삭제하기
+				@Override
+				public int getMemberDelete(String id) {
+					
+					int n = sqlsession.update("jdhresns.getMemberDelete", id);
+					
+					return n;
+				}
+
+				// 회원 수정하기
+				@Override
+				public int getMemberEdit(HashMap<String, Object> editMemberMap) {
+					
+					int n = sqlsession.update("jdhresns.getMemberEdit", editMemberMap);
+					
+					return n;
+				}
+
+				// 회원 복구
+				@Override
+				public int getMemberRestore(String id) {
+					
+					int n = sqlsession.update("jdhresns.getMemberRestore", id);
+					
+					return n;
+				}
+
+				// 검색어 있는 리스트 뽑기
+				@Override
+				public List<HashMap<String, String>> getSearchList(HashMap<String, String> map) {
+					
+					List<HashMap<String, String>> searchList =  sqlsession.selectOne("jdhresns.getSearchList", map);
+					
+					return searchList;
+				}
+
+				// 검색어가 없는 리스트 뽑기
+				@Override
+				public List<HashMap<String, String>> getNoSearchList(HashMap<String, String> map) {
+					List<HashMap<String, String>> searchList = sqlsession.selectOne("jdhresns.getNoSearchList", map);
+					return searchList;
+				}
+
+				// 검색어 있는 총 게시물 수
+				@Override
+				public int getTotalCount2(HashMap<String, String> map) {
+					
+					int n = sqlsession.selectOne("jdhresns.getTotalCount2", map);
+					
+					return n;
+				}
+
+				// 검색어 없는 총 게시물 수
+				@Override
+				public int getTotalCount1() {
+					
+					int n = sqlsession.selectOne("jdhresns.getTotalCount1");
+					
 					return n;
 				}
 				
-
+				
+				
 
 }

@@ -113,13 +113,43 @@
 	
 	
 	<!-- 공지사항 리스트 불러오기 -->
-	<select id="getNoticeList" resultMap="NoticeList">
+	
+	<!-- <select id="getNoticeList" resultMap="NoticeList">
 	
 	select
 	seq_tbl_notice, notice_title, to_char(notice_date, 'yyyy-mm-dd hh24') as notice_date, notice_status, notice_cate
 	from tbl_notice
 	where notice_status = 1
 	order by seq_tbl_notice desc
+	
+	</select> -->
+	
+	<!-- 페이징 -->
+	<select id="getNoticePaging" resultType="int">
+	
+	select count(*)
+	from tbl_notice
+	
+	</select>
+	
+	
+	<!-- 페이징 -->
+	<select id="getNoticeList" parameterType="HashMap" resultType="com.spring.jdh.model.NoticeVO">
+	
+		select *
+		from 
+		(
+		select rownum as RNO
+		     , V.*
+		from 
+		(
+		select *
+		from tbl_notice
+		where NOTICE_STATUS = 1
+		order by SEQ_TBL_NOTICE desc
+		) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	
 	</select>
 	
@@ -150,10 +180,179 @@
 	
 	<!-- 공지사항 수정하기 -->
 	
-	<!-- <update id="" parameterType="HashMap">
-		update tbl_notice set notice_title = #{notice_title}, notice_content = #{notice_content}, notice_date = sysdate, notice_cate = #{notice_cate}
-		where seq_tbl_ask = #{seq}
-	</update> -->
+	<update id="getNoticeModify" parameterType="HashMap">
+		update tbl_notice set notice_title = #{notice_title}, notice_content = #{notice_content}, notice_date = default, notice_cate = #{notice_cate}
+		where seq_tbl_notice = #{seq_tbl_notice}
+	</update>
 	
+	
+	
+	<resultMap type="java.util.HashMap" id="getMemNotiList">
+	
+	  <result property="seq_tbl_notice"   column="seq_tbl_notice"       javaType="String" />
+      <result property="notice_title"     column="notice_title"    		javaType="String" />
+      <result property="notice_date"      column="notice_date"      	javaType="String" />
+      <result property="notice_status"    column="notice_status"  		javaType="String" />
+      <result property="notice_cate"      column="notice_cate"   	  	javaType="String" />
+    
+	</resultMap>
+	
+	
+	<!-- 멤버용 공지사항 리스트 불러오기 -->
+	
+	<!-- <select id="getMemNotiList" resultMap="getMemNotiList">
+	
+	select
+	seq_tbl_notice, notice_title, to_char(notice_date, 'yyyy-mm-dd hh24') as notice_date, notice_status, notice_cate
+	from tbl_notice
+	where notice_status = 1
+	order by seq_tbl_notice desc
+	
+	</select> -->
+	
+	<select id="getMemNotiList" parameterType="HashMap" resultType="com.spring.jdh.model.NoticeVO">
+	
+		select *
+		from 
+		(
+		select rownum as RNO
+		     , V.*
+		from 
+		(
+		select *
+		from tbl_notice
+		where NOTICE_STATUS = 1
+		order by SEQ_TBL_NOTICE desc
+		) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
+	
+	</select>
+	
+	
+	<!-- 멤버용 공지사항 디테일 -->
+		
+	 <select id="getMemNoticeDe" parameterType="HashMap" resultType="com.spring.jdh.model.NoticeVO">
+		select *
+		from tbl_notice
+		where seq_tbl_notice = #{seq}
+	 </select>
+	
+	<!-- 회원리스트 -->
+	<resultMap type="java.util.HashMap" id="getMemList">
+	
+	  <result property="fk_login_id"   	  column="fk_login_id"       	javaType="String" />
+      <result property="user_email"   	  column="user_email"       	javaType="String" />
+      <result property="login_name"   	  column="login_name"       	javaType="String" />
+      <result property="user_report"   	  column="user_report"       	javaType="String" />
+      <result property="login_status"     column="login_status"       	javaType="String" />
+      
+	</resultMap>
+	
+	<select id="getMemList" resultMap="getMemList">
+		
+	select E.fk_login_id, E.user_email,E.user_report, D.login_name, D.login_status
+    from tbl_user E join tbl_login D
+    on E.fk_login_id = D.login_id
+	
+	</select>
+	
+	<!-- 회원 삭제하기 -->	
+	<update id="getMemberDelete" parameterType="String">
+	
+	update tbl_login set login_status = 0
+	where login_id = #{id}
+	
+	</update>
+	
+	<!-- 회원 수정하기 -->
+	
+	<update id="getMemberEdit" parameterType="HashMap">
+	
+		update tbl_login set login_name = #{login_name}
+		where login_id = #{login_id}
+		
+	</update>
+	
+	
+	<!-- 회원 복구하기 -->
+	
+	<update id="getMemberRestore" parameterType="String">
+	
+	update tbl_login set login_status = 1
+	where login_id = #{id}
+	
+	</update>
+	
+	<!-- 검색어 있는 리스트 -->
+	
+	<!-- <select id="getSearchList" parameterType="HashMap" resultType="com.spring.jdh.model.NoticeVO">
+	
+		 select seq, name, subject, readCount, regDate, commentCount
+		from 
+		(
+		select rownum as RNO
+		     , V.seq, V.name, V.subject, V.content, V.readCount, V.regDate, V.commentCount
+		from 
+		(
+		select seq, name 
+		     , case when length(subject) > 20 then substr(subject, 1, 18)||'..'
+		            else subject end as subject
+		     , content , readCount
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		     , commentCount
+		from tblBoard
+		where status = 1
+		order by seq desc
+		) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
+	
+	</select> -->
+	
+	<!-- 검색어가 없는 리스트 -->
+	
+	<!-- <select id="getSearchList" parameterType="HashMap" resultType="com.spring.jdh.model.NoticeVO">
+	
+	 select seq, name, subject, readCount, regDate, commentCount
+		from 
+		(
+		select rownum as RNO
+		     , V.seq, V.name, V.subject, V.content, V.readCount, V.regDate, V.commentCount
+		from 
+		(
+		select seq, name 
+		     , case when length(subject) > 20 then substr(subject, 1, 18)||'..'
+		            else subject end as subject
+		     , content , readCount
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		     , commentCount
+		from tblBoard
+		where status = 1
+		and ${colname} like '%'|| #{search} ||'%'
+		order by seq desc
+		) V
+		) T
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
+	
+	</select> -->
+	
+	<!-- <select id="">
+	
+	select count(*)
+		from tbl_user E join tbl_login D
+    on E.fk_login_id = D.login_id
+		
+	</select>
+   
+    
+    <select id="">
+    
+    select count(*)
+		from tbl_user E join tbl_login D
+    on E.fk_login_id = D.login_id
+    and ${colname} like '%' || #{search} || '%'
+	
+	</select> -->
 	
 </mapper>

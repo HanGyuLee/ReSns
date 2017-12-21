@@ -90,9 +90,9 @@ public class SnsService implements InterSnsService {
 
 		// 공지사항 리스트 불러오기
 		@Override
-		public List<HashMap<String, String>> getNoticeList() {
+		public List<NoticeVO> getNoticeList(HashMap<String, String> map) {
 			
-			 List<HashMap<String, String>> noticeList = dao.getNoticeList();
+			 List<NoticeVO> noticeList = dao.getNoticeList(map);
 			
 			return noticeList;
 		}
@@ -106,6 +106,7 @@ public class SnsService implements InterSnsService {
 			return nvo;
 		}
 
+		// 공지사항 등록하기
 		@Override
 		public int noticeRegister(NoticeVO nvo) {
 			
@@ -127,6 +128,99 @@ public class SnsService implements InterSnsService {
 			
 			int n = dao.getNoticeModify(notimodiMap);
 			
+			return n;
+		}
+
+		// 유저용 공지사항 불러오기
+		@Override
+		public List<NoticeVO> getMemNotice(HashMap<String, String> map) {
+			
+			List<NoticeVO> memnoticeList = dao.getMemNotiList(map);
+			
+			return memnoticeList;
+		}
+
+		// 유저용 공지사항 디테일
+		@Override
+		public NoticeVO getMemNoticeDe(HashMap<String, String> map) {
+			
+			NoticeVO nvo = dao.getMemNoticeDe(map);
+			
+			return nvo;
+		}
+
+		// 회원 리스트 불러오기
+		@Override
+		public List<HashMap<String, String>> getMemList() {
+			
+			List<HashMap<String, String>> memList = dao.getMemList();
+			
+			return memList;
+		}
+
+		// 토탈카운트
+		@Override
+		public int noticePage() {
+			int n = dao.getNoticePaging();
+			return n;
+		}
+
+		// 회원삭제하기
+		@Override
+		public int updateMemberDelete(String id) {
+			
+			int n = dao.getMemberDelete(id);
+			
+			return n;
+		}
+
+		// 회원정보 수정하기
+		@Override
+		public int memberEdit(HashMap<String, Object> editMemberMap) {
+			int n = dao.getMemberEdit(editMemberMap);
+			return n;
+		}
+
+		// 회원 복구하기
+		@Override
+		public int updateMemberRestore(String id) {
+			
+			int n = dao.getMemberRestore(id);
+			
+			return n;
+		}
+
+		// 검색어가 있는 리스트
+		@Override
+		public List<HashMap<String, String>> memberList2(HashMap<String, String> map) {
+			
+			List<HashMap<String, String>> searchList = dao.getSearchList(map);
+			
+			return searchList;
+		}
+
+		// 검색어가 없는 경우 리스트
+		@Override
+		public List<HashMap<String, String>> memberList1(HashMap<String, String> map) {
+			
+			List<HashMap<String, String>> searchList = dao.getNoSearchList(map);
+			
+			return searchList;
+		}
+
+		// 검색어 있는 총 게시물수
+		@Override
+		public int getTotalCount2(HashMap<String, String> map) {
+			
+			int n = dao.getTotalCount2(map);
+			
+			return n;
+		}
+
+		// 검색어 없는 총 게시물 수
+		@Override
+		public int getTotalCount1() {
+			int n = dao.getTotalCount1();
 			return n;
 		}
 
