@@ -449,41 +449,42 @@ public class HglController {
 				String url = "";
 				switch(alarm_type){
 				case "1": 
-					alarm_type =" 누가 내 게시물 하트";
+					alarm_type =" 내 게시물 하트";
 					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
 					break;
 				case "2": 
-					alarm_type ="누가 내 게시물 댓글";
+					alarm_type =" 내 게시물 댓글";
 					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
 					break;
 				case "3": 
-					alarm_type ="누가 내 댓글에 대댓글 ";
+					alarm_type =" 내 댓글에 대댓글 ";
 					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
 					break;
 				case "4": 
-					alarm_type =" 누가 나를 팔로우";
-					url = "/resns/otherspage.re?fk_login_id=";
+					alarm_type =" 나를 팔로우";
+					url = "/resns/otherspage.re?fk_login_id="+alarm.get("fk_login_id");
 					break;
 				case "5": 
-					alarm_type ="누가 내 문답게시판에 질문 ";
-					url = "/resns/";
+					alarm_type =" 내 문답게시판에 질문 ";
+					url = "/resns/questionList.re?fk_login_id="+userid;
 					break;
 				case "6": 
-					alarm_type ="내가 남긴 질문에 답변";
-					url = "";
+					alarm_type =" 내가 남긴 질문에 답변";
+					url = "/resns/questionList.re?fk_login_id="+userid;
 					break;
 				case "7": 
-					alarm_type =" 누가 내 동영상에 댓글";
-					url = "";
+					alarm_type =" 내 동영상에 댓글";
+					url = "/resns/music.re?fk_login_id="+userid;
 					break;
 				case "8": 
-					alarm_type =" 누가 나에게 메세지";
-					url = "";
+					alarm_type =" 나에게 메세지";
+					url = "/resns/msgDetail.re?seq_tbl_msg="+userid;
 					break;
 				
 				}
 				
 				jsonObj.put("theSeq",theSeq);
+				jsonObj.put("url",url);
 				jsonObj.put("alarm_type",alarm_type);
 				jsonObj.put("fk_login_id",alarm.get("fk_login_id"));
 				jsonObj.put("alarm_userid",alarm.get("alarm_userid"));
@@ -501,15 +502,10 @@ public class HglController {
 		String alarmList = jsonMap.toString();
 		
 		
-		
-		
 		/*List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		
-		
-		
-		
+				
 		System.out.println("/////"+myAlarmList);
 		int j=0;
 		for(int i=0; i<myAlarmList.size(); i++){

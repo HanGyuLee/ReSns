@@ -769,7 +769,7 @@ function goVeiwContent(statuscount){
 
 	
 	
-	
+	/* 
 	
 			
 	function goQuestionList(userid){
@@ -790,19 +790,17 @@ function goVeiwContent(statuscount){
 				  
 				  
 			  }); 
-	}
+	} */
 		
 
 
 
 /* ------------------------------------------------------------------- */
 
- function VeiwTag(statuscount){
-	  var form_data = {"theSeq" : $("#contentTagView"+statuscount).val()};
+ function goAlarm(statuscount){
+	  var form_data = {"theSeq" : $("#theSeq"+statuscount).val()};
 	  
-	 $("#too"+statuscount).hide();
-	 $("#thebogi"+statuscount).hide();
-	
+
 	$.ajax({
 			
 			url: "/resns/myalarm.re",
@@ -817,21 +815,21 @@ function goVeiwContent(statuscount){
 					
 					$.each(data, function(entryIndex, entry){
 						
-						var seq_tbl_tag = entry.seq_tbl_tag;
-						var tag_content = entry.tag_content;
+						var seq = entry.theSeq;
+						var fk_login_id = entry.fk_login_id;
+						var alarm_type = entry.alarm_type;
+						var alarm_time = entry.alarm_time;
+						var url = entry.url;
 						
-						var sub_tag_content = tag_content.substring(1);
+						result += "<a href='"+url+seq+"'>";
+						result += "<span style='font-weight: bold;'>"+fk_login_id+""+alarm_type+"</span>";
+						result += alarm_time +"</a>";
 
-						result += "<a href='/resns/searchEndTag.re?search="+sub_tag_content+"'>";
-						result += "<span style='font-weight: bold;'>"+tag_content+"</span>";
-						result += "</a>";
-
-						
 					});
 				}
 					
-				$("#tag"+statuscount).html(result);
-				$("#tag"+statuscount).show();	
+				$("#alarm"+statuscount).html(result);
+				$("#alarm"+statuscount).show();	
 				
 			}, error: function() {
 				
@@ -1030,7 +1028,7 @@ function goVeiwContent(statuscount){
             </li>
              <li>
               <a href="#tab_default_4" data-toggle="tab" >
-            	<button type="button" class="mybutton" onclick="goQuestionList('${sessionScope.loginUser.login_id}')" >문답</button> </a>
+            	문답 </a>
             </li>
           </ul>
           <div class="tab-content">
@@ -1268,7 +1266,7 @@ ${pagebar}
             
                         </div>
             <div class="tab-pane" id="tab_default_3">
-              <div id="question">
+              <div id="music">
               <iframe style="width: 100%; height: 800px;" src="music.re?fk_login_id=${sessionScope.loginUser.login_id}"></iframe>
               
               </div>
