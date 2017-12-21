@@ -186,6 +186,10 @@ figure.snip1166.hover figcaption p {
 }
 
 
+a:link { color: black; text-decoration: none;}
+a:visited { color: black; text-decoration: none;}
+a:hover { color: black; text-decoration: none;}
+
 </style>
 
 
@@ -314,11 +318,26 @@ function showDetail(statuscount) {
 						
 						if(re_depthno == 0) {
 							
+							if ('${sessionScope.loginUser.login_id}' == re_id){
+							
+							result += "<a href='/resns/mypage.re?fk_login_id="+re_id+"'>";	
 							result += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
+							result += "</a>";
+							
+							}
+							
+							if ('${sessionScope.loginUser.login_id}' != re_id){
+								
+								result += "<a href='/resns/otherspage.re?fk_login_id="+re_id+"'>";	
+								result += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
+								result += "</a>";
+								
+							}
+							
 							
 							if ('${sessionScope.loginUser.login_id}' == re_id){
 								
-							result += "<span style='font-weight: bold; cursor: pointer;'>";
+							result += "&nbsp;<span style='font-weight: bold; cursor: pointer; font-size: 9pt;'>";
 							result += "<a href='/resns/mypage.re?fk_login_id="+re_id+"'>"+login_name+"</a>";
 							result += "</span>";
 							
@@ -326,8 +345,8 @@ function showDetail(statuscount) {
 							
 							if ('${sessionScope.loginUser.login_id}' != re_id){
 								
-							result += "<span style='font-weight: bold; cursor: pointer;'>";
-							result += "<a href='/resns/mypage.re?fk_login_id="+re_id+"'>"+login_name+"</a>";
+							result += "&nbsp;<span style='font-weight: bold; cursor: pointer; font-size: 9pt;'>";
+							result += "<a href='/resns/otherspage.re?fk_login_id="+re_id+"'>"+login_name+"</a>";
 							result += "</span>";
 							
 							}
@@ -350,10 +369,44 @@ function showDetail(statuscount) {
 						}
 						else if (re_depthno == 1) {
 						
-							result += "<div style='margin-left: 15px;'>";
+							result += "<div style='margin-left: 15px; background-color: #FAFAFA;'>";
 							result += "<img src='resources/images/rere.png' style='width: 20px; height: 20px;' />";
-							result += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;' />";
-							result += "<span style='font-weight: bold;'>"+login_name+"</span>";
+							
+							
+							if ('${sessionScope.loginUser.login_id}' == re_id){
+								
+							result += "<a href='/resns/mypage.re?fk_login_id="+re_id+"'>";	
+							result += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
+							result += "</a>";
+							
+							}
+							
+							if ('${sessionScope.loginUser.login_id}' != re_id){
+								
+								result += "<a href='/resns/otherspage.re?fk_login_id="+re_id+"'>";	
+								result += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
+								result += "</a>";
+								
+							}
+							
+							
+							
+							if ('${sessionScope.loginUser.login_id}' == re_id){
+								
+							result += "&nbsp;<span style='font-weight: bold; cursor: pointer; font-size: 9pt;'>";
+							result += "<a href='/resns/mypage.re?fk_login_id="+re_id+"'>"+login_name+"</a>";
+							result += "</span>";
+							
+							}
+							
+							if ('${sessionScope.loginUser.login_id}' != re_id){
+								
+							result += "&nbsp;<span style='font-weight: bold; cursor: pointer; font-size: 9pt;'>";
+							result += "<a href='/resns/otherspage.re?fk_login_id="+re_id+"'>"+login_name+"</a>";
+							result += "</span>";
+							
+							}
+							
 							
 							if ('${sessionScope.loginUser.login_id}' == re_id){
 								result +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px; cursor: pointer;' align='right' />";
@@ -442,8 +495,17 @@ function showTag(statuscount) {
 							
 				var map_name = data.map_name;
 				
+				var result = "";
 				
-				var result = "<span style='font-weight: bold; font-size: 9pt;'>"+map_name+"</span>";
+				if (map_name == null) {
+					
+					result = "<span style='font-size: 9pt;'>지정된 위치가 없습니다.</span>";	
+					
+				}
+				else {
+					
+					result = "<span style='font-weight: bold; font-size: 9pt;'>"+map_name+"</span>";
+				}
 			
 				
 				$("#showLoc"+statuscount).html(result);
@@ -560,7 +622,7 @@ function heartCounting(statuscount) {
 			
 			//alert(board_heart);
 			
-			var result = "좋아요 "+board_heart+" 개";
+			var result = board_heart+"&nbsp;개";
 			
 			$("#heartCnt"+statuscount).html(result);
 			
@@ -797,12 +859,13 @@ function modalClose(statuscount) {
 										<div id="reList${status.count}" style="overflow-y:scroll; height: 300px;"></div>
 									</div>
 									<div
-										style="border: 0px solid green; width: 68%; height: 120px; float: left; overFlow: auto; max-height: 120px;">
-
-										<img
-											src="<%=request.getContextPath()%>/resources/images/user_location_black.png"
-											style="width: 16px; height: 16px;" /> <span
-											id="showLoc${status.count}"></span>
+										style="border: 0px solid green; width: 68%; height: 120px; float: left;">
+										<div style="float: left; width: 80%;">
+											<img
+												src="<%=request.getContextPath()%>/resources/images/user_location_black.png"
+												style="width: 16px; height: 16px;" /> <span
+												id="showLoc${status.count}"></span>
+											
 										<c:if test="${loginUser.login_id == map.FK_LOGIN_ID}">
 											<a href="/resns/deleteBoard.re?seq_tbl_board=${map.SEQ_TBL_BOARD}">
 											<img
@@ -811,11 +874,7 @@ function modalClose(statuscount) {
 											</a>	
 										</c:if>
 										<%-- <c:if test="${loginUser.login_id != null}"> --%>
-											<a href="/resns/reportingBoard.re?fk_login_id=${map.FK_LOGIN_ID}&seq_tbl_board=${map.SEQ_TBL_BOARD}">
-												<img
-													src="<%=request.getContextPath()%>/resources/images/report.png"
-													style="width: 18px; height: 18px;" align="right" /> 
-											</a>	
+												
 											<img
 												src="<%=request.getContextPath()%>/resources/images/hearted.png"
 												id="hearted${status.count}"
@@ -827,10 +886,21 @@ function modalClose(statuscount) {
 												style="width: 18px; height: 18px; cursor: pointer;"
 												align="right" onclick="addHeart('${status.count}');" />
 										<%-- </c:if>		 --%>
-										<span id="heartCnt${status.count}" style="font-weight: bold; font-size: 9pt;"></span>
-										<br /> <span style="line-height: 180%;">${map.BOARD_CONTENT}</span><br />
-										<br />
+										</div>
+										<div id="heartCnt${status.count}" align="right" style="font-weight: bold; margin-left: 2px; float: left; font-size: 8pt;"></div>
+										<div style="float: left; margin-left: 6px;">
+										<a href="/resns/reportingBoard.re?fk_login_id=${map.FK_LOGIN_ID}&seq_tbl_board=${map.SEQ_TBL_BOARD}">
+												<img
+													src="<%=request.getContextPath()%>/resources/images/report.png"
+													style="width: 18px; height: 18px;" align="right" /> 
+											</a>
+										</div>
+										<br /><div style="overFlow: auto; max-height: 80px;">
+										<span style="line-height: 180%;">${map.BOARD_CONTENT}</span><br /><br />
 										<div id="tagList${status.count}"></div>
+										</div><br />
+										<br />
+										
 									</div>
 									<div
 										style="border: 0px solid purple; width: 30%; height: 120px; float: right;">
