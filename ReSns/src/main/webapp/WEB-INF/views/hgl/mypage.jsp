@@ -797,10 +797,12 @@ function goVeiwContent(statuscount){
 
 /* ------------------------------------------------------------------- */
 
- function goAlarm(statuscount){
-	  var form_data = {"theSeq" : $("#theSeq"+statuscount).val()};
-	  
 
+
+ function goAlarm(userid){
+	
+	  var form_data = {"userid" : userid};
+	  
 	$.ajax({
 			
 			url: "/resns/myalarm.re",
@@ -811,25 +813,28 @@ function goVeiwContent(statuscount){
 			
 				if (data.length != null) {
 
-					var result = "<br/><br/>";
+					var result = "";
 					
 					$.each(data, function(entryIndex, entry){
 						
-						var seq = entry.theSeq;
+						
 						var fk_login_id = entry.fk_login_id;
 						var alarm_type = entry.alarm_type;
 						var alarm_time = entry.alarm_time;
 						var url = entry.url;
 						
-						result += "<a href='"+url+seq+"'>";
-						result += "<span style='font-weight: bold;'>"+fk_login_id+""+alarm_type+"</span>";
-						result += alarm_time +"</a>";
+						
+						
+						result += "<li><a href='"+url+"' style='text-decoration:none;'>";
+						result += "<span style='font-weight: bold;'>"+fk_login_id+" 님이 "+alarm_type+"</span><br/>";
+						result += alarm_time +"</a> </li><li class='divider'></li>";
 
+						
 					});
 				}
 					
-				$("#alarm"+statuscount).html(result);
-				$("#alarm"+statuscount).show();	
+				$("#alarm").html(result);
+				$("#alarm").show();	
 				
 			}, error: function() {
 				
@@ -910,24 +915,26 @@ function goVeiwContent(statuscount){
              <ul class="list-group" id="contact-list">
                
             <li class="list-group-item clickhide" id="editInfo">                       
-                	내 정보 수정하기                 
+                	<span style="font-weight:bold;">내 정보 수정하기       </span>          
              </li>
-             <li class="list-group-item " id="changePf">                       
+             <li class="list-group-item " id="changePf">     
+             		<span style="font-weight:bold;">프로필사진 변경하기</span>                  
                		<form name="changePf" action="<%=request.getContextPath()%>/updateMyPfEnd.re" method="post" enctype="multipart/form-data" >
-           			<input type='file' id='filePf' name='filePf'/><button type="button" id="btnChangePf" class="mybutton" style="margin-right: 10px; cursor: pointer;" onClick="goChangePf();">프로필 사진 선택완료   </button>
+           			<input type='file' id='filePf' name='filePf'/><button type="button" id="btnChangePf" class="mybutton" style="margin-right: 10px; cursor: pointer;text-decoration: underline; "onClick="goChangePf();">완료   </button>
            		
            		</form>                
              </li>
              	
-             <li class="list-group-item" id="changeBg">                       
+             <li class="list-group-item" id="changeBg">   
+             <span style="font-weight:bold;">배경사진 변경하기</span>                     
            		<form name="changeBg" action="<%=request.getContextPath()%>/updateMyBgEnd.re" method="post" enctype="multipart/form-data" >
-           			<input type='file' name='fileBg'/><button type="button" id="btnChangeBg" class="mybutton" style="margin-right: 10px; cursor: pointer;" onClick="goChangeBg();">배경 사진 선택 완료   </button>
+           			<input type='file' name='fileBg'/><button type="button" id="btnChangeBg" class="mybutton" style="margin-right: 10px; cursor: pointer; text-decoration: underline;" onClick="goChangeBg();"> 완료   </button>
            		
            		</form>             
              </li>
            
                <li class="list-group-item  clickhide" id="changeMypage">                       
-           			<button type="button" class="mybutton" data-toggle="modal" data-target="#mypageEdit">내 페이지 설정 </button>       
+           			<button type="button" class="mybutton" data-toggle="modal" data-target="#mypageEdit"><span style="font-weight:bold;">내 페이지 설정 </span></button>       
              </li>
     
            </ul>
@@ -990,17 +997,13 @@ function goVeiwContent(statuscount){
     
           <ul class="nav  navbar-nav">
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">나의 알림 <span class="glyphicon glyphicon-user pull-right"></span></a>
+          <a href="#" onClick="goAlarm('${sessionScope.loginUser.login_id}')" class="dropdown-toggle" data-toggle="dropdown">나의 알림 <span class="glyphicon glyphicon-user pull-right"></span></a>
+          
           <ul class="dropdown-menu">
-            <li><a href="#">Account Settings <span class="glyphicon glyphicon-cog pull-right"></span></a></li>
-            <li class="divider"></li>
-            <li><a href="#">User stats <span class="glyphicon glyphicon-stats pull-right"></span></a></li>
-            <li class="divider"></li>
-            <li><a href="#">Messages <span class="badge pull-right"> 42 </span></a></li>
-            <li class="divider"></li>
-            <li><a href="#">Favourites Snippets <span class="glyphicon glyphicon-heart pull-right"></span></a></li>
-            <li class="divider"></li>
-            <li><a href="#">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+          <li id="alarm">
+          
+          
+          </li>
           </ul>
         </li>
       </ul>
@@ -1267,14 +1270,14 @@ ${pagebar}
                         </div>
             <div class="tab-pane" id="tab_default_3">
               <div id="music">
-              <iframe style="width: 100%; height: 800px;" src="music.re?fk_login_id=${sessionScope.loginUser.login_id}"></iframe>
+              <iframe style="border-style:none; width: 100%; height: 800px;" src="music.re?fk_login_id=${sessionScope.loginUser.login_id}"></iframe>
               
               </div>
              
             </div>
              <div class="tab-pane" id="tab_default_4" >
               <div id="question">
-              <iframe style="width: 100%; height: 800px;" src="questionList.re?fk_login_id=${sessionScope.loginUser.login_id}"></iframe>
+              <iframe style="border-style:hidden; width: 100%; height: 800px;" src="questionList.re?fk_login_id=${sessionScope.loginUser.login_id}"></iframe>
               
               </div>
             </div>

@@ -330,14 +330,25 @@ public class HglController {
 	public String otherspage(HttpServletRequest req,HttpServletResponse response,HttpSession session){		
 		
 		String userid  = req.getParameter("fk_login_id"); // 페이지주인
+		String username = service.getUsername(userid); // 페이지주인 이름
 		
+		int n=0;
+		if((LoginVO)session.getAttribute("loginUser")!=null){
 		String loginId = null; // 나
 		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");		
 		loginId = loginUser.getLogin_id();	
-				
-		String username = service.getUsername(userid); // 페이지주인 이름
-			
 		List<String> loginUserFollowingName  = service.getFollowingName(loginId);
+			
+		
+	HashMap<String,String> blockmap = new HashMap<String,String>();
+		n = JsrService.followblock(blockmap);
+		blockmap.put("fk_login_id",userid);
+		blockmap.put("login_id",loginId);
+		req.setAttribute("loginUserFollowingName", loginUserFollowingName);
+		
+			
+		}
+			
 		
 		List<HashMap<String, Object>> myBoardList = service.getMyBoardList(userid);
 		List<HashMap<String, Object>> myFollowerList = service.getmyFollowerList(userid);
@@ -346,12 +357,8 @@ public class HglController {
 		HashMap<String,String> profile = service.getMyProfile(userid);			
 		HashMap<String,String> mypage =  null;
 		HashMap<String,String> insertMypage =  new HashMap<String,String>();
-		HashMap<String,String> blockmap = new HashMap<String,String>();
+	
 		
-		blockmap.put("fk_login_id",userid);
-		blockmap.put("login_id",loginId);
-		
-		int n = JsrService.followblock(blockmap);
 		int myFollowerCnt = myFollowerList.size();
 		int myFollowingCnt = myFollowingList.size();
 		int myBoardCnt = myBoardList.size();
@@ -375,7 +382,7 @@ public class HglController {
 			mypage = insertMypage;
 			
 		}
-		req.setAttribute("loginUserFollowingName", loginUserFollowingName);
+	
 		req.setAttribute("mypage", mypage);	
 		req.setAttribute("userid", userid);
 		req.setAttribute("profile", profile);
@@ -384,12 +391,11 @@ public class HglController {
 		req.setAttribute("myFollowerCnt", myFollowerCnt);
 		req.setAttribute("myFollowingCnt", myFollowingCnt);		
 		req.setAttribute("myBoardCnt", myBoardCnt);
-		
 		if(n<1){
-		req.setAttribute("myBoardList", myBoardList);
-		req.setAttribute("myFollowerList", myFollowerList);
-		req.setAttribute("myFollowingList", myFollowingList);
-		}
+			req.setAttribute("myBoardList", myBoardList);
+			req.setAttribute("myFollowerList", myFollowerList);
+			req.setAttribute("myFollowingList", myFollowingList);
+			}
 		
 		return  "hgl/otherspage.tiles2";
 		
@@ -411,6 +417,7 @@ public class HglController {
 		
 		userid = loginUser.getLogin_id();			
 		
+		System.out.println(userid + "유저넘어옴");
 		List<HashMap<String, Object>> myAlarmList = service.getMyAlarmList(userid);
 		
 		String theSeq= "";
@@ -450,15 +457,15 @@ public class HglController {
 				switch(alarm_type){
 				case "1": 
 					alarm_type =" 내 게시물 하트";
-					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
+					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
 					break;
 				case "2": 
 					alarm_type =" 내 게시물 댓글";
-					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
+					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
 					break;
 				case "3": 
 					alarm_type =" 내 댓글에 대댓글 ";
-					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board=";
+					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
 					break;
 				case "4": 
 					alarm_type =" 나를 팔로우";
@@ -501,6 +508,7 @@ public class HglController {
 		
 		String alarmList = jsonMap.toString();
 		
+		System.out.println("alarmList 하하하 : " + alarmList);
 		
 		/*List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 		HashMap<String,Object> map = new HashMap<String,Object>();
@@ -597,7 +605,7 @@ public class HglController {
 		req.setAttribute("list", alarmList);
 		
 		
-		return  "hgl/myalarm.notiles";
+		return  "myalarm.notiles";
 		
 		
 	}// end of alarm
