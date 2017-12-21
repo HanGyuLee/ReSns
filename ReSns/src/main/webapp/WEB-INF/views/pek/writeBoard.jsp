@@ -171,7 +171,7 @@ function googleapisView() {
 </head>
 <body>
 
-<div style="background-color: white; width: 55%; height: 800px; margin-left: 400px; border: 1px solid white;">
+<div style="background-color: white; width: 55%; height: 800px; margin-left: 400px; border: 1px solid black;">
 
 <form enctype="multipart/form-data" id="writeFrm" name="writeFrm" class="form-horizontal" style="margin-top: 100px; width:100%;">
 <fieldset>

@@ -209,7 +209,7 @@ public class PekController {
 	@RequestMapping(value = "/writeBoard.re", method = {RequestMethod.GET})
 	public String writeBoard() {
 		
-		return "/pek/writeBoard.tiles2";
+		return "/pek/writeBoard.tiles";
 	}
 	
 	// 글쓰기 완료

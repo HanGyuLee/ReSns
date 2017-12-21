@@ -11,7 +11,8 @@
 
 #container {
 	min-width: 310px;
-	max-width: 800px;
+	max-width: 350px;
+	min-height: 700px;
 	margin: 0 auto;
 }
 

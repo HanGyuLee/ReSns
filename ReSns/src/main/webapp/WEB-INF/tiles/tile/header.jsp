@@ -78,6 +78,7 @@
 }	
 .navbar-doublerow.navbar-trans.afterscroll {
    top:-50px;
+   background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png");
 }	
 
 .flex-container {
@@ -470,15 +471,17 @@ function goAlarm(userid){
               $.each(data, function(entryIndex, entry){
                  
                  
-                 var fk_login_id = entry.fk_login_id;
-                 var alarm_type = entry.alarm_type;
-                 var alarm_time = entry.alarm_time;
-                 var url = entry.url;
+            	  var fk_login_id = entry.fk_login_id;
+                  var alarm_type = entry.alarm_type;
+                  var alarm_time = entry.alarm_time;
+                  var url = entry.url;
+                  var login_name = entry.login_name;
+                  var imgsrc = entry.imgsrc;
                  
                  
                  
                  result += "<li><a href='"+url+"' style='text-decoration:none;'>";
-                 result += "<span style='font-weight: bold;'>"+fk_login_id+" 님이 "+alarm_type+"</span><br/>";
+                 result += "<img src='resources/images/profile0.png' style='width: 30px; height: 30px; display: inline;' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
                  result += alarm_time +"</a> </li><li class='divider'></li>";
 
                  
@@ -604,6 +607,7 @@ function goAlarm(userid){
         	
         	<ul class="nav navbar-nav flex-item hidden-xs pull-right">
         		<li><a href="<%=request.getContextPath()%>/followmain.re"><img src="<%=request.getContextPath()%>/resources/images/home.png" class="menuicon"></a></li>
+        		<li><a href="<%=request.getContextPath()%>/writeBoard.re"><img src="<%=request.getContextPath()%>/resources/images/write.png" class="menuicon"></a></li>
         		<li><a href="<%=request.getContextPath()%>/index.re"><img src="<%=request.getContextPath()%>/resources/images/friends.png" class="menuicon"></a></li>
         		<li><a href="<%=request.getContextPath()%>/mypage.re"><img src="<%=request.getContextPath()%>/resources/images/user_white.png" class="menuicon"></a></li>
         		<li><a href="#" onclick="window.open('<%=request.getContextPath()%>/message.re', 'message', 'top=100px, left=100px, height=800px, width=800px')"><img src="<%=request.getContextPath()%>/resources/images/chatting_white.png" class="menuicon"></a></li>
