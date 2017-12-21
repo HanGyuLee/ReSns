@@ -39,23 +39,6 @@ line-height: 1.42857143;
           transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
-.container{
-width: 600px;
-}
-
-.notice {
-    padding: 10px;
-    border-left: 6px solid #7f7f84;
-    margin-bottom: 10px;
-
-}
-
-/* .notice-success {
-    border-color: #7f7f84;
-} */
-.notice-success>strong {
-    color: #7f7f84;
-}
 
 .remore{
     cursor:pointer;
@@ -85,6 +68,7 @@ $(document).ready(function(){
 	var retval = []	
 	$(".heart").each(function(){
 	 var heartse = retval.push($(this).attr('id'));
+	 
 	
 	 if (heartse != null){
 		 
@@ -289,7 +273,7 @@ function goVeiwContent(statuscount){
 
 						if(re_depthno == 0){ //원 댓글
 							re += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
-							re += "<span style='font-weight: bold;'>"+login_name+"</span>";
+							re += "<a href='/resns/otherspage.re?fk_login_id="+re_id+"'><span style='font-weight: bold;'>"+login_name+"</span></a>";
 							re += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
 							re += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' />"; //신고 아직 안됨
 							re += "</a>";
@@ -316,7 +300,7 @@ function goVeiwContent(statuscount){
 							re += "<div style='margin-left: 15px;'>";
 							re += "<img src='resources/images/rere.png' style='width: 10px; height: 10px;' />";
 							re += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;' />";
-							re += "<span style='font-weight: bold;'>"+login_name+"</span>";
+							re += "<a href='/resns/otherspage.re?fk_login_id="+re_id+"'><span style='font-weight: bold;'>"+login_name+"</span></a>";
 							
 							if ('${sessionScope.loginUser.login_id}' == re_id){
 								re +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+","+statuscount+")' style='width: 15px; height: 15px;' align='right' />";
@@ -669,7 +653,8 @@ function goVeiwContent(statuscount){
     
     <tr>
 		<td width="30px" height="50px">&nbsp;</td>
-        <td colspan ="2" width="740px" height="50px"><img width="50px" height="50px" class=" img-circle" style="margin-right: 10px;" src="<%= request.getContextPath() %>/resources/images/${vo.follow_proile_image}"/>${vo.follow_name}
+        <td colspan ="2" width="740px" height="50px"><img width="50px" height="50px" class=" img-circle" style="margin-right: 10px;" src="<%= request.getContextPath() %>/resources/images/${vo.follow_proile_image}"/>
+        <a href="<%=request.getContextPath() %>/otherspage.re?fk_login_id=${vo.follow_id}">${vo.follow_name}</a>
         <input type="hidden" id="seq_tbl_board${status.count}" name="seq_tbl_board" value="${vo.seq_tbl_board}">
         <input type="hidden" id="fk_login_id${status.count}" name="fk_login_id" value="${vo.follow_id}">
         <input type="hidden" id="login_id${status.count}" name="login_id" value="${loginUser.login_id}">
@@ -711,7 +696,7 @@ function goVeiwContent(statuscount){
 												src="<%=request.getContextPath()%>/resources/images/heart.png"
 												id="heart${status.count}"
 												style="width: 18px; height: 18px; cursor: pointer;"
-												class="heart"  class="heart" onclick="addHeart('${status.count}');" />
+												class="heart" onclick="addHeart('${status.count}');" />
 												<div style="display: inline-block;" id="heartCnt${status.count}"><span style="font-weight: bold;">좋아요 ${vo.board_heart}개</span></div> &nbsp;&nbsp;
 		<a href="/resns/reportingBoard.re?fk_login_id=${vo.follow_id}&seq_tbl_board=${vo.seq_tbl_board}"> <img style="width: 18px; height: 18px; margin-right: 80px;"  src="<%=request.getContextPath()%>/resources/images/report.png" align="right" /> </a>	
 		</td>
@@ -812,9 +797,14 @@ function goVeiwContent(statuscount){
 </c:forEach>
 
 </div>
+
+
+<c:if test="${followBoard != null && not empty followBoard}">
 <div style="position: relative; left: 30%; ">
 ${pagebar}
 </div>
+</c:if>
+
 
 <br/>
 <br/>

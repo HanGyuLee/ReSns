@@ -55,7 +55,7 @@ public interface InterJsrService {
 	
 	
 	//백문백답답변가져오기
-	QuestionBoardReplyVO getReply(String seq_tbl_q);
+	HashMap<String,String> getReply(String seq_tbl_q);
 	//해당하는 질문내용 가져오기
 	QuestionBoardVO getQView(String seq_tbl_q);
 	
@@ -74,13 +74,20 @@ public interface InterJsrService {
 	
 	//차단체크 클래스에서 넘어온 차단 체크
 	int followblock(HashMap<String,String> map);
+
 	
 	
-/*	//블락테이블 인서트
-	int blockAdd(HashMap<String, String> map);
+	//블락테이블 인서트
+	int blockAdd(HashMap<String, String> map)throws Throwable;
+	//블락취소하기
+	int blockDel(HashMap<String, String> map);
 	
 	
-*/
+	//차단 리스트 뽑기
+	List<HashMap<String, String>> myBlockList(String login_id);
+	
+	//이름 알아오기
+	String getName(String q_fk_login_id);
 	
 
 

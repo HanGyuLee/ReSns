@@ -56,6 +56,15 @@ from tbl_follow
 where fk_login_id = #{login_id} and follow_id =  #{follow_id}
 </select>
 
+<!-- 나를 팔로우 하고 있는지 확인하기. follower_id에는 상대방의 아이디가 들어간다. -->
+<select id="followerCheck" parameterType="HashMap" resultType="Integer">
+select count(*)
+from tbl_follow
+where fk_login_id = #{follower_id} and follow_id = #{login_id}
+</select>
+
+
+
 <!-- 중복팔로우 확인 끝-->
 
 <!-- 팔로우하기 -->
@@ -133,8 +142,8 @@ where fk_login_id = #{follow_id}
 </resultMap>
 
 <select id="FollowBoardView" parameterType="HashMap" resultMap="FollowBoardMap">
-select follow_name
-, follower_proile_image
+select  follow_name
+, follow_proile_image
 ,follow_id
 ,seq_tbl_board
 ,board_content
@@ -152,8 +161,11 @@ select follow_name
 ,map_name
 from
 (
-select  rownum as rno , L.login_name as follow_name
-      ,nvl(M.uimg_profile_filename,'profile.png') as follower_proile_image
+select rownum as rno , V.*
+from
+(
+select  L.login_name as follow_name
+      ,M.uimg_profile_filename as follow_proile_image
       ,F.follow_id as follow_id
       ,B.seq_tbl_board as seq_tbl_board
       ,B.board_content as board_content
@@ -185,9 +197,10 @@ on F.follow_id = M.fk_login_id
 where F.fk_login_id = #{login_id}
 order by B.seq_tbl_board desc
 )V
-where V.rno >= #{startRno} and V.rno <![CDATA[<=]]> #{endRno}
-and V.board_time >= sysdate - 20
-order by V.board_time desc
+)T
+where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+and T.board_time >= sysdate - 20
+order by T.board_time desc
 </select>
 <!--  팔로우 게시글 리스트 가져오기 끝 -->
 
@@ -267,10 +280,13 @@ values(seq_tbl_alarm.nextval,#{seq_tbl_q},#{q_askid},#{fk_login_id},5,default,de
 
 <!-- 백문백답 리스트 불러오기 -->
 <select id="getQuList" parameterType="HashMap" resultType="com.spring.jsr.model.QuestionBoardVO">
-select rno, seq_tbl_q , fk_login_id, q_status, q_date, q_askid, q_content
+select seq_tbl_q , fk_login_id, q_status, q_date, q_askid, q_content
+from
+(
+select rownum rno, seq_tbl_q , fk_login_id, q_status, q_date, q_askid, q_content
 from 
 (
-select rownum as rno, seq_tbl_q, fk_login_id, q_status, q_date, q_askid
+select seq_tbl_q, fk_login_id, q_status, q_date, q_askid
 				,case when length(q_content) > 30
               then substr(q_content, 1, 20)||'...'
               else q_content
@@ -278,19 +294,24 @@ select rownum as rno, seq_tbl_q, fk_login_id, q_status, q_date, q_askid
          	as q_content
 from tbl_q
 where fk_login_id = #{fk_login_id}
+order by q_date desc
 )V
-where V.rno >= #{startRno} and V.rno <![CDATA[<=]]> #{endRno}
-order by V.seq_tbl_q desc
+)T
+where  T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+order by T.q_date desc
 </select>
 <!-- 백문백답 리스트 불러오기 -->
 
 
 <!-- 검색어 있는 백문백답 리스트 불러오기 -->
 <select id="getQuList2" parameterType="HashMap" resultType="com.spring.jsr.model.QuestionBoardVO">
-select rno, seq_tbl_q , fk_login_id, q_status, q_date, q_askid, q_content
+select seq_tbl_q , fk_login_id, q_status, q_date, q_askid, q_content
+from
+(
+select rownum rno, seq_tbl_q , fk_login_id, q_status, q_date, q_askid, q_content
 from 
 (
-select rownum as rno, seq_tbl_q, fk_login_id, q_status, q_date, q_askid
+select seq_tbl_q, fk_login_id, q_status, q_date, q_askid
 				,case when length(q_content) > 30
               then substr(q_content, 1, 20)||'...'
               else q_content
@@ -298,10 +319,11 @@ select rownum as rno, seq_tbl_q, fk_login_id, q_status, q_date, q_askid
          	as q_content
 from tbl_q
 where fk_login_id = #{fk_login_id}
-and q_content like '%' || #{qsearch} || '%'
+order by q_date desc
 )V
-where V.rno >= #{startRno} and V.rno <![CDATA[<=]]> #{endRno}
-order by V.seq_tbl_q desc
+)T
+where  T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
+order by T.q_date desc
 </select>
 <!-- 검색어 있는 백문백답 리스트 불러오기 -->
 
@@ -324,10 +346,18 @@ order by V.seq_tbl_q desc
 
 
 <!--  백문백답 답변 가져오기 -->
-<select id="getRp" parameterType="String" resultType="com.spring.jsr.model.QuestionBoardReplyVO">
-select fk_seq_tbl_q, fk_login_id, a_content, a_date
-from tbl_a
-where fk_seq_tbl_q = #{seq_tbl_q}
+<resultMap type="HashMap" id="getReMap">
+<result property="fk_seq_tbl_q" 					column="fk_seq_tbl_q" 				javaType="String" />
+<result property="fk_login_id" 					column="fk_login_id" 				javaType="String" />
+<result property="a_content" 					column="a_content" 				javaType="String" />
+<result property="a_date" 					column="a_date" 				javaType="String" />
+<result property="fk_login_name" 					column="login_name" 				javaType="String" />
+</resultMap>
+<select id="getRp" parameterType="String" resultMap="getReMap">
+select A.fk_seq_tbl_q, A.fk_login_id, A.a_content, A.a_date, L.login_name
+from tbl_a A join tbl_login L
+on A.fk_login_id = L.login_id
+where A.fk_seq_tbl_q = #{seq_tbl_q}
 </select>
 <!--  백문백답 답변 가져오기 끝 -->
 
@@ -439,4 +469,46 @@ from tbl_block
 where fk_login_id = #{fk_login_id} and block_id = #{login_id}
 </select>
 
+
+
+<!-- 차단하기 -->
+<select id="followblockAdd" parameterType="HashMap">
+insert into tbl_block(seq_block, fk_login_id, block_id)
+values(seq_tbl_block.nextval,#{login_id},#{block_id})
+</select>
+<!-- 차단하기 끝 -->
+
+
+<!-- 차단취소-->
+<select id="followblockDel" parameterType="HashMap">
+delete from tbl_block
+where fk_login_id = #{login_id}  and  block_id = #{block_id}
+</select>
+<!-- 차단취소 끝 -->
+
+
+
+<!-- 블락리스트가져오기 -->
+<resultMap type="HashMap" id="getMyBlockListMap">
+<result property="login_id" 			column="login_id" 					javaType="String" />
+<result property="block_id" 			column="block_id" 					javaType="String" />
+<result property="Block_name" 			column="Block_name" 				javaType="String" />
+<result property="Block_proile_image" 	column="Block_proile_image" 		javaType="String" />
+</resultMap>
+<select id="getMyBlockList" parameterType="String" resultMap="getMyBlockListMap">
+select B.fk_login_id as login_id, B.block_id as block_id, L.login_name as Block_name, nvl(M.uimg_profile_filename,'profile0.png') as Block_proile_image
+from tbl_block B left join tbl_login L
+on B.block_id = L.login_id
+left join tbl_uimage M
+on B.block_id = M.fk_login_id
+where B.fk_login_id = #{login_id}
+</select>
+<!-- 블락리스트가져오기  끝-->
+
+
+	<select id="getName" parameterType="String" resultType="String">
+		    select login_name
+		    from tbl_login
+		    where login_id = #{q_fk_login_id}	
+	</select>
 </mapper>

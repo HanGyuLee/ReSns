@@ -35,7 +35,7 @@ public class JsrDAO implements InterJsrDAO {
 	@Override
 	public List<HashMap<String, String>> getFollowerList(HashMap<String, String> map) {
 		List<HashMap<String, String>> followerList = sqlsession.selectList("jsrresns.getFollowerList",map);
-		System.out.println("팔로워 리스트 넘어오나요1");
+		//System.out.println("팔로워 리스트 넘어오나요1");
 		return followerList;
 	}
 
@@ -49,6 +49,14 @@ public class JsrDAO implements InterJsrDAO {
 		int c = sqlsession.selectOne("jsrresns.followCheck",map);
 		//팔로우 되어 있는 값이 있으면 1 리턴.
 		return c;
+	}
+	
+	//나를 팔로우 하고 있는지 확인
+	@Override
+	public int followerCheck(HashMap<String, String> map) {
+		
+		int ck = sqlsession.selectOne("jsrresns.followerCheck",map);
+		return ck;
 	}
 	
 	
@@ -216,8 +224,8 @@ public class JsrDAO implements InterJsrDAO {
 	
 	//백문백답 답변 가져오기
 	@Override
-	public QuestionBoardReplyVO getRp(String seq_tbl_q) {
-		 QuestionBoardReplyVO list = sqlsession.selectOne("jsrresns.getRp",seq_tbl_q); 
+	public HashMap<String,String> getRp(String seq_tbl_q) {
+		HashMap<String,String> list = sqlsession.selectOne("jsrresns.getRp",seq_tbl_q); 
 		return list;
 	}
 
@@ -317,7 +325,48 @@ public class JsrDAO implements InterJsrDAO {
 	}
 
 
+	
+	//블락한 상대 페이지에 접속했을 때, 블락을 신청한 사람도 상대방을 못보게 해야한다. 그래서 아이디 알아오기.
+	@Override
+	public String getblockResId(HashMap<String, String> map) {
+		String id = sqlsession.selectOne("jsrresns.getblockResId"); 
+		return id;
+	}
 
+
+	//차단하기
+	@Override
+	public int followblockAdd(HashMap<String, String> map) {
+		int n = sqlsession.insert("jsrresns.followblockAdd",map);
+		return n;
+	}
+
+
+	//차단취소하기
+	@Override
+	public int blockDel(HashMap<String, String> map) {
+		int n =  sqlsession.delete("jsrresns.followblockDel",map);
+		return n;
+	}
+
+	
+	//내 블락 리스트 가져오기
+	@Override
+	public List<HashMap<String, String>> myBlockList(String login_id) {
+		List<HashMap<String, String>> myBlockList = sqlsession.selectList("jsrresns.getMyBlockList",login_id);
+		return myBlockList;
+	}
+
+
+	//이름 알아오기
+	@Override
+	public String getUsername(String q_fk_login_id) {
+		String userName = sqlsession.selectOne("jsrresns.gerName",q_fk_login_id);
+		return userName;
+	}
+
+
+	
 
 
 

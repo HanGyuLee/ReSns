@@ -6,7 +6,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
+  <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+  <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
 
 <style type="text/css">
 
@@ -35,7 +37,7 @@ outline: 0;
 .a_content-feedback{ line-height:50px;}
 
 
-.q_contentbox{
+/* .q_contentbox{
 border-radius: 25px;
 background-color: skyblue;
 }
@@ -43,7 +45,7 @@ background-color: skyblue;
 .a_contentbox{
 border-radius: 25px;
 background-color: #fffd95;
-}
+} */
 
 
 
@@ -61,22 +63,22 @@ border: black;
 }
 
 .goQ:focus{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:active:hover{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:active:focus{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:hover{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
@@ -99,7 +101,7 @@ border-radius: 4px;
          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
          
 box-shadow:none;
-border-color:#eee;      
+border-color:#dbdbdb;      
 
 }
  .qsearch:focus{
@@ -116,6 +118,74 @@ box-shadow: 5px 5px 5px 0px lightgray;
 border-radius: 4px;
 
 }
+
+
+
+
+
+.triangle-isosceles {
+  position:relative;
+  padding:15px;
+/*   margin:1em 0 3em; */
+  color:#000;
+  background:#f3961c; /* default background for browsers without gradient support */
+  /* css3 */
+  background:-webkit-gradient(linear, 0 0, 0 100%, from(#f9d835), to(#f3961c));
+  background:-moz-linear-gradient(#f9d835, #f3961c);
+  background:-o-linear-gradient(#f9d835, #f3961c);
+  background:linear-gradient(#f9d835, #f3961c);
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+.triangle-isosceles:after {
+  content:"";
+  position:absolute;
+  bottom:-15px; /* value = - border-top-width - border-bottom-width */
+  left:50px; /* controls horizontal position */
+  border-width:15px 15px 0; /* vary these values to change the angle of the vertex */
+  border-style:solid;
+  border-color:#f3961c transparent;
+  /* reduce the damage in FF3.0 */
+  display:block;
+  width:0;
+}
+
+
+
+
+
+.triangle-obtuse {
+  position:relative;
+  padding:15px;
+/*   margin:1em 0 3em; */
+  color:#000;
+  background:#8c8c8c; /* default background for browsers without gradient support */
+  /* css3 */
+  background:-webkit-gradient(linear, 0 0, 0 100%, from(#8c8c8c), to(#000000));
+  background:-moz-linear-gradient(#8c8c8c, #000000);
+  background:-o-linear-gradient(#8c8c8c, #000000);
+  background:linear-gradient(#8c8c8c, #000000);
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+.triangle-obtuse:after {
+  content:"";
+  position:absolute;
+  bottom:-15px; /* value = - border-top-width - border-bottom-width */
+  left:600px; /* controls horizontal position */
+  border-width:15px 15px 0; /* vary these values to change the angle of the vertex */
+  border-style:solid;
+  border-color:#000000 transparent;
+  /* reduce the damage in FF3.0 */
+  display:block;
+  width:0;
+}
+
+
 
 
 </style>
@@ -206,7 +276,7 @@ $(document).ready(function(){
 		
 		$("#displayList").hide();
 		
-	});// end of $("#displayList").click()----------	
+	}); //end of $("#displayList").click()----------	
 
  
 	}); //end of $(document).ready
@@ -268,11 +338,95 @@ $(document).ready(function(){
 <body>
 <br/>
 <br/>
-<div style="border: solid 0px; black; width: 1200px;">
+<div style="border: solid 0px skyblue; width: 900px; position: relative; left: 5%;">
 
-<div style="float:left; margin-top: 22px; margin-right: 15px;">
-<form name="searchFrm" action="<%= request.getContextPath()%>/questionList.re" method="get">
-<div align="right" style="border: solid 0px red;">
+
+	<div class="myrow" style="width:900px; border: 0px solid red; ">
+<form name="qboardReFrm">
+<span style="margin-top: -10px;"><img src="<%= request.getContextPath()%>/resources/images/q_board_count.png "> ${totalcount}개의 질문이 있습니다.</span>
+		<button style="position: relative; left: 53%;" type="button" id="q_ce" class="delete btn btn-danger goQ" onClick="javascript:location.href='<%= request.getContextPath() %>/${gobackURL}'">리스트로 돌아 가기</button>
+
+		<table class="table table-hover table-responsive" style="width: 800px; border:1px solid; border-color: #c2c2c2; margin-top: 10px;">
+		    <thead>
+		        <tr>
+		            <th colspan="5"><span style="margin-left: 45%; font-size: 12pt;">${getques.q_date}</span></th>
+
+		        </tr>
+		    </thead>
+		    <tbody>
+		    	<tr id="d1">
+		    	<td></td>
+		            <td align="center" id="f1" width="600px" colspan="3">
+		           <p class="triangle-isosceles">${getques.q_content}</p>
+		            <img style="position: relative; right: 38%;" src="<%=request.getContextPath() %>/resources/images/q_ask_icon.png">
+		            <input id="fk_seq_tbl_q" name="fk_seq_tbl_q" type="hidden" value="${getques.seq_tbl_q}"/>
+		           <input type="hidden" id="q_askid" name="q_askid" value="${getques.q_askid}"/>
+		            </td>   
+		            <td></td>
+		            
+		        </tr>	
+		        
+
+		        
+		        		        
+		        <tr>
+		        <td colspan="5" style="border-top-style: hidden; border-bottom-style: hidden;"></td>
+		        </tr>      
+		        
+		        
+		        <tr>
+		        <td></td>
+		        
+		        <td colspan="3" width="600px" align="center"> 
+		        <c:if test ="${replayMap.a_content == null}" >
+		       
+				<span style="color: black; font-weight:bold; font-size:15pt;  text-align: center;">아직 답변이 없습니다.</span>
+				${replayMap.fk_login_name}
+				</c:if>
+				
+				<c:if test ="${replayMap.a_content != null}">
+				<div  align="left">답변날짜:${replayMap.a_date}</div>
+				<p class="triangle-obtuse">
+				<span style="color: white;  text-align: center;">${replayMap.a_content}</span></p>
+				<div style="font-size: 17pt; font-weight:bold; position: relative; left: 38%;">${replayMap.fk_login_name}</div>
+				</c:if>        
+				</td>
+		        <td></td>
+		        </tr>  
+
+		
+		<c:if test ="${replayMap.a_content != null && getques.fk_login_id == sessionScope.loginUser.login_id}">
+			<tr>
+		<td colspan="5" align="center" style="border-left-style:hidden; border-right-style:hidden; border-bottom-style: hidden;"> <button type="button" id="q_board_re"  onClick="goQReDel();" class="delete btn btn-danger">답변 삭제</button>
+		</td>
+		</tr>
+		</c:if>
+		
+		<c:if test ="${replayMap.a_content == null && getques.fk_login_id == sessionScope.loginUser.login_id}">
+			<tr>
+		<td colspan="5" style="border-left-style:hidden; border-right-style:hidden; border-bottom-style: hidden;">
+		<textarea class="a_content" name="a_content" id="a_contentw" placeholder="답변을 작성해주세요." style="border-style:hidden; border-bottom-style:solid; position:relative; right:5px; width:700px; height:40px; resize: none;"></textarea>
+		<button style="margin-left: -3px; width: 80px; padding-left: 0px; padding-right: 0px; margin-top: -30px; " type="button" id="q_board_re"  onClick="goQboardRe();" class="delete btn btn-danger">답변 작성</button>
+		</td>
+		</tr>
+		</c:if>
+
+
+		    </tbody>
+		</table>
+
+
+		<input type="hidden" id="gobackURL" name="gobackURL" value="${gobackURL}"/>
+		<input type="hidden" id="fk_login_id" name="fk_login_id" value="${getques.fk_login_id}"/>
+
+</form>
+		
+			</div>
+<div style="border:0px solid black; width:900px;">
+
+
+<form name="searchFrm" action="<%= request.getContextPath() %>/questionList.re" method="get">
+<div id ="searchDiv" align="right" style="width:450px; position:relative; left:38%;  border: solid 0px red;">
 <input type="hidden" name="fk_login_id" value="${getques.fk_login_id}">
 <input type="text" id="qsearch" name="qsearch" class="qsearch" style="margin-bottom: 10px; margin-right: 10px;"/><button type="button" class="delete btn btn-danger goQ" onClick="goSearch()">검색</button>
 <div id="display" style="width: 300px; height: border: 0px solid green; position: relative; right: 60px;"></div>
@@ -281,85 +435,16 @@ $(document).ready(function(){
 </div>
 </div>
 </form>
+
+</div>		
+
+
+
+
+	
+
 </div>
 
-<div class="container">
-	<div class="row">
-	<form name="qboardReFrm">
-<span style="margin-top: -10px;"><img src="<%= request.getContextPath()%>/resources/images/q_board_count.png "> ${totalcount}개의 질문이 있습니다.</span>
-	
-		<table class="table table-hover table-responsive" style="width: 800px">
-		    <thead>
-		        <tr>
-		            <th><span style="margin-left: 50%; text-align: center;">${getques.q_date}</span></th>
-
-		        </tr>
-		    </thead>
-		    <tbody>
-		    	<tr id="d1">
-		            <td id="f1" width="400px">
-		            <img src="<%=request.getContextPath() %>/resources/images/q_ask_icon.png">
-		            <div class="q_contentbox" style=" width: 400px;" ><div style="margin-left: 20px; margin-right: 15px;">${getques.q_content}</div></div>
-		            <input id="fk_seq_tbl_q" name="fk_seq_tbl_q" type="hidden" value="${getques.seq_tbl_q}"/>
-		           <input type="hidden" id="q_askid" name="q_askid" value="${getques.q_askid}"/>
-		            </td>   
-		            
-		        </tr>	
-		        
-		        <tr>
-		        <td></td>
-		        </tr>      
-		        
-		        
-		        <tr>
-		        <td>
-		        
-		        <div style="margin-left: 10px;"><img src="<%=request.getContextPath() %>/resources/images/a_board_login_id.png"></div>
-		       <div class="a_contentbox">
-		        <c:if test ="${replay.a_content == null}" >
-				<div style="text-align:right; margin-right: 15px;">아직 답변이 없습니다.</div>
-				</c:if>
-				 <c:if test ="${replay.a_content != null}" >
-				<div style="text-align:right; margin-left:10px; margin-right: 15px;">${replay.a_content}</div>
-				</c:if>        
-				</div>
-		        </td>
-		        </tr>  
-
-				<tr>
-				<td>
-		<c:if test ="${replay.a_content != null && getques.fk_login_id == sessionScope.loginUser.login_id}">
-		<td colspan="5" align="center"> <button type="button" id="q_board_re"  onClick="goQReDel();" class="delete btn btn-danger">답변 삭제</button></td>
-		
-		</c:if>
-		
-		<c:if test ="${replay.a_content == null && getques.fk_login_id == sessionScope.loginUser.login_id}">
-		<div style="margin-left: 10px;"><textarea class="a_content" name="a_content" id="a_contentw" placeholder="답변을 작성해주세요." style=" height:100px; resize: none;"></textarea>
-		<button type="button" id="q_board_re"  onClick="goQboardRe();" class="delete btn btn-danger">답변 작성</button>
-		</div>
-		</c:if>
-		</td>
-		
-				</tr>
-
-
-		    </tbody>
-		</table>
-
-		<div align="right">
-		<button type="button" id="q_ce" class="delete btn btn-danger goQ" onClick="javascript:location.href='<%= request.getContextPath() %>/${gobackURL}'">리스트로 돌아 가기</button>
-	</div>
-	
-		<input type="hidden" id="gobackURL" name="gobackURL" value="${gobackURL}"/>
-		<input type="hidden" id="fk_login_id" name="fk_login_id" value="${getques.fk_login_id}"/>
-
-</form>
-	
-	
-		</div>
-	</div>
-	
-</div>
 
 
 

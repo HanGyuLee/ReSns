@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.spring.common.JsrUtill;
+import com.spring.hgl.service.InterHglService;
 import com.spring.jdh.model.LoginVO;
 
 import com.spring.jsr.model.QuestionBoardReplyVO;
@@ -32,7 +33,6 @@ public class JsrController {
 	//의존객체 주입(DI:Dependency injection)
 	@Autowired
 	private InterJsrService service;
-	
 	
 	//팔로우,팔로워 리스트 페이지 요청
 	@RequestMapping(value="/followList.re", method={RequestMethod.GET})
@@ -63,7 +63,7 @@ public class JsrController {
 		req.setAttribute("followerList", followerList);//팔로워
 		
 
-		return "jsr/followList.tiles";
+		return "jsr/followList.tiles2";
 	}//end of public String followListView(HttpServletRequest req, HttpSession session)
 
 	
@@ -361,7 +361,7 @@ public class JsrController {
 	req.setAttribute("gobackURL", gobackURL);	
 	req.setAttribute("ask_id", login_id);	
 	
-	return "jsr/questionBoardAdd.tiles2";
+	return "jsrnotiles/questionBoardAdd.notiles";
 	}//end of public String questionAdd()
 	
 	
@@ -424,7 +424,8 @@ public class JsrController {
 		
 		
 		String fk_login_id = req.getParameter("fk_login_id");//일단 임의로 qqii를 넣어준다.
-		//System.out.println("fk_login_id확인:"+fk_login_id);
+		//system.out.println("fk_login_id확인:"+fk_login_id);
+		
 		
 		if(fk_login_id ==null || fk_login_id.isEmpty()){
 			req.setAttribute("msg", "비정상적인 경로로 접근하였습니다.");
@@ -515,7 +516,7 @@ public class JsrController {
 		req.setAttribute("gobackURL", gobackURL);
 	
 
-		return "jsr/questionList.tiles2";
+		return "jsrnotiles/questionList.notiles";
 	}//end of public String questionList()
 	
 	
@@ -524,7 +525,7 @@ public class JsrController {
 	public String requireLogin2_questionView(HttpServletRequest req,HttpServletResponse res,HttpSession session){
 		
 		Object obj = session.getAttribute("loginUser");
-		
+
 		String login_id = "";	
 		if (obj != null) {
 			LoginVO loginUser = (LoginVO)obj;
@@ -539,6 +540,8 @@ public class JsrController {
 		String gobackURL = req.getParameter("gobackURL");
 		String totalcount =  req.getParameter("totalcount");
 		//System.out.println("테스트seq"+seq_tbl_q);
+		//System.out.println("gobackURL::"+gobackURL);
+		//System.out.println("totalcount::"+totalcount);
 
 
 		
@@ -562,8 +565,20 @@ public class JsrController {
 		   }*/
 		
 		//답변 가져오기
-		QuestionBoardReplyVO replay = service.getReply(seq_tbl_q);
-		if (replay != null){
+		HashMap<String,String> replayMap = service.getReply(seq_tbl_q);
+		//QuestionBoardReplyVO replay = service.getReply(seq_tbl_q);
+		if(replayMap !=null ){
+		String a_content = replayMap.get("a_content");
+		a_content = a_content.replaceAll("\r\n", "<br/>");
+		replayMap.put("a_content", a_content);
+		req.setAttribute("replayMap", replayMap);
+		}
+		
+		else{
+			req.setAttribute("replayMap", replayMap);
+		}
+		
+/*		if (replay != null){
 			String a_content = replay.getA_content();
 			
 			a_content = a_content.replaceAll("\r\n", "<br/>");
@@ -572,7 +587,7 @@ public class JsrController {
 		}
 		else{
 			req.setAttribute("replay", replay);
-		}
+		}*/
 		//질문 가져오기
 		QuestionBoardVO getques =  service.getQView(seq_tbl_q);	
 		
@@ -590,12 +605,13 @@ public class JsrController {
 		getques.setQ_content(q_content);
 		//System.out.println("질문확인:"+getques);
 		
+
 		req.setAttribute("getques", getques);
 		req.setAttribute("gobackURL", gobackURL);
 		req.setAttribute("totalcount",totalcount);
 
 		
-		return "jsr/questionView.tiles2";
+		return "jsrnotiles/questionView.notiles";
 	}//end of public String questionView()
 	
 	//백문백답 답변 댓글 작성하기 요청
@@ -787,16 +803,11 @@ public class JsrController {
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 	
-	//은경씨에게 이야기 할거----> 게시글 비공개 처리 하면서 태그랑 지워버리고, 그 후에 다시  글 공개로 돌리면 태그는 null이 되면서 리스트가 이상해짐 ㅠㅠ...
-	// 대댓글 접기 가능!
-	//규리씨에게 이야기 할거--> 알람 테이블이 자식테이블이여서 글을 삭제 할수가 없음...ㅠㅠ......fk할 때 온케스케이드를 붙이거나, 참조가 아니게 하기.
-	
-	
 	
 	//블락 하기!!!!
 
 	@RequestMapping(value="/followBlock.re", method={RequestMethod.GET})
-	public String followma(HttpServletRequest req, HttpSession session) {	
+	public String BlockAdd(HttpServletRequest req, HttpSession session)throws Throwable {	
 	
 		String block_id = req.getParameter("fk_login_id");	
 		
@@ -812,17 +823,79 @@ public class JsrController {
 
 		}
 
-
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("block_id", block_id);
-		map.put("login_id", login_id);
+		map.put("block_id", block_id);//블락할 아이디
+		map.put("login_id", login_id);//로그인한 내 아이디
 		
-		//int n = service.blockAdd(map);
 		
+		int n = service.blockAdd(map);
+	
+		if(n>0 || n==1){
+			
+			req.setAttribute("msg","차단성공!");
+			req.setAttribute("loc", "/resns/index.re");
+
+		}
+		
+		if(n==-1){
+			req.setAttribute("msg","이미 차단함!");
+			req.setAttribute("loc", "/resns/index.re");
+			
+		}
+
+		else{
+			req.setAttribute("msg","차단 실패!");
+			req.setAttribute("loc", "/resns/index.re");
+		}
 		
 	
-	return "";
+	return "msg.notiles";
 	}
+	
+	
+	
+	//차단 취소하기
+	@RequestMapping(value="/followBlockBack.re", method={RequestMethod.GET})
+	public String BlockDel(HttpServletRequest req, HttpSession session)throws Throwable {	
+	
+		String block_id = req.getParameter("fk_login_id");	
+		
+		Object obj = session.getAttribute("loginUser");
+		
+		String login_id = null;	
+		if (obj != null) {
+			LoginVO loginUser = (LoginVO)obj;
+		
+		if(loginUser != null){
+			login_id = loginUser.getLogin_id();
+		}
+
+		}
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("block_id", block_id);//블락 취소할 아이디
+		map.put("login_id", login_id);//로그인한 내 아이디
+		
+		
+		int n = service.blockDel(map);
+	
+		if(n>0 || n==1){
+			
+			req.setAttribute("msg","차단취소 성공!");
+			req.setAttribute("loc", "/resns/index.re");
+
+		}
+		
+		else{
+			req.setAttribute("msg","차단 취소 실패!");
+			req.setAttribute("loc", "/resns/index.re");
+		}
+		
+	
+	return "msg.notiles";
+	}
+	
+	
 	
 	
 	

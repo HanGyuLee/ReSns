@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.hgl.model.InterHglDAO;
 import com.spring.jsr.model.InterJsrDAO;
 import com.spring.jsr.model.QuestionBoardReplyVO;
 import com.spring.jsr.model.QuestionBoardVO;
@@ -27,7 +28,7 @@ public class JsrService implements InterJsrService {
 	//의존객체 주입
 	@Autowired
 	private InterJsrDAO jdao;
-	private BoardDAO jbdao;
+	private InterHglDAO hdao;
 	
 	
 	//팔로우 리스트 가져오기
@@ -385,8 +386,8 @@ public class JsrService implements InterJsrService {
 
 	//백문백답 답변 가져오기
 	@Override
-	public QuestionBoardReplyVO getReply(String seq_tbl_q) {
-		QuestionBoardReplyVO list =  jdao.getRp(seq_tbl_q);
+	public HashMap<String,String> getReply(String seq_tbl_q) {
+		HashMap<String,String> list =  jdao.getRp(seq_tbl_q);
 		return list;
 	}
 
@@ -497,21 +498,186 @@ public class JsrService implements InterJsrService {
 	
 	/*--------------------------------------------------------------------------------------------------------------------------*/	
 	
-	//차단체크
+	//차단당했는지 알아오기
 	@Override
 	public int followblock(HashMap<String,String> map) {
-		int n = jdao.followblock(map);
+		int n =0;//접속한 유저가 방문한 해당 회원에게 차단당했는가 체크
+		int m = 0;//접속한 유저가 방문한 해당 회원을 차단했는가 체크
+		int ckEnd = 0;//체크 확인
+		
+		n = jdao.followblock(map);	// 접속한 유저 login_id가  해당 페이지의 fk_login_id에게 차단 당했는가?
+		//이때 map에는 login_id에 login_id가 들어가서 block_id에 매칭되어 블락당한 아이디에 존재하는지 확인된다.
+		
+		//System.out.println("서비스:n"+n);
+	
+		
+		HashMap<String,String> map2 = new HashMap<String,String>();
+		//접속한 유저 login_user를 fk_login_id에 넣어주고, 접속하려는 해당 회원의 페이지를 block_id에 담아준다
+		String fk_login_id = map.get("login_id");
+		String block_id = map.get("fk_login_id");
+		//System.out.println("서비스단 블락:"+block_id);
+		//System.out.println("서비스단 내 아이디"+fk_login_id);
+		
+		//쿼리문 block_id에 접속하고자 하는 상대 페이지 fk_login_id를 넣어주어야 하니까, 
+		map2.put("login_id", block_id);
+		//접속월 원하는 내가 fk_login_id에 들어가면 된다. 왜냐하면 쿼리문에서 fk_login_id는 블락을 신청한 사람이니까.
+		map2.put("fk_login_id", fk_login_id);
+		
+		m = jdao.followblock(map2);
+		//System.out.println("서비스:m"+m);
+/*		해당 메소드는 내가 차단당했는지를 확인하는 쿼리문이므로 잘 보고 변수를 바꿔 select 돼야 한다.
+		select count(*)
+		from tbl_block
+		where fk_login_id = #{fk_login_id} and block_id = #{login_id}
+		*/
+		
+		//System.out.println("서비스:ckEnd"+ckEnd);
+		if(n==1 || m==1){
+			ckEnd = 1;
+		}
+		
+		else {
+			ckEnd = 0;
+		}
+		
+		
+		
+		return ckEnd;
+	}
 
+
+	
+	//유저 차단 하기!
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int blockAdd(HashMap<String, String> map) throws Throwable{
+		
+		/*
+		 리턴 값 정리
+		 
+		 -1 : 이미 차단 되어 있는 상태
+		 0 : 차단 실패
+		 1 : 차단성공
+		 
+		 
+		 */	
+
+		int blockCk = 0;//블락체크
+		
+		
+
+		int followCk = 0;//팔로우 체크
+		int downfollow1 = 0;//내가 팔로우 하고 있는 사람이라면 내 팔로우 값에서 팔로우 다운 시키기
+		int downfollower1 = 0;//내가 팔로우 하고 있던 사람이라면 상대  팔로워 다운 시키기
+		int unfollow=0;//언팔로우 시키기
+		
+		
+		int followerCk = 0;//나를 팔로우 하고 있는지 확인
+		int block_id_unfollow = 0;//나를 팔로우 하고 있는 경우 언팔시키기
+		int downfollow2 = 0;//나를 팔로우 하고 있는 사람이라면 상대 팔로우 값에서 팔로우 다운 시키기
+		int downfollower2 = 0;//나를 팔로우 하고 있던 사람이라면 내  팔로워 다운 시키기
+		
+		
+		int blockAdd = 0;
+		int blockAddEnd = 0;//최종블락
+		
+		
+		//현재 내가 팔로우 한 상태인지 체크하기
+		followCk = jdao.followCheck(map);
+		
+		
+		
+		
+		//나를 팔로우 하고 있는지 확인
+		String follower_id =map.get("block_id");
+				map.put("follower_id", follower_id);
+		followerCk =  jdao.followerCheck(map);
+		
+		
+	
+		
+		//이미 블락되었는지 확인하기
+		blockCk = jdao.followblock(map);	
+		
+		if(blockCk == 1){
+			blockAddEnd = -1; //이미 차단 테이블에 등록되어 있다.
+		}
+		
+
+		
+		if(blockCk ==0){//아직 차단하지 않았을 때
+		
+			
+			//내가 팔로우한 상태이고, 나를 팔로우 하지 않았고, 
+			if(followCk == 1){
+				unfollow = jdao.unFollow(map);//언팔로우 하기
+				
+				//팔로우, 팔로워 값 감소하기
+				downfollow1 = jdao.unfollowupdate(map);
+				downfollower1 = jdao.unfollowerupdate(map);
+				
+				
+		
+			}
+
+			//상대도 나를 팔로우 했을 때 언팔
+			if(followerCk ==1){
+				block_id_unfollow = 0;
+				HashMap<String,String> map2 = new HashMap<String,String>();
+				String login_id = map.get("login_id");//로그인한 내 아이디를 가지고 온다.
+				String block_id = map.get("block_id");//차단시키면서 언팔시킬 상대 아이디를 가지고 온다.
+				
+				map2.put("follow_id", login_id); //나를 언팔 시킬 거니까 팔로우 아이디에 로그인한 내 아이디
+				map2.put("login_id", block_id);// 로그인 아이디에 나를 팔로우한 상대 아이디를 넣어준다.
+				
+				block_id_unfollow = jdao.unFollow(map2);
+				
+				downfollow2 = jdao.unfollowupdate(map2);
+				downfollower2 = jdao.unfollowerupdate(map2);
+
+				
+			}
+			
+			//차단 테이블에 인서트 하기
+			blockAdd =  jdao.followblockAdd(map);
+		
+			
+			if(blockAdd>0 || blockAdd==1){
+				
+				blockAddEnd = 1; //내가 팔로우 한 상태에서 차단성공
+			}	
+			
+		}//팔로우가 되어 있다면
+		
+		
+		return blockAddEnd;
+	}
+
+
+	//블락취소하기
+	@Override
+	public int blockDel(HashMap<String, String> map) {
+		int n = jdao.blockDel(map);
 		return n;
 	}
 
 
+	//내 차단 리스트 가져오기
+	@Override
+	public List<HashMap<String, String>> myBlockList(String login_id) {
+		List<HashMap<String, String>> myBlockList = jdao.myBlockList(login_id);
+		return myBlockList;
+	}
 
 
-
-	
-
-	
+	//이름 알아오기
+	@Override
+	public String getName(String q_fk_login_id) {	
+		String getName = jdao.getUsername(q_fk_login_id);
+		System.out.println("서비스단!!"+getName);
+		return getName;
+	}
 	
 	
 	

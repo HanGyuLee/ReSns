@@ -18,9 +18,10 @@
   <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
  
  <style type="text/css" >
- 	#myheader		{ height:100px; background-color:black; margin-top:-30px; }
+ 	#myheader		{ height:120px; background-color:black; margin-top: -30px; }
  	#mycontainer	{ margin:0 auto; }
-	#mycontent		{ float:left; width:100%; background-color:#F5F5F5; min-height:800px; }
+ 	#mynoticeinf    { position: relative;}
+	#mycontent		{ position:relative; width:100%; background-color:#F5F5F5; min-height:800px; }
  
  </style>    
 

@@ -18,6 +18,10 @@ public interface InterJsrDAO {
 	int followCheck(HashMap<String, String> map);
 	
 	
+	//나를 팔로우 하고 있는지 확인
+	int followerCheck(HashMap<String, String> map);
+	
+	
 	//팔로우
 	int followAdd(HashMap<String, String> map);
 	//팔로우 후 팔로워, 팔로우 수 증가
@@ -74,7 +78,7 @@ public interface InterJsrDAO {
 	
 	
 	//백문백답 답변가져오기
-	QuestionBoardReplyVO getRp(String seq_tbl_q);
+	HashMap<String,String> getRp(String seq_tbl_q);
 	//해당하는 질문내용 가져오기
 	QuestionBoardVO getQView(String seq_tbl_q);
 	
@@ -102,6 +106,23 @@ public interface InterJsrDAO {
 	
 	//차단체크
 	int followblock(HashMap<String,String> map);
+	
+	//블락신청한 사람 아이디 가져오기
+	String getblockResId(HashMap<String, String> map);
+	
+	//차단하기
+	int followblockAdd(HashMap<String, String> map);
+	
+	//차단 취소하기
+	int blockDel(HashMap<String, String> map);
+	
+	//블락리스트 가져오기
+	List<HashMap<String, String>> myBlockList(String login_id);
+	
+	//이름알아오기
+	String getUsername(String q_fk_login_id);
+
+	
 	
 	
 	

@@ -6,19 +6,28 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<title>백문백답</title>
+
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
+  <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+  <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
   
 
 
 <style type="text/css">
+
+
 
 table{
     font-family:'Calibri';
     font-size:13px;
     background-color:#fff;
     color:#333; 
+    border-radius: 4px;
+    
 }
 .table-hover > tbody > tr:hover {
-  background-color: #fffedb;
+  background-color: #ededed;
 }
 
 
@@ -42,22 +51,22 @@ border: black;
 }
 
 .goQ:focus{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:active:hover{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:active:focus{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:hover{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
@@ -80,7 +89,7 @@ border-radius: 4px;
          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
          
 box-shadow:none;
-border-color:#eee;      
+border-color:#dbdbdb;      
 
 }
  .qsearch:focus{
@@ -147,6 +156,7 @@ $(document).ready(function(){
 				$("#displayList").hide();
 			} // end of if ~ else ----------------
 			
+			
 		},//end of sucess
 		error: function(request, status, error){
 			alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -157,7 +167,6 @@ $(document).ready(function(){
 	});//end of keyup
 	
 	
-
 	$("#displayList").click(function(event){
 		
 		var $target = $(event.target);
@@ -179,8 +188,17 @@ $(document).ready(function(){
 		// 텍스트박스에 검색된 결과의 문자열을 입력해준다.
 		
 		$("#displayList").hide();
-		
+
 	});// end of $("#displayList").click()----------	
+	
+
+	$("html").click(function(){
+	
+	 if (event.target.id != $("#searchDiv") ){
+		   $("#displayList").hide();
+		  }
+	
+	});
 
  
 	}); //end of $(document).ready
@@ -231,7 +249,7 @@ $(document).ready(function(){
 	var frm = document.wFrm;
 	var ask_id = frm.q_askid.value;
 	if (fk_login_id == ask_id ){
-		alert("스스로에게 질문할 수 없습니다 x(");
+		alert("스스로에게 질문할 수 없습니다.");
 	}
 	
 	else{
@@ -273,37 +291,21 @@ $(document).ready(function(){
 
 
 
-<title>백문백답</title>
+
 </head>
 <body>
 <br/>
 <br/>
-<div id="test002" class="test002">
+<div style="border: solid 0px skyblue; width: 900px; position: relative; left: 5%;">
 
-<%-- <%@include file="/WEB-INF/views/jsr/mypage.jsp"%>
- --%>
-</div>
 
-<div style="border: solid 0px; black; width: 1200px;">
-
-<div style="float:left; margin-top: 22px; margin-right: 15px;">
-<form name="searchFrm" action="<%= request.getContextPath()%>/questionList.re" method="get">
-<div align="right" style="border: solid 0px red;">
-<input type="hidden" name="fk_login_id" value="${fk_login_id}">
-<input type="text" id="qsearch" name="qsearch" class="qsearch" style="margin-bottom: 10px; margin-right: 10px;"/><button type="button" class="delete btn btn-danger goQ" onClick="goSearch()">검색</button>
-<div id="display" style="width: 300px; height: border: 0px solid green; position: relative; right: 60px;"></div>
-<div style="width: 300px; border: 0px solid black; position: relative; right: 60px;">
-<div id="displayList"></div>
-</div>
-</div>
-</form>
-</div>
-
-<div class="container">
-	<div class="row">
+	<div class="myrow" style="width:900px; border: 0px solid red; ">
 <span style="margin-top: -10px;"><img src="<%= request.getContextPath()%>/resources/images/q_board_count.png "> ${totalcount}개의 질문이 있습니다.</span>
-	
-		<table class="table table-hover table-responsive" style="width: 800px;">
+<div align="right" style="position:relative; left:50%; display: inline; "><button style="" type="button" class="delete btn btn-danger goQ" onClick="goQAdd('${fk_login_id}');">질문하기</button>&nbsp;&nbsp;
+		<button style="" type="button" class="delete btn btn-danger goQ" onClick="javascript:location.href='<%= request.getContextPath() %>/questionList.re?fk_login_id=${fk_login_id}'">전체목록</button>
+		</div>
+
+		<table class="table table-hover table-responsive" style="width: 800px; border:1px solid; border-color: #c2c2c2; margin-top: 10px;">
 		    <thead>
 		        <tr>
 		          <%--  <th><span style="margin-left: 30%;">번호</span></th> --%>
@@ -360,19 +362,33 @@ $(document).ready(function(){
 		    </c:forEach>
 		    </tbody>
 		</table>
-		<div align="right" style="margin-right: 20px;"><button style="" type="button" class="delete btn btn-danger goQ" onClick="goQAdd('${fk_login_id}');">질문하기</button>
-		<button style="" type="button" class="delete btn btn-danger goQ" onClick="javascript:location.href='<%= request.getContextPath() %>/questionList.re?fk_login_id=${fk_login_id}'">전체목록</button>
-		</div>
-	</div>
-	
-</div>
-	
-	
-<div style="position: relative; left: 60%; ">
-${pagebar}
-</div>
-</div>
+		
+		
+		<div style="position: relative; left: 40%; margin-top: -30px; margin-bottom: -30px;">${pagebar}</div>
+		
+			</div>
+<div style="border:0px solid black; width:900px;">
 
+
+<form name="searchFrm" action="<%= request.getContextPath() %>/questionList.re" method="get">
+<div id ="searchDiv" align="right" style="width:450px; position:relative; left:38%;  border: solid 0px red;">
+<input type="hidden" name="fk_login_id" value="${fk_login_id}">
+<input type="text" id="qsearch" name="qsearch" class="qsearch" style="margin-bottom: 10px; margin-right: 10px;"/><button type="button" class="delete btn btn-danger goQ" onClick="goSearch()">검색</button>
+<div id="display" style="width: 300px; height: border: 0px solid green; position: relative; right: 60px;"></div>
+<div style="width: 300px; border: 0px solid black; position: relative; right: 60px;">
+<div id="displayList"></div>
+</div>
+</div>
+</form>
+
+</div>		
+
+
+
+
+	
+
+</div>
 
 
 
