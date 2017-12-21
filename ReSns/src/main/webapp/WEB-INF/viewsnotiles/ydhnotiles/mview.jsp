@@ -1,6 +1,13 @@
+<%@page import="org.springframework.stereotype.Repository"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
+ <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+ <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
+
    
 <style type="text/css">
 	table, th, td, input, textarea {border: solid gray 1px;}
@@ -40,11 +47,11 @@
 <div style="padding-left: 10%; border: solid 0px red;">
 	<h1>글내용보기</h1>
 	<table id="table">
-		<tr>
+		<%-- <tr>
 			<th>글번호</th>
 			<td><input type="hidden" name="seq_tbl_music" value="${mvo.seq_tbl_music}"/>${mvo.seq_tbl_music}</td>
-		</tr>
-		
+		</tr> --%>
+		   <input type="hidden" name="seq_tbl_music" value="${mvo.seq_tbl_music}"/>
 			<input type="hidden" name="fk_login_id" value="${mvo.fk_login_id}"/>
 		
 		<tr>

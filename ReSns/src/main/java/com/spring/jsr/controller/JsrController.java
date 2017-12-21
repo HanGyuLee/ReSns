@@ -403,7 +403,7 @@ public class JsrController {
 
 	//백문백답 게시판 목록 요청
 	@RequestMapping(value="/questionList.re", method={RequestMethod.GET})
-	public String requireLogin_questionList(HttpServletRequest req,HttpServletResponse res,HttpSession session){
+	public String questionList(HttpServletRequest req,HttpServletResponse res,HttpSession session){
 	
 		List<QuestionBoardVO> queBoardList =null;
 		LoginVO loginUser = null;

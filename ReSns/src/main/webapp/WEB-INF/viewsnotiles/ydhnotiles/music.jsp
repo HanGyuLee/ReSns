@@ -1,6 +1,13 @@
+<%@page import="org.springframework.stereotype.Repository"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
+ <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+ <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
+
     
 <style type="text/css">
 	table, th, td {border: solid gray 1px;}
@@ -234,7 +241,7 @@
 	  <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
 	   <div style="margin-top: 20px;">
 		  <tr align="center" >
-			<th style="width: 70px;">글번호</th>
+			<!-- <th style="width: 70px;">글번호</th> -->
 			<th style="width: 360px;">제목</th>
 			<th style="width: 70px;">날짜</th>
 			<th style="width: 70px;"><span style="font-size:9pt; color:red;"><label for ="allCheckbox">전체선택&nbsp;</label></span>&nbsp;<input type="checkbox" id="allCheckbox" /></th>
@@ -245,7 +252,7 @@
 	  <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
 	   <div style="margin-top: 20px;">
 		  <tr align="center" >
-			<th style="width: 70px;">글번호</th>
+			<!-- <th style="width: 70px;">글번호</th> -->
 			<th style="width: 360px;">제목</th>
 			<th style="width: 70px;">날짜</th>
 		 </tr>
@@ -266,7 +273,7 @@
 	 <c:forEach var="m" items="${mlist}" varStatus="status"> 
 			<tr>
 			<input type="hidden" name="fk_login_id" value="${m.FK_LOGIN_ID}"/>
-			<td align="center" style="width: 70px;">${m.SEQ_TBL_MUSIC}</td>
+			<%-- <td align="center" style="width: 70px;">${m.SEQ_TBL_MUSIC}</td> --%>
 	 		<c:if test="${m.MUSIC_COMMENTCOUNT != 0}">
 			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}','${m.FK_LOGIN_ID}');">${m.MUSIC_NAME}&nbsp;<span style="font-style: italic; color:red;">[${m.MUSIC_COMMENTCOUNT}]</span></span></td>
 			</c:if>

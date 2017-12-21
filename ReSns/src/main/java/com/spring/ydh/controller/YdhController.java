@@ -360,7 +360,7 @@ public class YdhController {
 	    	//req.setAttribute("gobackURL", gobackURL);
 		    
 	    	
-	    	return "ydh/music.tiles2";
+	    	return "ydhnotiles/music.notiles";
 		    
 	}//music.re
 	
@@ -412,7 +412,7 @@ public class YdhController {
   		  
 		
 
-		return "ydh/mwrite.tiles2";
+		return "ydhnotiles/mwrite.notiles";
 	}//write()
 	
 	//글쓰기
@@ -424,7 +424,7 @@ public class YdhController {
 			req.setAttribute("n", n);
 			req.setAttribute("fk_login_id", fk_login_id);
 			req.setAttribute("seq_tbl_music", seq_tbl_music);
-			return "ydh/mwriteEnd.tiles2";
+			return "ydhnotiles/mwriteEnd.notiles";
 		 }
 		    
 	
@@ -472,7 +472,7 @@ public class YdhController {
    
     		//req.setAttribute("gobackURL", "mview.re");
     		
-    	return "ydh/addComment.tiles2";
+    	return "ydhnotiles/addComment.notiles";
     	// /WEB-INF/views2/board/addCommentEnd.jsp파일을 생성한다.
     }//addComment()
 	
@@ -509,7 +509,7 @@ public class YdhController {
     	     req.setAttribute("n", n);
 
     	
-    	return "ydh/remdel.tiles2";
+    	return "ydhnotiles/remdel.notiles";
     }
     
     
@@ -551,7 +551,7 @@ public class YdhController {
 		   req.setAttribute("commentList", commentList);
 		   //req.setAttribute("view", view);
 		
-		return "ydh/mview.tiles2";
+		return "ydhnotiles/mview.notiles";
 	
 	}
 	
@@ -572,7 +572,7 @@ public class YdhController {
 		req.setAttribute("mvo", mvo);
 		req.setAttribute("fk_login_id", fk_login_id);
 		req.setAttribute("seq_tbl_music", seq_tbl_music);
-		return "ydh/medit.tiles2";
+		return "ydhnotiles/medit.notiles";
 	
 	}
 	
@@ -603,7 +603,7 @@ public class YdhController {
 		    req.setAttribute("seq_tbl_music", seq_tbl_music);
 		    req.setAttribute("fk_login_id", fk_login_id);
 		    
-			return "ydh/meditEnd.tiles2";
+			return "ydhnotiles/meditEnd.notiles";
 		
 		}
 	
@@ -624,7 +624,7 @@ public class YdhController {
 		  req.setAttribute("seq_tbl_music", seq_tbl_music);
 		  req.setAttribute("fk_login_id", fk_login_id);
 			  
-		  return "ydh/mdel.tiles2";
+		  return "ydhnotiles/mdel.notiles";
 		
 		}	
 	
@@ -665,7 +665,7 @@ public class YdhController {
 	    req.setAttribute("seq_tbl_music", seq_tbl_music);
 	    req.setAttribute("fk_login_id", fk_login_id);
 			
-		return "ydh/mdelChckbox.tiles2";
+		return "ydhnotiles/mdelChckbox.notiles";
 		
 		}	
 	
