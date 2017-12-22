@@ -534,11 +534,11 @@ public class HglController {
 					break;
 				case "5": 
 					alarm_type =" 문답게시판에 질문을 남겼습니다";
-					url = "/resns/questionList.re?fk_login_id="+userid;
+					url = "/resns/questionViewAra.re?fk_seq_tbl_q="+theSeq;
 					break;
 				case "6": 
 					alarm_type =" 내가 남긴 질문에 답변을 남겼습니다";
-					url = "/resns/questionList.re?fk_login_id="+userid;
+					url = "/resns/questionViewAra.re?fk_seq_tbl_q="+theSeq;
 					break;
 				case "7": 
 					alarm_type =" 동영상에 댓글을 남겼습니다";
