@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.spring.common.FileManager;
 import com.spring.common.MyUtil;
 import com.spring.jdh.model.LoginVO;
+import com.spring.jdh.service.InterSnsService;
 import com.spring.jsr.service.InterJsrService;
 import com.spring.jsr.service.JsrService;
 import com.spring.pek.model.BimageVO;

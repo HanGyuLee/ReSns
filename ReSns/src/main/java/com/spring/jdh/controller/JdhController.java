@@ -103,6 +103,16 @@ public class JdhController {
 				req.setAttribute("uservo", uservo);
 				session.setAttribute("loginUser", loginUser);
 				
+				System.out.println("아이디 "+id);
+				
+				int birth = service.getBirth(id);
+				
+				session.setAttribute("birth", birth);
+				
+				System.out.println("생일=========================");
+				System.out.println(birth);
+				System.out.println("==============================");
+				
 				// 세션에 저장된 돌아갈 페이지(url)정보를 불러온다.
 				String gobackURL = (String)session.getAttribute("gobackURL");
 				

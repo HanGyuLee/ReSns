@@ -262,6 +262,19 @@ public class SnsDAO implements InterSnsDAO {
 					
 					return n;
 				}
+
+				// 생일인지 알아오기
+				@Override
+				public int getBirth(String id) {
+					
+					System.out.println("아이디dao:"+id);
+					
+					int birth = sqlsession.selectOne("jdhresns.getBirth", id);
+					
+					System.out.println("생일dao: "+birth);
+					
+					return birth;
+				}
 				
 				
 				

@@ -253,6 +253,18 @@ public class SnsService implements InterSnsService {
 		   }
 
 		
+		// 생일인지 알아오기
+		@Override
+		public int getBirth(String id) {
+			
+			int birth = dao.getBirth(id);
+			
+			System.out.println("생일service:" +birth);
+			
+			return birth;
+		}
+
+		
 
 		
 	

@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 
 <%-- ===== #35. tiles 를 사용하는 레이아웃 페이지 만들기  ===== --%>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"  %>    
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"  %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
     
 <!DOCTYPE html>
 <html>
@@ -20,6 +21,7 @@
  
  <style type="text/css" >
  	#myheader		{ height:120px; background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png"); }
+ 	#myheader2		{ height:120px; background-image: url("<%= request.getContextPath() %>/resources/images/birthday.png"); }
  	#mycontainer	{ margin:0 auto; }
 	#mycontent		{ float:left; width:75%; min-height:800px; padding-top: 40px;}
 	#mysideinfo		{ float:left; width:25%; }
@@ -30,9 +32,23 @@
 
 <body>
 	<div id="mycontainer">
+	<c:if test="${sessionScope.loginUser == null}">
 		<div id="myheader">
 			<tiles:insertAttribute name="header" />
 		</div>
+	</c:if>
+	<c:if test="${sessionScope.loginUser != null}">
+		<c:if test="${sessionScope.birth == 0}">
+			<div id="myheader">
+				<tiles:insertAttribute name="header" />
+			</div>
+		</c:if>
+		<c:if test="${sessionScope.birth == 1}">
+			<div id="myheader2">
+				<tiles:insertAttribute name="header" />
+			</div>
+		</c:if>
+	</c:if>
 		<div id="mynoticeinf">
 		<tiles:insertAttribute name="noticeinfo" />
 		</div>

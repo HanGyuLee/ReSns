@@ -535,7 +535,12 @@ function goAlarm(userid){
           
           </ul>
         </li>
+        <c:if test="${sessionScope.birth == 0}">
          <li><a href="#"><span class="text-white">${sessionScope.loginUser.login_name} 님 환영합니다.</span></a></li>
+         </c:if>
+         <c:if test="${sessionScope.birth == 1}">
+         <li><a href="#"><span class="text-white">${sessionScope.loginUser.login_name} 님 생일 축하합니다! <img src="<%=request.getContextPath()%>/resources/images/cake.png" class="menuicon"/></span></a></li>
+         </c:if>
       </ul>
 	   
 	    

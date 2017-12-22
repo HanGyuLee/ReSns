@@ -361,5 +361,10 @@
       
     </select>
 	
-	
+	<!-- 생일인지 알아오기 -->
+	<select id="getBirth" parameterType="String" resultType="int">
+		select count(*)
+			from tbl_user
+		where (to_char(to_date(user_birth, 'mm-dd-yy'), 'mm-dd') = to_char(sysdate , 'mm-dd')) and fk_login_id = #{id}
+	</select>
 </mapper>

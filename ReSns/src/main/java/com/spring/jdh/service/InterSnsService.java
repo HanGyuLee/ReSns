@@ -61,6 +61,8 @@ public interface InterSnsService {
 
 	boolean nickDuplicateCheck(String login_name);	// 별명 중복체크
 
+	int getBirth(String id);		// 생일인지 알아오기
+
 	
 	
 	
