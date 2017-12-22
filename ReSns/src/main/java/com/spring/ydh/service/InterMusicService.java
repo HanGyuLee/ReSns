@@ -67,7 +67,16 @@ public interface InterMusicService {
 
 	List<MapVO> getMapLocations();//지도보여주기
 
-	List<HashMap<String, String>> displayTagmore(int startrno, int endrno,HttpServletRequest req);//tag더보기
+	String displayTagmore(HashMap<String,String> map);//tag더보기
+
+	String displayMapmore(HashMap<String, String> map);//map더보기
+
+	String displayNamesmore(HashMap<String, String> map);//names(별명들)더보기
+
+	int jtagCount(String searchTagcnt);//tag json더보기 count구하기
+
+
+
 
 	
 

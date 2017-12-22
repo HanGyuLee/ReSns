@@ -35,6 +35,8 @@
 		});
 		
 		
+
+			
 	
 		
 		searchKeeping();
@@ -113,14 +115,19 @@
 			$("#displayList").hide();
 			
 		});
-		
-		
+
 		$(".delChkbox").click(function(){
-			var tagId = $(this).attr('id');	
-			//alert("테스트");
-			var frm = document.deltest;
-			frm.test01.value = tagId;		
+			var tagId = $(this).attr('id');
+			if(tagId){
+				var frm = document.deltest;
+				frm.test01.value = tagId;	
+			}
+			var tagIdd = tagId.removeAttr('id');
+			if(tagIdd){
+				alert("tagIddtest::"+tagIdd);
+			}
 		});
+		
 		
 		
 		$("#delete").click(function(){

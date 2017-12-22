@@ -108,7 +108,7 @@ public class MusicService implements InterMusicService {
 
 	@Override//태그검색(게시물)
 	public String jTag(HashMap<String, String> map) {
-		System.out.println("serviceTag:");
+		System.out.println("serviceTag");
 		int jtagCnt = dao.jTagCnt(map);
 		
 		System.out.println("jresult확인:"+jtagCnt);
@@ -388,49 +388,144 @@ public class MusicService implements InterMusicService {
 
 
 	@Override//tag더보기
-	public List<HashMap<String,String>> displayTagmore(int startrno, int endrno, HttpServletRequest req) {
-		System.out.println("확인1");
-		String start = req.getParameter("start");
-		String len= req.getParameter("len");
-         System.out.println("확인2");
-		if(start.trim().isEmpty()){
-			start = "1";
-		}
-		if(len.trim().isEmpty()){
-			len = "1";
-		}
-		
-		 startrno = Integer.parseInt(start);					//시작행번호
-		 endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
-		
-		List<HashMap<String,String>> taglist = dao.displayTagmore(startrno,endrno);
+	public String displayTagmore(HashMap<String,String> map) {
+
+		String str_displaytagmore = "";
+		//List<HashMap<String,String>> taglist = dao.displayTagmore(map);
         
+        List<HashMap<String, String>> taglistboard = dao.searchTagMore(map);
+
+        System.out.println("서비스확인태그:"+map.get("searchTag"));
+        System.out.println("서비스확인스타트:"+map.get("startrno"));
+        System.out.println("서비스확인엔드:"+map.get("endrno"));
+        
+		//JSONArray jasonList = new JSONArray();
+		JSONArray jasonList2 = new JSONArray();
 		
-		JSONArray jasonList = new JSONArray();
-		if(taglist != null && taglist.size()>0 ){
+		System.out.println("taglistboard::"+taglistboard);
+		
+		if(taglistboard != null && taglistboard.size()>0){
+			for( HashMap<String, String> map3 : taglistboard){
+				JSONObject jsonObj2 = new JSONObject();
+				jsonObj2.put("login_name", map3.get("login_name"));
+				jsonObj2.put("login_id", map3.get("login_id"));
+				jsonObj2.put("seq_tbl_board", map3.get("seq_tbl_board"));
+				jsonObj2.put("tag_content", map3.get("tag_content"));
+				jsonObj2.put("bimg_filename", map3.get("bimg_filename"));
+				
+				jasonList2.put(jsonObj2);
+				System.out.println("이름::"+map3.get("login_name"));
+			}
 			
-			for(HashMap<String, String>  tvo : taglist){
-				
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("tvo", tvo);
-				
-				jasonList.put(jsonObj);
-				
-				String str_displaytagmore =jasonList.toString();
-				req.setAttribute("str_displaytagmore", str_displaytagmore);
-				
-			}//end of for
-			
-		}
-		return taglist;
+
+		}//end of if
+		
+		str_displaytagmore = jasonList2.toString();
+		System.out.println("서비스단 마지막::"+str_displaytagmore);
+	
+		
+		
+		return str_displaytagmore;
 	}
 
 
 
+	@Override//map더보기
+	public String displayMapmore(HashMap<String, String> map) {
+		
+		String str_displaymapmore = "";
+        
+        List<HashMap<String, String>> maplist = dao.searchMapMore(map);
+
+        System.out.println("서비스확인태그맵:"+map.get("searchMap"));
+        System.out.println("서비스확인스타트맵:"+map.get("startrno"));
+        System.out.println("서비스확인엔드맵:"+map.get("endrno"));
+        
+		//JSONArray jasonList = new JSONArray();
+		JSONArray jasonList2 = new JSONArray();
+		
+		System.out.println("maplist::"+maplist);
+		
+		if(maplist != null && maplist.size()>0){
+			for( HashMap<String, String> jmap : maplist){
+				JSONObject jsonObj2 = new JSONObject();
+				jsonObj2.put("login_name", jmap.get("login_name"));
+				jsonObj2.put("login_id", jmap.get("login_id"));
+				jsonObj2.put("seq_tbl_board", jmap.get("seq_tbl_board"));
+				jsonObj2.put("bimg_filename", jmap.get("bimg_filename"));
+				jsonObj2.put("board_time", jmap.get("board_time"));
+				jsonObj2.put("board_content", jmap.get("board_content"));
+				jsonObj2.put("map_ky", jmap.get("map_ky"));
+				jsonObj2.put("map_we", jmap.get("map_we"));
+				jsonObj2.put("map_name", jmap.get("map_name"));
+				
+				
+				jasonList2.put(jsonObj2);
+				System.out.println("이름::"+jmap.get("login_name"));
+			}
+			
+
+		}//end of if
+		
+		str_displaymapmore = jasonList2.toString();
+		System.out.println("서비스단 마지막str_displaymapmore::"+str_displaymapmore);
+
+		
+		
+		return str_displaymapmore;
+	}
 
 
 
-	
-	
-	
-}
+	@Override//names(별명들)더보기
+	public String displayNamesmore(HashMap<String, String> map) {
+	     
+		String str_displayNamesmore = "";
+        
+        List<HashMap<String, String>> names = dao.searchNamesMore(map);
+
+        System.out.println("서비스확인네임s:"+map.get("searchMap"));
+        System.out.println("서비스확인스타트네임s:"+map.get("startrno"));
+        System.out.println("서비스확인엔드네임s:"+map.get("endrno"));
+        
+		//JSONArray jasonList = new JSONArray();
+		JSONArray jasonList2 = new JSONArray();
+		
+		System.out.println("names::"+names);
+		
+		if(names != null && names.size()>0){
+			for( HashMap<String, String> jmap : names){
+				JSONObject jsonObj2 = new JSONObject();
+				jsonObj2.put("login_name", jmap.get("login_name"));
+				jsonObj2.put("login_id", jmap.get("login_id"));
+				jsonObj2.put("user_ed", jmap.get("user_ed"));
+				jsonObj2.put("user_ing", jmap.get("user_ing"));
+				jsonObj2.put("user_boardcnt", jmap.get("user_boardcnt"));
+				jsonObj2.put("uimg_profile_filename", jmap.get("uimg_profile_filename"));
+
+				jasonList2.put(jsonObj2);
+				System.out.println("이름::"+jmap.get("login_name"));
+			}
+			
+
+		}//end of if
+		
+		str_displayNamesmore = jasonList2.toString();
+		System.out.println("서비스단 마지막str_displaymapmore::"+str_displayNamesmore);
+
+		
+		
+		return str_displayNamesmore;
+	}
+
+
+
+	@Override//tag json더보기 count구하기
+	public int jtagCount(String searchTagcnt) {
+		int n = dao.jtagCount(searchTagcnt);
+		return n;
+	}
+
+
+
+}//MAIN

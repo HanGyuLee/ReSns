@@ -48,18 +48,24 @@ public class YdhController {
 	//태그게시물검색
 	@RequestMapping(value="/searchEndTag.re", method={RequestMethod.GET})
 	public String searchTag(HttpServletRequest req){
+		   
+		 String searchTagcnt = req.getParameter("searchTag");
+		 int jtCnt = service.jtagCount(searchTagcnt);
 		
 		 String search = req.getParameter("search");
 		 System.out.println("tst:"+search);
 		 HashMap<String,String> map = new HashMap<String,String>();
 		 map.put("search", search);
 		 
-		 if(!search.trim().isEmpty() ){
+		 if(!search.trim().isEmpty() && jtCnt>0){
 		
 		 List<HashMap<String, String>> searchTag = service.searchTag(map);
+		 
 		
 			 if(!searchTag.isEmpty()){
 				 req.setAttribute("searchTag", searchTag);
+				 req.setAttribute("search", search);
+				 req.setAttribute("jtCnt", jtCnt);
 			    }
 			
 		 }else{
@@ -94,6 +100,7 @@ public class YdhController {
 		
 			 if(!searchName.isEmpty()){
 				 req.setAttribute("searchName", searchName);
+				 req.setAttribute("search", search);
 			    }
 			
 		 }else{
@@ -125,6 +132,7 @@ public class YdhController {
 		 
 			 if(!searchNameOne.isEmpty()){
 				 req.setAttribute("searchNameOne", searchNameOne);
+				 req.setAttribute("search", search);
 				 System.out.println("name:"+searchNameOne);
 				 
 			    }
@@ -150,6 +158,7 @@ public class YdhController {
 		
 			 if(!searchMap.isEmpty()){
 				 req.setAttribute("searchMap", searchMap);
+				 req.setAttribute("search", search);
 			    }
 			
 		 }else{
@@ -240,18 +249,163 @@ public class YdhController {
 	}//
 	
 	/*==================================<더보기버튼>====================================*/
-	
+	//TAG
 	@RequestMapping(value="/displaymoreJsonTag.re", method={RequestMethod.GET})
-	public String displaymoreJsonTag(int startrno, int endrno, HttpServletRequest req){
+	public String displaymoreJsonTag(HttpServletRequest req){
+	    
+		System.out.println("넘어오나 확인");
+		
+		String start = req.getParameter("start");
+		String len = req.getParameter("lenNEW");
+		String searchTag = req.getParameter("searchTag");
+		
+		System.out.println("start::"+start);
+		System.out.println("len::"+len);
+		System.out.println("searchTag::"+searchTag);
+		
+		
+		if(start.trim().isEmpty()){
+		
+			start = "1";
+		}
+		if(len.trim().isEmpty()){
 	
+			len = "2";
+		}
+		
+		int startrno = 0;
+		int endrno = 0; 
+		startrno = Integer.parseInt(start);					//시작행번호
+		endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
+		
+		System.out.println("startrno확인::"+startrno);
+		System.out.println("endrno확인::"+endrno);
+		
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("startrno",Integer.toString(startrno));
+		map.put("endrno", Integer.toString(endrno));
+		map.put("searchTag", searchTag);
+		
 		System.out.println("displayMORETAGs");
-		List<HashMap<String,String>> boardList = service.displayTagmore(startrno, endrno,req);//tag더보기
+		String boardList = service.displayTagmore(map);//tag더보기
+		System.out.println("boardList"+boardList);
 
 	    req.setAttribute("boardList", boardList);
 		
 		return "ydhnotiles/displaymoreJsonTag.notiles";
 		
 	}
+	
+	//지도더보기
+	@RequestMapping(value="/displaymoreJsonMap.re", method={RequestMethod.GET})
+	public String displaymoreJsonMap(HttpServletRequest req){
+	
+		String start = req.getParameter("start");
+		String len = req.getParameter("lenNEW");
+		String searchMap = req.getParameter("searchMap");
+		
+		System.out.println("startMap::"+start);
+		System.out.println("len::"+len);
+		System.out.println("searchMap::"+searchMap);
+		
+		
+		if(start.trim().isEmpty()){
+			start = "1";
+		}
+		if(len.trim().isEmpty()){
+		
+			len = "2";
+		}
+		
+		int startrno = 0;
+		int endrno = 0; 
+		startrno = Integer.parseInt(start);					//시작행번호
+		endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
+		
+		System.out.println("startrno 맵확인::"+startrno);
+		System.out.println("endrno 맵확인::"+endrno);
+		
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("startrno",Integer.toString(startrno));
+		map.put("endrno", Integer.toString(endrno));
+		map.put("searchMap", searchMap);
+		
+		System.out.println("displayMORETAGs");
+		String maplist = service.displayMapmore(map);//tag더보기
+		System.out.println("maplist::"+maplist);
+
+	    req.setAttribute("maplist", maplist);
+		
+		return "ydhnotiles/displaymoreJsonMap.notiles";
+		
+	}
+	
+	
+	//별명들더보기
+	@RequestMapping(value="/displaymoreJName.re", method={RequestMethod.GET})
+	public String displaymoreJName(HttpServletRequest req){
+	System.out.println("Begin list of names");
+		String start = req.getParameter("start");
+		String len = req.getParameter("lenNEW");
+		String searchNames = req.getParameter("searchNames");
+		
+		System.out.println("startMap::"+start);
+		System.out.println("len::"+len);
+		System.out.println("searchNames::"+searchNames);
+		
+		
+		if(start.trim().isEmpty()){
+			start = "1";
+		}
+		if(len.trim().isEmpty()){
+		
+			len = "2";
+		}
+		
+		int startrno = 0;
+		int endrno = 0; 
+		startrno = Integer.parseInt(start);					//시작행번호
+		endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
+		
+		System.out.println("startrno 맵확인::"+startrno);
+		System.out.println("endrno 맵확인::"+endrno);
+		
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("startrno",Integer.toString(startrno));
+		map.put("endrno", Integer.toString(endrno));
+		map.put("searchNames", searchNames);
+		
+		System.out.println("displaynames");
+		String names = service.displayNamesmore(map);
+		System.out.println("names::"+names);
+
+	    req.setAttribute("names", names);
+		
+		return "ydhnotiles/displaymoreJName.notiles";
+		
+	}
+	
+	//tag더보기 페이징
+/*	@RequestMapping(value="/searchTag.re", method={RequestMethod.GET})
+	public String jtagCount(HttpServletRequest req){
+		System.out.println("더보기페이징");
+		String searchTag = req.getParameter("searchTag");
+		
+		int jtCnt = service.jtagCount(searchTag);
+		System.out.println("searchTag cnt"+searchTag);
+		
+		req.setAttribute("jtCnt", jtCnt);
+		System.out.println("jtCnt"+jtCnt);
+		
+		return "ydh/searchTag.tiles";
+		
+	}*/
+	
+	//map더보기 페이징
+	
+	//names더보기 페이징
+	
+
 	/*==================================<음악LIST>====================================*/
 	@RequestMapping(value="/musicBegin.re", method={RequestMethod.GET})
 	public String requireLogin2_musicBegin(HttpServletRequest req,HttpServletResponse response,HttpSession session){

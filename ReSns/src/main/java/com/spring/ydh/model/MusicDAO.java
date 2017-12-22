@@ -238,10 +238,39 @@ public class MusicDAO implements InterMusicDAO {
 
 
 	@Override//tag더보기
-	public List<HashMap<String,String>> displayTagmore(int startrno, int endrno) {
-		List<HashMap<String,String>>  list = sqlsession.selectList("ydhresns.displayTagmore");
+	public List<HashMap<String,String>> displayTagmore(HashMap<String,String> map) {
+		List<HashMap<String,String>>  list = sqlsession.selectList("ydhresns.displayTagmore",map);
 		return list;
 	}
+
+
+	@Override////tag더보기2
+	public List<HashMap<String, String>> searchTagMore(HashMap<String, String> map) {
+		List<HashMap<String, String>> taglist = sqlsession.selectList("ydhresns.searchTag2", map);
+		return taglist;
+	}
+
+
+	@Override//map더보기
+	public List<HashMap<String, String>> searchMapMore(HashMap<String, String> map) {
+		List<HashMap<String, String>> maplist = sqlsession.selectList("ydhresns.searchMapMore", map);
+		return maplist;
+	}
+
+
+	@Override//names더보기
+	public List<HashMap<String, String>> searchNamesMore(HashMap<String, String> map) {
+		List<HashMap<String, String>> names = sqlsession.selectList("ydhresns.searchNamesMore", map);
+		return names;
+	}
+
+
+	@Override//tag json더보기 count구하기
+	public int jtagCount(String searchTagcnt) {
+		int n = sqlsession.selectOne("ydhresns.jtagCount",searchTagcnt);
+		return n;
+	}
+
 
 
 

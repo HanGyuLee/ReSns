@@ -125,7 +125,6 @@ select substr(tag_content,2)
 from tbl_tag
 where substr(tag_content,2) =#{search}
 )
-
 </select> 
 
 <!-- 태그검색결과  -->
@@ -159,7 +158,86 @@ where lower(map_name) like '%'||lower(#{search})||'%'
 
                   <!--  더보기버튼  -->
 
-<!-- 이름검색후결과값에서 더보기버튼 -->
+<!-- 태그검색 JSON더보기 -->
+<resultMap type="HashMap" id="Tag2" >
+   <result property="login_name"      column="login_name" 	    	 javaType="String"/>
+   <result property="login_id"        column="login_id" 		     javaType="String"/>
+   <result property="seq_tbl_board"   column="seq_tbl_board"    	 javaType="String"/>
+   <result property="board_content"   column="board_content"   	     javaType="String"/>
+   <result property="tag_content"     column="tag_content"   	     javaType="String"/>
+   <result property="bimg_filename"   column="bimg_filename"   		 javaType="String"/>
+</resultMap>
+<select id="searchTag2" parameterType="HashMap" resultMap="Tag2">
+select  V.login_name, V.login_id, V.seq_tbl_board, V.board_content, V.tag_content, V.bimg_filename  
+from
+(
+select rownum as rno, A.login_name, A.login_id, B.seq_tbl_board, B.board_content, C.tag_content, D.bimg_filename
+from tbl_tag C left join tbl_board B
+on C.seq_tbl_board = B.seq_tbl_board
+left join tbl_bimage D
+ on C.seq_tbl_board = D.seq_tbl_board
+left join tbl_login A
+on B.fk_login_id = A.login_id
+where substr(C.tag_content,2) = #{searchTag}
+)V
+where V.rno between #{startrno} and #{endrno}
+</select>
+
+<!-- 지도검색 JSON더보기 -->
+<resultMap type="HashMap" id="Map" >
+   <result property="map_name"     	  column="map_name" 	    	 javaType="String"/>
+   <result property="map_we"          column="map_we" 		         javaType="String"/>
+   <result property="map_ky"          column="map_ky"    	         javaType="String"/>
+   <result property="seq_tbl_board"   column="seq_tbl_board"   	     javaType="String"/>
+   <result property="board_content"   column="board_content"   	     javaType="String"/>
+   <result property="board_time"      column="board_time"   		 javaType="String"/>
+   <result property="login_id"        column="login_id"   	         javaType="String"/>
+   <result property="login_name"      column="login_name"   	     javaType="String"/>
+   <result property="bimg_filename"   column="bimg_filename"   		 javaType="String"/>
+</resultMap>
+<select id="searchMapMore" parameterType="HashMap" resultMap="Map">
+select  V.map_name, V.map_we, V.map_ky, V.seq_tbl_board, V.board_content, V.board_time  ,V.login_id ,V.login_name,V.bimg_filename
+from
+(
+select rownum as rno , A.map_name, A.map_we,A.map_ky,B.seq_tbl_board, B.board_content, B.board_time ,C.login_id, C.login_name, D.bimg_filename
+from tbl_map A left join tbl_board B
+on A.fk_seq_tbl_board = B.seq_tbl_board
+left join tbl_login C
+on B.fk_login_id = C.login_id
+left join tbl_bimage D
+on B.seq_tbl_board = D.seq_tbl_board
+where lower(A.map_name) like '%'||lower(#{searchMap})||'%'
+)V
+where V.rno between #{startrno} and #{endrno}
+</select>
+
+<!-- 별명검색 JSON더보기 -->
+<resultMap type="HashMap" id="Names" >
+   <result property="login_name"     	      column="login_name" 	    	 javaType="String"/>
+   <result property="login_id"     	          column="login_id" 	    	     javaType="String"/>
+   <result property="user_ed"                 column="user_ed" 		         javaType="String"/>
+   <result property="user_ing"                column="user_ing"    	         javaType="String"/>
+   <result property="user_boardcnt"           column="user_boardcnt"   	     javaType="String"/>
+   <result property="uimg_profile_filename"   column="uimg_profile_filename"   javaType="String"/>
+</resultMap>
+<select id="searchNamesMore" parameterType="HashMap" resultMap="Names">
+ select V.login_name, V.login_id, V.user_ed, V.user_ing, V.user_boardcnt, V.uimg_profile_filename
+  from 
+  (
+   select rownum as rno, A.login_name,A.login_id, B.user_ed, B.user_ing, B.user_boardcnt,C.uimg_profile_filename
+    from tbl_login A left join tbl_user B 
+    on A.login_id = B.fk_login_id
+    left join tbl_uimage C
+    on B.fk_login_id = C.fk_login_id
+    where lower(A.login_name) like '%'|| lower(#{searchNames}) || '%'
+    and login_status = 1
+   )V
+where V.rno between #{startrno} and #{endrno}
+</select>
+
+
+
+<!-- where substr(C.tag_content,2) = #{searchTag} 이름검색후결과값에서 더보기버튼 -->
 <!-- <resultMap id="jButton" type="HashMap">
 	<result property="cnt" column="cnt" javaType="Integer"/>
 </resultMap>
@@ -192,7 +270,7 @@ and login_status = 1
 	<result property="tag_content"    column="V.tag_content"   javaType="String"/>
 	<result property="seq_tbl_board"  column="V.seq_tbl_board" javaType="String"/>
 </resultMap>
-<select id="displayTagmore" resultMap="displaytag">
+<select id="displayTagmore" parameterType="HashMap" resultMap="displaytag">
 select  V.login_name, V.login_id, V.seq_tbl_board, V.board_content, V.tag_content, V.bimg_filename      
 from      
 (     
@@ -203,10 +281,17 @@ from
   on B.seq_tbl_board = C.seq_tbl_board
   left join tbl_bimage D
   on C.seq_tbl_board = D.seq_tbl_board
+  where substr(C.tag_content,2) = #{searchTag}
 )V
 where V.rno between #{startrno} and #{endrno}
 </select>
 
+<!-- tag더보기 페이징을위한  count -->
+<select id="jtagCount" parameterType="String" resultType="int">
+select count (*) as cnt
+from tbl_tag
+where lower(substr(tag_content,2)) = lower(#{searchTagcnt})
+</select>
 
 
 					<!-- YOUTUBE LIST -->
@@ -334,37 +419,6 @@ and fk_login_id = #{fk_login_id}
 </select>
  
 
-<!-- 글한개보이기 test -->
-<!-- <resultMap id="test" type="HashMap">
-  <result property="login_name"       column="A.login_name"      javaType="String"/>
-  <result property="music_date"       column="B.music_date"      javaType="String"/>
-  <result property="music_content"    column="B.music_content"   javaType="String"/>
-  <result property="music_link"       column="B.music_link"      javaType="String"/>
-  <result property="fk_login_id"      column="B.fk_login_id"     javaType="String"/>
-  <result property="seq_tbl_remusic"  column="C.seq_tbl_remusic" javaType="String"/>
-  <result property="re_ycontent"      column="C.re_ycontent"     javaType="String"/>
-  <result property="re_ydate"         column="C.re_ydate"        javaType="String"/>
-  <result property="re_login_id"      column="C.re_login_id"     javaType="String"/>
-  <result property="seq_tbl_music"    column="C.seq_tbl_music"   javaType="String"/>
-</resultMap>
-<select id="view" parameterType="HashMap" resultMap="test">
-select A.login_name
-       ,B.music_date
-       ,B.music_content
-       ,B.music_link
-       ,B.fk_login_id
-       ,C.seq_tbl_remusic
-       ,C.re_ycontent
-       ,C.re_ydate
-       ,C.re_login_id
-       ,C.seq_tbl_music
-from tbl_login A join tbl_music B
-on A.login_id = B.fk_login_id
-join tbl_remusic C
-on B.seq_tbl_music = C.seq_tbl_music
-where B.seq_tbl_music = #{seq_tbl_music}
-</select>
- -->
 <!-- 글수정할때 원글띄어주기 -->
 <select id="mupdate" parameterType="HashMap" resultType="com.spring.ydh.model.MusicVO"> 
 select seq_tbl_music, music_name,to_char(music_date,'yyyy-mm-dd hh24:mi:ss') as music_date , music_content, music_link

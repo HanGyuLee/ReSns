@@ -72,7 +72,16 @@ public interface InterMusicDAO {
 
 	int Musicalarm(HashMap<String, String> map);//music댓글알람
 
-	List<HashMap<String,String>> displayTagmore(int startrno, int endrno);//tag더보기
+	List<HashMap<String,String>> displayTagmore(HashMap<String,String> map);//tag더보기
+
+	List<HashMap<String, String>> searchTagMore(HashMap<String, String> map);//tag더보기22
+
+	List<HashMap<String, String>> searchMapMore(HashMap<String, String> map);//map더보기
+
+	List<HashMap<String, String>> searchNamesMore(HashMap<String, String> map);//names더보기
+
+	int jtagCount(String searchTagcnt);//tag json더보기 count구하기
+
 
 	
 
