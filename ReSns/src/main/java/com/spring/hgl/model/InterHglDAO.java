@@ -32,8 +32,8 @@ public interface InterHglDAO {
 	
 	int getmyFollowingCnt(String userid);
 
-	List<String> getFollowingName(String loginId);
-
 	List<HashMap<String, Object>> getMyAlarmList(String userid);
+
+	List<String> getFollowingId(String loginId);
 	
 }

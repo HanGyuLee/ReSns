@@ -313,7 +313,9 @@ public class HglController {
 		else if(n == -3){
 			msg = "이미 팔로우 함!";
 		}
-		
+		else if(n == -4){
+			msg = "내가 나를 팔로우 못함!";	
+		}
 		loc = "javascript:history.back();";
 		
 		req.setAttribute("msg", msg);
@@ -331,31 +333,17 @@ public class HglController {
 		
 		String userid  = req.getParameter("fk_login_id"); // 페이지주인
 		String username = service.getUsername(userid); // 페이지주인 이름
-		
-		int n=0;
-		if(session.getAttribute("loginUser")!=null){
-		
-		String loginId = null; // 나
-		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");		
-		loginId = loginUser.getLogin_id();	
-		List<String> loginUserFollowingName  = service.getFollowingName(loginId);
-			
-		
-		HashMap<String,String> blockmap = new HashMap<String,String>();
-			
-			blockmap.put("fk_login_id",userid);
-			blockmap.put("login_id",loginId);
-			
-			n = JsrService.followblock(blockmap);
-			req.setAttribute("loginUserFollowingName", loginUserFollowingName);
-		
-			
-		}
-			
+		int alreadyFollowing = 0;
+	//	int alreadyMyFollowing=0;
 		
 		List<HashMap<String, Object>> myBoardList = service.getMyBoardList(userid);
 		List<HashMap<String, Object>> myFollowerList = service.getmyFollowerList(userid);
 		List<HashMap<String, Object>> myFollowingList = service.getmyFollowingList(userid);
+		
+		System.out.println(myFollowerList.get(1).get("fk_login_id"));
+		
+		System.out.println(myFollowingList.get(1).get("follow_id"));
+		
 		
 		HashMap<String,String> profile = service.getMyProfile(userid);			
 		HashMap<String,String> mypage =  null;
@@ -385,6 +373,73 @@ public class HglController {
 			mypage = insertMypage;
 			
 		}
+		
+		int n=0;
+		if(session.getAttribute("loginUser")!=null){
+			
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+			
+			
+			
+		
+		String loginId = null; // 나
+		LoginVO loginUser = (LoginVO)session.getAttribute("loginUser");		
+		loginId = loginUser.getLogin_id();	
+		List<String> loginUserFollowingId  = service.getFollowingId(loginId);
+		
+		System.out.println(loginUserFollowingId);
+		System.out.println(loginId);
+		
+		
+		
+		for(int i=0; i<loginUserFollowingId.size(); i++){
+			if(loginUserFollowingId.get(i).equals(userid)){
+				
+				alreadyFollowing = 1;
+				
+			}// end of if
+		}// end of for
+		
+				
+		HashMap<String,String> blockmap = new HashMap<String,String>();
+			
+			blockmap.put("fk_login_id",userid);
+			blockmap.put("login_id",loginId);
+			
+			n = JsrService.followblock(blockmap);
+			req.setAttribute("loginUserFollowingName", loginUserFollowingId);
+		
+			
+			
+		/*	
+			
+			for(int i=0; i<myFollowerList.size(); i++){
+			
+				String id = (String)myFollowerList.get(i).get("fk_login_id");
+				
+				for(int j=0; j<loginUserFollowingId.size();  j++){
+					if(loginUserFollowingId.get(j).equals(id)){
+						
+						alreadyMyFollowing = 1;
+						
+					}// end of if
+					
+				}// end of inner for
+				map.put("num"+i, alreadyMyFollowing);
+				
+				
+			}// end of outer for
+			
+			
+			
+			System.out.println(myFollowerList);
+			*/
+			/*req.setAttribute("alreadyFollower", map);
+			*/
+			
+			
+		}// end of loginUser if
 	
 		req.setAttribute("mypage", mypage);	
 		req.setAttribute("userid", userid);
@@ -397,6 +452,7 @@ public class HglController {
 		
 		if(n<1){
 			req.setAttribute("myBoardList", myBoardList);
+			req.setAttribute("alreadyFollowing", alreadyFollowing);
 			req.setAttribute("myFollowerList", myFollowerList);
 			req.setAttribute("myFollowingList", myFollowingList);
 			}
@@ -456,9 +512,48 @@ public class HglController {
 					theSeq = msg;
 				}
 				
+				
 				String alarm_type = (String) alarm.get("alarm_type");
 				String url = "";
 				switch(alarm_type){
+				case "1": 
+					alarm_type =" 게시물을 좋아합니다";
+					url = "/resns/alaramBoard.re?fk_seq_tbl_board="+theSeq;
+					break;
+				case "2": 
+					alarm_type =" 게시물에 댓글을 남겼습니다 ";
+					url = "/resns/alaramBoard.re?fk_seq_tbl_board="+theSeq;
+					break;
+				case "3": 
+					alarm_type =" 내 댓글에 대댓글을 남겼습니다";
+					url = "/resns/alaramBoard.re?fk_seq_tbl_board="+theSeq;
+					break;
+				case "4": 
+					alarm_type =" 나를 팔로우합니다";
+					url = "/resns/otherspage.re?fk_login_id="+alarm.get("fk_login_id");
+					break;
+				case "5": 
+					alarm_type =" 문답게시판에 질문을 남겼습니다";
+					url = "/resns/questionList.re?fk_login_id="+userid;
+					break;
+				case "6": 
+					alarm_type =" 내가 남긴 질문에 답변을 남겼습니다";
+					url = "/resns/questionList.re?fk_login_id="+userid;
+					break;
+				case "7": 
+					alarm_type =" 동영상에 댓글을 남겼습니다";
+					url = "/resns/music.re?fk_login_id="+userid;
+					break;
+				case "8": 
+					alarm_type =" 나에게 메세지를 보냈습니다";
+					url = "/resns/msgDetail.re?seq_tbl_msg="+theSeq;
+					break;
+				
+				}
+				
+			/*	
+			 
+			  switch(alarm_type){
 				case "1": 
 					alarm_type =" 게시물을 좋아합니다";
 					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;
@@ -493,8 +588,10 @@ public class HglController {
 					break;
 				
 				}
-				
-			/*	switch(alarm_type){
+			  
+			  
+			  
+			  switch(alarm_type){
 				case "1": 
 					alarm_type =" <span style='color:red;'>게시물을 좋아합니다";
 					url = "/resns/mypage.re?fk_login_id="+userid+"&fk_seq_tbl_board="+theSeq;

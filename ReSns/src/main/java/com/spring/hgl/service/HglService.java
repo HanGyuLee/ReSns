@@ -119,8 +119,8 @@ public class HglService implements InterHglService {
 
 
 	@Override
-	public List<String> getFollowingName(String loginId) {
-		List<String> list = dao.getFollowingName(loginId);
+	public List<String> getFollowingId(String loginId) {
+		List<String> list = dao.getFollowingId(loginId);
 		return list;
 	}
 

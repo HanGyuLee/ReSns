@@ -204,7 +204,7 @@ $(function(){
 
 function goFollower(num,followId){
 	
-	alert("확인");
+
 	var frm = document.follower;
 
 	frm.followId.value=followId;
@@ -214,14 +214,44 @@ function goFollower(num,followId){
 	
 }
 
+
+
+
+
 function goFollowing(num,followId){
 	
-	alert("확인");
+	
 	var frm = document.following;
 
 	frm.followId.value=followId;
 	frm.method = "post";
 	frm.action = "/resns/followAddEnd.re";
+	frm.submit();
+	
+}
+
+
+
+
+function goFollow(followId){
+	
+	var frm = document.follow;
+
+	frm.followId.value=followId;
+	frm.method = "post";
+	frm.action = "/resns/followAddEnd.re";
+	frm.submit();
+	
+}
+
+
+function goUnfollow(unFollowId){
+	
+	var frm = document.unfollow;
+
+	frm.unFollowId.value=unFollowId;
+	frm.method = "post";
+	frm.action = "/resns/unFollowAdd.re";
 	frm.submit();
 	
 }
@@ -829,8 +859,9 @@ function goVeiwContent(statuscount){
 			
 			
 		</div> --%>
-			
-			
+		
+		
+		
   
    <div style="margin-top:270px;margin-left:43%; border:1px solid transparent" >
 	  
@@ -838,11 +869,29 @@ function goVeiwContent(statuscount){
 	  
    </div>
   
-  
- 
+  <div style="margin-top:270px;margin-left:80%; border:1px solid transparent; width:170px;  font-size:14pt; font-weight:bold;  align:center;"  >
+	
+ <c:if test="${alreadyFollowing==0}">
+		<button type="button" id="pageFollow" class="btn btn-info btn-circle btn-xl" onClick="goFollow('${userid}');"><i class="glyphicon glyphicon-ok">
+			 팔로우 하기 </i></button>
+			 
+			 <input type="hidden" id="pageFollowId" name="followId" value="${userid}"/>
+		</c:if>
+		
+		
+		
+		<c:if test="${alreadyFollowing==1}">
+		
+<button type="button" class="btn btn-warning btn-circle btn-xl"><i class="glyphicon glyphicon-remove" onClick="goUnfollow('${userid}');">
+			언팔로우하기</i></button>
+			<input type="hidden" id="pageUnfollowId" name="unFollowId" value="${userid}"/>
+		</c:if>
+		
+		</div>
+		
     
    
-     <div class="container gal-container" style="border:1px solid transparent;margin-top:300px;">
+     <div class="container gal-container" style="border:1px solid transparent;margin-top:20px;">
    
    
    <div style=" margin-top:-80px;float: left; width:100%; border:1px solid transparent; background-color:white;">
@@ -1610,6 +1659,15 @@ ${pagebar}
   <form name="following">
   <input type="hidden" name="followId"/>	
   </form>
+  
+   <form name="follow">
+  <input type="hidden" name="followId"/>	
+  </form>
+  
+   <form name="unfollow">
+  <input type="hidden" name="unFollowId"/>	
+  </form>
+  
 </body>
 </html>
 

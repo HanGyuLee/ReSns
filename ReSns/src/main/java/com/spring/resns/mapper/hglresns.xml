@@ -188,8 +188,8 @@
 
 
 <!-- 내가 팔로우하는 사람들 ( 내 팔로잉 ) 이름리스트 가져오기   -->	
-	<select id="getFollowingName" parameterType="String" resultType="String" >	
-	    select L.login_name
+	<select id="getFollowingId" parameterType="String" resultType="String" >	
+	    select L.login_id
 	    from tbl_follow F join tbl_login L 
 	    on F.follow_id = L.login_id
 	    left join tbl_uimage U 
