@@ -25,7 +25,8 @@
 		<result property="board_time" 	 		 column="board_time" 			javaType="String"/>
 		<result property="bimg_filename" 		 column="bimg_filename" 		javaType="String"/>
 		<result property="map_name" 			 column="map_name" 				javaType="String"/>
-		<result property="board_heart" 			 column="board_heart" 			javaType="String"/>	
+		<result property="board_heart" 			 column="board_heart" 			javaType="String"/>
+		<result property="board_status" 		 column="board_status" 			javaType="String"/>	
  	</resultMap>
  	
 			
@@ -35,6 +36,7 @@
 		      ,M.uimg_profile_filename as uimg_profile_filename
 		      ,L.login_id as login_id
 		      ,B.seq_tbl_board as seq_tbl_board
+		      ,B.board_status as board_status
 		      ,B.board_content as board_content
 		      ,case when length(B.board_content) > 10
 		              then substr(B.board_content, 1, 10)||'...'
@@ -59,8 +61,8 @@
 		on B.fk_login_id = L.login_id
 		join tbl_uimage M
 		on B.fk_login_id = M.fk_login_id
-		where B.fk_login_id =  #{userid}
-		
+		where B.fk_login_id =  #{userid} 
+		order by B.board_time desc
 	</select>
 
 <!-- 내 게시글 가져오기 끝 -->	

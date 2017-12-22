@@ -72,7 +72,7 @@ public class HglController {
 		String textarea = loginUser.getLogin_name() + "의 페이지 입니다";
 		
 		insertMypage.put("textinput",textinput);
-		insertMypage.put("textarea",textarea);
+		insertMypage.put("textarea",textarea.replaceAll("\r\n", "<br/>"));
 		insertMypage.put("userid",userid);
 		
 		

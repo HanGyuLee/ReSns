@@ -874,7 +874,7 @@ function goVeiwContent(statuscount){
    <c:if test="${not empty myBoardList}">
    
    <c:forEach var="board" items="${myBoardList}" varStatus="status" >
-   
+   <c:if test="${board.board_status.equals('0')}">
     <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
       <div class="box" style="height:280px;">
         <a href="#" data-toggle="modal" data-target="#bimg_filename${status.count}">
@@ -895,7 +895,7 @@ function goVeiwContent(statuscount){
         </div>
       </div>
     </div>
-    
+    </c:if>
     </c:forEach>
     
     </c:if>
@@ -926,6 +926,7 @@ function goVeiwContent(statuscount){
 
 
 <c:forEach var="vo" items="${myBoardList}" varStatus="status">
+<c:if test="${vo.board_status.equals('0')}">
 <table align="center" style="width: 90%; border: solid 1px transparent; background-color: #F3F3F3;" >   
  
      <tr>
@@ -1076,7 +1077,7 @@ function goVeiwContent(statuscount){
 <br/>
 <br/>
 
-
+</c:if>
 </c:forEach>
 
 <div style="position: relative; left: 30%; ">

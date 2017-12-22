@@ -246,6 +246,7 @@ function goSave(){
 	var frm = document.saveFrm;
 	
 	var textinput = $("#textinput").val();
+	
 	var textarea = $("#textarea").val();
 	if(textinput.trim()==""){
 		alert("마이페이지 타이틀을 입력하세요");
@@ -970,7 +971,7 @@ function goVeiwContent(statuscount){
              <li class="list-group-item " id="changePf">     
              		<span style="font-weight:bold;">프로필사진 변경하기</span>                  
                		<form name="changePf" action="<%=request.getContextPath()%>/updateMyPfEnd.re" method="post" enctype="multipart/form-data" >
-           			<input type='file' id='filePf' name='filePf'/><button type="button" id="btnChangePf" class="mybutton" style="margin-right: 10px; cursor: pointer;text-decoration: underline; "onClick="goChangePf();">완료   </button>
+           			<input type='file' id='filePf' name='filePf'/><button type="button" id="btnChangePf" class="mybutton" style="font-weight:bold; border:none; width:80%; background-color:skyblue; margin-top:3px; color:white; text-align:center; cursor: pointer;  "onClick="goChangePf();">완료   </button>
            		
            		</form>                
              </li>
@@ -978,7 +979,7 @@ function goVeiwContent(statuscount){
              <li class="list-group-item" id="changeBg">   
              <span style="font-weight:bold;">배경사진 변경하기</span>                     
            		<form name="changeBg" action="<%=request.getContextPath()%>/updateMyBgEnd.re" method="post" enctype="multipart/form-data" >
-           			<input type='file' name='fileBg'/><button type="button" id="btnChangeBg" class="mybutton" style="margin-right: 10px; cursor: pointer; text-decoration: underline;" onClick="goChangeBg();"> 완료   </button>
+           			<input type='file' name='fileBg'/><button type="button" id="btnChangeBg"  style="font-weight:bold; border:none; width:80%; background-color:skyblue; margin-top:3px; color:white; text-align:center; cursor: pointer; " onClick="goChangeBg();"> 완료   </button>
            		
            		</form>             
              </li>
@@ -1152,7 +1153,7 @@ function goVeiwContent(statuscount){
     
     <tr>
 		<td width="30px" height="50px">&nbsp;</td>
-        <td colspan ="2" width="740px" height="50px"><img width="50px" height="50px" class=" img-circle" style="margin-right: 10px;" src="<%= request.getContextPath() %>/resources/images/${vo.follow_proile_image}"/>${vo.follow_name}
+        <td colspan ="2" width="740px" height="50px">
         <input type="hidden" id="seq_tbl_board${status.count}" name="seq_tbl_board" value="${vo.seq_tbl_board}">
         <input type="hidden" id="fk_login_id${status.count}" name="fk_login_id" value="${vo.login_id}">
         <input type="hidden" id="login_id${status.count}" name="login_id" value="${loginUser.login_id}">
