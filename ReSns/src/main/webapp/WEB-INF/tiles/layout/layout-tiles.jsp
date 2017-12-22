@@ -21,7 +21,7 @@
  
  <style type="text/css" >
  	#myheader		{ height:120px; background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png"); }
- 	#myheader2		{ height:120px; background-image: url("<%= request.getContextPath() %>/resources/images/birthday.png"); }
+ 	#myheader2		{ height:120px; background-image: url("<%= request.getContextPath() %>/resources/images/birthh.png"); }
  	#mycontainer	{ margin:0 auto; }
 	#mycontent		{ float:left; width:75%; min-height:800px; padding-top: 40px;}
 	#mysideinfo		{ float:left; width:25%; }

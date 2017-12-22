@@ -39,7 +39,22 @@
 .navbar-doublerow .nav{
 	padding: 0px auto;
 }
-.navbar-doublerow .dividline{
+.navbar-doublerow2 .dividline{
+  margin: 5px 100px;
+  padding-top: 1px;
+  background-color: inherit;
+}
+
+.navbar-doublerow2 > .navbar{
+	display: block;	
+	padding: 0px auto;
+	margin: 0px auto;
+	min-height: 25px;
+}
+.navbar-doublerow2 .nav{
+	padding: 0px auto;
+}
+.navbar-doublerow2 .dividline{
   margin: 5px 100px;
   padding-top: 1px;
   background-color: inherit;
@@ -48,7 +63,11 @@
 .navbar-doublerow .navbar-top ul>li>a {
 	padding: 10px auto;
 	font-size: 12px;
-} 
+}
+.navbar-doublerow2 .navbar-top ul>li>a {
+	padding: 10px auto;
+	font-size: 12px;
+}  
 /*down nav*/
 .navbar-doublerow .navbar-down .navbar-brand {
 	padding: 0px auto;
@@ -64,7 +83,24 @@
 .navbar-doublerow .navbar-down ul>li>a:hover{
 	border-bottom: 1px solid #fff;
 	color: #fff;
-}/* 
+}
+
+.navbar-doublerow2 .navbar-down .navbar-brand {
+	padding: 0px auto;
+	float: left;
+	color: #fff;
+	font-size: 32px;
+}
+.navbar-doublerow2 .navbar-down ul>li>a{
+	font-size: 16px;
+	color: #fff;
+	transition: border-bottom .2s ease-in , transform .2s ease-in-out;
+}
+.navbar-doublerow2 .navbar-down ul>li>a:hover{
+	border-bottom: 1px solid #fff;
+	color: #fff;
+}
+/* 
 .navbar-doublerow .navbar-down .dropdown{
     padding: 5px;
     color: #000;
@@ -79,6 +115,12 @@
 .navbar-doublerow.navbar-trans.afterscroll {
    top:-50px;
    background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png");
+}
+.navbar-doublerow2.navbar-trans.afterscroll {
+}	
+.navbar-doublerow2.navbar-trans.afterscroll {
+   top:-50px;
+   background-image: url("<%= request.getContextPath() %>/resources/images/birthh.png");
 }	
 
 .flex-container {
@@ -509,9 +551,17 @@ function goAlarm(userid){
 
 </script>
 
-<nav class="navbar navbar-default navbar-doublerow navbar-trans navbar-fixed-top">
-  
-  
+<c:if test="${sessionScope.loginUser == null}">
+	<nav class="navbar navbar-default navbar-doublerow navbar-trans navbar-fixed-top">
+</c:if>
+<c:if test="${sessionScope.loginUser != null}">
+	<c:if test="${sessionScope.birth == 0}">
+	<nav class="navbar navbar-default navbar-doublerow navbar-trans navbar-fixed-top">
+	</c:if>
+	<c:if test="${sessionScope.birth == 1}">
+	<nav class="navbar navbar-default navbar-doublerow2 navbar-trans navbar-fixed-top">
+	</c:if>  
+</c:if>  
   <!-- top nav -->
   <nav class="navbar navbar-top hidden-xs">
    
