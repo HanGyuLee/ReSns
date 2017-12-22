@@ -418,6 +418,7 @@ $(document).ready(function(){
 
 		<input type="hidden" id="gobackURL" name="gobackURL" value="${gobackURL}"/>
 		<input type="hidden" id="fk_login_id" name="fk_login_id" value="${getques.fk_login_id}"/>
+		<input type="hidden" id="totalcount" name="totalcount" value="${totalcount}"/>
 
 </form>
 		

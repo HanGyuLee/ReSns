@@ -366,6 +366,14 @@ public class JsrDAO implements InterJsrDAO {
 	}
 
 
+	//알람용 글 한개보기
+	@Override
+	public HashMap<String,Object> getAlarmBoard(HashMap<String, String> map) {
+		HashMap<String,Object> list = sqlsession.selectOne("jsrresns.getAlarmBoard",map);
+		return list;
+	}
+
+
 	
 
 

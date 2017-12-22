@@ -51,22 +51,22 @@ border: black;
 }
 
 .goQ:focus{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:active:hover{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:active:focus{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
 .goQ:hover{
-background-color: black;
+background-color: #343434;
 border: black;
 }
 
@@ -119,9 +119,9 @@ $(document).ready(function(){
 </head>
 <body>
 
+<div style="border:0px solid black; width:900px; position: relative; left: 5%;">
 <form name="question" class="">
 
-<div align="center">
 <div style="">
 <input type="hidden" name="q_askid" id="q_askid" value="${sessionScope.loginUser.login_id}"><br/>
 <input type="hidden" name="fk_login_id" id="fk_login_id" value="${fk_login_id}" ><br/>
@@ -140,10 +140,9 @@ $(document).ready(function(){
 <button type="button" id="q_go" class="delete btn btn-danger goQ">질문하기</button>
 <button type="button" id="q_ce" class="delete btn btn-danger" onClick="javascript:location.href='<%= request.getContextPath() %>/${gobackURL}'">돌아가기</button>
 </div>
-</div>
 
 </form>
-
+</div>
 	
 
 </body>

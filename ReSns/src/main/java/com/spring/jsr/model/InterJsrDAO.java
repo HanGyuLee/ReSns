@@ -121,6 +121,9 @@ public interface InterJsrDAO {
 	
 	//이름알아오기
 	String getUsername(String q_fk_login_id);
+	
+	//알람용 글 한개보기
+	HashMap<String,Object> getAlarmBoard(HashMap<String, String> map);
 
 	
 	

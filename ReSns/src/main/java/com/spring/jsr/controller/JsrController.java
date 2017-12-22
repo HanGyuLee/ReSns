@@ -632,15 +632,14 @@ public class JsrController {
 
 		}
 		
-		
+		String totalcount =  req.getParameter("totalcount");
 		String seq_tbl_q = req.getParameter("fk_seq_tbl_q");
 		String gobackURL =  req.getParameter("gobackURL");
 		String q_askid = req.getParameter("q_askid");
 		
-		
-		System.out.println(qbrvo.getA_content());
-		System.out.println(qbrvo.getFk_login_id());
-		System.out.println(qbrvo.getFk_seq_tbl_q());
+		//System.out.println(qbrvo.getA_content());
+		//System.out.println(qbrvo.getFk_login_id());
+		//System.out.println(qbrvo.getFk_seq_tbl_q());
 		
 		int result = service.QboardRe(qbrvo,q_askid);
 		
@@ -660,6 +659,7 @@ public class JsrController {
 		
 		req.setAttribute("seq_tbl_q", seq_tbl_q);
 		req.setAttribute("gobackURL", gobackURL);
+		req.setAttribute("totalcount", totalcount);
 		
 		return "jsrnotiles/msg2.notiles";
 	}//end of public String replyAdd()
@@ -686,7 +686,7 @@ public class JsrController {
 		String gobackURL = req.getParameter("gobackURL");
 		String reflasyVeiw= "/resns/questionView.re?seq_tbl_q="+fk_seq_tbl_q;
 		String fk_login_id= req.getParameter("fk_login_id");
-		
+		String totalcount =  req.getParameter("totalcount");
 		if(login_id.equalsIgnoreCase(fk_login_id)){
 	
 		//System.out.println("gobackURL확인::"+gobackURL);
@@ -700,6 +700,7 @@ public class JsrController {
 			req.setAttribute("loc", reflasyVeiw);
 			req.setAttribute("seq_tbl_q", fk_seq_tbl_q);
 			req.setAttribute("gobackURL", gobackURL);
+			req.setAttribute("totalcount", totalcount);
 			
 		}
 		
@@ -708,6 +709,7 @@ public class JsrController {
 			req.setAttribute("loc", reflasyVeiw);
 			req.setAttribute("seq_tbl_q", fk_seq_tbl_q);
 			req.setAttribute("gobackURL", gobackURL);
+			req.setAttribute("totalcount", totalcount);
 		}
 		
 		}
@@ -717,6 +719,7 @@ public class JsrController {
 		req.setAttribute("loc", gobackURL);
 		req.setAttribute("loc", reflasyVeiw);
 		req.setAttribute("seq_tbl_q", fk_seq_tbl_q);
+		req.setAttribute("totalcount", totalcount);
 		
 		}
 		
@@ -732,7 +735,7 @@ public class JsrController {
 		System.out.println("삭제 seq_tbq_q::"+seq_tbq_q);
 		String gobackURL = req.getParameter("gobackURL");
 		String fk_login_id = req.getParameter("fk_login_id");
-		
+		String totalcount =  req.getParameter("totalcount");
 		
 	Object obj = session.getAttribute("loginUser");
 		
@@ -753,24 +756,28 @@ public class JsrController {
 		if (result == 1){
 			req.setAttribute("msg", "삭제 성공!");
 			req.setAttribute("loc", gobackURL);
+			req.setAttribute("totalcount", totalcount);
 			
 		}
 		
 		else{
 			req.setAttribute("msg", "삭제 실패!");
 			req.setAttribute("loc", gobackURL);
+			req.setAttribute("totalcount", totalcount);
 		}
 		
 			req.setAttribute("result", result);;
 			req.setAttribute("seq_tbq_q", seq_tbq_q);
 			req.setAttribute("fk_login_id", fk_login_id);
 			req.setAttribute("gobackURL", gobackURL);
+			req.setAttribute("totalcount", totalcount);
 		}
 		
 		else {
 			req.setAttribute("msg", "게시판 주인인 회원만 삭제 가능합니다.");
 			req.setAttribute("loc", gobackURL);
 			req.setAttribute("gobackURL", gobackURL);
+			req.setAttribute("totalcount", totalcount);
 			
 		}
 
@@ -894,6 +901,51 @@ public class JsrController {
 	
 	return "msg.notiles";
 	}
+	
+	
+	
+	
+	
+	//해당하는 게시물만 보기
+	@RequestMapping(value="/alaramBoard.re", method={RequestMethod.GET})
+	public String alaramBoard(HttpServletRequest req, HttpSession session)throws Throwable {	
+
+
+		String login_id = "";	
+		
+		Object obj = session.getAttribute("loginUser");
+		
+		if (obj != null) {
+			LoginVO loginUser = (LoginVO)obj;
+		
+		if(loginUser != null){
+			login_id = loginUser.getLogin_id();
+		}
+
+		}
+	
+		
+		
+		String seq_tbl_board = req.getParameter("seq_tbl_board");
+		//System.out.println("login_id확인::"+login_id);
+		
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("login_id", login_id);
+		map.put("seq_tbl_board", seq_tbl_board);
+		
+		HashMap<String,Object> boardView =  service.getAlarmBoard(map);
+		
+		//System.out.println("결과확인::"+boardView);
+		
+		req.setAttribute("vo", boardView);
+		
+		
+		
+	return "jsrnotiles/alarmBoard.notiles";
+	}
+	
+	
 	
 	
 	

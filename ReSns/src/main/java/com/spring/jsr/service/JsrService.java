@@ -508,15 +508,15 @@ public class JsrService implements InterJsrService {
 		n = jdao.followblock(map);	// 접속한 유저 login_id가  해당 페이지의 fk_login_id에게 차단 당했는가?
 		//이때 map에는 login_id에 login_id가 들어가서 block_id에 매칭되어 블락당한 아이디에 존재하는지 확인된다.
 		
-		//System.out.println("서비스:n"+n);
+		System.out.println("서비스:n"+n);
 	
 		
 		HashMap<String,String> map2 = new HashMap<String,String>();
 		//접속한 유저 login_user를 fk_login_id에 넣어주고, 접속하려는 해당 회원의 페이지를 block_id에 담아준다
 		String fk_login_id = map.get("login_id");
 		String block_id = map.get("fk_login_id");
-		//System.out.println("서비스단 블락:"+block_id);
-		//System.out.println("서비스단 내 아이디"+fk_login_id);
+		System.out.println("서비스단 블락:"+block_id);
+		System.out.println("서비스단 내 아이디"+fk_login_id);
 		
 		//쿼리문 block_id에 접속하고자 하는 상대 페이지 fk_login_id를 넣어주어야 하니까, 
 		map2.put("login_id", block_id);
@@ -524,14 +524,14 @@ public class JsrService implements InterJsrService {
 		map2.put("fk_login_id", fk_login_id);
 		
 		m = jdao.followblock(map2);
-		//System.out.println("서비스:m"+m);
+		System.out.println("서비스:m"+m);
 /*		해당 메소드는 내가 차단당했는지를 확인하는 쿼리문이므로 잘 보고 변수를 바꿔 select 돼야 한다.
 		select count(*)
 		from tbl_block
 		where fk_login_id = #{fk_login_id} and block_id = #{login_id}
 		*/
 		
-		//System.out.println("서비스:ckEnd"+ckEnd);
+		System.out.println("서비스:ckEnd"+ckEnd);
 		if(n==1 || m==1){
 			ckEnd = 1;
 		}
@@ -677,6 +677,13 @@ public class JsrService implements InterJsrService {
 		String getName = jdao.getUsername(q_fk_login_id);
 		System.out.println("서비스단!!"+getName);
 		return getName;
+	}
+
+	//알람용 글 한개보기
+	@Override
+	public HashMap<String,Object> getAlarmBoard(HashMap<String, String> map) {
+		HashMap<String,Object> getAlarmBoard = jdao.getAlarmBoard(map);
+		return getAlarmBoard;
 	}
 	
 	

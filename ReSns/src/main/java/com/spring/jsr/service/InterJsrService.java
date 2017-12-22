@@ -89,6 +89,10 @@ public interface InterJsrService {
 	//이름 알아오기
 	String getName(String q_fk_login_id);
 	
+	
+	//알람용 글 한개 보기
+	HashMap<String,Object> getAlarmBoard(HashMap<String, String> map);
+	
 
 
 

@@ -27,10 +27,15 @@
     	
     } 
     </script>
+   
+    <div align="center">
+    <img src="<%=request.getContextPath() %>/resources/images/loop_black.png"/>
+    	<br/>로딩중...
+    </div>
     
-    로딩중...
     <form name="goback">
     <input type="hidden" name="gobackURL" value="${gobackURL}">
     <input type="hidden" name="seq_tbl_q" value="${seq_tbl_q}">
     <input type="hidden" name="fk_login_id" value="${fk_login_id}">
+    <input type="hidden" name="totalcount" value="${totalcount}">
     </form>

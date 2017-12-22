@@ -195,6 +195,7 @@ on F.follow_id = L.login_id
 join tbl_uimage M
 on F.follow_id = M.fk_login_id
 where F.fk_login_id = #{login_id}
+and B.board_status = 0
 order by B.seq_tbl_board desc
 )V
 )T
@@ -456,8 +457,9 @@ on F.follow_id = L.login_id
 join tbl_uimage M
 on F.follow_id = M.fk_login_id
 where F.fk_login_id = #{login_id}
+and B.board_time >= sysdate - 20
+and B.board_status = 0
 </select>
-
 <!--  가져오기 끝 -->
 
 
@@ -511,4 +513,62 @@ where B.fk_login_id = #{login_id}
 		    from tbl_login
 		    where login_id = #{q_fk_login_id}	
 	</select>
+	
+	
+
+<resultMap type="HashMap" id="getAlarmBoardViewMap">
+<result property="board_login_name" 				column="board_login_name" 					javaType="String" />
+<result property="seq_tbl_board" 					column="seq_tbl_board" 						javaType="String" />
+<result property="board_profile_filename" 			column="board_profile_filename" 			javaType="String" />
+<result property="board_login_id" 					column="board_login_id" 					javaType="String" />
+<result property="board_content" 					column="board_content" 						javaType="String" />
+<result property="board_time" 						column="board_time" 						javaType="String" />
+<result property="board_heart" 						column="board_heart" 						javaType="String" />
+<result property="board_recnt" 						column="board_recnt" 						javaType="String" />
+<result property="board_status" 					column="board_status" 						javaType="String" />
+<result property="bimg_filename" 					column="bimg_filename" 						javaType="String" />
+<result property="bimg_orgfilename" 				column="bimg_orgfilename" 					javaType="String" />
+<result property="bimg_filesize" 					column="bimg_filesize" 						javaType="String" />
+<result property="map_we" 							column="map_we" 							javaType="String" />
+<result property="ma_ky" 							column="ma_ky" 								javaType="String" />
+<result property="map_name" 						column="map_name" 							javaType="String" />
+<result property="title" 							column="title" 								javaType="String" />
+</resultMap>
+
+<select id="getAlarmBoard" parameterType="HashMap" resultMap="getAlarmBoardViewMap">
+select 
+	  L.login_name as board_login_name
+      ,M.uimg_profile_filename as board_profile_filename
+      ,B.fk_login_id as board_login_id
+      ,B.seq_tbl_board as seq_tbl_board
+      ,B.board_content as board_content
+      ,case when length(B.board_content) > 10
+              then substr(B.board_content, 1, 10)||'...'
+              else B.board_content
+              end 
+         as title   
+      ,B.board_time as board_time
+      ,B.board_heart as board_heart
+      ,B.board_recnt as board_recnt
+      ,B.board_status as board_status
+      ,I.bimg_filename as bimg_filename
+      ,I.bimg_orgfilename as bimg_orgfilename
+      ,I.bimg_filesize as bimg_filesize
+      ,M.map_we as map_we
+      ,M.map_ky as ma_ky
+      ,M.map_name as map_name
+from tbl_board B join tbl_bimage I
+on B.seq_tbl_board = I.seq_tbl_board
+left outer join tbl_map M
+on B.seq_tbl_board = M.fk_seq_tbl_board 
+join tbl_login L
+on B.fk_login_id = L.login_id
+join tbl_uimage M
+on B.fk_login_id = M.fk_login_id
+where B.seq_tbl_board = #{seq_tbl_board}
+and B.board_status = 0
+</select>
+	
+	
+	
 </mapper>

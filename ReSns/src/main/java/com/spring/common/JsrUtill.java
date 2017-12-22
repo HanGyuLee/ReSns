@@ -1,6 +1,5 @@
 package com.spring.common;
 
-import javax.servlet.http.HttpServletRequest;
 
 public class JsrUtill {
 	public static String getPageBarSearch(int totalcount,int sizep,int cShowp,int totalPage,int blockSize,String qsearch,String fk_login_id,String url) {
@@ -94,7 +93,7 @@ public class JsrUtill {
 
 		
 		//pageBar += "<div class='container'>";
-		pageBar += "<div class='row'>";
+		pageBar += "<div class=''>";
 		pageBar += "<nav aria-label='Page navigation'>";
 		pageBar += "<ul class='pagination'>";
 				
@@ -105,7 +104,7 @@ public class JsrUtill {
 		}
 		
 		else {
-			str_pageNo = "<li><a href=\""+url+"?cShowp="+(pageNo-1)+"&sizep="+sizep+"\" aria-label='Previous' >"+" <span aria-hidden='true'>«</span></a></li>";
+			str_pageNo = "<li><a href=\""+url+"?cShowp="+(pageNo-1)+"&sizep="+sizep+"\" aria-label='Previous' >"+" <span aria-hidden='true'>^</span></a></li>";
 			//str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;";
 		}
 		
@@ -116,7 +115,7 @@ public class JsrUtill {
 		while(!(pageNo > totalPage || loop > blockSize)){
 			
 			if (pageNo == cShowp)
-				str_pageNo = "<li><span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>";
+				str_pageNo = "<li><span style='color:red; font-size:12pt; font-weight:bold; text-decoration:underline;'>"+pageNo+ "</span>";
 			else			
 			    str_pageNo = "<li><a href=\""+url+"?cShowp="+pageNo+"&sizep="+sizep+"\" >"+pageNo+"</a>";
 			pageBar += str_pageNo; 
