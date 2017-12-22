@@ -95,7 +95,7 @@
 				on R.re_id = L.login_id
 				left join tbl_uimage U
 				on L.login_id = U.fk_login_id
-				where R.seq_tbl_board = #{seq_tbl_board} and R.re_status = 1
+				where R.seq_tbl_board = #{seq_tbl_board} and R.re_status = 1 and L.login_status = 1
 				start with R.re_fk_seq = 0
 				connect by prior R.re_seq = R.re_fk_seq
 				order siblings by R.re_groupno asc, R.re_seq asc

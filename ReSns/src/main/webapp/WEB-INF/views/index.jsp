@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <script type="text/javascript"
@@ -31,6 +32,8 @@ figure.snip1166 {
   background: #ffffff;
   color: #000000;
   text-align: left;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px 0px lightgray;
 }
 figure.snip1166 * {
   -webkit-box-sizing: padding-box;
@@ -48,6 +51,7 @@ figure.snip1166 img {
   vertical-align: top;
   -webkit-transition: opacity 0.4s;
   transition: opacity 0.4s;
+  border-radius: 10px;
 }
 figure.snip1166 figcaption {
   position: absolute;
@@ -183,6 +187,11 @@ figure.snip1166.hover figcaption p {
   opacity: 0.8;
   -webkit-transform: translateY(0);
   transform: translateY(0);
+}
+
+.fallowmain{
+border-radius: 10px;
+box-shadow: 5px 5px 5px 0px lightgray;
 }
 
 
@@ -815,13 +824,7 @@ function runEffect(entryIndex) {
     // Run the effect
    $( "#reReply"+entryIndex ).toggle( "blind", options, 500 ); 
   };
-  
- 
-function modalClose(statuscount) {
-	
-	$(statuscount).hide();
-}
-  
+
 </script>
 
 </head>
@@ -859,11 +862,10 @@ function modalClose(statuscount) {
 					<div class="modal fade" id="${status.count}" tabindex="-1"
 						role="dialog">
 						<div class="modal-dialog" role="document">
-							<div class="modal-content" style="width: 800px; height: 500px;">
-								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">×
-									<!-- <span aria-hidden="true"></span> -->
-								</button>
+							<div class="modal-content" style="width: 800px; height: 500px; cursor: pointer;">
+							
+								<button type="button" class="close" data-dismiss="modal" >×</button>
+								
 								<div class="modal-body">
 									<div
 										style="width: 68%; height: 350px; border: 0px solid blue; float: left;">
@@ -912,7 +914,8 @@ function modalClose(statuscount) {
 												style="width: 18px; height: 18px;" align="right" />
 											</a>	
 										</c:if>
-										<a href="/resns/reportingBoard.re?fk_login_id=${map.FK_LOGIN_ID}&seq_tbl_board=${map.SEQ_TBL_BOARD}">
+										<a href="#" 
+										onclick="window.open('<%=request.getContextPath()%>/reportingBoard.re?fk_login_id=${map.FK_LOGIN_ID}&seq_tbl_board=${map.SEQ_TBL_BOARD}', 'message', 'top=100px, left=100px, height=800px, width=800px')">
 												<img
 													src="<%=request.getContextPath()%>/resources/images/report.png"
 													style="width: 18px; height: 18px;" align="right" /> 

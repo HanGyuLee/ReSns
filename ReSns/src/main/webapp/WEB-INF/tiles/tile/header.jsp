@@ -142,7 +142,12 @@
     z-index: 9;
 }
 
-
+.dropdown2 {
+    background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png");
+    border:1px solid #ccc;
+    border-radius:4px;
+    width:50px; 
+}
 
 </style>
 
@@ -516,9 +521,11 @@ function goAlarm(userid){
 	    
 	     <ul class="nav  navbar-nav pull-left">
         <li>
+         <c:if test="${sessionScope.loginUser.login_status eq 1}">
           <a href="#" onClick="goAlarm('${sessionScope.loginUser.login_id}')" class="dropdown-toggle" data-toggle="dropdown">
           <img src="<%=request.getContextPath()%>/resources/images/alarm_white.png" class="menuicon">
           </a>
+          </c:if>
           
           <ul class="dropdown-menu dropdown">
           <li id="alarm">
@@ -532,7 +539,7 @@ function goAlarm(userid){
       </ul>
 	   
 	    
-	      <%-- <!-- left nav top -->
+	     <%--  <!-- left nav top -->
 	      <ul class="nav navbar-nav pull-left">
 	       <ul class="nav  navbar-nav">
         <li class="dropdown">
@@ -546,10 +553,13 @@ function goAlarm(userid){
 	        <li><a href="#"><span class="text-white">${sessionScope.loginUser.login_name} 님 환영합니다.</span></a></li>
 	      </ul> --%>
 	      <!-- right nav top -->
-	      <!-- <ul class="nav navbar-nav pull-right">
-	        <li><a href="#" class="text-white">About Us</a></li>
-	        <li><a href="#" class="text-white">Contact Us</a></li> 
-	      </ul> -->
+	      <ul class="nav navbar-nav pull-right">
+	      <c:if test="${sessionScope.loginUser.login_status eq 1}">
+	        <li><a href="<%=request.getContextPath()%>/noticeMemMain.re"><img src="<%=request.getContextPath()%>/resources/images/q.png" class="menuicon"></a></li>
+        	<li><a href="<%=request.getContextPath()%>/faq.re"><img src="<%=request.getContextPath()%>/resources/images/faq.png" class="menuicon"></a></li>
+	      	<li><a href="<%=request.getContextPath()%>/help.re"><img src="<%=request.getContextPath()%>/resources/images/question.png" class="menuicon"></a></li>
+	      </c:if>
+	      </ul>
 	    </div>
 	    
     </c:if>
@@ -618,8 +628,26 @@ function goAlarm(userid){
         <c:if test="${sessionScope.loginUser.login_status eq 9}">
         
         	<ul class="nav navbar-nav flex-item hidden-xs pull-right">
-        		<li><a href="<%=request.getContextPath()%>/index.re"><img src="<%=request.getContextPath()%>/resources/images/home.png" class="menuicon"></a></li>
-        		<li><a href="<%=request.getContextPath()%>/report.re"><img src="<%=request.getContextPath()%>/resources/images/admin.png" class="menuicon"></a></li>
+        		<li><a href="<%=request.getContextPath()%>/noticeAdmMain.re"><img src="<%=request.getContextPath()%>/resources/images/home.png" class="menuicon"></a></li>
+
+        		<li>
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		          <img src="<%=request.getContextPath()%>/resources/images/admin.png" class="menuicon">
+		          </a>
+		          
+		          <ul class="dropdown-menu dropdown2">
+		          <li>
+		          <li><a href="<%=request.getContextPath()%>/memberSupervise.re">회원관리</a></li>
+		          <li><a href="<%=request.getContextPath()%>/report.re">신고관리</a></li>
+		          </li>
+		          
+		          </ul>
+		        </li>
+        		
+        		
+        		<li><a href="<%=request.getContextPath()%>/help.re"><img src="<%=request.getContextPath()%>/resources/images/question.png" class="menuicon"></a></li>
+        		<li><a href="<%=request.getContextPath()%>/faq.re"><img src="<%=request.getContextPath()%>/resources/images/faq.png" class="menuicon"></a></li>
+        		<li><a href="<%=request.getContextPath()%>/statistics.re"><img src="<%=request.getContextPath()%>/resources/images/chart.png" class="menuicon"></a></li>
           		<li><a href="<%=request.getContextPath()%>/logout.re"><img src="<%=request.getContextPath()%>/resources/images/logout.png" class="menuicon"></a></li>  
         	</ul>
         
@@ -644,89 +672,5 @@ function goAlarm(userid){
   </nav> 
 <!--bg img  -->
 <header>
-</header>    
-
-
-
-
-
-	<%-- <ul class="nav nav-tabs mynav">
-		
-		<li style="margin-left:3%; "><a href="<%=request.getContextPath()%>/index.re"><img src="<%=request.getContextPath()%>/resources/images/home.png"></a></li>
-		
-		<li style="margin-left:34%;margin-top:10px; "><img src="<%=request.getContextPath()%>/resources/images/search.png"><input/></li>
-		
-		
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">제품정보 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="<%=request.getContextPath()%>/product/listProduct.re">제품목록</a></li>
-			</ul></li>
-		
-		<c:if test="${sessionScope.loginuser.gradelevel >= 10 }">
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">제품등록(다중파일첨부) <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-			    <li><a href="<%=request.getContextPath()%>/product/addProduct.action">제품등록</a></li>
-				<li><a href="<%=request.getContextPath()%>/product/productStore.action">제품입고</a></li>
-			</ul></li>
-		</c:if>	
-		
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">로그인 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<c:if test="${sessionScope.loginuser == null}">
-				<li><a href="#">회원가입</a></li>
-				<li><a href="<%=request.getContextPath()%>/login.action">로그인</a></li>
-				</c:if>
-				
-				<c:if test="${sessionScope.loginuser != null}">
-				<li><a href="<%=request.getContextPath()%>/logout.action">로그아웃</a></li>
-				</c:if>
-			</ul></li>		
-			<li style="margin-left:90%; margin-top:-70px;display:inline;"><a href="<%=request.getContextPath()%>/index.re"><img src="<%=request.getContextPath()%>/resources/images/alarm_white.png"></a></li>
-		
-		<li class="dropdown" style="margin-left:85%; margin-top:-50px; display:inline;"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#"><img src="<%=request.getContextPath()%>/resources/images/alarm_white.png"> <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-			
-			<c:if test="${sessionScope.loginuser != null && not empty alarmList}">
-				<c:forEach var="alarmvo" items="alarmList">
-					<li><a href="<%=request.getContextPath()%>/alarm/alarmList.re">${alarmList }</a></li>
-				</c:forEach>
-						</c:if>	
-				<li><img src="<%=request.getContextPath()%>/resources/images/user_black.png">(예시)친구가 팔로우함 </li>
-				<li><img src="<%=request.getContextPath()%>/resources/images/follow_black.png">(예시)새로운팔로워</li>
-			
-		</ul></li>
-		
-		
-		<c:if test="${sessionScope.loginUser == null}">
-		
-		<li style="margin-left:85%;margin-top:10px; margin-top:-60px; display:inline;"><a href="<%=request.getContextPath()%>/login.re"><img src="<%=request.getContextPath()%>/resources/images/user_white.png"></a></li>
-		</c:if>
-		<c:if test="${sessionScope.loginUser!= null}">
-		<li style="margin-left:85%;margin-top:10px; margin-top:-60px; display:inline;"><a href="<%=request.getContextPath()%>/mypage.re"><img src="<%=request.getContextPath()%>/resources/images/user_white.png"></a></li>
-		</c:if>
-		
-		
-		
-		<!-- ===== #52. 로그인 성공한 사용자 성명 출력하기. ===== -->
-		<c:if test="${sessionScope.loginUser.login_status eq 1}">
-		<li style="margin-left: 35%; margin-top: 1%;">
-		♥ 환영합니다~ <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.login_name}</span> 님  ♥
-		</li>
-		<br/>
-		<div><button type="button" id="logout" name="logout" class="btn btn-primary" onclick="gologout();">로그아웃</button></div>
-		</c:if>
-		
-		<c:if test="${sessionScope.loginUser.login_status eq 9}">
-		<li style="margin-left: 15%; margin-top: 1%;">
-		♥ 환영합니다~ 관리자  <span style="color: navy; font-weight: bold;">${sessionScope.loginUser.login_name}</span> 님 ♥
-		</li>
-		<br/>
-		<br/><div><button type="button" id="logout" name="logout" class="btn btn-primary" onclick="gologout();">로그아웃</button></div>
-		</c:if>
-		
-	</ul> --%>
+</header>
 

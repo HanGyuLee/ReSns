@@ -147,19 +147,26 @@ function goDetail(seq_tbl_msg) {
 
 	<div class="container">
 	
-<c:forEach items="${msgList}" var="msg" varStatus="status">
-  <div class="card">
-    <div class="icon-container">
-      <div class="loading-icon perpetuum-mobile"><img src="<%=request.getContextPath()%>/resources/images/${msg.UIMG_PROFILE_FILENAME}" style="width: 30px; height: 30px;" class="img-circle" /></div>
-    </div>
-    <div class="description">
-    	<span style="font-size: 8pt; font-weight: bold;">from ${msg.LOGIN_NAME}</span>
-      <div class="name" style="cursor: pointer;" onclick="goDetail('${msg.SEQ_TBL_MSG}');">${msg.MSG_CONTENT}</div>
-      <div style="font-size: 7pt;">${msg.MSG_DATE}</div>
-    </div>
-  </div>
-</c:forEach>  
-  
+<c:if test="${empty msgList}">
+	<div align="center" style="border: 0px solid white; margin-top: 300px;">
+		<span style="font-weight: bold; font-family:'나눔고딕'; font-size: 15pt; color: gray;  text-align: center;">받은 쪽지가 없습니다:(</span>
+	</div>
+</c:if>
+	
+<c:if test="${not empty msgList}">	
+	<c:forEach items="${msgList}" var="msg" varStatus="status">
+	  <div class="card">
+	    <div class="icon-container">
+	      <div class="loading-icon perpetuum-mobile"><img src="<%=request.getContextPath()%>/resources/images/${msg.UIMG_PROFILE_FILENAME}" style="width: 30px; height: 30px;" class="img-circle" /></div>
+	    </div>
+	    <div class="description">
+	    	<span style="font-size: 8pt; font-weight: bold;">from ${msg.LOGIN_NAME}</span>
+	      <div class="name" style="cursor: pointer;" onclick="goDetail('${msg.SEQ_TBL_MSG}');">${msg.MSG_CONTENT}</div>
+	      <div style="font-size: 7pt;">${msg.MSG_DATE}</div>
+	    </div>
+	  </div>
+	</c:forEach>  
+</c:if>  
 </div>
 </body>
 </html>
