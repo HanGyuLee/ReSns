@@ -841,7 +841,7 @@ public class PmhController {
 	public String getGenderChartJson(HttpServletRequest req) {
 		
 		String jsonData = service.getGenderInfo();
-		
+		System.out.println(jsonData);
 		req.setAttribute("jsonData", jsonData);
 		return "jsonData.notiles2";
 	}
@@ -869,4 +869,46 @@ public class PmhController {
 	}
 	
 	/////////////////////////////////////////// 통계 페이지 컨트롤러 끝 ///////////////////////////////////////////////
+	
+	/////////////////////////////////////////// 기타 컨트롤러 시작 ///////////////////////////////////////////////////
+	@RequestMapping(value="reportingUser.re", method={RequestMethod.GET})
+	public String reportingUserHandler(HttpServletRequest req, HttpSession ses) {
+		String re_id = req.getParameter("re_id");
+		
+		LoginVO loginUser = (LoginVO) ses.getAttribute("loginUser");
+		
+		if (loginUser == null) {
+			
+			req.setAttribute("msg", "회원전용 메뉴입니다. 로그인을 해 주세요.");
+			req.setAttribute("loc", "/resns/login.re");
+			
+			String url = MyUtil.getCurrentURL(req);
+			ses.setAttribute("gobackURL", url);
+			
+			return "msg.notiles2";
+		}
+		
+		HashMap<String, String> reportMap = new HashMap<String, String>();
+		
+		reportMap.put("re_id", re_id);
+		
+		int n = service.reportingReply(reportMap);
+
+		if (n>0) {
+			String msg = "선택하신 리플을 신고하였습니다.";
+			String loc = "/resns/index.re";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+		}
+		else {
+			String msg = "리플 신고에 실패하였습니다.";
+			String loc = "/resns/index.re";
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+		}
+		
+		return "msg.notiles2";
+	}
+	
+	/////////////////////////////////////////// 기타 컨트롤러 끝 ///////////////////////////////////////////////////
 }

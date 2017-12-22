@@ -344,7 +344,16 @@ public class PmhDAO implements InterPmhDAO {
 		List<HashMap<String, String>> list = sqlsession.selectList("pmhresns.getBoardCountChartPreWeekInfo", loginid);
 		return list;
 	}
-
 	
 	/////////////////////////////// 통계 DAO 끝 ///////////////////////////////////////////
+	
+	/////////////////////////////// 기타 DAO 시작 /////////////////////////////////////////
+
+	@Override
+	public int reportingReply(HashMap<String, String> reportMap) {
+		int n = sqlsession.update("pmhresns.reportingReply", reportMap);
+		return n;
+	}
+	
+	/////////////////////////////// 기타 DAO 끝 ///////////////////////////////////////////
 }

@@ -45,6 +45,11 @@
 
 
 <script type="text/javascript">
+
+	$(document).ready(function() {
+		ageChart();
+		genderChart();
+	});
 	
 	function ageChart() {
 		//Create the chart
@@ -114,7 +119,7 @@
 					[entry.gendername, Number(entry.cnt)]					
 				);
 			});// end of each()-----
-			
+			console.log(genderArr);
 			Highcharts.chart('gender-container', {
 			    chart: {
 			        type: 'column'
@@ -169,81 +174,7 @@
 		}); // end of $.getJSON("getGenderChartJson.re", function(data)-----------
 	}// end of genderChart()----------
 	
-	function boardCountChart() {
-		
-		var loginid = "<c:out value='${loginUser.login_id}'/>";
-		
-		if (loginid != null && loginid.length > 0) {
-			var weekInfo = [];
-			var preWeekInfo = [];
-			var weekdate = [];
-			$.getJSON("getBoardCountChartWeekJson.re", {"loginid" : loginid}, function(data) {
-				$.each(data, function(index, entry) {
-					weekInfo.push(
-						parseFloat(entry.cnt)
-					);
-				});
-				$.each(data, function(index, entry) {
-					weekdate.push(
-						entry.weekdate
-					);
-				});
-			}); // end of getJSON1
-			$.getJSON("getBoardCountChartPreWeekJson.re", {"loginid" : loginid}, function(data) {
-				$.each(data, function(index, entry) {
-					preWeekInfo.push(
-						parseFloat(entry.cnt)
-					);
-				});
-			}); // end of getJSON2
-			console.log(weekInfo);
-			console.log(preWeekInfo);
-			console.log(weekdate);
-			
-			Highcharts.chart('boardCount-container', {
-			    chart: {
-			        type: 'line'
-			    },
-			    title: {
-			        text: 'Monthly Average Temperature'
-			    },
-			    subtitle: {
-			        text: 'Source: WorldClimate.com'
-			    },
-			    xAxis: {
-			        categories: weekdate
-			    },
-			    yAxis: {
-			        title: {
-			            text: 'Temperature (°C)'
-			        }
-			    },
-			    plotOptions: {
-			        line: {
-			            dataLabels: {
-			                enabled: true
-			            },
-			            enableMouseTracking: false
-			        }
-			    },
-			    series: [{
-			        name: '저번주',
-			        data: weekInfo
-			    }, {
-			        name: '저저번주',
-			        data: preWeekInfo
-			    }]
-			});
-		}// end of if
-				
-	}// end of boardCountChart()-----
 	
-	window.onload = function() {
-		ageChart();
-		genderChart();
-		boardCountChart();
-	}
-		
 	document.title = "통계 페이지";
 </script>
 

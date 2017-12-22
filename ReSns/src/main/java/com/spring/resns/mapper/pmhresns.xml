@@ -458,4 +458,13 @@
 	</select>
 	
 	<!-- //////////////// 통계 mapper 끝 ////////////////// -->
+	
+	<!-- //////////////// 기타 mapper 시작 ////////////////// -->
+	
+	<update id="reportingReply" parameterType="HashMap">
+		update tbl_user set user_report = user_report + 1
+		where fk_login_id = #{re_id}
+	</update>
+	
+	<!-- //////////////// 통계 mapper 끝 ////////////////// -->
 </mapper>

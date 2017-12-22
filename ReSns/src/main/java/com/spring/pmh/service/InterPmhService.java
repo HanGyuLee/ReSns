@@ -102,7 +102,11 @@ public interface InterPmhService {
 	String getBoardCountChartWeekInfo(String loginid);
 
 	String getBoardCountChartPreWeekInfo(String loginid);
-	
+
 	////////////////////// 통계 서비스 끝 /////////////////////////////
+	
+	////////////////////// 기타 서비스 시작 //////////////////////////
+	int reportingReply(HashMap<String, String> reportMap);
+	////////////////////// 기타 서비스 끝 /////////////////////////////
 	
 }
