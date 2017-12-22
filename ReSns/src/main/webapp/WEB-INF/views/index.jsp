@@ -380,7 +380,7 @@ function showDetail(statuscount) {
 							}
 							
 							
-							result += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
+							result += "<a href='/resns/reportingUser.re?re_id="+re_id+"'>";
 							result += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' />";
 							result += "</a>";
 							

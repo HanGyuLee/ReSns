@@ -21,6 +21,6 @@ $(function () {
 </script>
 </head>
 <body>
-<div style ="text-align: center; cursor: pointer;" class="tlt"><a href="#">여기에는 공지사항이 들어갑니다.</a></div>
+<a href="<%= request.getContextPath() %>/noticeMemMain.re"><div style ="text-align: center; cursor: pointer;" class="tlt" >아리의 공지사항을 확인하세요.</div></a>
 </body>
 </html>
