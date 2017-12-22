@@ -165,6 +165,51 @@ span.input-group-addon i {
      });
     
     
+    // 비밀번호 유효성 검사
+    $("#pwd").blur(function() {
+        var pwd = $(this).val();
+        var pattern = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
+        // 암호는 숫자/영문자/특수문자/ 포함 형태의  8~15자리 이내만 허락해주는 정규표현식 객체생성
+        var bool = pattern.test(pwd);
+
+        if (!bool) {
+           $(this).next().show();
+           $(":input").attr("disabled",true).addClass("bgcol");
+           $(this).attr("disabled", false).removeClass("bgcol");
+           $("#btnRegister").attr("disabled", true);
+           $(this).val("");
+           $(this).focus();
+        } else {
+           $(this).next().hide();
+           $(":input").attr("disabled",false).removeClass("bgcol");
+           $("#btnRegister").attr("disabled", false);
+        }
+     });// end of $("#passwd").blur()----------------------
+
+     $("#pwdcheck").blur(function() {
+        var pwd = $("#pwd").val();
+        var pwdcheck = $(this).val();
+
+        if (pwd != pwdcheck) {
+           $(this).next().show();
+           $(":input").attr("disabled", true).addClass("bgcol");
+           $(this).attr("disabled", false).removeClass("bgcol");
+           $("#pwd").attr("disabled", false).removeClass("bgcol");
+           $("#btnRegister").attr("disabled", true);
+           $(this).val("");
+           $("#pwd").focus();
+        } else {
+           $(this).next().hide();
+           $(":input").attr("disabled", false).removeClass("bgcol");
+           $("#btnRegister").attr("disabled",false);
+        }
+     });// end of $("#passwdcheck").blur
+    
+    
+    
+    
+    
+    
     document.title = "회원가입";
     </script>
     
@@ -182,13 +227,14 @@ span.input-group-addon i {
   <span class="help-block"></span>
    
   </div>
+  
 </div> -->
 
 						<div class="form-group">
-							<label for="name" class="cols-sm-2 control-label">아이디</label>
-							<div class="cols-sm-10">
+							<label for="name" class="cols-sm-2 control-label"></label>
+							<div class="col-md-4">
 								<div class="input-group">
-									<span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+									<span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i>아이디</span>
 									<input type="text" class="form-control" id="login_id" name="login_id" required="required"  placeholder="사용하실 아이디를 입력하세요."/>
 								</div>
 							</div>
@@ -200,15 +246,26 @@ span.input-group-addon i {
      </a>
        <span class="error">아이디는 필수입력 사항입니다.</span>
 
-
+						<!-- <div class="form-group">
+							<label for="password" class="cols-sm-2 control-label">비밀번호</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+									<input type="password" class="form-control" name="password" id="password"  placeholder="비밀번호는 영문자,숫자,특수기호를 포함한 8자 이상 12자 이하로 입력해주세요."/>
+								</div>
+							</div>
+						</div> -->
 
 <div class="form-group">
-  <label class="col-md-4 control-label" for="netmask">비밀번호</label>  
-  <div class="col-md-4">
+  <label for="password" class="cols-sm-2 control-label"></label>  
+  <div class="col-md-4" >
+  <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i>비밀번호</span>
   <input id="login_pwd" name="login_pwd" type="password" placeholder="영문자,숫자,특수기호를 포함 9글자 이상 입력하세요." class="form-control input-md" required="required">
-  <span class="help-block"></span>  
+  <span class="help-block"></span>
   </div>
 </div>
+
+
 
 <div class="form-group">
   <label class="col-md-4 control-label" for="netmask">비밀번호 확인</label>  
@@ -252,7 +309,7 @@ span.input-group-addon i {
   </div>
 </div>
 
-<a class="btn btn-xs btn-warning" id="nickcheck">
+	<a class="btn btn-xs btn-warning" id="nickcheck">
       <span style="color: #4F84C4;"><span class="glyphicon glyphicon-ok-circle"></span> 별명 중복체크</span>
      </a>
        <span class="error">별명은 필수입력 사항입니다.</span>

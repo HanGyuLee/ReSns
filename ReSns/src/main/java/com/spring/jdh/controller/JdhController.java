@@ -260,7 +260,7 @@ public class JdhController {
 			String user_gender = req.getParameter("user_gender");	// 성별		
 			String user_email = req.getParameter("user_email");		// 이메일			
 			String user_birth = req.getParameter("user_birth");		// 생년월일
-			String user_selfi = req.getParameter("user_selfi");		// 자기소개
+			
 			
 			
 			
@@ -280,7 +280,7 @@ public class JdhController {
 			uvo.setUser_email(user_email);
 			uvo.setUser_birth(user_birth);
 			uvo.setUser_gender(Integer.parseInt(user_gender));
-			uvo.setUser_selfi(user_selfi);
+			
 			
 			if(attach == null || attach.isEmpty()){
 				ivo.setAttach(null);
