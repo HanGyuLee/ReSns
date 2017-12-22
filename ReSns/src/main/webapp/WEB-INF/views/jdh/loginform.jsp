@@ -8,7 +8,53 @@
 
     <style type="text/css">
 
-	 .mydiv {display: inline-block; 
+	  body {
+        background-color: #444;
+        background: url(http://s18.postimg.org/l7yq0ir3t/pick8_1.jpg);
+        
+    }
+    .form-signin input[type="text"] {
+        margin-bottom: 5px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .form-signin .form-control {
+        position: relative;
+        font-size: 16px;
+        font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+        height: auto;
+        padding: 10px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .vertical-offset-100 {
+        padding-top: 100px;
+    }
+    .img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+    }
+    .panel {
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    }
+	
+	</style>
+
+<!-- 
+.mydiv {display: inline-block; 
 	        position: relative; 
 	        top: 30px; 
 	        line-height: 150%; 
@@ -17,9 +63,7 @@
 	
 	.mydisplay {display: block;}
 	       	
-	.myfont {font-size: 14pt;}
-	
-</style>
+	.myfont {font-size: 14pt;} -->
 
 <script type="text/javascript">
  
@@ -128,7 +172,43 @@
     
 </script>
 
-<div style="width:90%; margin: auto; border: solid 0px red;">
+
+<body>
+            <div class="container" style="width:130%; height:80%; margin: auto;">
+                <div class="row vertical-offset-100">
+                    <div class="col-md-4 col-md-offset-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">                                
+                                <div class="row-fluid user-row">
+                                    <img src="http://s11.postimg.org/7kzgji28v/logo_sm_2_mr_1.png" class="img-responsive" alt="Conxole Admin"/>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                            
+                                <form accept-charset="UTF-8" role="form" class="form-signin" name="loginFrm">
+                                    <fieldset>
+                                        <label class="panel-login">
+                                            <div class="login_result"></div>
+                                        </label>
+                                        <input class="form-control" placeholder="아이디를 입력하세요" type="text" name="id" id="id">
+                                        <input class="form-control" placeholder="비밀번호를 입력하세요" type="password" name="pwd" id="pwd">
+                                        <br></br>
+                                        <input class="btn btn-lg btn-success btn-block" type="button" id="btnLOGIN" value="로그인 »">
+                                    </fieldset>
+                                </form>&nbsp;&nbsp;&nbsp;
+                                
+    &nbsp;&nbsp;<br/><br/><a data-toggle="modal" data-target="#idFindFrm" data-dismiss="modal" class="btn btn-warning" style="font-weight: bold; color: black;" >아이디찾기</a> 
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" data-target="#passwdFind" data-dismiss="modal" class="btn btn-info" style="font-weight: bold; color: black;">비밀번호찾기</a>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-primary" type="button" id="reregister" style="font-weight: bold; color: black;" href="<%= request.getContextPath() %>/reRegister.re">회원가입</a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+		
+		<!-- <div style="width:90%; margin: auto; border: solid 0px red;">
 
 	<div style="width:80%; margin-top:10%; margin-left:10%; height:300px; border: solid 0px blue;">
 		<h2 class="text-primary">로그인</h2>
@@ -150,7 +230,8 @@
 				
 			</div>	
 		
-		</form>
+		</form> -->
+		
 		
 		<!-- <form name="findFrm">
 		
@@ -164,9 +245,7 @@
 		
 		</form> -->
 		
-		&nbsp;<br/><br/><br/><a data-toggle="modal" data-target="#idFindFrm" data-dismiss="modal" >아이디찾기</a> 
-		&nbsp;<br/><br/><br/><a data-toggle="modal" data-target="#passwdFind" data-dismiss="modal">비밀번호찾기</a>
-		&nbsp;<br/><br/><br/><a type="button" id="reregister" href="<%= request.getContextPath() %>/reRegister.re">회원가입</a>
+		
 	<div class="modal fade" id="idFindFrm" role="dialog">
 	<div class="modal-dialog">
 	
@@ -183,12 +262,12 @@
           	<form name="idFindFrm">
 
 				<div id="div_name" align="center">
-					<span style="color: blue; font-size: 12pt;">이메일</span><br/>
+					<span style="color: blue; font-size: 12pt; font-weight: bold;">이메일</span><br/>
 					<input type="text" id="email" name="email" size="15" placeholder="email을 입력하세요." required />
-				</div>
+				</div><br/>
 				
 				<div id="div_mobile" align="center">
-					<span style="color: blue; font-size: 12pt;">별명</span><br/>
+					<span style="color: blue; font-size: 12pt; font-weight: bold;">별명</span><br/>
 					<input type="text" id="nickname" name="nickname" size="15" placeholder="별명을 입력하세요." required />
 				</div>
 				
@@ -197,10 +276,12 @@
 				</div>
 				
 				<div id="div_btnFind" align="center">
-					<button type="button" class="btn btn-success" id="btnFind">찾기</button>
+					<button type="button" class="btn btn-primary" id="btnFind">찾기</button>
 				</div>
+				<br/><br/>
 				
 				<div class="modal-footer">
+				<span style="margin-right: 40pt;">회원가입을 하시겠습니까?</span><a href="<%= request.getContextPath() %>/reRegister.re" class="btn btn-primary">회원가입</a>
           <button type="button" class="btn btn-default myclose" data-dismiss="modal">닫기</button>
         		</div>
 				

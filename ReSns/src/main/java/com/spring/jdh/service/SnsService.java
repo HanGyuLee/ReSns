@@ -224,6 +224,33 @@ public class SnsService implements InterSnsService {
 			return n;
 		}
 
+		// 아이디 중복체크
+		@Override
+		public boolean idDuplicateCheck(String userid) {
+			
+			int n = dao.idDuplicateCheck(userid);
+			
+			 if(n == 1) {
+		         return false;
+		      }
+			 
+			 else {
+		         return true;
+		      }
+		   }
+
+		// 별명 중복체크
+		@Override
+		public boolean nickDuplicateCheck(String login_name) {
+			
+			 int n = dao.nickDuplicateCheck(login_name);
+			
+			 if(n == 1) {
+		         return false;
+		      } else {
+		         return true;
+		      }
+		   }
 
 		
 

@@ -44,7 +44,7 @@
 		}
 		$("#btnUpdate").click(function(event){
 			var method = "${method}";
-			// 숙제(정규식, 새암호와 새암호확인 같도록 비교)(유효성검사)
+			
 			var pwd = $("#pwd").val();// pwdConfirmFrm의 아이디값
 			//var pwd = "${pwd}";
 			var pwd2 = $("#pwd2").val();

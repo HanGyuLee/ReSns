@@ -57,6 +57,10 @@ public interface InterSnsService {
 
 	int getTotalCount1();	// 검색어 없는 총게시물 수
 
+	boolean idDuplicateCheck(String userid);	//아이디 중복체크
+
+	boolean nickDuplicateCheck(String login_name);	// 별명 중복체크
+
 	
 	
 	

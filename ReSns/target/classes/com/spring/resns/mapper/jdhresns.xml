@@ -286,73 +286,80 @@
 	
 	<!-- 검색어 있는 리스트 -->
 	
-	<!-- <select id="getSearchList" parameterType="HashMap" resultType="com.spring.jdh.model.NoticeVO">
+	<select id="getSearchList1" parameterType="HashMap" resultType="java.util.HashMap">
 	
-		 select seq, name, subject, readCount, regDate, commentCount
+	 select fk_login_id, login_name, user_email, user_report, login_status
 		from 
 		(
 		select rownum as RNO
-		     , V.seq, V.name, V.subject, V.content, V.readCount, V.regDate, V.commentCount
+		     , V.fk_login_id, V.login_name, V.user_email, V.user_report, V.login_status
 		from 
 		(
-		select seq, name 
-		     , case when length(subject) > 20 then substr(subject, 1, 18)||'..'
-		            else subject end as subject
-		     , content , readCount
-		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		     , commentCount
-		from tblBoard
-		where status = 1
-		order by seq desc
+		select fk_login_id, login_name, user_email, user_report, login_status
+		from tbl_user E join tbl_login D
+    	on E.fk_login_id = D.login_id		
+		and ${colname} like '%'|| #{search} ||'%'		
 		) V
 		) T
-		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
+		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	
-	</select> -->
+	</select>
 	
 	<!-- 검색어가 없는 리스트 -->
 	
-	<!-- <select id="getSearchList" parameterType="HashMap" resultType="com.spring.jdh.model.NoticeVO">
+	<select id="getNoSearchList2" parameterType="HashMap" resultType="java.util.HashMap">
 	
-	 select seq, name, subject, readCount, regDate, commentCount
+		select fk_login_id, login_name, user_email, user_report, login_status
 		from 
 		(
 		select rownum as RNO
-		     , V.seq, V.name, V.subject, V.content, V.readCount, V.regDate, V.commentCount
-		from 
+		     , V.fk_login_id, V.login_name, V.user_email, V.user_report, V.login_status
+		from
 		(
-		select seq, name 
-		     , case when length(subject) > 20 then substr(subject, 1, 18)||'..'
-		            else subject end as subject
-		     , content , readCount
-		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
-		     , commentCount
-		from tblBoard
-		where status = 1
-		and ${colname} like '%'|| #{search} ||'%'
-		order by seq desc
+		select fk_login_id, login_name, user_email, user_report, login_status
+		from tbl_user E join tbl_login D
+    	on E.fk_login_id = D.login_id				
 		) V
 		) T
-		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
+    	where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	
-	</select> -->
+	</select>
 	
-	<!-- <select id="">
+	<select id="getTotalCount2" parameterType="HashMap">
 	
 	select count(*)
-		from tbl_user E join tbl_login D
+	from tbl_user E join tbl_login D
     on E.fk_login_id = D.login_id
-		
+    and ${colname} like '%' || #{search} || '%'	
+    
 	</select>
    
     
-    <select id="">
+    <select id="getTotalCount1" parameterType="int">
     
     select count(*)
-		from tbl_user E join tbl_login D
+	from tbl_user E join tbl_login D
     on E.fk_login_id = D.login_id
-    and ${colname} like '%' || #{search} || '%'
 	
-	</select> -->
+	</select>
+	
+	<!-- 아이디 중복체크 -->
+	<select id="idDuplicateCheck" parameterType="String" resultType="int">
+	  
+      select count(*) as cnt
+      from tbl_login
+      where login_id = #{userid}
+      
+    </select>
+	
+	<!-- 별명 중복체크 -->
+	<select id="nickDuplicateCheck" parameterType="String" resultType="int">
+	
+      select count(*) as cnt
+      from tbl_member
+      where login_name = #{login_name}
+      
+    </select>
+	
 	
 </mapper>

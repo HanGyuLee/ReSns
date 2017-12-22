@@ -215,7 +215,7 @@ public class SnsDAO implements InterSnsDAO {
 				@Override
 				public List<HashMap<String, String>> getSearchList(HashMap<String, String> map) {
 					
-					List<HashMap<String, String>> searchList =  sqlsession.selectOne("jdhresns.getSearchList", map);
+					List<HashMap<String, String>> searchList =  sqlsession.selectOne("jdhresns.getSearchList1", map);
 					
 					return searchList;
 				}
@@ -223,7 +223,7 @@ public class SnsDAO implements InterSnsDAO {
 				// 검색어가 없는 리스트 뽑기
 				@Override
 				public List<HashMap<String, String>> getNoSearchList(HashMap<String, String> map) {
-					List<HashMap<String, String>> searchList = sqlsession.selectOne("jdhresns.getNoSearchList", map);
+					List<HashMap<String, String>> searchList = sqlsession.selectOne("jdhresns.getNoSearchList2", map);
 					return searchList;
 				}
 
@@ -241,6 +241,24 @@ public class SnsDAO implements InterSnsDAO {
 				public int getTotalCount1() {
 					
 					int n = sqlsession.selectOne("jdhresns.getTotalCount1");
+					
+					return n;
+				}
+
+				// 아이디 중복체크
+				@Override
+				public int idDuplicateCheck(String userid) {
+					
+					int n = sqlsession.selectOne("jdhresns.idDuplicateCheck", userid);
+					
+					return n;
+				}
+
+				// 별명 중복체크
+				@Override
+				public int nickDuplicateCheck(String login_name) {
+					
+					int n = sqlsession.selectOne("jdhresns.nickDuplicateCheck", login_name);
 					
 					return n;
 				}

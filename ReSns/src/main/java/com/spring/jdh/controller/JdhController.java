@@ -154,7 +154,7 @@ public class JdhController {
 					req.setAttribute("str_json", str_json);
 				}
 				
-				// jdh/loginform.tiles
+				
 				return "idfindjson.notiles";
 			}
 		
@@ -208,6 +208,8 @@ public class JdhController {
 				     req.setAttribute("userid", userid);
 				     req.setAttribute("email", email);
 				     return "jdh/pwdFind.tiles";
+				     
+				     // return "jdh/pwdFind.tiles";
 			} // end of 비밀번호 
 			
 			// 비밀번호 재설정
@@ -623,7 +625,7 @@ public class JdhController {
 		
 		// 회원관리 리스트 뽑기
 		
-		/*@RequestMapping(value="memberSupervise.re", method={RequestMethod.GET, RequestMethod.POST})
+		@RequestMapping(value="memberSupervise.re", method={RequestMethod.GET, RequestMethod.POST})
 		public String memberSV(HttpServletRequest req){
 			
 			
@@ -632,7 +634,6 @@ public class JdhController {
 			memList = service.getMemList();
 			
 			req.setAttribute("memList", memList);
-			
 			
 			String colname = req.getParameter("colname");
 			String search = req.getParameter("search");
@@ -682,13 +683,13 @@ public class JdhController {
 			}
 			
 			
-			===== #111. 페이지바 만들기(먼저 페이지바에 나타낼 총 페이지 갯수 구하기) =====
+			/*===== #111. 페이지바 만들기(먼저 페이지바에 나타낼 총 페이지 갯수 구하기) =====
 			
 				검색조건이 없을때의 총 페이지 수와 
 				검색조건이 있을때의 총 페이지 수를 구해야 한다.
 				
 				검색조건이 없을때의 총 페이지수 ---> colname 과 search 의 값이 없는 경우이다.
-				검색조건이 있을때의 총 페이지수 ---> colname 과 search 의 값이 있는 경우이다.
+				검색조건이 있을때의 총 페이지수 ---> colname 과 search 의 값이 있는 경우이다.*/
 			
 			
 			// 총 게시물 건수를 구한다.
@@ -721,8 +722,8 @@ public class JdhController {
 			req.setAttribute("search", search);
 			
 			
-			return "jdh/memberSV.tiles";
-		}*/
+			return "jdh/memberSV.tiles2";
+		}
 		
 		
 		// 회원관리 회원 삭제하기
@@ -775,7 +776,7 @@ public class JdhController {
 		
 		String login_id = req.getParameter("login_id");
 		String login_name = req.getParameter("login_name");
-			
+		
 		editMemberMap.put("login_id", login_id);
 		editMemberMap.put("login_name", login_name);
 		
@@ -789,6 +790,7 @@ public class JdhController {
 		}
 		
 		return "msg.notiles2";
+		
 		}
 		
 		
@@ -811,10 +813,39 @@ public class JdhController {
 			
 		}
 		
+		// 아이디 중복체크		
+		@RequestMapping(value="/memberIdDuplicateCheck.re")
+		   public String idDuplicateCheck(HttpServletRequest req) {
+		      String method = req.getMethod();
+		      String userid = req.getParameter("userid");
+		      req.setAttribute("method", method);
+		      
+		      if(userid != null) {
+		         req.setAttribute("userid", userid);
+		         boolean isUseuserid = service.idDuplicateCheck(userid);
+		         req.setAttribute("isUseuserid", isUseuserid);
+		      }
+		      
+		      return "jdh/idDuplicateCheck.notiles";
+		   }
 		
 		
-		
-		
+		// 별명 중복체크		
+				@RequestMapping(value="/memberNickDuplicateCheck.re")
+				   public String nickDuplicateCheck(HttpServletRequest req) {
+					
+				      String method = req.getMethod();
+				      String login_name = req.getParameter("login_name");
+				      req.setAttribute("method", method);
+				      
+				      if(login_name != null) {
+				         req.setAttribute("login_name", login_name);
+				         boolean isUseusernick = service.nickDuplicateCheck(login_name);
+				         req.setAttribute("isUseusernick", isUseusernick);
+				      }
+				      
+				      return "jdh/nickDuplicateCheck.notiles";
+				   }
 		
 		
 		

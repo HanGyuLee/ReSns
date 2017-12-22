@@ -57,6 +57,10 @@ public interface InterSnsDAO {
 
 	int getTotalCount1();	// 검색어 없는 총 게시물 수
 
+	int idDuplicateCheck(String userid);	// 아이디 중복체크
+
+	int nickDuplicateCheck(String login_name);	// 별명 중복체크
+
 	
 	
 	
