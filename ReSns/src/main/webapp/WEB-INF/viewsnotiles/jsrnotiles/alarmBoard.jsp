@@ -618,8 +618,8 @@ function heartCounting() {
 						swal(data.msg);
 						
 						$("#re_content").val("");
-						showRe();
-						reCounting();
+						goVeiwRe(statuscount);
+						reCounting(statuscount);
 					}, error: function() {
 						
 					}
@@ -653,7 +653,7 @@ function heartCounting() {
 					
 					//alert(board_heart);
 					
-					var result = "댓글 "+board_recnt+" 개";
+					var result = "댓글"+board_recnt+" 개";
 					
 					$("#reCnt").html(result);
 					

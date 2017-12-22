@@ -948,6 +948,73 @@ public class JsrController {
 	
 	
 	
+	//백문백답 게시판 글 알람확인용 1개 보기
+		@RequestMapping(value="/questionViewAra.re", method={RequestMethod.GET})
+		public String requireLogin2_questionViewAra(HttpServletRequest req,HttpServletResponse res,HttpSession session){
+			
+			Object obj = session.getAttribute("loginUser");
+
+			String login_id = "";	
+			if (obj != null) {
+				LoginVO loginUser = (LoginVO)obj;
+			
+			if(loginUser != null){
+				login_id = loginUser.getLogin_id();
+			}
+
+			}
+			
+			String seq_tbl_q = req.getParameter("seq_tbl_q");
+
+
+			//문자 입력하였을 때 막기 끝.
+			if(seq_tbl_q ==null || seq_tbl_q.isEmpty()){
+				req.setAttribute("msg", "비정상적인 경로로 접근하였습니다.");
+				req.setAttribute("loc", "/resns/index.re");
+				return "msg.notiles";		
+			}
+			
+			
+			//답변 가져오기
+			HashMap<String,String> replayMap = service.getReply(seq_tbl_q);
+			//QuestionBoardReplyVO replay = service.getReply(seq_tbl_q);
+			if(replayMap !=null ){
+			String a_content = replayMap.get("a_content");
+			a_content = a_content.replaceAll("\r\n", "<br/>");
+			replayMap.put("a_content", a_content);
+			req.setAttribute("replayMap", replayMap);
+			}
+			
+			else{
+				req.setAttribute("replayMap", replayMap);
+			}
+			
+			//질문 가져오기
+			QuestionBoardVO getques =  service.getQView(seq_tbl_q);	
+			
+			//없는 seq를 검색하였을 때
+			if(getques == null){
+				
+				req.setAttribute("msg", "데이터가 없습니다.");
+				req.setAttribute("loc", "/resns/index.re");
+				return "msg.notiles";
+			}
+			//없는 seq를 검색하였을 때 막기 끝.
+			
+			String q_content = getques.getQ_content();
+			q_content =  q_content.replaceAll("\r\n", "<br/>");
+			getques.setQ_content(q_content);
+			//System.out.println("질문확인:"+getques);
+			
+
+			req.setAttribute("getques", getques);
+
+			
+			return "jsrnotiles/questionViewAra.notiles";
+		}//end of public String questionView()
+	
+	
+	
 	
 	
 	

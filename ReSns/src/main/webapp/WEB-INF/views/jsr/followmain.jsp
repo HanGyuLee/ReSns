@@ -121,9 +121,9 @@ box-shadow: 5px 5px 5px 0px lightgray;
 
 
 #floatMenu {
-	position:absolute;
+	position: fixed;
 	right:100px;
-	top: 250px;
+	top: 100px;
 	color: #fff;
 	
 }
@@ -138,17 +138,8 @@ box-shadow: 5px 5px 5px 0px lightgray;
 
 .pagination > li:first-child 
 {
-  margin-left: 0;
+  margin-left: 4px;
   
-
-}
-.pagination > li:child {
- margin-left: -4px;
-
-
-}
-.pagination > li:last-child {
- margin-left:-4px;
 
 }
 
@@ -172,7 +163,7 @@ $(document).ready(function(){
 
 	}); */
 	
-	
+
 	
 	var floatPosition = parseInt($("#floatMenu").css('top'));
 	// 250px 이런식으로 가져오므로 여기서 숫자만 가져온다. parseInt( 값 );
@@ -182,16 +173,16 @@ $(document).ready(function(){
 		var scrollTop = $(window).scrollTop();
 		var newPosition = scrollTop + floatPosition + "px";
  
-		/* 애니메이션 없이 바로 따라감
-		 $("#floatMenu").css('top', newPosition);
-		 */
+		// 애니메이션 없이 바로 따라감
+		// $("#floatMenu").css('top', newPosition);
+		 
  
 		$("#floatMenu").stop().animate({
 			"top" : newPosition
 		}, 500);
  
 	}).scroll();
-	
+
 	
 	
 	
@@ -233,7 +224,7 @@ $(document).ready(function(){
 			}
 		});//end of ajax
 		heartCounting(heartse);
-		reCounting(heartse);
+		//reCounting(heartse);
 	 }//end of  if hearts not null
 	});//end of heart each
 	
@@ -428,7 +419,7 @@ function goVeiwContent(statuscount){
 							re += re_content;
 							re += "<div style='display: none' id='reReply"+entryIndex+"'>";
 							re += "<input type='text' id='reReValue"+entryIndex+"' />";
-							re += "<button onclick=\"writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+",'"+re_id+"');\">입력!</button>";
+							re += "<button class='btn btn-default' onclick=\"writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+",'"+re_id+"');\">입력</button>";
 							re += "</div>";
 							
 						}//원 댓글 끝
@@ -657,8 +648,9 @@ function goVeiwContent(statuscount){
 					
 					$("#re_content"+statuscount).val("");
 					
-					showRe(statuscount);
+					goVeiwRe(statuscount);
 					reCounting(statuscount);
+					
 				}, error: function() {
 					
 				}
@@ -689,7 +681,7 @@ function goVeiwContent(statuscount){
 				
 				//alert(board_heart);
 				
-				var result = "댓글 "+board_recnt+" 개";
+				var result = "댓글"+board_recnt+" 개";
 				
 				$("#reCnt"+statuscount).html(result);
 				
@@ -787,7 +779,7 @@ function goVeiwContent(statuscount){
 <br/>
 <div style="padding-left: 10%;">
 <c:if test="${followBoard != null && not empty followBoard}">
-<div id="floatMenu" style="position: relative; ">
+<div id="floatMenu" style="position: relative; border: 0px solid red; width: 7%; ">
 ${pagebar}
 </div>
 </c:if>
