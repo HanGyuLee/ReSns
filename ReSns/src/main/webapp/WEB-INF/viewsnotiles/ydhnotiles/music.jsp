@@ -45,6 +45,13 @@
 		$("#displayList").hide();
 		
 		$("#search").keyup(function() {
+				
+			
+				if(search.trim() == ""){
+					$("#displayList").hide();
+					}
+			
+			
 			
 			var form_data = { "colname" : $("#colname").val(),   // 키값 : 밸류값 
 							  "search"  : $("#search").val(),     // 키값 : 밸류값
@@ -316,12 +323,11 @@
 	<br/>
 	
 
-</form>
 
 </div>
 
 <form name="deltest">
-<input type="text" id="test01"/>
+<input type="hidden" id="test01"/>
 </form>
 
 

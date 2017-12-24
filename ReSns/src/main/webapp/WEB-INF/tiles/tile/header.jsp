@@ -39,7 +39,7 @@
 .navbar-doublerow .nav{
 	padding: 0px auto;
 }
-.navbar-doublerow2 .dividline{
+.navbar-doublerow .dividline{
   margin: 5px 100px;
   padding-top: 1px;
   background-color: inherit;
@@ -110,23 +110,33 @@
   color: #000;
   border-bottom: none;
 } */
+
+
 .navbar-doublerow.navbar-trans.afterscroll {
 }	
 .navbar-doublerow.navbar-trans.afterscroll {
    top:-50px;
    background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png");
 }
+
+
+
 .navbar-doublerow2.navbar-trans.afterscroll {
 }	
 .navbar-doublerow2.navbar-trans.afterscroll {
    top:-50px;
    background-image: url("<%= request.getContextPath() %>/resources/images/birthh.png");
-}	
+}
+
+
 
 .flex-container {
     display: flex;
     justify-content: space-between;
 }
+
+
+
 .flex-item {
 }
 /*text*/
@@ -191,6 +201,22 @@
     width:50px; 
 }
 
+
+
+#allSearchDisPlayDiv{
+         
+         
+box-shadow: 5px 5px 5px 0px gray;
+border-radius: 10px;
+  opacity: 0.8;
+    filter: alpha(opacity=40); /* For IE8 and earlier */
+}
+
+#allSearchDisPlayDiv:hover {
+    opacity: 1.0;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+}
+
 </style>
 
 <script type="text/javascript">
@@ -203,6 +229,10 @@ $(document).ready(function(){
 	$("#displayList").hide();
 
 	$("#search").keyup(function() {
+		var search = $("#search").val();
+		if(search.trim() == ""){
+			$("#allSearchDisPlayDiv").hide();
+			}
 		
 		var form_data = { "search"  : $("#search").val() };
 		 
@@ -226,7 +256,7 @@ $(document).ready(function(){
 						var jnameCnt = entry.jnameCnt
 						
 						
-						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -300px;'>별명검색</span> "+"<span style='cursor:pointer;'><a href='searchEndName.re?search="+sname+"'>"+"&nbsp;&nbsp;"+sname +"</a>"+jnameCnt+"</span><br/>"; 
+						resultHTML += "<span style='color:navy; font-weight:bold;'>별명검색</span> "+"<span style='cursor:pointer;'><a href='searchEndName.re?search="+sname+"'>"+"&nbsp;&nbsp;"+sname +"</a>"+jnameCnt+"</span><br/>"; 
 						
 					});
 					
@@ -296,7 +326,7 @@ $(document).ready(function(){
 						var jtagCnt = entry.jtagCnt
 						
 						
-						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -50px;'>#</span>"+"<span style='cursor:pointer;'><a href='searchEndTag.re?search="+stag+"'>"+"&nbsp;&nbsp;"+stag+"</a>"+"&nbsp;&nbsp;"+jtagCnt+"</span><br/>"; 
+						resultHTML += "<span style='color:navy; font-weight:bold; '>#</span>"+"<span style='cursor:pointer;'><a href='searchEndTag.re?search="+stag+"'>"+"&nbsp;&nbsp;"+stag+"</a>"+"&nbsp;&nbsp;"+jtagCnt+"</span><br/>"; 
 						
 					});
 					
@@ -364,7 +394,7 @@ $(document).ready(function(){
 						var smap = entry.smap;
 						var jMapCnt = entry.jMapCnt
 						
-						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -120px;'>지도검색</span>"+"<span style='cursor:pointer;'><a href='searchEndMap.re?search="+smap+"'>"+"&nbsp;&nbsp;"+smap+"&nbsp;&nbsp;"+"</a>"+"&nbsp;&nbsp;"+jMapCnt+"</span><br/>"; 
+						resultHTML += "<span style='color:navy; font-weight:bold; '>지도검색</span>"+"<span style='cursor:pointer;'><a href='searchEndMap.re?search="+smap+"'>"+"&nbsp;&nbsp;"+smap+"&nbsp;&nbsp;"+"</a>"+"&nbsp;&nbsp;"+jMapCnt+"</span><br/>"; 
 					
 					});
 					
@@ -431,7 +461,7 @@ $(document).ready(function(){
 					$.each(data, function(entryIndex, entry){
 						var jnone = entry.jnone;
 						
-						resultHTML += "<span style='color:navy; font-weight:bold; margin-left: -120px;'>별명검색</span>"+"<span style='cursor:pointer;'><a href='searchEndNameOne.re?search="+jnone+"'>"+jnone+"</a>"+"</span><br/>"; 
+						resultHTML += "<span style='color:navy; font-weight:bold; cursor:pointer;'><a href='searchEndNameOne.re?search="+jnone+"'>"+jnone+"님의 마이페이지</span></a><br/>"; 
 					
 					});
 					
@@ -474,6 +504,18 @@ $(document).ready(function(){
 	
 	
 
+	
+/* 	
+	$("html").click(function(){
+		
+		 if (event.target.id != $("#searchDivDiv") ){
+			   $("#allSearchDisPlayDiv").hide();
+			  }
+		
+		});
+ */
+	
+	
 
 });//document
 
@@ -511,7 +553,7 @@ function goAlarm(userid){
         dataType: "JSON", 
         success: function(data) {
         
-           if (data.length != null) {
+           if (data.length > 0) {
 
               var result = "";
               
@@ -649,13 +691,15 @@ function goAlarm(userid){
           <li><a><img src="<%=request.getContextPath()%>/resources/images/search.png" class="menuicon" />
           	<input name="search" id="search" style="background-color:transparent; border: 0px;"></a></li>
           	 <div style="padding-top: 49px ">
-		         <div id="displayList" style="width:312px; margin-left:70px; border-top: 0px; border: solid gray 0px;">
+          	 <div id="allSearchDisPlayDiv" style="border: solid 0px red; width: 250px; background-color: white; ">
+		         <div id="displayList" style="position:relative; text-align:center; width:250px; margin-left:0px; border-top: 0px; border: solid gray 0px;">
 				</div>
-				<div id="displayListTag" style="width:312px; margin-left:57px; border-top: 0px; border: solid gray 0px;">
+				<div id="displayListTag" style=" position:relative;text-align:center;  width:250px; margin-left:0px; border-top: 0px; border: solid gray 0px;">
 				</div>
-				<div id="displayListMap" style="width:312px; margin-left:-100px; border-top: 0px; border: solid gray 0px;">
+				<div id="displayListMap" style=" position:relative;text-align:center;  width:250px; margin-left:0px; border-top: 0px; border: solid gray 0px;">
 				</div>
-				<div id="displayListAllName" style="width:312px; margin-left:-100px; border-top: 0px; border: solid gray 0px;">
+				<div id="displayListAllName" style=" position:relative;text-align:center;  width:250px; margin-left:0px; border-top: 0px; border: solid gray 0px;">
+				</div>
 				</div>
 		      </div>
         </ul>
