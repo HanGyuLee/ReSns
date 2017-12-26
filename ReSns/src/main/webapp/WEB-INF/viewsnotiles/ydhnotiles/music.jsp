@@ -35,7 +35,6 @@
 		});
 		
 		
-
 			
 	
 		
@@ -46,12 +45,6 @@
 		
 		$("#search").keyup(function() {
 				
-			
-				if(search.trim() == ""){
-					$("#displayList").hide();
-					}
-			
-			
 			
 			var form_data = { "colname" : $("#colname").val(),   // 키값 : 밸류값 
 							  "search"  : $("#search").val(),     // 키값 : 밸류값
@@ -95,7 +88,6 @@
 			
 		}); // end of keyup(function(){})
 		
-
 		$("#displayList").click(function(event){
 			//alert("test");
 			var wordd = "";
@@ -122,7 +114,6 @@
 			$("#displayList").hide();
 			
 		});
-
 		$(".delChkbox").click(function(){
 			var tagId = $(this).attr('id');
 			if(tagId){
@@ -159,7 +150,6 @@
 	});// end of $(document).ready()----------------------
 	
 	function goView(seq_tbl_music,fk_login_id){
-
 		var frm = document.seqFrm;
 		frm.seq_tbl_music.value = seq_tbl_music;
 		frm.fk_login_id.value= fk_login_id;
@@ -178,7 +168,6 @@
 	  
 	   alert(del);
 	   alert(len);
-
 	   
 	   if(del==""){
 		   alert("삭제할 게시물을 선택해 주세요.");
@@ -216,10 +205,8 @@
   			
   			frm.submit();
   		}
-
   	}	
 	
-
 </script>
 
 <div align="center" style="padding-left: 10%; border: solid 0px red;">

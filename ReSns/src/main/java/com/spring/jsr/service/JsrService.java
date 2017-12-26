@@ -205,7 +205,7 @@ public class JsrService implements InterJsrService {
 	//List<ReVO> reList = jdao.followreList(seq_tbl_board);
 
 	List<HashMap<String,String>> resultMap = jdao.followRe(seq_tbl_board);
-	
+	//System.out.println("1에서resultMap::"+resultMap);
 		JSONArray jsonMap = new JSONArray();
 		
 		
@@ -235,6 +235,50 @@ public class JsrService implements InterJsrService {
 		return str_reList;
 	}
 
+	@Override
+	public String followre2(HashMap<String, String> map) {
+		List<HashMap<String,String>> resultMap = jdao.followRe2(map);
+		//System.out.println("2에서resultMap::"+resultMap);
+		JSONArray jsonMap = new JSONArray();
+		
+		
+		if (resultMap != null) {
+			for(HashMap<String, String> re : resultMap) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("re_seq", re.get("re_seq"));
+				jsonObj.put("seq_tbl_board", re.get("seq_tbl_board"));
+				jsonObj.put("re_id", re.get("re_id"));
+				jsonObj.put("re_content", re.get("re_content"));
+				jsonObj.put("re_date", re.get("re_date"));
+				jsonObj.put("re_status", re.get("re_status"));
+				jsonObj.put("re_fk_seq", re.get("re_fk_seq"));
+				jsonObj.put("re_groupno", re.get("re_groupno"));
+				jsonObj.put("re_depthno", re.get("re_depthno"));
+				jsonObj.put("login_name", re.get("login_name"));
+				jsonObj.put("uimg_profile_filename", re.get("uimg_profile_filename"));
+	
+				//System.out.println("re.getRe_content()확인::"+re);
+				
+				jsonMap.put(jsonObj);
+			}
+		}
+		
+		String str_reList = jsonMap.toString();
+		return str_reList;
+	}
+
+	
+	
+	
+	//팔로우 댓글 카운트  가져오기
+	@Override
+	public int folllowReCount(String seq_tbl_board) {
+		int n = jdao.ReGetCount(seq_tbl_board);
+		return n;
+	}
+	
+	
+	
 
 	//태그 가져오기
 	@Override
@@ -685,6 +729,11 @@ public class JsrService implements InterJsrService {
 		HashMap<String,Object> getAlarmBoard = jdao.getAlarmBoard(map);
 		return getAlarmBoard;
 	}
+
+
+
+
+
 	
 	
 	

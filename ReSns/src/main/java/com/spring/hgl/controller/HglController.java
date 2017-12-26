@@ -340,9 +340,9 @@ public class HglController {
 		List<HashMap<String, Object>> myFollowerList = service.getmyFollowerList(userid);
 		List<HashMap<String, Object>> myFollowingList = service.getmyFollowingList(userid);
 		
-		System.out.println(myFollowerList.get(1).get("fk_login_id"));
+		//
 		
-		System.out.println(myFollowingList.get(1).get("follow_id"));
+		//System.out.println(myFollowingList.get(1).get("follow_id"));
 		
 		
 		HashMap<String,String> profile = service.getMyProfile(userid);			
@@ -518,15 +518,15 @@ public class HglController {
 				switch(alarm_type){
 				case "1": 
 					alarm_type =" 게시물을 좋아합니다";
-					url = "/resns/alaramBoard.re?fk_seq_tbl_board="+theSeq;
+					url = "/resns/alaramBoard.re?seq_tbl_board="+theSeq;
 					break;
 				case "2": 
 					alarm_type =" 게시물에 댓글을 남겼습니다 ";
-					url = "/resns/alaramBoard.re?fk_seq_tbl_board="+theSeq;
+					url = "/resns/alaramBoard.re?seq_tbl_board="+theSeq;
 					break;
 				case "3": 
 					alarm_type =" 내 댓글에 대댓글을 남겼습니다";
-					url = "/resns/alaramBoard.re?fk_seq_tbl_board="+theSeq;
+					url = "/resns/alaramBoard.re?seq_tbl_board="+theSeq;
 					break;
 				case "4": 
 					alarm_type =" 나를 팔로우합니다";
@@ -534,11 +534,11 @@ public class HglController {
 					break;
 				case "5": 
 					alarm_type =" 문답게시판에 질문을 남겼습니다";
-					url = "/resns/questionViewAra.re?fk_seq_tbl_q="+theSeq;
+					url = "/resns/questionViewAra.re?seq_tbl_q="+theSeq;
 					break;
 				case "6": 
 					alarm_type =" 내가 남긴 질문에 답변을 남겼습니다";
-					url = "/resns/questionViewAra.re?fk_seq_tbl_q="+theSeq;
+					url = "/resns/questionViewAra.re?seq_tbl_q="+theSeq;
 					break;
 				case "7": 
 					alarm_type =" 동영상에 댓글을 남겼습니다";

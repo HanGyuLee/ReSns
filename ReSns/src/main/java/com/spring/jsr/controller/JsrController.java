@@ -34,6 +34,7 @@ public class JsrController {
 	@Autowired
 	private InterJsrService service;
 	
+	
 	//팔로우,팔로워 리스트 페이지 요청
 	@RequestMapping(value="/followList.re", method={RequestMethod.GET})
 	public String followListView(HttpServletRequest req, HttpSession session){	
@@ -270,7 +271,7 @@ public class JsrController {
 		
 		
 		
-	return "jsr/followmain.tiles";
+	return "jsr/followmain2.tiles";
 	}
 	
 
@@ -281,10 +282,42 @@ public class JsrController {
 		
 		String seq_tbl_board = req.getParameter("seq_tbl_board");
 
+		String start = req.getParameter("start");
+		String len = req.getParameter("len");
+			
+		if(start ==null || start.trim().isEmpty()){
+			
+			start = "1";
+		}
+		if(start ==null || len.trim().isEmpty()){
+	
+			len = "3";
+		}
+	
+		int startrno = 0;
+		int endrno = 0; 
+		startrno = Integer.parseInt(start);					//시작행번호
+		endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
+		//System.out.println("startrno::"+startrno);
+		//System.out.println("endrno::"+endrno);
+		
+		//int followRecount = 0;
 		//댓글 내용 가져오기
-		String str_jsonMap = service.followre(seq_tbl_board);
+		//String str_jsonMap1 = service.followre(seq_tbl_board);
+		
+		//더보기 위한 카운트 가져오기
+
+		HashMap<String,String> map =  new HashMap<String,String>();
+		map.put("seq_tbl_board", seq_tbl_board);
+		map.put("startrno", Integer.toString(startrno));
+		map.put("endrno", Integer.toString(endrno));
+		
+		String str_jsonMap = service.followre2(map);
+		
+		//System.out.println("str_jsonMap::"+str_jsonMap);
 		
 		req.setAttribute("str_jsonMap",str_jsonMap);
+		//req.setAttribute("followRecount",followRecount);
 
 		
 	return "jsrnotiles/followreJSON.notiles";
@@ -522,7 +555,7 @@ public class JsrController {
 	
 	//백문백답 게시판 글 1개 보기
 	@RequestMapping(value="/questionView.re", method={RequestMethod.GET})
-	public String requireLogin2_questionView(HttpServletRequest req,HttpServletResponse res,HttpSession session){
+	public String questionView(HttpServletRequest req,HttpServletResponse res,HttpSession session){
 		
 		Object obj = session.getAttribute("loginUser");
 

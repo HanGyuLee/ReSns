@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>tiles 를 사용한 메인(시작) 페이지 작성하기</title>
+<title>::Remeber Emember::</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   

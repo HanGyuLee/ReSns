@@ -142,6 +142,21 @@ public class JsrDAO implements InterJsrDAO {
 	}
 
 
+	@Override
+	public List<HashMap<String, String>> followRe2(HashMap<String, String> map) {
+		 List<HashMap<String, String>> followRe = sqlsession.selectList("jsrresns.followreList2",map);
+		return followRe;
+	}
+
+
+
+
+	//팔로우 댓글 카운트 가져오기
+	@Override
+	public int ReGetCount(String seq_tbl_board) {
+		 int n = sqlsession.selectOne("jsrresns.ReGetCount",seq_tbl_board);
+		return n;
+	}
 	
 	/*--------------------------------------------------------------------------------------------------------------------------*/	
 
@@ -372,12 +387,6 @@ public class JsrDAO implements InterJsrDAO {
 		HashMap<String,Object> list = sqlsession.selectOne("jsrresns.getAlarmBoard",map);
 		return list;
 	}
-
-
-	
-
-
-
 
 
 

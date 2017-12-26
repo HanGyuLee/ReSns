@@ -28,6 +28,11 @@ public interface InterJsrService {
 
 	//팔로우 하는 사람 댓글 가져오기
 	String followre(String seq_tbl_board);
+	String followre2(HashMap<String, String> map);
+	
+	
+	//팔로우 리플 카운트 가져오기
+	int folllowReCount(String seq_tbl_board);
 	
 	//태그 가져오기
 	String followTag(String seq_tbl_board);
@@ -92,6 +97,9 @@ public interface InterJsrService {
 	
 	//알람용 글 한개 보기
 	HashMap<String,Object> getAlarmBoard(HashMap<String, String> map);
+
+	
+
 	
 
 

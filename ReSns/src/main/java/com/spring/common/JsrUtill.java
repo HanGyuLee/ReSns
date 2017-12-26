@@ -130,7 +130,7 @@ public class JsrUtill {
 			str_pageNo = "";
 		}
 		else {
-			str_pageNo = "<a href=\""+url+"?cShowp="+pageNo+"&sizep="+sizep+"\" ><span aria-hidden='true'>»</span></a></li>";
+			str_pageNo = "<a href=\""+url+"?cShowp="+pageNo+"&sizep="+sizep+"\" ><span aria-hidden='true'>v</span></a></li>";
 			//str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;";
 		}
 		

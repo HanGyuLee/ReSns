@@ -915,7 +915,7 @@ function runEffect(entryIndex) {
 											</a>	
 										</c:if>
 										<a href="#" 
-										onclick="window.open('<%=request.getContextPath()%>/reportingBoard.re?fk_login_id=${map.FK_LOGIN_ID}&seq_tbl_board=${map.SEQ_TBL_BOARD}', 'message', 'top=100px, left=100px, height=800px, width=800px')">
+										onclick="window.open('<%=request.getContextPath()%>/reportingBoard.re?fk_login_id=${map.FK_LOGIN_ID}&seq_tbl_board=${map.SEQ_TBL_BOARD}', 'message', 'top=100px, left=100px, height=501px, width=1011px')">
 												<img
 													src="<%=request.getContextPath()%>/resources/images/report.png"
 													style="width: 18px; height: 18px;" align="right" /> 

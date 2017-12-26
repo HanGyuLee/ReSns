@@ -142,8 +142,9 @@ where fk_login_id = #{follow_id}
 </resultMap>
 
 <select id="FollowBoardView" parameterType="HashMap" resultMap="FollowBoardMap">
-select  follow_name
-, follow_proile_image
+select rno 
+,follow_name
+,follow_proile_image
 ,follow_id
 ,seq_tbl_board
 ,board_content
@@ -161,10 +162,10 @@ select  follow_name
 ,map_name
 from
 (
-select rownum as rno , V.*
+select rownum as rno,V.*
 from
 (
-select  L.login_name as follow_name
+select L.login_name as follow_name
       ,M.uimg_profile_filename as follow_proile_image
       ,F.follow_id as follow_id
       ,B.seq_tbl_board as seq_tbl_board
@@ -178,21 +179,21 @@ select  L.login_name as follow_name
       ,B.board_heart as board_heart
       ,B.board_recnt as board_recnt
       ,B.board_status as board_status
-      ,I.bimg_filename as bimg_filename
+      ,nvl(I.bimg_filename,'default0.png') as bimg_filename
       ,I.bimg_orgfilename as bimg_orgfilename
       ,I.bimg_filesize as bimg_filesize
       ,M.map_we as map_we
       ,M.map_ky as ma_ky
       ,M.map_name as map_name
-from tbl_board B join tbl_bimage I
+from tbl_board B left outer join tbl_bimage I
 on B.seq_tbl_board = I.seq_tbl_board
 left outer join tbl_map M
 on B.seq_tbl_board = M.fk_seq_tbl_board 
-join tbl_follow F
+left join tbl_follow F
 on B.fk_login_id = F.follow_id
-join tbl_login L
+left join tbl_login L
 on F.follow_id = L.login_id
-join tbl_uimage M
+left join tbl_uimage M
 on F.follow_id = M.fk_login_id
 where F.fk_login_id = #{login_id}
 and B.board_status = 0
@@ -200,7 +201,6 @@ order by B.seq_tbl_board desc
 )V
 )T
 where T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
-and T.board_time >= sysdate - 20
 order by T.board_time desc
 </select>
 <!--  팔로우 게시글 리스트 가져오기 끝 -->
@@ -235,6 +235,31 @@ order siblings by R.re_groupno asc, R.re_seq asc
 </select> 
 <!-- 팔로우 게시글 댓글 가져오기 끝 -->
 
+
+<!-- 페이징  처리한 댓글 가져오기 -->
+<select id="followreList2" parameterType="HashMap" resultMap="followReMap">
+select re_seq, seq_tbl_board, re_id, re_content, re_date, 
+re_status, re_fk_seq, re_groupno, re_depthno, login_name, uimg_profile_filename
+from
+(
+select rownum rno, V.*
+from
+(
+select R.re_seq, R.seq_tbl_board, R.re_id, R.re_content, to_char(R.re_date, 'yyyy-mm-dd') as re_date, 
+R.re_status, R.re_fk_seq, R.re_groupno, R.re_depthno, L.login_name, U.uimg_profile_filename
+from tbl_re R left join tbl_login L
+on R.re_id = L.login_id
+left join tbl_uimage U
+on L.login_id = U.fk_login_id
+where seq_tbl_board = #{seq_tbl_board} and R.re_status = 1
+start with R.re_fk_seq = 0
+connect by prior R.re_seq = R.re_fk_seq
+order siblings by R.re_groupno asc, R.re_seq asc
+)V
+)T
+where T.rno between #{startrno} and #{endrno}
+</select>
+<!--  페이징 처리한 댓글 끝 -->
 
 
 <!--  팔로우 게시글 더 보기 자세히 보기 -->
@@ -446,7 +471,7 @@ where fk_seq_tbl_board = #{seq_tbl_board} and fk_login_id= #{login_id}
 <!--  팔로우 메인 토탈 카운트 가져오기  -->
 <select id="getFollowMainTotalCount"  parameterType="HashMap" resultType="Integer">
 select  count(*)
-from tbl_board B join tbl_bimage I
+from tbl_board B left outer join tbl_bimage I
 on B.seq_tbl_board = I.seq_tbl_board
 left outer join tbl_map M
 on B.seq_tbl_board = M.fk_seq_tbl_board 
@@ -457,7 +482,6 @@ on F.follow_id = L.login_id
 join tbl_uimage M
 on F.follow_id = M.fk_login_id
 where F.fk_login_id = #{login_id}
-and B.board_time >= sysdate - 20
 and B.board_status = 0
 </select>
 <!--  가져오기 끝 -->
@@ -515,7 +539,7 @@ where B.fk_login_id = #{login_id}
 	</select>
 	
 	
-
+<!-- 알람용 뷰 -->
 <resultMap type="HashMap" id="getAlarmBoardViewMap">
 <result property="board_login_name" 				column="board_login_name" 					javaType="String" />
 <result property="seq_tbl_board" 					column="seq_tbl_board" 						javaType="String" />
@@ -568,7 +592,16 @@ on B.fk_login_id = M.fk_login_id
 where B.seq_tbl_board = #{seq_tbl_board}
 and B.board_status = 0
 </select>
-	
+<!--  알람용 뷰 끝 -->
+
+
+<!-- 댓글 숫자 알아오기 -->
+<select id="ReGetCount" parameterType="String" resultType="int">
+select board_recnt
+from tbl_board
+where seq_tbl_board = #{seq_tbl_board}
+</select>
+<!-- 댓글 숫자 알아오기 끝 -->
 	
 	
 </mapper>

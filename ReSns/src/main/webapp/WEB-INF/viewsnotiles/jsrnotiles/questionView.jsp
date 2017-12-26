@@ -113,12 +113,20 @@ outline: 0;
 
 .searchbox{
          
+         
 box-shadow: 5px 5px 5px 0px lightgray;
 
 border-radius: 4px;
 
+  opacity: 0.8;
+    filter: alpha(opacity=40); /* For IE8 and earlier */
+
 }
 
+searchbox:hover {
+    opacity: 1.0;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+}
 
 
 
@@ -201,14 +209,19 @@ $(document).ready(function(){
         }
     });
 	
-	
-	$("#displayList").hide();
+	var qsearch = $("#qsearch").val();
+	$("#q_displayList").hide();
 	searchKeep();
 
 	var fk_login_id = $("#fk_login_id").val();
 	
 	
 	$("#qsearch").keyup(function(){
+		
+		if(qsearch.trim() == ""){
+			$("#q_displayList").hide();
+			}
+		
 	var form_data = {"qsearch":$("#qsearch").val(),
 		             "fk_login_id":fk_login_id};
 	
@@ -235,12 +248,12 @@ $(document).ready(function(){
 					
 				});
 				resultHTML += "</div>"
-				$("#displayList").html(resultHTML);
-				$("#displayList").show();
+				$("#q_displayList").html(resultHTML);
+				$("#q_displayList").show();
 			}
 			else {
 				// 검색된 데이터가 존재하지 않는 경우라면
-				$("#displayList").hide();
+				$("#q_displayList").hide();
 			} // end of if ~ else ----------------
 			
 		},//end of sucess
@@ -254,7 +267,7 @@ $(document).ready(function(){
 	
 	
 
-	$("#displayList").click(function(event){
+	$("#q_displayList").click(function(event){
 		
 		var $target = $(event.target);
 		var word = "";
@@ -274,7 +287,7 @@ $(document).ready(function(){
 		$("#qsearch").val(word);
 		// 텍스트박스에 검색된 결과의 문자열을 입력해준다.
 		
-		$("#displayList").hide();
+		$("#q_displayList").hide();
 		
 	}); //end of $("#displayList").click()----------	
 
@@ -430,9 +443,9 @@ $(document).ready(function(){
 <div id ="searchDiv" align="right" style="width:450px; position:relative; left:38%;  border: solid 0px red;">
 <input type="hidden" name="fk_login_id" value="${getques.fk_login_id}">
 <input type="text" id="qsearch" name="qsearch" class="qsearch" style="margin-bottom: 10px; margin-right: 10px;"/><button type="button" class="delete btn btn-danger goQ" onClick="goSearch()">검색</button>
-<div id="display" style="width: 300px; height: border: 0px solid green; position: relative; right: 60px;"></div>
+<div id="q_display" style="width: 300px; height: border: 0px solid green; position: relative; right: 60px;"></div>
 <div style="width: 300px; border: 0px solid black; position: relative; right: 60px;">
-<div id="displayList"></div>
+<div id="q_displayList"></div>
 </div>
 </div>
 </form>

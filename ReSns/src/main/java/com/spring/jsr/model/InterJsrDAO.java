@@ -48,8 +48,11 @@ public interface InterJsrDAO {
 	
 	//내 팔로우 보드 댓글 불러오기2
 	List<HashMap<String, String>> followRe(String seq_tbl_board);
+	List<HashMap<String, String>> followRe2(HashMap<String, String> map);
+
+	//내 팔로우 해당 게시글 댓글 카운트 
+	int ReGetCount(String seq_tbl_board);
 	
-	//내 팔로우 태그 가져오기
 	
 	//내 팔로우 해당하는 내용 불러오기
 	String getConVeiw(String seq_tbl_board);
@@ -124,6 +127,7 @@ public interface InterJsrDAO {
 	
 	//알람용 글 한개보기
 	HashMap<String,Object> getAlarmBoard(HashMap<String, String> map);
+		
 
 	
 	

@@ -62,7 +62,9 @@
 		
 	}// end of loopshowNowTime() --------------------------
 	
-	
+	function searchTagGo(tag){
+		location.href="/resns/searchEndTag.re?search="+tag;
+	}
 	
 	function popHash() {
 		var text = $("#tagList").text();
@@ -87,11 +89,35 @@
 		    series: [{
 		        type: 'wordcloud',
 		        data: data,
-		        name: '태그를 사용한 게시물'
+		        name: '태그를 사용한 게시물',
+		        events: {
+	                click: function (event) {
+	                	console.log(event.point.name);
+						var tag_content = event.point.name;
+	                	var sub_tag_content = tag_content.substring(1);
+	  /*               	result += "<a href='/resns/searchEndTag.re?search="+sub_tag_content+"'>";
+						result += "<span style='font-weight: bold;'>"+tag_content+"</span>";
+						result += "</a>";
+	                	 */
+	                	searchTagGo(sub_tag_content);
+	                	 
+/*                 	alert(
+	                		sub_tag_content + ' clicked\n'
+	                    );  */
+     
+	                }
+	            }
 		    }],
 		    title: {
 		        text: '인기 해시 태그'
-		    }
+		    },
+		    credits:{
+		    	enabled: false
+		    },
+		    chart:{
+		    	backgroundColor: 'transparent'
+		    },
+		    
 		});
 	}
 </script>

@@ -460,8 +460,8 @@ $(document).ready(function(){
 				
 					$.each(data, function(entryIndex, entry){
 						var jnone = entry.jnone;
-						
-						resultHTML += "<span style='color:navy; font-weight:bold; cursor:pointer;'><a href='searchEndNameOne.re?search="+jnone+"'>"+jnone+"님의 마이페이지</span></a><br/>"; 
+						var jid = entry.fk_login_id;
+						resultHTML += "<span style='color:navy; font-weight:bold; cursor:pointer;'><a href='otherspage.re?fk_login_id="+jid+"'>"+jnone+"님의 마이페이지</span></a><br/>"; 
 					
 					});
 					
@@ -685,7 +685,7 @@ function goAlarm(userid){
     <div class="header container">
       <div class="flex-container">  
         <div class="navbar-header flex-item">
-          <div class="navbar-brand" onclick="show();" style="cursor: pointer;">Remeber Eemember</div>
+          <div class="navbar-brand" onclick="show();" style="cursor: pointer;">Remeber Emember</div>
         </div>
         <ul class="nav navbar-nav flex-item">
           <li><a><img src="<%=request.getContextPath()%>/resources/images/search.png" class="menuicon" />
