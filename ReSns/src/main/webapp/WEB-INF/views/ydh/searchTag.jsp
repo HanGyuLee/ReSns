@@ -226,9 +226,7 @@ $(document).ready(function(){
 		   displayNEWAppend($(this).val());
 	   });
 	   
-	 
-	   $("<iframe scrolling='no' />").attr("src", "/resns/alaramBoard.re?seq_tbl_board="+seq_tbl_board;").attr("frameborder", 0).attr("width", "100%").attr("height", "0px").appendTo("#test001");
-	    $('iframe').iframeAutoHeight({heightOffset: 10});
+
 
 
 });//document
