@@ -867,7 +867,7 @@ ${pagebar}
 </div>
 </c:if>
 
-<div style="margin-top:-8%;">
+<div style="margin-top:-20%;">
 <c:forEach var="vo" items="${followBoard}" varStatus="status">
 <table class="fallowmain" style="width: 1000px; border: solid 0px red;  background-color: #f4f4f4;" >   
  

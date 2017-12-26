@@ -285,11 +285,11 @@ public class JsrController {
 		String start = req.getParameter("start");
 		String len = req.getParameter("len");
 			
-		if(start ==null || start.trim().isEmpty()){
+		if(start == null || start.trim().isEmpty()){
 			
 			start = "1";
 		}
-		if(start ==null || len.trim().isEmpty()){
+		if(len == null || len.trim().isEmpty()){
 	
 			len = "3";
 		}

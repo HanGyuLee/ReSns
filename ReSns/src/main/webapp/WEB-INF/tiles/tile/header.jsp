@@ -459,9 +459,9 @@ $(document).ready(function(){
 					var resultHTML = "";
 				
 					$.each(data, function(entryIndex, entry){
-						var jnone = entry.jnone;
+						var jname = entry.login_name;
 						var jid = entry.fk_login_id;
-						resultHTML += "<span style='color:navy; font-weight:bold; cursor:pointer;'><a href='otherspage.re?fk_login_id="+jid+"'>"+jnone+"님의 마이페이지</span></a><br/>"; 
+						resultHTML += "<span style='color:navy; font-weight:bold; cursor:pointer;'><a href='otherspage.re?fk_login_id="+jid+"'>"+jname+"님의 마이페이지</span></a><br/>"; 
 					
 					});
 					
