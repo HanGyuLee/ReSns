@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 
-<script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<%-- <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css"> --%>
     
 <c:choose>
 	<c:when test="${faqList ne null}">
@@ -11,7 +11,7 @@
 			<p class="heading">${faq.faq_title}</p>
 			<div class="content"><span style="font-weight: bold;">${faq.faq_content}</span><br>${faq.faq_answer}</div>
 		</c:forEach>
-		<button type="button" id="btn"></button>
+		<button type="button" class="btn btn-default" id="btn"></button>
 	</c:when>
 	<c:when test="${faqList eq null}">
 		검색된 결과가 없습니다.

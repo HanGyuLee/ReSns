@@ -120,12 +120,17 @@ public interface InterPmhDAO {
 	List<HashMap<String, String>> getBoardCountChartWeekInfo(String loginid);
 
 	List<HashMap<String, String>> getBoardCountChartPreWeekInfo(String loginid);
-
+	
+	List<HashMap<String, String>> getTagInfo();
 	/////////////////////////////// 통계 DAO 끝 ///////////////////////////////////////////
 	
 	/////////////////////////////// 기타 DAO 시작 ////////////////////////////////////////
 	
 	int reportingReply(HashMap<String, String> reportMap);
+
+	
+
+	
 	
 	/////////////////////////////// 기타 DAO 끝 //////////////////////////////////////////
 }

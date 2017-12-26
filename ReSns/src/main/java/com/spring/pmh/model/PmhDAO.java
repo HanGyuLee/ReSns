@@ -345,6 +345,12 @@ public class PmhDAO implements InterPmhDAO {
 		return list;
 	}
 	
+	@Override
+	public List<HashMap<String, String>> getTagInfo() {
+		List<HashMap<String, String>> list = sqlsession.selectList("pmhresns.getTagInfo");
+		return list;
+	}
+
 	/////////////////////////////// 통계 DAO 끝 ///////////////////////////////////////////
 	
 	/////////////////////////////// 기타 DAO 시작 /////////////////////////////////////////
@@ -354,6 +360,8 @@ public class PmhDAO implements InterPmhDAO {
 		int n = sqlsession.update("pmhresns.reportingReply", reportMap);
 		return n;
 	}
+
 	
+
 	/////////////////////////////// 기타 DAO 끝 ///////////////////////////////////////////
 }

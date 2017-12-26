@@ -8,7 +8,7 @@
 <title>신고상세 페이지</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 <script src="<%= request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<%-- <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css"> --%>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
 <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
@@ -20,7 +20,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
 
-	table { width: 40%;
+	/* table { width: 40%;
 			font-size: 18px;
 			border: 1px solid grey;
 	}
@@ -29,7 +29,13 @@
 	table td { font-weight: bold;
 				text-align: left;
 				border: 1px solid grey;
-	 }
+	 } */
+	 
+	 table.ex1 {width:35%; margin:0 auto; text-align:right; border-collapse:collapse}
+	.ex1 td {padding:5px 10px}
+	.ex1 tbody th {text-align:left; width:15%}
+	.ex1 tbody tr:hover {background:#F3F5BB}
+	.ex1 tbody tr:hover th {background:#F2F684; color:#1BA6B2}
 	 
 	 .modal-dialog.modal-80size {
 			  width: 80%;
@@ -48,33 +54,33 @@
 
 
 <div align="center">
-<table>
+<table class="ex1">
 	<tr>
-		<td width="20%">신고사유</td>
+		<th width="20%">신고사유</th>
 		<td width="80%"><c:out value="${reportMap['report_cate']}"/></td>
 	</tr>
 	<tr>
-		<td width="20%">신고자<%-- ${reportMap.reporting_name} --%></td>
+		<th width="20%">신고자</th>
 		<td width="80%"><c:out value="${reportMap['reporting_name']}"/>&nbsp;(<c:out value="${reportMap['reporting_id']}"/>)</td>
 	</tr>
 	<tr>
-		<td width="20%">피신고자</td>
+		<th width="20%">피신고자</th>
 		<td width="80%"><c:out value="${reportMap['report_name']}"/>&nbsp;(<c:out value="${reportMap['report_id']}"/>)</td>
 	</tr>
 	<tr>
-		<td width="20%">신고글번호</td>
+		<th width="20%">신고글번호</th>
 		<td width="80%"><c:out value="${reportMap['fk_seq_tbl_board']}"/></td>
 	</tr>
 	<tr>
-		<td width="20%">신고날짜</td>
+		<th width="20%">신고날짜</th>
 		<td width="80%"><c:out value="${reportMap['report_date1']}"/></td>
 	</tr>
 	<tr>
-		<td width="20%">처리날짜</td>
+		<th width="20%">처리날짜</th>
 		<td width="80%"><c:out value="${reportMap['report_date2']}"/></td>
 	</tr>
 	<tr>
-		<td width="20%">처리상태</td>
+		<th width="20%">처리상태</th>
 		<td width="80%">
 			<c:if test="${reportMap.report_status eq 0}">
 							0. 처리완료
@@ -86,7 +92,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td width="20%">신고내용</td>
+		<th width="20%">신고내용</th>
 		<td width="80%"><c:out value="${reportMap['report_content']}"/></td>
 	</tr>
 	

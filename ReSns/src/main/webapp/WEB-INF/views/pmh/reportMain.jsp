@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>게시물 관리(신고) 게시판</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<%-- <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css"> --%>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
 <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
@@ -21,13 +21,15 @@
 
 	table { font-size: 16px;
 			text-align: center;
+			
 	}
 	th { font-size: 18px;
 		 text-align: center;
 		 font-weight: bold;
 	}
-	
+
 	a.no-uline { text-decoration:none }
+	
 </style>
 </head>
 <body>
@@ -85,24 +87,33 @@
 	</div>
 </div>
 	
-<div align="center">
-	<form id="searchFrm">
-		<select id="searchType" name="searchType">
+<div align="center" style="margin-left: 400px;">
+	<form id="searchFrm" class="form-inline">
+		<select id="searchType" name="searchType" style="width: 100px;" class="form-control col-xs-4">
 			<option value="report_content">제목</option>
 			<option value="report_user">아이디</option>
 		</select>
-		<input type="text" onkeyup="enterkey();" id="searchInput" name="searchInput">
-		<button type="button" id="searchBtn" onclick="goSearch();">찾기</button>
-		<button type="button" id="clearBtn" onclick="goClear();">검색해제</button>
+		 <div class="container-fluid">
+		 	<div class="col-md-4 col-sx-6">
+				<input type="text" onkeyup="enterkey();" class="form-control" id="searchInput" name="searchInput">
+			</div>
+			<div class="col-md-1">
+				<button type="button" class="btn btn-default" id="searchBtn" onclick="goSearch();">찾기</button>
+			</div>
+			<div class="col-md-1">
+				<button type="button" class="btn btn-default" id="clearBtn" onclick="goClear();">검색해제</button>
+			</div>
+		</div>
 	</form>
 </div>	
-	
+	<br>
 	<form id="seqFrm">
 		<input type="hidden" id="seq" name="seq">
 	</form>
 	
 </div>
-<br>
+
+<br>&nbsp;
 <div align="center">
 		${pagebar}
 </div>

@@ -96,7 +96,7 @@ public class PmhController {
 		req.setAttribute("searchType", searchType);
 		req.setAttribute("searchInput", searchInput);
 				
-		return "pmh/reportMain.tiles2";
+		return "pmh/reportMain.tiles";
 	}
 	
 	@RequestMapping(value="/reportDetail.re", method={RequestMethod.GET})
@@ -108,7 +108,7 @@ public class PmhController {
 		
 		req.setAttribute("reportMap", reportMap);
 				
-		return "pmh/reportDetail.tiles2";
+		return "pmh/reportDetail.tiles";
 	}
 	
 	@RequestMapping(value="/getBoardContent.re")
@@ -204,7 +204,7 @@ public class PmhController {
 		
 		if (n1 > 0) {
 			String msg = "이미 신고한 글입니다.";
-			String loc = "/resns/index.re";
+			String loc = "/resns/selfClose.re";
 			req.setAttribute("msg", msg);
 			req.setAttribute("loc", loc);
 			
@@ -215,7 +215,7 @@ public class PmhController {
 		req.setAttribute("seq_tbl_board", seq_tbl_board);
 		req.setAttribute("loginUser", loginUser);
 				
-		return "pmh/reportingBoard.tiles2";
+		return "reportingBoard.notiles2";
 	}
 	
 	@RequestMapping(value="/reportingBoardHandler.re", method={RequestMethod.POST})
@@ -259,7 +259,7 @@ public class PmhController {
 	@RequestMapping(value="/reportBoardEnd.re")
 	public String reportBoardEnd() {
 		
-		return "pmh/reportingBoardEnd.tiles2";
+		return "reportingBoardEnd.notiles2";
 	}
 /////////////////////////////////////////// 신고게시판 컨트롤러 끝 //////////////////////////////////////////////////
 	
@@ -328,7 +328,7 @@ public class PmhController {
 		String url = MyUtil.getCurrentURL(req);
 		ses.setAttribute("gobackURL", url);
 				
-		return "pmh/helpMain.tiles2";
+		return "pmh/helpMain.tiles";
 	}
 	
 	@RequestMapping(value="/helpWrite.re")
@@ -360,7 +360,7 @@ public class PmhController {
 			req.setAttribute("depthno", depthno);
 			
 			req.setAttribute("loginUser", loginUser);
-			return "pmh/helpWrite.tiles2";
+			return "pmh/helpWrite.tiles3";
 		}
 		
 	}
@@ -502,7 +502,7 @@ public class PmhController {
 		
 		ses.setAttribute("gobackURL", "helpDetail.re?seq=" + seq);
 		
-		return "pmh/helpDetail.tiles2";
+		return "pmh/helpDetail.tiles3";
 	}
 	
 	@RequestMapping(value="/helpDelete.re")
@@ -582,7 +582,7 @@ public class PmhController {
 		
 		ses.setAttribute("gobackURL", "helpDetail.re?seq=" + seq);
 		
-		return "pmh/helpModify.tiles2";
+		return "pmh/helpModify.tiles3";
 	}
 	
 	@RequestMapping(value="/helpModifyEnd.re", method={RequestMethod.POST})
@@ -668,7 +668,7 @@ public class PmhController {
 		if (loginUser != null)
 			req.setAttribute("loginUser", loginUser);
 		
-		return "pmh/faqMain.tiles2";
+		return "pmh/faqMain.tiles";
 	}
 	
 	@RequestMapping(value="faqSearchInput.re", method={RequestMethod.GET})
@@ -694,7 +694,7 @@ public class PmhController {
 	@RequestMapping(value="faqWrite.re", method={RequestMethod.GET})
 	public String faqWrite() {
 		
-		return "pmh/faqWrite.tiles2";
+		return "pmh/faqWrite.tiles";
 	}
 	
 	@RequestMapping(value="faqWriteEnd.re", method={RequestMethod.POST})
@@ -732,7 +732,7 @@ public class PmhController {
 		
 		req.setAttribute("faqList", faqList);
 		
-		return "pmh/faqModifyDelete.tiles2";
+		return "pmh/faqModifyDelete.tiles3";
 	}
 	
 	@RequestMapping(value="faqDeleteEnd.re", method={RequestMethod.POST})
@@ -822,7 +822,8 @@ public class PmhController {
 		req.setAttribute("agelinePct", agelinePct);
 		req.setAttribute("loginUser", loginUser);
 		
-		return "pmh/statisticsMain.tiles2";
+		
+		return "pmh/statisticsMain.tiles";
 	}
 	
 	@RequestMapping(value="getAgeDetail.re", method={RequestMethod.POST})
@@ -841,7 +842,6 @@ public class PmhController {
 	public String getGenderChartJson(HttpServletRequest req) {
 		
 		String jsonData = service.getGenderInfo();
-		System.out.println(jsonData);
 		req.setAttribute("jsonData", jsonData);
 		return "jsonData.notiles2";
 	}
@@ -850,9 +850,7 @@ public class PmhController {
 	public String getBoardCountChartWeekJson(HttpServletRequest req) {
 		
 		String loginid = req.getParameter("loginid");
-		System.out.println(loginid);
 		String jsonData = service.getBoardCountChartWeekInfo(loginid);
-		System.out.println(jsonData);
 		req.setAttribute("jsonData", jsonData);
 		return "jsonDataWeek.notiles2";
 	}
@@ -861,11 +859,17 @@ public class PmhController {
 	public String getBoardCountChartPreWeekJson(HttpServletRequest req) {
 		
 		String loginid = req.getParameter("loginid");
-		System.out.println(loginid);
 		String jsonData = service.getBoardCountChartPreWeekInfo(loginid);
-		System.out.println(jsonData);
 		req.setAttribute("jsonData", jsonData);
 		return "jsonDataPreWeek.notiles2";
+	}
+	
+	@RequestMapping(value="getTagChartJson.re", method={RequestMethod.GET})
+	public String getTagChartJson(HttpServletRequest req) {
+		
+		String jsonData = service.getTagInfo();
+		req.setAttribute("jsonData", jsonData);
+		return "jsonDataTag.notiles2";
 	}
 	
 	/////////////////////////////////////////// 통계 페이지 컨트롤러 끝 ///////////////////////////////////////////////
@@ -873,7 +877,6 @@ public class PmhController {
 	/////////////////////////////////////////// 기타 컨트롤러 시작 ///////////////////////////////////////////////////
 	@RequestMapping(value="reportingUser.re", method={RequestMethod.GET})
 	public String reportingUserHandler(HttpServletRequest req, HttpSession ses) {
-		String re_id = req.getParameter("re_id");
 		
 		LoginVO loginUser = (LoginVO) ses.getAttribute("loginUser");
 		
@@ -887,6 +890,7 @@ public class PmhController {
 			
 			return "msg.notiles2";
 		}
+		String re_id = req.getParameter("re_id");
 		
 		HashMap<String, String> reportMap = new HashMap<String, String>();
 		
@@ -908,6 +912,12 @@ public class PmhController {
 		}
 		
 		return "msg.notiles2";
+	}
+	
+	@RequestMapping(value="selfClose.re")
+	public String selfClose() {
+	
+		return "selfClose.notiles2";
 	}
 	
 	/////////////////////////////////////////// 기타 컨트롤러 끝 ///////////////////////////////////////////////////

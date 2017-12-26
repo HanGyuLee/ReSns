@@ -448,6 +448,29 @@ public class PmhService implements InterPmhService {
 		return info;
 	}
 	
+	@Override
+	public String getTagInfo() {
+		List<HashMap<String, String>> list = pdao.getTagInfo();
+		
+		JSONArray array = new JSONArray();
+		String info = "";
+		
+		if (list != null && list.size() > 0) {
+			for (HashMap<String, String> map : list) {
+				JSONObject obj = new JSONObject();
+				obj.put("tag_content", map.get("tag_content"));
+				obj.put("cnt", map.get("cnt"));
+				obj.put("rk", map.get("rk"));
+				
+				array.put(obj);
+			}
+		}
+		
+		info = array.toString();
+		
+		return info;
+	}
+	
 	////////////////////////////////// 통계 서비스 끝 //////////////////////////////////////////
 	
 	////////////////////////////////// 기타 서비스 시작 ////////////////////////////////////////

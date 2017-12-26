@@ -45,7 +45,7 @@
 	</definition>
 	<!-- 마이페이지 레이아웃 끝  -->
 	
-	<!-- 회원 개인페이지, 친구 페이지 , 관리자 레이아웃  설정 시작  -->
+	<!-- 회원 개인페이지, 친구 페이지 설정 시작  -->
 	<definition name="layout-tiles2"     template="/WEB-INF/tiles/layout/layout-tiles2.jsp"> 
 		<put-attribute name="header"    value="/WEB-INF/tiles/tile/header.jsp" />
 		<put-attribute name="content"   value="" />
@@ -62,7 +62,26 @@
 	<definition name="*/*/*.tiles2" extends="layout-tiles2">
 		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
 	</definition>
-	<!-- 회원 개인페이지, 친구 페이지 ,  관리자 레이아웃 설정 끝 -->
+	<!-- 회원 개인페이지, 친구 페이지 설정 끝 -->
+	
+	<!-- 관리자 레이아웃  설정 시작  -->
+	<definition name="layout-tiles3"     template="/WEB-INF/tiles/layout/layout-tiles3.jsp"> 
+		<put-attribute name="header"    value="/WEB-INF/tiles/tile/header.jsp" />
+		<put-attribute name="content"   value="" />
+		<put-attribute name="noticeinfo"  value="/WEB-INF/tiles/tile/notice.jsp" />
+	</definition>
+	
+	
+	<definition name="*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- 관리자 레이아웃 설정 끝 -->
 
 
 

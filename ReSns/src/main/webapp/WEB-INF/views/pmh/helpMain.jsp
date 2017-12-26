@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>문의게시판 메인</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<%-- <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css"> --%>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
 <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
@@ -27,6 +27,69 @@
 	}
 	div.main1 {	width: 50%;
 			}
+			
+		html,body{
+  height:100%;
+}
+
+button{
+  background:#1AAB8A;
+  color:#fff;
+  border:none;
+  position:relative;
+  height:35px;
+  font-size:1.6em;
+  padding:0 2em;
+  cursor:pointer;
+  transition:800ms ease all;
+  outline:none;
+}
+button:hover{
+  background:#fff;
+  color:#1AAB8A;
+}
+button:before,button:after{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  height:2px;
+  width:0;
+  background: #1AAB8A;
+  transition:400ms ease all;
+}
+button:after{
+  right:inherit;
+  top:inherit;
+  left:0;
+  bottom:0;
+}
+button:hover:before,button:hover:after{
+  width:100%;
+  transition:800ms ease all;
+}
+
+input[type=text] {
+ border: none;
+ border-bottom: 2px solid cyan;
+}
+
+    select {
+        width: 150px;
+        height: 30px;
+        padding-left: 10px;
+        font-size: 18px;
+        color: #006fff;
+        border: 1px solid #006fff;
+        border-radius: 3px;
+        -webkit-appearance: none; 
+       -moz-appearance: none;    
+       appearance: none;
+       background: url('<%= request.getContextPath() %>/resources/images/mod_select-arrow-down-red.png') no-repeat 95% 50%; /* 화살표 아이콘 추가 */       
+    }
+    select::-ms-expand {
+       display: none;            
+    }
 </style>
 </head>
 <body>
@@ -35,7 +98,7 @@
 &nbsp;<br>
 
 <div class="main1" align="center" >
-	${currentShowPageNo}  / ${totalPage} 페이지, 총 게시글 ${totalCountExceptDelete} 개
+	<span style="font-weight: bold;">${currentShowPageNo}  / ${totalPage}</span> 페이지, 총 게시글 <span style="font-weight: bold;">${totalCountExceptDelete}</span> 개
 </div>
 
 <div class="container">
@@ -114,7 +177,7 @@
 			<option value="ask_content">내용</option>
 			<option value="ask_title||ask_content">제목+내용</option>
 		</select>
-		<input type="text" onkeyup="enterkey();" id="searchInput" name="searchInput">
+		<input type="text" onkeyup="enterkey();" width="300px" id="searchInput" name="searchInput">
 		<button type="button" id="searchBtn" onclick="goSearch();">찾기</button>
 		<button type="button" id="clearBtn" onclick="goClear();">검색해제</button>
 	</form>
@@ -131,7 +194,7 @@
 </div>
 
 <div align="right">
-	<button type="button" style="margin-right: 400px;" onclick="goWrite();">글쓰기</button>
+	<button type="button" style="margin-right: 150px;" onclick="goWrite();">글쓰기</button>
 </div>
 
 <script type="text/javascript">

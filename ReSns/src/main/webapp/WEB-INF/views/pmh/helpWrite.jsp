@@ -7,12 +7,12 @@
 <meta charset="UTF-8">
 <title>문의게시판 글쓰기 페이지</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
-<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
+<%-- <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">  --%>
+<%-- <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
 <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/jquery.textillate.js"></script>
-<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet">
+<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet"> --%>
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <script type="text/javascript"
@@ -24,22 +24,87 @@
 		text-align: left;
 		margin-left: 600px;
 	}
+	div.sub_title_info{
+		align: center;
+		text-align: center;
+	}
+	div.sub_content{
+		align: center;
+	}
+	div.postscript_area 
+	{
+		margin-left: 560px;
+		align: center;
+		width: 40%;
+	}
 	legend { text-align: center;
 			margin-bottom: 10px auto;
 	}
-	div.buttons { 
-				
+	
+	@import url(https://fonts.googleapis.com/css?family=BenchNine:700);
+	.snip1535 {
+	  background-color: #c47135;
+	  border: none;
+	  color: #ffffff;
+	  cursor: pointer;
+	  display: inline-block;
+	  font-family: 'BenchNine', Arial, sans-serif;
+	  font-size: 1em;
+	  font-size: 22px;
+	  line-height: 1em;
+	  margin: 15px 40px;
+	  outline: none;
+	  padding: 12px 40px 10px;
+	  position: relative;
+	  text-transform: uppercase;
+	  font-weight: 700;
+	}
+	.snip1535:before,
+	.snip1535:after {
+	  border-color: transparent;
+	  -webkit-transition: all 0.25s;
+	  transition: all 0.25s;
+	  border-style: solid;
+	  border-width: 0;
+	  content: "";
+	  height: 24px;
+	  position: absolute;
+	  width: 24px;
+	}
+	.snip1535:before {
+	  border-color: #c47135;
+	  border-right-width: 2px;
+	  border-top-width: 2px;
+	  right: -5px;
+	  top: -5px;
+	}
+	.snip1535:after {
+	  border-bottom-width: 2px;
+	  border-color: #c47135;
+	  border-left-width: 2px;
+	  bottom: -5px;
+	  left: -5px;
+	}
+	.snip1535:hover,
+	.snip1535.hover {
+	  background-color: #c47135;
+	}
+	.snip1535:hover:before,
+	.snip1535.hover:before,
+	.snip1535:hover:after,
+	.snip1535.hover:after {
+	  height: 100%;
+	  width: 100%;
 	}
 	
 </style>
 </head>
 <body>
-
+<br>&nbsp;
 <div align="center"><h1>문의하기</h1></div>
 
 
 <div class="sub_title_info">
-	    <h3 style="margin-left: 35px;">문의게시판</h3>
 	</div>
 	<!-- sub content s -->
 	<div class="sub_content">
@@ -85,7 +150,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="fk_login_id">작성자</label>  
   <div class="col-md-4">
-  <input id="fk_login_id" name="fk_login_id" type="text" placeholder="" class="form-control input-md" value="${sessionScope.loginUser.login_id}" required="required" readonly>
+  <input id="fk_login_id" name="fk_login_id" type="text" placeholder="" class="form-control input-md" value="${sessionScope.loginUser.login_id}" required readonly>
     
   </div>
 </div>
@@ -94,7 +159,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="ask_title">제목</label>  
   <div class="col-md-4">
-  <input id="ask_title" name="ask_title" type="text" placeholder="" class="form-control input-md" required="required">
+  <input id="ask_title" name="ask_title" type="text" placeholder="" class="form-control input-md" required>
     
   </div>
 </div>
@@ -134,11 +199,11 @@
 	<input type="hidden" name="seq" value="${seq}" />
 
 <div align="center" class="buttons">
-		<button type="button" id="listBtn" style="margin-right: 100px;" onclick="goList();">목록</button>
+		<button type="button" id="listBtn" class="snip1535" style="margin-right: 100px;" onclick="goList();">목록</button>
 	
-		<button type="button" id="writeBtn" onclick="goWrite();">작성</button>
+		<button type="button" id="writeBtn" class="snip1535" onclick="goWrite();">작성</button>
 
-		<button type="reset" style="margin-left: 100px;">비우기</button>
+		<button type="reset" class="snip1535" style="margin-left: 100px;">비우기</button>
 </div>
 
 </fieldset>
@@ -149,11 +214,26 @@
 
 <script type="text/javascript">
 
+	$(document).ready(function() {
+		/* Demo purposes only */
+		$(".hover").mouseleave(
+		  function() {
+		    $(this).removeClass("hover");
+		  }
+		);
+	});
+
 	function goList() {
 		location.href = "help.re";
 	}
 	
 	function goWrite() {
+		
+		var title = document.getElementById("ask_title").value;
+		if (title == null || title.trim().length <= 0) {
+			swal("제목은 반드시 입력하셔야 합니다.");
+			return;
+		}		
 		
 		var file = writeFrm.file.value;
 		
