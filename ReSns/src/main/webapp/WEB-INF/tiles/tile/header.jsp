@@ -567,11 +567,18 @@ function goAlarm(userid){
                   var login_name = entry.login_name;
                   var imgsrc = entry.imgsrc;
                  
+                if ( alarm_type == " 나를 팔로우합니다"){
+                    result += "<li><a href='"+url+"' style='text-decoration:none;'>";
+                    result += "<img src='resources/images/profile0.png' style='width: 30px; height: 30px; display: inline;' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
+                    result += alarm_time +"</a> </li><li class='divider'></li>";
+                }
                  
-                 
-                 result += "<li><a href='"+url+"' style='text-decoration:none;'>";
-                 result += "<img src='resources/images/profile0.png' style='width: 30px; height: 30px; display: inline;' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
-                 result += alarm_time +"</a> </li><li class='divider'></li>";
+                if (alarm_type != " 나를 팔로우합니다"){
+                    result += "<li><a href='#' onclick=\"window.open(\'"+url+"\', \'_blank\', 'width=900,height=950,toolbars=no,scrollbars=no');\" return false;  style='text-decoration:none;'>";
+                    result += "<img src='resources/images/profile0.png' style='width: 30px; height: 30px; display: inline;' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
+                    result += alarm_time +"</a> </li><li class='divider'></li>";   	
+                }
+
 
                  
               });
@@ -753,16 +760,18 @@ function goAlarm(userid){
         </c:if>
         
         <!-- dropdown only moblie -->
-          <div class="dropdown visible-xs pull-right">
+          <div class="dropdown visible-xs pull-right"  style="background: transparent; border: hidden;">
             <button class="btn btn-default dropdown-toggle " type="button" id="dropdownmenu" data-toggle="dropdown">
               <span class="glyphicon glyphicon-align-justify"></span> 
             </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Projects</a></li>
-              <li><a href="#">Pricing</a></li> 
-              <li><a href="#">TheTeam</a></li> 
-              <li role="separator" class="divider"></li>
-              <li><a href="#">contact us</a></li>
+            <ul class="dropdown-menu" style="background: black;">
+              <li><a href="<%=request.getContextPath()%>/followmain.re">메인</a></li>
+              <li><a href="<%=request.getContextPath()%>/index.re">인기페이지</a></li> 
+              <li><a href="<%=request.getContextPath()%>/mypage.re">내페이지</a></li>
+              <li><a href="<%=request.getContextPath()%>/writeBoard.re">글쓰기</a></li>
+              <li><a href="#" onclick="window.open('<%=request.getContextPath()%>/message.re', 'message', 'top=100px, left=100px, height=800px, width=800px')">쪽지</a></li> 
+<!--               <li role="separator" class="divider"></li>
+              <li><a href="#">contact us</a></li> -->
             </ul>
           </div>
         </div>  

@@ -762,7 +762,7 @@ function heartCounting() {
 <br/>
 <br/>
 
-<div align="center">
+<div align="" style="margin-left: 10%;">
 <table class="fallowmain" style="width: 500px; border: solid 0px red;  background-color: #f4f4f4;" >   
  
      <tr>
