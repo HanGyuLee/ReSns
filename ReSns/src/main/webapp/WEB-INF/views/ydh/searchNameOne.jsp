@@ -22,22 +22,18 @@ $(document).ready(function(){
 <body>
 
 
-<div align="center">
-<span style=" font-size:20pt; font-weight:bold;">(myPage연결하면됨)게시물</span><br/>
-</div>
+<div>
 <c:forEach var="map" items="${searchNameOne}" >
 이름 :${map.LOGIN_NAME}
-<c:if test="${map.BIMG_FILENAME != null}">
 <img src="<%=request.getContextPath()%>/resources/images/${map.BIMG_FILENAME}" style="width: 400px; height: 300px;"><br/><br/>
 <br/><br/>
 <form name="moreResults">
 	<div align="center">
-		<button type="button" >더보기</button>
-	</div>
+
 </form>
 <br/><br/>
-</c:if>
 
+<div>
 <c:if test="${map.BIMG_FILENAME == null}">
 	<div align="center">
       <span style=" font-weight:bold; font-size:20;">올린 게시물이 없습니다.</span>

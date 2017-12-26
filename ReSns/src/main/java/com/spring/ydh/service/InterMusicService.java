@@ -73,7 +73,11 @@ public interface InterMusicService {
 
 	String displayNamesmore(HashMap<String, String> map);//names(별명들)더보기
 
-	int jtagCount(String searchTagcnt);//tag json더보기 count구하기
+	int jtagCount(String search);//tag json더보기 count구하기
+
+	int jnameCount(String search);//더보기페이징cnt
+
+	int jmapCount(String search);//map더보기 cnt
 
 
 

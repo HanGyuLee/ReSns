@@ -48,21 +48,20 @@ public class YdhController {
 	//태그게시물검색
 	@RequestMapping(value="/searchEndTag.re", method={RequestMethod.GET})
 	public String searchTag(HttpServletRequest req){
-		   
-		 String searchTagcnt = req.getParameter("searchTag");
-		 int jtCnt = service.jtagCount(searchTagcnt);
 		
 		 String search = req.getParameter("search");
 		 System.out.println("tst:"+search);
 		 HashMap<String,String> map = new HashMap<String,String>();
 		 map.put("search", search);
 		 
-		 if(!search.trim().isEmpty() && jtCnt>0){
+		 if(!search.trim().isEmpty() ){
 		
 		 List<HashMap<String, String>> searchTag = service.searchTag(map);
-		 
 		
 			 if(!searchTag.isEmpty()){
+					
+				int jtCnt = service.jtagCount(search);
+				 
 				 req.setAttribute("searchTag", searchTag);
 				 req.setAttribute("search", search);
 				 req.setAttribute("jtCnt", jtCnt);
@@ -79,7 +78,7 @@ public class YdhController {
 		  
 		
 		return "ydh/searchTag.tiles";
-		
+	  
 	}//search1
 
 	
@@ -99,6 +98,10 @@ public class YdhController {
 		 List<HashMap<String, String>> searchName = service.searchName(map);
 		
 			 if(!searchName.isEmpty()){
+				 
+				 int jNCnt = service.jnameCount(search);//더보기페이징cnt
+				 
+				 req.setAttribute("jNCnt", jNCnt);
 				 req.setAttribute("searchName", searchName);
 				 req.setAttribute("search", search);
 			    }
@@ -119,6 +122,7 @@ public class YdhController {
 	
 	//별명검색(한명)
 	@RequestMapping(value="/searchEndNameOne.re", method={RequestMethod.GET})
+	//@RequestMapping(value="/otherspage.re", method={RequestMethod.GET})
 	public String searchNameOne(HttpServletRequest req){
 		
 		 String search = req.getParameter("search");
@@ -157,6 +161,10 @@ public class YdhController {
 		 List<HashMap<String, String>> searchMap = service.searchMap(map);//태그검색
 		
 			 if(!searchMap.isEmpty()){
+				 
+				 int jMCnt = service.jmapCount(search);//map더보기 cnt
+				 
+				 req.setAttribute("jMCnt", jMCnt);
 				 req.setAttribute("searchMap", searchMap);
 				 req.setAttribute("search", search);
 			    }
@@ -256,27 +264,29 @@ public class YdhController {
 		System.out.println("넘어오나 확인");
 		
 		String start = req.getParameter("start");
-		String len = req.getParameter("lenNEW");
+		String lenNEW = req.getParameter("lenNEW");
 		String searchTag = req.getParameter("searchTag");
+		//String seq_tbl_board = req.getParameter("seq_tbl_board");
 		
 		System.out.println("start::"+start);
-		System.out.println("len::"+len);
+		System.out.println("len::"+lenNEW);
 		System.out.println("searchTag::"+searchTag);
+		//System.out.println("seq_tbl_board::"+seq_tbl_board);
 		
 		
 		if(start.trim().isEmpty()){
 		
 			start = "1";
 		}
-		if(len.trim().isEmpty()){
+		if(lenNEW.trim().isEmpty()){
 	
-			len = "2";
+			lenNEW = "3";
 		}
 		
 		int startrno = 0;
 		int endrno = 0; 
 		startrno = Integer.parseInt(start);					//시작행번호
-		endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
+		endrno = startrno + (Integer.parseInt(lenNEW) - 1 );	// 끝행번호
 		
 		System.out.println("startrno확인::"+startrno);
 		System.out.println("endrno확인::"+endrno);
@@ -291,6 +301,7 @@ public class YdhController {
 		System.out.println("boardList"+boardList);
 
 	    req.setAttribute("boardList", boardList);
+	    
 		
 		return "ydhnotiles/displaymoreJsonTag.notiles";
 		
@@ -301,26 +312,26 @@ public class YdhController {
 	public String displaymoreJsonMap(HttpServletRequest req){
 	
 		String start = req.getParameter("start");
-		String len = req.getParameter("lenNEW");
+		String lenNEW = req.getParameter("lenNEW");
 		String searchMap = req.getParameter("searchMap");
 		
 		System.out.println("startMap::"+start);
-		System.out.println("len::"+len);
+		System.out.println("len::"+lenNEW);
 		System.out.println("searchMap::"+searchMap);
 		
 		
 		if(start.trim().isEmpty()){
 			start = "1";
 		}
-		if(len.trim().isEmpty()){
+		if(lenNEW.trim().isEmpty()){
 		
-			len = "2";
+			lenNEW = "1";
 		}
 		
 		int startrno = 0;
 		int endrno = 0; 
 		startrno = Integer.parseInt(start);					//시작행번호
-		endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
+		endrno = startrno + (Integer.parseInt(lenNEW) - 1 );	// 끝행번호
 		
 		System.out.println("startrno 맵확인::"+startrno);
 		System.out.println("endrno 맵확인::"+endrno);
@@ -346,26 +357,26 @@ public class YdhController {
 	public String displaymoreJName(HttpServletRequest req){
 	System.out.println("Begin list of names");
 		String start = req.getParameter("start");
-		String len = req.getParameter("lenNEW");
+		String lenNEW = req.getParameter("lenNEW");
 		String searchNames = req.getParameter("searchNames");
 		
 		System.out.println("startMap::"+start);
-		System.out.println("len::"+len);
+		System.out.println("len::"+lenNEW);
 		System.out.println("searchNames::"+searchNames);
 		
 		
 		if(start.trim().isEmpty()){
 			start = "1";
 		}
-		if(len.trim().isEmpty()){
+		if(lenNEW.trim().isEmpty()){
 		
-			len = "2";
+			lenNEW = "1";
 		}
 		
 		int startrno = 0;
 		int endrno = 0; 
 		startrno = Integer.parseInt(start);					//시작행번호
-		endrno = startrno + (Integer.parseInt(len) - 1 );	// 끝행번호
+		endrno = startrno + (Integer.parseInt(lenNEW) - 1 );	// 끝행번호
 		
 		System.out.println("startrno 맵확인::"+startrno);
 		System.out.println("endrno 맵확인::"+endrno);
@@ -386,7 +397,7 @@ public class YdhController {
 	}
 	
 	//tag더보기 페이징
-/*	@RequestMapping(value="/searchTag.re", method={RequestMethod.GET})
+/*	@RequestMapping(value="/searchEndTag.re", method={RequestMethod.GET})
 	public String jtagCount(HttpServletRequest req){
 		System.out.println("더보기페이징");
 		String searchTag = req.getParameter("searchTag");

@@ -105,15 +105,11 @@ and A.login_status = 1
 </select>
 
 <!-- 별명한명검색 -->
-<resultMap type="String" id="jnameOne">
- <result property="LoginName" 	column="name"  	     javaType="String"/>
-</resultMap>
-<select id="jNameOne" parameterType="String" resultMap="jnameOne">
-select A.login_name as name
-from tbl_login A left join tbl_user B
-on A.login_id = B.fk_login_id
-where lower(A.login_name) like '%'|| lower(#{search})||'%' 
-and A.login_status = 1
+<select id="jNameOne" parameterType="String" resultType="com.spring.jdh.model.LoginVO">
+select login_name , login_id
+from tbl_login
+where lower(login_name) like '%'|| lower(#{search})||'%'  
+and login_status = 1
 </select>
 
 <!-- 태그검색결과(총게시물)  -->
@@ -290,8 +286,24 @@ where V.rno between #{startrno} and #{endrno}
 <select id="jtagCount" parameterType="String" resultType="int">
 select count (*) as cnt
 from tbl_tag
-where lower(substr(tag_content,2)) = lower(#{searchTagcnt})
+where lower(substr(tag_content,2)) = lower(#{search})
 </select>
+
+<!-- names 더보기 페이징을위한  count -->
+<select id="jnameCount" parameterType="String" resultType="int">
+select count (*) as cnt
+from tbl_login
+where lower(login_name) like '%'||lower(#{search})||'%'
+and login_status = 1
+</select>
+
+
+<!-- map 더보기 페이징을위한  count -->
+<select id="jmapCount" parameterType="String" resultType="int">
+select count (*) as cnt
+from tbl_map
+where lower(map_name) like '%'||lower(#{search})||'%'
+</select> 
 
 
 					<!-- YOUTUBE LIST -->
