@@ -79,8 +79,8 @@
 	
 	<insert id="registerDetail" parameterType="com.spring.jdh.model.UserVO">
 	
-		insert into tbl_user(fk_login_id, user_email, user_birth, user_gender, user_ing, user_ed, user_boardcnt, user_report, user_selfi)
-		values(#{fk_login_id}, #{user_email}, #{user_birth}, #{user_gender}, default, default, default, default, #{user_selfi})
+		insert into tbl_user(fk_login_id, user_email, user_birth, user_gender, user_ing, user_ed, user_boardcnt, user_report)
+		values(#{fk_login_id}, #{user_email}, #{user_birth}, #{user_gender}, default, default, default, default)
 		
 	</insert>
 	
@@ -285,62 +285,77 @@
 	</update>
 	
 	<!-- 검색어 있는 리스트 -->
+	<resultMap type="HashMap" id="getNoSearchList1">
+		<result property="fk_login_id" column="fk_login_id" javaType="String"/>
+		<result property="login_name" column="login_name" javaType="String"/>
+		<result property="user_email" column="user_email" javaType="String"/>
+		<result property="user_report" column="user_report" javaType="String"/>
+		<result property="login_status" column="login_status" javaType="String"/>
+	</resultMap>
+	<select id="getSearchList1" parameterType="HashMap" resultMap="getNoSearchList1">
 	
-	<select id="getSearchList1" parameterType="HashMap" resultType="java.util.HashMap">
-	
-	 select fk_login_id, login_name, user_email, user_report, login_status
-		from 
-		(
-		select rownum as RNO
-		     , V.fk_login_id, V.login_name, V.user_email, V.user_report, V.login_status
-		from 
-		(
-		select fk_login_id, login_name, user_email, user_report, login_status
-		from tbl_user E join tbl_login D
-    	on E.fk_login_id = D.login_id		
-		and ${colname} like '%'|| #{search} ||'%'		
-		) V
-		) T
+	 	    
+	    select fk_login_id, login_name, user_email, user_report, login_status
+	    from
+			(
+			select rownum as RNO
+			     , V.fk_login_id, V.login_name, V.user_email, V.user_report, V.login_status
+			from 
+			(
+		      select fk_login_id, login_name, user_email, user_report, login_status
+		      from tbl_user E join tbl_login D
+		        on E.fk_login_id = D.login_id		
+		      and ${colname} like '%'|| #{search} ||'%'		
+			) V
+	    ) t
 		where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	
 	</select>
 	
 	<!-- 검색어가 없는 리스트 -->
 	
-	<select id="getNoSearchList2" parameterType="HashMap" resultType="java.util.HashMap">
+	<resultMap type="HashMap" id="getNoSearchList2">
+		<result property="fk_login_id" column="fk_login_id" javaType="String"/>
+		<result property="login_name" column="login_name" javaType="String"/>
+		<result property="user_email" column="user_email" javaType="String"/>
+		<result property="user_report" column="user_report" javaType="String"/>
+		<result property="login_status" column="login_status" javaType="String"/>
+	</resultMap>
+	
+	<select id="getNoSearchList2" parameterType="HashMap" resultMap="getNoSearchList2">
 	
 		select fk_login_id, login_name, user_email, user_report, login_status
 		from 
-		(
-		select rownum as RNO
-		     , V.fk_login_id, V.login_name, V.user_email, V.user_report, V.login_status
-		from
-		(
-		select fk_login_id, login_name, user_email, user_report, login_status
-		from tbl_user E join tbl_login D
-    	on E.fk_login_id = D.login_id				
-		) V
-		) T
+			(
+				select rownum as RNO
+				     , V.fk_login_id, V.login_name, V.user_email, V.user_report, V.login_status
+				from
+				(
+					select fk_login_id, login_name, user_email, user_report, login_status
+					from tbl_user E join tbl_login D
+			    	on E.fk_login_id = D.login_id				
+				) V
+			) T
     	where T.RNO >= #{startRno} and T.RNO <![CDATA[<=]]> #{endRno}
 	
 	</select>
 	
-	<select id="getTotalCount2" parameterType="HashMap">
+	<select id="getTotalCount2" parameterType="HashMap" resultType="int">
 	
-	select count(*)
-	from tbl_user E join tbl_login D
-    on E.fk_login_id = D.login_id
-    and ${colname} like '%' || #{search} || '%'	
+		select count(*)
+		from tbl_user E join tbl_login D
+	    on E.fk_login_id = D.login_id
+	    and ${colname} like '%' || #{search} || '%'	
     
 	</select>
    
     
-    <select id="getTotalCount1" parameterType="int">
+    <select id="getTotalCount1" parameterType="int" resultType="int">
     
-    select count(*)
-	from tbl_user E join tbl_login D
-    on E.fk_login_id = D.login_id
-	
+	    select count(*)
+		from tbl_user E join tbl_login D
+	    on E.fk_login_id = D.login_id
+	    
 	</select>
 	
 	<!-- 아이디 중복체크 -->
@@ -356,7 +371,7 @@
 	<select id="nickDuplicateCheck" parameterType="String" resultType="int">
 	
       select count(*) as cnt
-      from tbl_member
+      from tbl_login
       where login_name = #{login_name}
       
     </select>
@@ -367,4 +382,7 @@
 			from tbl_user
 		where (to_char(to_date(user_birth, 'mm-dd-yy'), 'mm-dd') = to_char(sysdate , 'mm-dd')) and fk_login_id = #{id}
 	</select>
+	
+	
+	
 </mapper>

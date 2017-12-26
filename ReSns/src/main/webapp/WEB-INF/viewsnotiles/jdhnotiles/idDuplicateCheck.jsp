@@ -53,8 +53,8 @@
 </script>
 
 </head>
-<body style="background-color: #fff0f5;">
-<span style="font-size:10pt; font-weight: bold;">${method}</span>   
+<body style="background-color: silver;">
+   
 
 <c:if test="${method == 'GET'}">
 <form name="frmIdDuplicateCheck">
@@ -83,7 +83,7 @@
    </c:if>
    
    <c:if test="${isUseuserid == false}">
-         <br style="line-height: 200%"/>   
+         <br style="line-height: 200%"/>
          <div align="center">
             <span style="color:red; font-weight: bold;">[${userid}]는 이미 사용중입니다.</span>
          <br/>

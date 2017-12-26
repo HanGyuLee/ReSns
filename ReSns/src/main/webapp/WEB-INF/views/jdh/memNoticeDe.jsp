@@ -91,7 +91,7 @@ textarea.form-control{
            
             <div class="btn_area">
        
-        <a onclick="goBack();">확인(뒤로 가기)</a>
+        <a class="btn btn-primary btn-outline btn-lg" onclick="goBack();">확인(뒤로 가기)</a>
        
 			</div>
          

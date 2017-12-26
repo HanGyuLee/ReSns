@@ -82,7 +82,6 @@ public class SnsService implements InterSnsService {
 			int p = dao.registerMember(lvo);
 			int s = dao.registerDetail(uvo);
 			int v = dao.registerImg(ivo);
-			
 			return (p + s + v);	// + v
 		}
 

@@ -63,34 +63,34 @@
     
     
     <div class="col-md-5">
-          <h4><strong>공지사항 등록하기</strong></h4>
+          <h4 style="font-style: oblique; font-weight: bold; font-size: 20px; color: fuchsia;"><strong>공지사항 등록하기</strong></h4><br/>
         <form name="noticeRegisFrm" id="noticeRegisFrm">
           <div class="form-group">
-            <h4>제목<input type="text" class="form-control" name="notice_title" ></h4>
+            <h4 style="font-style: oblique; font-weight: bold; font-size: 16px; color: fuchsia;">제목<input type="text" class="form-control" name="notice_title" ></h4>
           </div>
      
           
-          <h2>공지사항 카테고리</h2>
+          <br/><br/>
   <fieldset>
-    <legend>분류를 선택하세요 </legend>
-    <label for="radio-1">기타 공지사항</label>
+    <p style="font-style: oblique; font-weight: bold; font-size: 16px; color: fuchsia;">분류를 선택하세요 </p>
     <input type="radio" name="notice_cate" id="except" value="0" checked="checked">
-    <label for="radio-2">업데이트 공지사항</label>
+    <label for="radio-1">기타 공지사항</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <input type="radio" name="notice_cate" id="update" value="1" >
-    <label for="radio-3">긴급 공지사항</label>
+    <label for="radio-2">업데이트 공지사항</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <input type="radio" name="notice_cate" id="urgent" value="2" >
-  </fieldset>
+    <label for="radio-3">긴급 공지사항</label>    
+  </fieldset><br/><br/>
          
           <div class="form-group">
-            <textarea class="form-control" name="notice_content" rows="3" placeholder="내용" style="width: 90%; height: 90%;"></textarea>
+            <textarea class="form-control" name="notice_content" rows="3" placeholder="내용" style="width: 110%; height: 110%;"></textarea>
           </div>
           
         <div>
-          <button class="btn btn-default" type="button" name="reginotice" id="reginotice" onclick="goreginotice();">
+          <button class="btn btn-primary btn-outline btn-lg" type="button" name="reginotice" id="reginotice" onclick="goreginotice();">
               <i class="fa fa-paper-plane-o" aria-hidden="true">등록하기</i>
           </button>
           
-          <button class="btn btn-default" type="button" name="button" onclick="goBack();">
+          <button class="btn btn-primary btn-outline btn-lg" type="button" name="button" onclick="goBack();">
               <i class="fa fa-paper-plane-o" aria-hidden="true">취소</i>             
           </button>
         </div>

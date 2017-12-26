@@ -45,7 +45,6 @@
 		  frm.action = "<%= request.getContextPath() %>/memberEdit.re";
 		  frm.method = "POST";
 		  frm.submit();
-		
 	}
 	
 	function input(id) {
@@ -62,7 +61,7 @@
 	
 	
 	function searchKeep() {
-	<c:if test="${ (colname != 'null' && not empty colname) && (search != 'null' && not empty search)}"> // colname과 search가 비어있지 않다라면
+	<c:if test="${ (colname != 'null' && not empty colname) && (search != 'null' && not empty search)}">
 		$("#colname").val("${colname}"); // 검색에 대한 컬럼명을 유지시킨다.
 		$("#search").val("${search}"); // 검색에 대한 검색어를 유지시킨다.
 	</c:if>
@@ -70,38 +69,49 @@
 	
 	
 	function goSearch() {
+		
+		
 		var frm = document.searchFrm;
-		var search = $("#search").val();
+		//alert(frm.search.value);
+		//alert(frm.colname.value);
+		/* var search = $("#search").val();
+		
+		//console.log(search);
 		if (search.trim() == ""){
 			alert("검색어를 입력하세요!!");
 			return;
 		}
-		else {
-			frm.submit();
-		}
+		else if ()
+		
+		else { *
+			
+		/* } */
+		frm.submit();
 	}
-	
-	
+	$(document).ready(function(){
+		
+	});
+		
 </script>
 
 
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<h4>공지사항 페이지 테이블</h4>
+			<h4 style="font-style: oblique; font-size: x-large; font-weight: bold; color: fuchsia;">공지사항 페이지 테이블</h4><br/>
 			
 			
 			
 			<!-- ==== #102. 글검색 폼 추가하기 : 글제목, 내용, 글쓴이로 검색하도록 한다. ==== -->
 	<form name="searchFrm" action="<%= request.getContextPath() %>/memberSupervise.re" method="get">
 		<select name="colname" id="colname">
-			<option value="subject">회원 아이디</option>
-			<option value="content">이메일</option>
-			<option value="name">별명</option>
+			<option value="login_id">회원 아이디</option>
+			<option value="user_email">이메일</option>
+			<option value="login_name">별명</option>
 		</select>
 		<input type="text" name="search" id="search" size="40pt">
-		<button type="button" onClick="goSearch();">검색</button>
-	</form>
+		<button type="button" onClick="goSearch();" style="background-color: activeborder; color: teal;">검색</button>
+	</form><br/><br/>
 
 	<form id="idFrm" method="post">
 		<input type="hidden" name="id" id="idInput">
@@ -125,80 +135,72 @@
 					</thead>
 					
 					<tbody>
-					
-					<c:if test="${not empty memList}">
-					
-					<c:forEach var="mvo" items="${memList}" varStatus="status">
-					
-					 <tr>
-					
-						<td>${mvo.fk_login_id}</td>
+						<c:if test="${empty memList}">
+							<tr><td colspan="5">리스트가 없습니다.</td></tr>
+						</c:if>
 						
-						<td>${mvo.user_email}</td>
+						<c:if test="${not empty memList}">
+							<c:forEach var="mvo" items="${memList}">
+								<tr>
+									<!-- fk_login_id, login_name, user_email, user_report, login_status -->
+									<td>${mvo.fk_login_id}</td>
+									<td>${mvo.user_email}</td>
+									<td>${mvo.login_name}</td>
+									<td align="center">${mvo.user_report}</td>
+									<td><c:choose>
+							<c:when test="${mvo.login_status eq 1}">
+										회원
+									</c:when>
+									<c:when test="${mvo.login_status eq 9}">
+										관리자
+									</c:when>
+									<c:when test="${mvo.login_status eq 0}">
+										정지
+									</c:when>
+							</c:choose></td>
+							
+									<!-- 수정 -->
+									<!-- <a href="http://www.jquery2dotnet.com" class="glyphicon glyphicon-pencil"></a> -->
+									<td>
+										<button class="btn btn-danger btn-xs" data-title="Edit"
+														data-toggle="modal" data-target="#Edit" class="btns" onclick="goInput('${mvo.fk_login_id}');"> 
+											 <span class="glyphicon glyphicon-pencil"></span> 
+										</button>
+									</td>
+							<!-- 삭제  -->
+									<td>
+									<!--
+									<p data-placement="top" data-toggle="tooltip"
+													title="Delete"> -->
+										<button class="btn btn-danger btn-xs" data-title="Delete"
+														data-toggle="modal" data-target="#delete" class="btns" onclick="input('${mvo.fk_login_id}')"> 
+											 <span class="glyphicon glyphicon-trash"></span> 
+										</button>
+									<!--</p> -->
+									
+									</td>
 						
-						<td>${mvo.login_name}</td>
-						
-						<td align="center">${mvo.user_report}</td>
-						
-						<td>${mvo.login_status}</td>
-						
-	
-						
-						
-						<!-- 수정 -->
-						
-						<!-- <a href="http://www.jquery2dotnet.com" class="glyphicon glyphicon-pencil"></a> -->
-						<td>
-						
-						<button class="btn btn-danger btn-xs" data-title="Edit"
-										data-toggle="modal" data-target="#Edit" class="btns" onclick="goInput('${mvo.fk_login_id}');"> 
-							 <span class="glyphicon glyphicon-pencil"></span> 
-						</button>
-						
-						</td>
-						
-						<!-- 삭제  -->
-					<td>
-					<!--
-					<p data-placement="top" data-toggle="tooltip"
-									title="Delete"> -->
-						<button class="btn btn-danger btn-xs" data-title="Delete"
-										data-toggle="modal" data-target="#delete" class="btns" onclick="input('${mvo.fk_login_id}')"> 
-							 <span class="glyphicon glyphicon-trash"></span> 
-						</button>
-					<!--</p> -->
-					
-					</td>
-					
-						<!-- 복원 -->
-					<td><p data-placement="top" data-toggle="tooltip"
-									title="Restore">
-						<button class="btn btn-danger btn-xs" data-title="Restore"
-							data-toggle="modal" data-target="#Restore" class="btns" onclick="input('${mvo.fk_login_id}')" >
-							<span class="glyphicon glyphicon-flag"></span>
-						</button>
-								
-					</p></td>
-						
-						<!-- <td><a href="http://www.jquery2dotnet.com" class="glyphicon glyphicon-flag"></a></td> -->
-						
-					</tr>
-					
-					</c:forEach>
-					</c:if>
-					
+							<!-- 복원 -->
+								<td>
+									<p data-placement="top" data-toggle="tooltip"
+													title="Restore">
+										<button class="btn btn-danger btn-xs" data-title="Restore"
+											data-toggle="modal" data-target="#Restore" class="btns" onclick="input('${mvo.fk_login_id}')" >
+											<span class="glyphicon glyphicon-flag"></span>
+										</button>
+									</p>
+								</td>
+								<!-- <td><a href="http://www.jquery2dotnet.com" class="glyphicon glyphicon-flag"></a></td> -->
+							</tr>
+							</c:forEach>
+						</c:if>
 					</tbody>
-					
 				</table>
-				
 			</div>
 		</div>
 	</div>
 </div>
 
-
-	
-	
 	<!-- 수정모달 -->
     
    <!--  <div class="container" > -->
@@ -209,6 +211,7 @@
               <div class="modal-header">
                  <h4 class="modal-title">회원 별명수정</h4>
               </div>
+              
               
               
               <div class="col-md-12"> <br> 

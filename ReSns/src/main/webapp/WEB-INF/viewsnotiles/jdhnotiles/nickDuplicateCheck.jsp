@@ -52,15 +52,16 @@
 </script>
 
 </head>
-<body style="background-color: #fff0f5;">
-<span style="font-size:10pt; font-weight: bold;">${method}</span>
-
+<body style="background-color: silver;">
+<%-- <span style="font-size:10pt; font-weight: bold;">${method}</span>
+ --%>
 <c:if test="${method == 'GET'}">
+
 <form name="frmNickDuplicateCheck">
    <table style="width: 95%; height: 90%;">
       <tr>
          <td style="text-align: center;">
-               별명을 입력하세요<br style="line-height: 200%;"/>
+                별명을 입력하세요<br style="line-height: 200%;"/>
                <input type="text" id=login_name name="login_name" size="20" class="box" /><br style="line-height: 300%;"/>
                <button type="button" class="box" onClick="goNickCheck();">확인</button>
          </td>
@@ -69,7 +70,7 @@
 </form>
 </c:if>
 
-<c:if test="${method == 'POST'}">
+<%-- <c:if test="${method == 'POST'}"> --%>
 
    <c:if test="${isUseusernick == true}">
       <br style="line-height: 200%"/>
@@ -87,7 +88,7 @@
             <span style="color:red; font-weight: bold;">[${login_name}]는 이미 사용중입니다.</span>
          <br/>
          
-         <form name="frmIdDuplicateCheck" action="memberNickDuplicateCheck.re" method="post">
+         <form name="frmNickDuplicateCheck" action="memberNickDuplicateCheck.re" method="post">
              <table style="width: 95%; height: 90%;">
             <tr>
               <td style="text-align: center;">
@@ -101,7 +102,7 @@
          </div>
    </c:if>
 
-</c:if>
+<%-- </c:if> --%>
 
 </body>
 </html>

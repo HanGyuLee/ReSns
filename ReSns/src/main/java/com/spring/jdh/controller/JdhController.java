@@ -217,7 +217,7 @@ public class JdhController {
 					 req.setAttribute("n", n);
 				     req.setAttribute("userid", userid);
 				     req.setAttribute("email", email);
-				     return "jdh/pwdFind.tiles";
+				     return "jdhnotiles/pwdFind.notiles";
 				     
 				     // return "jdh/pwdFind.tiles";
 			} // end of 비밀번호 
@@ -246,7 +246,7 @@ public class JdhController {
 			         req.setAttribute("pwd", pwd);
 			         req.setAttribute("pwd2", pwd2);
 			      }
-			      return "jdh/pwdConfirm.tiles";
+			      return "jdhnotiles/pwdConfirm.notiles";
 			   }
 			 
 			 
@@ -271,11 +271,7 @@ public class JdhController {
 			String user_email = req.getParameter("user_email");		// 이메일			
 			String user_birth = req.getParameter("user_birth");		// 생년월일
 			
-			
-			
-			
 			MultipartFile attach = req.getFile("attach");
-			
 			
 			LoginVO lvo = new LoginVO(); 
 			UserVO uvo = new UserVO();
@@ -297,7 +293,6 @@ public class JdhController {
 			} else {
 				ivo.setAttach(attach);
 			}
-			
 			
 			
 			if (ivo.getAttach() != null && !ivo.getAttach().isEmpty()){	// 첨부파일이 있다면..
@@ -358,7 +353,7 @@ public class JdhController {
 			
 			
 			int q = service.registerMember(lvo, uvo, ivo);	//ivo
-			 
+			
 			
 			if (q == 3) {
 				String msg = "RE 회원가입이 정상적으로 처리되었습니다.";
@@ -367,6 +362,13 @@ public class JdhController {
 				req.setAttribute("msg", msg);
 				req.setAttribute("loc", loc);
 				
+			}
+			else {
+				String msg = "회원가입이 실패했습니다.";
+				String loc = "/resns/reRegister.re";
+				
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
 			}
 			
 			return "msg.notiles";	
@@ -441,7 +443,7 @@ public class JdhController {
 			NoticeVO nvo = service.getNoticeDetail(map);
 			
 			req.setAttribute("vo", nvo);
-			return "jdh/admNoticeDetail.tiles2";
+			return "jdh/admNoticeDetail.tiles";
 		}
 		
 		
@@ -517,7 +519,7 @@ public class JdhController {
 			NoticeVO nvo = service.getMemNoticeDe(map);
 			
 			req.setAttribute("vo", nvo);
-			return "jdh/memNoticeDe.tiles2";
+			return "jdh/memNoticeDe.tiles";
 		}
 		
 		// 공지사항 등록하기
@@ -525,7 +527,7 @@ public class JdhController {
 			public String noticeRegister(HttpServletRequest req){
 			
 			
-			return "jdh/noticeRegister.tiles2"; 
+			return "jdh/noticeRegister.tiles"; 
 		}
 		
 		// 공지사항 등록하기
@@ -637,16 +639,12 @@ public class JdhController {
 		
 		@RequestMapping(value="memberSupervise.re", method={RequestMethod.GET, RequestMethod.POST})
 		public String memberSV(HttpServletRequest req){
-			
-			
 			List<HashMap<String, String>> memList = null;
-			
 			memList = service.getMemList();
-			
-			req.setAttribute("memList", memList);
-			
+			//req.setAttribute("memList", memList);
 			String colname = req.getParameter("colname");
 			String search = req.getParameter("search");
+			System.out.println("colname : "+colname+"    " +"search : "+search);
 			
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("colname", colname);
@@ -675,6 +673,23 @@ public class JdhController {
 			
 			startRno = ((currentShowPageNo - 1)*sizePerPage) + 1;
 			endRno = startRno + sizePerPage - 1;
+			// 총 게시물 건수를 구한다.
+
+			/*if ( (colname != null && search != null) &&
+					(!colname.trim().isEmpty() && !search.trim().isEmpty() ) && 
+					(!colname.equals("null") && !search.equals("null") )
+					) {	// 검색어가 있는 경우
+					totalCount = service.getTotalCount2(map);
+					System.out.println("totalCount2 : "+totalCount);
+			}*/
+			if((colname!=null&&!"".equals(colname)) && (search!=null&&!"".equals(search))){
+				totalCount = service.getTotalCount2(map);
+				System.out.println("totalCount2 : "+totalCount);
+			}
+			else {// 검색어가 없는 경우
+					totalCount = service.getTotalCount1();
+					System.out.println("totalCount1 : "+totalCount);
+			}
 			
 			// ===== #109. 페이징처리를 위해서 startRno , endRno 를 map 에 추가하여 
 			//				파라미터로 넘겨서 select 되도록 한다.
@@ -683,13 +698,16 @@ public class JdhController {
 			
 			if ( (colname != null && search != null) &&
 					(!colname.trim().isEmpty() && !search.trim().isEmpty() ) && 
-					(!colname.equals("null") && !search.equals("null") )
-					) {	// 검색어가 있는 경우
-				memList = service.memberList2(map);
+					(!colname.equals("null") && !search.equals("null") ) ) {	// 검색어가 있는 경우
+					memList = service.memberList2(map);
+					if(memList != null )
+						System.out.println("memList2 사이즈는 "+memList.size());
+					for(int i=0; i<memList.size(); i++) {
+						System.out.println("memList2의 "+memList.get(i).get("login_name"));
 					}
-			
+			}
 			else {// 검색어가 없는 경우
-				memList = service.memberList1(map);
+					memList = service.memberList1(map);
 			}
 			
 			
@@ -701,37 +719,22 @@ public class JdhController {
 				검색조건이 없을때의 총 페이지수 ---> colname 과 search 의 값이 없는 경우이다.
 				검색조건이 있을때의 총 페이지수 ---> colname 과 search 의 값이 있는 경우이다.*/
 			
-			
-			// 총 게시물 건수를 구한다.
-			
-			if ( (colname != null && search != null) &&
-					(!colname.trim().isEmpty() && !search.trim().isEmpty() ) && 
-					(!colname.equals("null") && !search.equals("null") )
-					) {	// 검색어가 있는 경우
-					totalCount = service.getTotalCount2(map);
-					}
-			
-			else {// 검색어가 없는 경우
-					totalCount = service.getTotalCount1();
-					}
-			
 			// totalPage 구하기
 			
 			totalPage = (int)Math.ceil( (double)totalCount/sizePerPage );
 			
 			String pagebar = "<ul>";
 			
-			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "list.action");
+			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "memberSupervise.re");
 			
 			pagebar += "</ul>";
 			
-			req.setAttribute("pagebar", pagebar);
 			
+			req.setAttribute("pagebar", pagebar);
 			req.setAttribute("memList", memList);
 			req.setAttribute("colname", colname);
 			req.setAttribute("search", search);
-			
-			
+			req.setAttribute("memberListToString", memList.toString());
 			return "jdh/memberSV.tiles2";
 		}
 		
@@ -836,7 +839,8 @@ public class JdhController {
 		         req.setAttribute("isUseuserid", isUseuserid);
 		      }
 		      
-		      return "jdh/idDuplicateCheck.notiles";
+		      
+		      return "jdhnotiles/idDuplicateCheck.notiles";
 		   }
 		
 		
@@ -848,13 +852,15 @@ public class JdhController {
 				      String login_name = req.getParameter("login_name");
 				      req.setAttribute("method", method);
 				      
+				      // System.out.println("login_name"+login_name);
+				      
 				      if(login_name != null) {
 				         req.setAttribute("login_name", login_name);
 				         boolean isUseusernick = service.nickDuplicateCheck(login_name);
 				         req.setAttribute("isUseusernick", isUseusernick);
 				      }
 				      
-				      return "jdh/nickDuplicateCheck.notiles";
+				      return "jdhnotiles/nickDuplicateCheck.notiles";
 				   }
 		
 		

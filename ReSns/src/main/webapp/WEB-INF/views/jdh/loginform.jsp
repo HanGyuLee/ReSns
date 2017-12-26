@@ -1,56 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
+	
 	<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
 
 
+
     <style type="text/css">
 
-	  body {
-        background-color: #444;
-        background: url(http://s18.postimg.org/l7yq0ir3t/pick8_1.jpg);
-        
-    }
-    .form-signin input[type="text"] {
-        margin-bottom: 5px;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-    .form-signin input[type="password"] {
-        margin-bottom: 10px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
-    .form-signin .form-control {
-        position: relative;
-        font-size: 16px;
-        font-family: 'Open Sans', Arial, Helvetica, sans-serif;
-        height: auto;
-        padding: 10px;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-    .vertical-offset-100 {
-        padding-top: 100px;
-    }
-    .img-responsive {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    margin: auto;
-    }
-    .panel {
-    margin-bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.75);
-    border: 1px solid transparent;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-    }
-	
+	body{
+ background: url('http://k30.kn3.net/taringa/3/F/4/1/A/2/TheCrashWTF/B95.jpg');
+}
+	  
 	</style>
 
 <!-- 
@@ -180,7 +142,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">                                
                                 <div class="row-fluid user-row">
-                                    <img src="http://s11.postimg.org/7kzgji28v/logo_sm_2_mr_1.png" class="img-responsive" alt="Conxole Admin"/>
+                                    <img src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-1/p200x200/21752007_1546637858708136_2911158173821163272_n.png?oh=8fef724e1730308435625632b2803357&oe=5AB88BC5" class="img-responsive" alt="Conxole Admin" style="margin-left: 170px;"/>
                                 </div>
                             </div>
                             <div class="panel-body">
@@ -190,7 +152,7 @@
                                         <label class="panel-login">
                                             <div class="login_result"></div>
                                         </label>
-                                        <input class="form-control" placeholder="아이디를 입력하세요" type="text" name="id" id="id">
+                                        <input class="form-control" placeholder="아이디를 입력하세요" type="text" name="id" id="id"><br/>
                                         <input class="form-control" placeholder="비밀번호를 입력하세요" type="password" name="pwd" id="pwd">
                                         <br></br>
                                         <input class="btn btn-lg btn-success btn-block" type="button" id="btnLOGIN" value="로그인 »">

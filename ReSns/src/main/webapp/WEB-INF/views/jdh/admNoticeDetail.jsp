@@ -71,16 +71,16 @@ textarea.form-control{
    
    </script>
    
-    <div class="container">
+    <div class="container" style="">
      <form class="well span8" id="noticeDetail" name="noticeDetail">
      
      	<input type="hidden" id="seq" name="seq_tbl_notice" value="${vo.seq_tbl_notice}">  
      	
-        <div class="row">
+        <div class="row" style="background-color: activeborder;">
         	
             <div class="span3">
-                <th>제목<input class="span3" name="notice_title" type="text" value="${vo.notice_title}" style="width: 50%;"></th>&nbsp;
-                <th>게시날짜<input class="span3" name="notice_date" type="text" value="${vo.notice_date}" readonly></th>&nbsp;
+                <th>제목<input class="span3" name="notice_title" type="text" value="${vo.notice_title}" style="width: 50%;"></th>&nbsp;&nbsp;
+                <th>게시날짜<input class="span3" name="notice_date" type="text" value="${vo.notice_date}" readonly></th>&nbsp;&nbsp;
                 <th>분류
                 <select name="notice_cate">
                 	<option value="0">기타</option>
@@ -100,13 +100,13 @@ textarea.form-control{
                  
             </div>
            
-            <div class="btn_area">
+            <div class="btn_area" >
        
-        <a style="margin-left: 350px" onclick="goEdit();">수정</a>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a onclick="goBack();">확인(뒤로 가기)</a>
+        <a class="btn btn-primary btn-outline btn-lg" style="margin-left: 350px;" onclick="goEdit();">수정</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="btn btn-primary btn-outline btn-lg" onclick="goBack();" >확인(뒤로 가기)</a>
        
 			</div>
-         
+         </div>
          
     </form>
    

@@ -215,7 +215,7 @@ public class SnsDAO implements InterSnsDAO {
 				@Override
 				public List<HashMap<String, String>> getSearchList(HashMap<String, String> map) {
 					
-					List<HashMap<String, String>> searchList =  sqlsession.selectOne("jdhresns.getSearchList1", map);
+					List<HashMap<String, String>> searchList =  sqlsession.selectList("jdhresns.getSearchList1", map);
 					
 					return searchList;
 				}
@@ -223,7 +223,10 @@ public class SnsDAO implements InterSnsDAO {
 				// 검색어가 없는 리스트 뽑기
 				@Override
 				public List<HashMap<String, String>> getNoSearchList(HashMap<String, String> map) {
-					List<HashMap<String, String>> searchList = sqlsession.selectOne("jdhresns.getNoSearchList2", map);
+					List<HashMap<String, String>> searchList = sqlsession.selectList("jdhresns.getNoSearchList2", map);
+					/*for(int i=0; i<searchList.size(); i++) {
+						System.out.println("검색어 없는 리스트================"+searchList.get(i));
+					}*/
 					return searchList;
 				}
 
@@ -239,9 +242,8 @@ public class SnsDAO implements InterSnsDAO {
 				// 검색어 없는 총 게시물 수
 				@Override
 				public int getTotalCount1() {
-					
 					int n = sqlsession.selectOne("jdhresns.getTotalCount1");
-					
+					System.out.println("getTotalCount1=========================="+n);
 					return n;
 				}
 

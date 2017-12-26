@@ -52,10 +52,10 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<h4>공지사항 페이지 테이블</h4>
+			<h4><span style="font-size: x-large; font-style: oblique; font-weight: bold; color: fuchsia;;">관리자용 공지사항 페이지</span></h4>
 			
 			<div align="right" style="margin-right: 25pt;">
-			<button type="button" onclick="goreginotice()">공지사항 등록하기</button>
+			<button type="button" onclick="goreginotice()" style="background-color: highlight; font-style: inherit; font-weight: bold;">공지사항 등록하기</button>
 			</div>
 			
 			<div class="table-responsive">
