@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<%-- <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css"> --%>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
 <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>

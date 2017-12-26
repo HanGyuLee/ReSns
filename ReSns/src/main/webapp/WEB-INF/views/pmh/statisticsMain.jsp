@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>통계 페이지</title>
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+<%-- <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css"> --%>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
 <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
@@ -20,35 +20,31 @@
 <script src="<%= request.getContextPath() %>/resources/highcharts/code/highcharts.js"></script>
 <script src="<%= request.getContextPath() %>/resources/highcharts/code/modules/data.js"></script>
 <script src="<%= request.getContextPath() %>/resources/highcharts/code/modules/drilldown.js"></script>
+<script src="<%= request.getContextPath() %>/resources/highcharts/code/modules/exporting.js"></script>
 </head>
 
 <body>
+<div align="center"><h1><span style="font-weight: bold;">통계 페이지</span></h1></div>
 <br>
-<br>
-<br>
-<br>
-<div style="width: 310px; height: 400px;">
+<div>
+<div style="width: 450px; height: 600px; float: left; margin: 10px;">
 <div id="age-container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 </div>
 
-<div style="width: 310px; height: 400px;">
+<div style="width: 450px; height: 600px; float: left; margin: 10px;">
 <div id="gender-container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 </div>
 
-<div style="width: 1500px; height: 800px;">
-<div id="boardCount-container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div style="width: 450px; height: 600px; float: left; margin: 10px;">
+<div id="tag-container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 </div>
-
-<c:forEach var="ages" items="${ageList}">
-	<c:out value="${ages.ageline}" />
-</c:forEach>
-
-
+</div>
 <script type="text/javascript">
 
 	$(document).ready(function() {
 		ageChart();
 		genderChart();
+		tagChart();
 	});
 	
 	function ageChart() {
@@ -174,6 +170,56 @@
 		}); // end of $.getJSON("getGenderChartJson.re", function(data)-----------
 	}// end of genderChart()----------
 	
+	function tagChart() {
+		
+		$.getJSON("getTagChartJson.re", function(data){
+
+			var tagArr = [];
+			
+			$.each(data, function(index, entry) {
+				tagArr.push(
+					{
+						name: entry.tag_content,
+						y: parseInt(entry.cnt)
+					}
+					
+				);
+			}); // end of $.each(data, function(index, entry)----------
+			
+			// Build the chart
+			Highcharts.chart('tag-container', {
+			    chart: {
+			        plotBackgroundColor: null,
+			        plotBorderWidth: null,
+			        plotShadow: false,
+			        type: 'pie'
+			    },
+			    title: {
+			        text: '자주 쓰이는 태그 5순위'
+			    },
+			    tooltip: {
+			        pointFormat: '{series.name}: <b>{point.y}번({point.percentage:.1f}%)</b>'
+			    },
+			    plotOptions: {
+			        pie: {
+			            allowPointSelect: true,
+			            cursor: 'pointer',
+			            dataLabels: {
+			                enabled: false
+			            },
+			            showInLegend: true
+			        }
+			    },
+			    series: [{
+			        name: '태그명',
+			        colorByPoint: true,
+			        data: tagArr
+			    }]
+			});
+			
+		});// end of $.getJSON("getTagChartJson.re", function(data)-------------------
+		
+	}// end of tagChart()-------
 	
 	document.title = "통계 페이지";
 </script>

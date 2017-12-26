@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.jdh.model.LoginVO;
 import com.spring.pek.model.MapVO;
 import com.spring.pek.model.TagVO;
 
@@ -63,8 +64,8 @@ public class MusicDAO implements InterMusicDAO {
 	
 
 	@Override//json별명한명검색
-	public List<String> jNameOne(String search) {
-		List<String> jNone = sqlsession.selectList("ydhresns.jNameOne",search);
+	public List<LoginVO> jNameOne(String search) {
+		List<LoginVO> jNone = sqlsession.selectList("ydhresns.jNameOne",search);
 		return jNone;
 	}
 
@@ -266,8 +267,22 @@ public class MusicDAO implements InterMusicDAO {
 
 
 	@Override//tag json더보기 count구하기
-	public int jtagCount(String searchTagcnt) {
-		int n = sqlsession.selectOne("ydhresns.jtagCount",searchTagcnt);
+	public int jtagCount(String search) {
+		int n = sqlsession.selectOne("ydhresns.jtagCount",search);
+		return n;
+	}
+
+
+	@Override//더보기페이징cnt
+	public int jnameCount(String search) {
+		int n = sqlsession.selectOne("ydhresns.jnameCount",search);
+		return n;
+	}
+
+
+	@Override//map더보기 cnt
+	public int jmapCount(String search) {
+		int n = sqlsession.selectOne("ydhresns.jmapCount",search);
 		return n;
 	}
 

@@ -457,6 +457,24 @@
 		order by D.weekdate
 	</select>
 	
+	<resultMap type="java.util.HashMap" id="tagChartInfo">
+		<result property="tag_content" column="tag_content" 	javaType="String"/>
+		<result property="cnt" 		   column="cnt" 	 		javaType="String"/>
+		<result property="rk" 		   column="rk" 			  	javaType="String"/>
+	</resultMap>
+	
+	<select id="getTagInfo" resultMap="tagChartInfo">
+		<![CDATA[
+		select v.tag_content as tag_content, v.cnt as cnt, v.rk as rk
+		from
+		(
+		select tag_content, count(tag_content) as cnt, rank() over (order by count(tag_content) desc) as rk
+		from tbl_tag
+		group by tag_content
+		) V
+		where rk < 5
+		]]>
+	</select>
 	<!-- //////////////// 통계 mapper 끝 ////////////////// -->
 	
 	<!-- //////////////// 기타 mapper 시작 ////////////////// -->

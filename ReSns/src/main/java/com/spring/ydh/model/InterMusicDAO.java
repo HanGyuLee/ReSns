@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.spring.jdh.model.LoginVO;
 import com.spring.pek.model.MapVO;
 import com.spring.pek.model.TagVO;
 
@@ -22,7 +23,7 @@ public interface InterMusicDAO {
 
 	List<String> jName(HashMap<String, String> map);// json별명검색
 
-	List<String> jNameOne(String search);// json별명한명검색
+	List<LoginVO> jNameOne(String search);// json별명한명검색
 
 	public int jTagCnt(HashMap<String, String> map);// json태그검색(총게시물)
 
@@ -80,7 +81,11 @@ public interface InterMusicDAO {
 
 	List<HashMap<String, String>> searchNamesMore(HashMap<String, String> map);//names더보기
 
-	int jtagCount(String searchTagcnt);//tag json더보기 count구하기
+	int jtagCount(String search);//tag json더보기 count구하기
+
+	int jnameCount(String search);//더보기페이징cnt
+
+	int jmapCount(String search);//map더보기 cnt
 
 
 	

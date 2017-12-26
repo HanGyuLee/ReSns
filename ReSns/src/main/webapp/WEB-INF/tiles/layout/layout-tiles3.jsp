@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>::Remeber Emember::</title>
+<title>ReSNS</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
@@ -18,7 +18,7 @@
   <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
  
  <style type="text/css" >
- 	#myheader		{ height:120px; margin-top:30px; background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png"); }
+ 	#myheader		{ height:120px; background-image: url("<%= request.getContextPath() %>/resources/images/headerback.png"); }
  	#mycontainer	{ margin:0 auto; }
  	#mynoticeinf    { position: relative;}
 	#mycontent		{ position:relative; width:100%; background-color:#F5F5F5; min-height:800px;}

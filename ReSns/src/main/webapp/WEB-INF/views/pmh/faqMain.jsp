@@ -6,13 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <title>자주묻는질문 게시판 메인</title>
-<script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
-<script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
+<%-- <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script> --%>
+<%-- <link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css"> --%>
+<%-- <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.fittext.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/assets/jquery.lettering.js"></script>
 <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
 <script src="<%= request.getContextPath() %>/resources/textillate-master/jquery.textillate.js"></script>
-<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet">
+<link href="<%= request.getContextPath() %>/resources/textillate-master/assets/animate.css" rel="stylesheet"> --%>
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <script type="text/javascript"
@@ -22,20 +22,20 @@
 	legend { text-align: center;
 	}
 	div.selectBtns { position: absolute;
-			top: 250px;
-			left: 50%;
-			margin-left: -200px; }
+			top: 330px;
+			left: 30%;
+			margin-left: -100px; }
 	div.controlBtns { 
 			position: absolute;
 			top: 300px;
 			left: 50%;
-			margin-left: -600px;
+			margin-left: -800px;
 	}		
 			
 	.faqlayer {
 		position: absolute;
-		top: 300px;
-		margin-left: 700px;
+		top: 390px;
+		margin-left: 420px;
 		width: 500px;
 		}
 		
@@ -46,10 +46,12 @@
 		cursor: pointer;
 		position: relative;
 		background-color:#c30;
+		border-radius: 5px;
 		}
 	.content {
 		padding: 5px 10px;
 		background-color:#fafafa;
+		border-radius: 5px;
 		}
 	p { padding: 5px 0; }
 	
@@ -80,10 +82,10 @@
 <br>
 <form id="btnFrm">
 <div class="selectBtns">
-	<button type="button" onclick="goSearch(0);">전체</button>
-	<button type="button" style="margin-left: 30px;" onclick="goSearch(1)">회원관련</button>
-	<button type="button" style="margin-left: 30px;" onclick="goSearch(2)">기능관련</button>
-	<button type="button" style="margin-left: 30px;" onclick="goSearch(3)">기타사항</button>
+	<button type="button" class="btn btn-default" onclick="goSearch(0);">전체</button>
+	<button type="button" class="btn btn-default" style="margin-left: 30px;" onclick="goSearch(1)">회원관련</button>
+	<button type="button" class="btn btn-default" style="margin-left: 30px;" onclick="goSearch(2)">기능관련</button>
+	<button type="button" class="btn btn-default" style="margin-left: 30px;" onclick="goSearch(3)">기타사항</button>
 </div>
 </form>
 
@@ -97,8 +99,8 @@
 <div class="controlBtns">
 <c:if test="${loginUser ne null && loginUser.login_status eq 9}">
 	<span style="font-weight: bold;">관리자용 메뉴</span><br>
-	<button type="button" onclick="goWrite();">입력</button>
-	<button type="button" onclick="goModiDel();">수정 및 삭제</button>
+	<button type="button" class="btn btn-default" onclick="goWrite();">입력</button>
+	<button type="button" class="btn btn-default" onclick="goModiDel();">수정 및 삭제</button>
 </c:if>
 </div>
 <script type="text/javascript">

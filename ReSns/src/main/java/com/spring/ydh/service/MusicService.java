@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.jdh.model.LoginVO;
 import com.spring.pek.model.MapVO;
 import com.spring.pek.model.TagVO;
 import com.spring.ydh.model.InterMusicDAO;
@@ -87,15 +88,17 @@ public class MusicService implements InterMusicService {
 
 	@Override//json별명한명검색
 	public String jNameOne(String search) {
-		List<String> jNone = dao.jNameOne(search);
+		
+		List<LoginVO> jNone = dao.jNameOne(search);
 		JSONArray jNameOne = new JSONArray();
 		
 		
 		 if(jNameOne != null){
-			 for(String jnone :  jNone){
-		 
+			 for(LoginVO jnone :  jNone){
+
 				JSONObject jobj = new JSONObject();
-				jobj.put("jnone",jnone);
+				jobj.put("login_name", jnone.getLogin_name());
+				jobj.put("fk_login_id", jnone.getLogin_id());
 				jNameOne.put(jobj);
 			 }//for
 		 }//if
@@ -521,8 +524,24 @@ public class MusicService implements InterMusicService {
 
 
 	@Override//tag json더보기 count구하기
-	public int jtagCount(String searchTagcnt) {
-		int n = dao.jtagCount(searchTagcnt);
+	public int jtagCount(String search) {
+		int n = dao.jtagCount(search);
+		return n;
+	}
+
+
+
+	@Override//더보기페이징cnt
+	public int jnameCount(String search) {
+		int n = dao.jnameCount(search);
+		return n;
+	}
+
+
+
+	@Override//map더보기 cnt
+	public int jmapCount(String search) {
+		int n = dao.jmapCount(search);
 		return n;
 	}
 

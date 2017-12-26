@@ -18,15 +18,19 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
 
-	div.sub_content { margin-left: 600px;}
+	div.sub_content { margin-left: 250px;}
 	legend { text-align: center;
 			margin-bottom: 10px auto;
 	}
-		
+	body {
+		background-color: #E6E6E6;
+	}
+	
 </style>
 
 </head>
-<body>
+<body style="overflow-x:hidden; overflow-y:auto;">
+
 <br>
 	<div class="sub_content">
 	    <div class="postscript_area">
@@ -93,6 +97,7 @@
       <input name="report_cate" id="report_cate-1" value="2" type="radio">
       유해성 게시물
     </label> 
+    <br>
     <label class="radio-inline" for="report_cate-2">
       <input name="report_cate" id="report_cate-2" value="3" type="radio">
       스팸광고
@@ -109,7 +114,7 @@
   <label class="col-md-4 control-label" for="submitBtn">입력</label>
   <div class="col-md-8">
     <button id="submitBtn" name="submitBtn" class="btn btn-success" onclick="goSubmit();">입력</button>
-    <button id="cancelBtn" name="cancelBtn" class="btn btn-danger"  onclick="goBack();" style="margin-left: 150px;">취소</button>
+    <button id="cancelBtn" name="cancelBtn" class="btn btn-danger"  onclick="goBack();" style="margin-left: 150px;">창닫기</button>
   </div>
 </div>
 
@@ -127,8 +132,18 @@
 	}
 	
 	function goBack() {
-		location.href = "<%= request.getContextPath() %>/index.re";
+		self.close();
 	}
+	
+	
+	var size = {
+			  width: window.innerWidth || document.body.clientWidth,
+			  height: window.innerHeight || document.body.clientHeight 
+			}
+
+	window.onload = function() {
+		console.log(size);
+	}	
 
 	document.title = "신고하기";
 </script>
