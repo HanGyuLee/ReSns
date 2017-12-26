@@ -294,9 +294,7 @@ function VeiwTag(){
 						
 						var sub_tag_content = tag_content.substring(1);
 
-						result += "<a href='/resns/searchEndTag.re?search="+sub_tag_content+"'>";
 						result += "<span style='font-weight: bold;'>"+tag_content+"</span>";
-						result += "</a>";
 
 						
 					});
@@ -765,7 +763,7 @@ function heartCounting() {
 <br/>
 
 <div align="center">
-<table class="fallowmain" style="width: 1000px; border: solid 0px red;  background-color: #f4f4f4;" >   
+<table class="fallowmain" style="width: 500px; border: solid 0px red;  background-color: #f4f4f4;" >   
  
      <tr>
      <td width="5%">&nbsp;</td>
@@ -798,7 +796,7 @@ function heartCounting() {
     
     <tr>
         <td width="5%" height="500px">&nbsp;</td>
-        <td width="90%" colspan="2" height="700px" style="text-align: center;"><img width="800px"  height="700px" src ="<%= request.getContextPath() %>/resources/images/${vo.bimg_filename}"/></td>
+        <td width="90%" colspan="2" height="500px" style="text-align: center;"><img width="500px"  height="500px" src ="<%= request.getContextPath() %>/resources/images/${vo.bimg_filename}"/></td>
         <td width="5%" height="500px">&nbsp;</td>
     </tr>
         <tr>
