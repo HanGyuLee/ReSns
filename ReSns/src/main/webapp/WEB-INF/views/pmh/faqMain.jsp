@@ -93,7 +93,11 @@
 <div>
 
 </div>
-
+<%--  <select>
+ <c:forEach begin="1950" end="2017" step="1" var="x">
+  	<option value="${x}">${x}</option>
+ </c:forEach>
+	</select> --%>
 <div class="faqlayer"></div>
 <br>
 <div class="controlBtns">

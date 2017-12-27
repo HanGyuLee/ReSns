@@ -920,5 +920,11 @@ public class PmhController {
 		return "selfClose.notiles2";
 	}
 	
+	@RequestMapping(value="adminMain.re")
+	public String adminMain() {
+		
+		return "pmh/adminMain.tiles";
+	}
+	
 	/////////////////////////////////////////// 기타 컨트롤러 끝 ///////////////////////////////////////////////////
 }
