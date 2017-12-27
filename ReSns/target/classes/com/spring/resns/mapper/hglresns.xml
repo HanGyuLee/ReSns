@@ -62,6 +62,7 @@
 		join tbl_uimage M
 		on B.fk_login_id = M.fk_login_id
 		where B.fk_login_id =  #{userid} 
+		and board_status = 0
 		order by B.board_time desc
 	</select>
 

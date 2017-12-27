@@ -913,8 +913,10 @@ ${pagebar}
     
     <tr>
      	<td width="5%" height="40px">&nbsp;</td>
-        <td width="45%" height="40px"></td>
-        <td width="45%" height="40px" style="text-align: right;"><img
+        <td width="45%" height="40px">
+        </td>
+        <td width="45%" height="40px" style="text-align: right;">
+        									<img
 												src="<%=request.getContextPath()%>/resources/images/hearted.png"
 												id="hearted${status.count}"
 												style="width: 18px; height: 18px; cursor: pointer;"
@@ -925,7 +927,8 @@ ${pagebar}
 												style="width: 18px; height: 18px; cursor: pointer;"
 												class="heart" onclick="addHeart('${status.count}');" />
 												<div style="display: inline-block;" id="heartCnt${status.count}"><span style="font-weight: bold;">좋아요 ${vo.board_heart}개</span></div> &nbsp;&nbsp;
-		<a href="/resns/reportingBoard.re?fk_login_id=${vo.follow_id}&seq_tbl_board=${vo.seq_tbl_board}"> <img style="width: 18px; height: 18px; margin-right: 80px;"  src="<%=request.getContextPath()%>/resources/images/report.png" align="right" /> </a>	
+		<a href="#" onclick="window.open('<%=request.getContextPath()%>/reportingBoard.re?fk_login_id=${vo.follow_id}&seq_tbl_board=${vo.seq_tbl_board}', 'message', 'top=100px, left=100px, height=501px, width=1011px')">
+		 <img style="width: 18px; height: 18px; margin-right: 80px;"  src="<%=request.getContextPath()%>/resources/images/report.png" align="right" /> </a>	
 		</td>
         <td width="5%" height="40px">&nbsp;</td>
     </tr>

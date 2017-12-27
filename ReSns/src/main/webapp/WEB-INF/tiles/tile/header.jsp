@@ -573,12 +573,25 @@ function goAlarm(userid){
                     result += alarm_time +"</a> </li><li class='divider'></li>";
                 }
                  
-                if (alarm_type != " 나를 팔로우합니다"){
+                if (alarm_type == " 게시물을 좋아합니다" || " 나에게 메세지를 보냈습니다" || " 게시물에 댓글을 남겼습니다" || " 내 댓글에 대댓글을 남겼습니다" || " 동영상에 댓글을 남겼습니다"){
                     result += "<li><a href='#' onclick=\"window.open(\'"+url+"\', \'_blank\', 'width=900,height=950,toolbars=no,scrollbars=no');\" return false;  style='text-decoration:none;'>";
                     result += "<img src='resources/images/profile0.png' style='width: 30px; height: 30px; display: inline;' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
                     result += alarm_time +"</a> </li><li class='divider'></li>";   	
                 }
+                
+                
+                if (alarm_type == " 문답게시판에 질문을 남겼습니다" || " 내가 남긴 질문에 답변을 남겼습니다"){
+                    result += "<li><a href='#' onclick=\"window.open(\'"+url+"\', \'_blank\', 'width=900,height=450,toolbars=no,scrollbars=no');\" return false;  style='text-decoration:none;'>";
+                    result += "<img src='resources/images/profile0.png' style='width: 30px; height: 30px; display: inline;' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
+                    result += alarm_time +"</a> </li><li class='divider'></li>";   	
+                }
 
+                
+                if (alarm_type == " 나에게 메세지를 보냈습니다"){
+                    result += "<li><a href='#' onclick=\"window.open(\'"+url+"\', \'_blank\', 'width=900,height=950,toolbars=no,scrollbars=no');\" return false;  style='text-decoration:none;'>";
+                    result += "<img src='resources/images/profile0.png' style='width: 30px; height: 30px; display: inline;' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
+                    result += alarm_time +"</a> </li><li class='divider'></li>";   	
+                }
 
                  
               });
@@ -767,9 +780,12 @@ function goAlarm(userid){
             <ul class="dropdown-menu" style="background: black;">
               <li><a href="<%=request.getContextPath()%>/followmain.re">메인</a></li>
               <li><a href="<%=request.getContextPath()%>/index.re">인기페이지</a></li> 
+              <c:if test="${sessionScope.loginUser.login_status eq 1}">
+              <li><a href="#">contact us</a></li>
               <li><a href="<%=request.getContextPath()%>/mypage.re">내페이지</a></li>
               <li><a href="<%=request.getContextPath()%>/writeBoard.re">글쓰기</a></li>
               <li><a href="#" onclick="window.open('<%=request.getContextPath()%>/message.re', 'message', 'top=100px, left=100px, height=800px, width=800px')">쪽지</a></li> 
+              </c:if>
 <!--               <li role="separator" class="divider"></li>
               <li><a href="#">contact us</a></li> -->
             </ul>

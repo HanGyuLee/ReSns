@@ -474,16 +474,16 @@ function heartCounting() {
 							re += "<img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 25px; height: 25px;'/>";
 							
 							if ('${sessionScope.loginUser.login_id}' == re_id){
-								re += "<a href='/resns/mypage.re?fk_login_id="+re_id+"'><span style='font-weight: bold;'>"+login_name+"</span></a>";
+								re += "<a href='#'><span style='font-weight: bold;'>"+login_name+"</span></a>";
 							}
 							
 							
 							if ('${sessionScope.loginUser.login_id}' != re_id){
-								re += "<a href='/resns/otherspage.re?fk_login_id="+re_id+"'><span style='font-weight: bold;'>"+login_name+"</span></a>";
+								re += "<a href='#'><span style='font-weight: bold;'>"+login_name+"</span></a>";
 							}
 
 							
-							re += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
+							re += "<a href='#'>";
 							re += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' />"; //신고 아직 안됨
 							re += "</a>";
 							
@@ -513,7 +513,7 @@ function heartCounting() {
 							
 							
 							if ('${sessionScope.loginUser.login_id}' != re_id){
-								re += "<a href='/resns/otherspage.re?fk_login_id="+re_id+"'><span style='font-weight: bold;'>"+login_name+"</span></a>";
+								re += "<a href='#'><span style='font-weight: bold;'>"+login_name+"</span></a>";
 							}
 
 							
@@ -521,7 +521,7 @@ function heartCounting() {
 								re +="<img src='resources/images/delete.png' onclick='deleteRe("+re_seq+","+re_groupno+","+re_depthno+")' style='width: 15px; height: 15px;' align='right' />";
 							}
 							
-							re += "<a href='/resns/reportingBoard.re?re_id="+re_id+"'>";
+							re += "<a href='#'>";
 							re += "<img src='resources/images/report.png' align='right' style='width: 15px; height: 15px;' /><br/>";
 							re += "</a>";
 							re += "<div style='margin-left: 20px;'>"+re_content+"</div>";
@@ -775,7 +775,7 @@ function heartCounting() {
     <tr>
 		<td width="5%">&nbsp;</td>
         <td colspan ="2" width="90%" height="50px"><img width="50px" height="50px" class=" img-circle" style="margin-right: 10px;" src="<%= request.getContextPath() %>/resources/images/${vo.board_profile_filename}"/>
-        <a href="<%=request.getContextPath() %>/otherspage.re?fk_login_id=${vo.board_login_id}">${vo.board_login_name}</a>
+        <a href="#">${vo.board_login_name}</a>
         <input type="hidden" id="seq_tbl_board" name="seq_tbl_board" value="${vo.seq_tbl_board}">
         <input type="hidden" id="fk_login_id" name="fk_login_id" value="${vo.board_login_id}">
         <input type="hidden" id="login_id" name="login_id" value="${loginUser.login_id}">
@@ -807,7 +807,9 @@ function heartCounting() {
     
     <tr>
      	<td width="5%" height="40px">&nbsp;</td>
-        <td width="45%" height="40px"></td>
+        <td width="45%" height="40px" >	
+
+										</td>
         <td width="45%" height="40px" style="text-align: right;"><img
 												src="<%=request.getContextPath()%>/resources/images/hearted.png"
 												id="hearted"
@@ -820,6 +822,13 @@ function heartCounting() {
 												class="heart" onclick="addHeart();" />
 												<div style="display: inline-block;" id="heartCnt"><span style="font-weight: bold;">좋아요 ${vo.board_heart}개</span></div> &nbsp;&nbsp;
 		<a href="/resns/reportingBoard.re?fk_login_id=${vo.board_login_id}&seq_tbl_board=${vo.seq_tbl_board}"> <img style="width: 18px; height: 18px; margin-right: 80px;"  src="<%=request.getContextPath()%>/resources/images/report.png" align="right" /> </a>	
+												<c:if test="${loginUser.login_id == vo.board_login_id}">
+											<a href="/resns/deleteBoard.re?seq_tbl_board=${vo.seq_tbl_board}">
+											<img
+												src="<%=request.getContextPath()%>/resources/images/delete.png"
+												style="width: 18px; height: 18px;" align="right" />
+											</a>	
+										</c:if>
 		</td>
         <td width="5%" height="40px">&nbsp;</td>
     </tr>

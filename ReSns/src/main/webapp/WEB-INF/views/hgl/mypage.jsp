@@ -87,13 +87,12 @@ $(function(){
 	var retval = []	
 	$(".heart").each(function(){
 	 var heartse = retval.push($(this).attr('id'));
-	
 	 if (heartse != null){
 		 
 			$("#hearted"+heartse).hide();
 			$("#heart"+heartse).show();
-
-	 var form_data = {"login_id" : ${sessionScope.loginUser.login_id}, "seq_tbl_board" : $("#seq_tbl_board"+heartse).val()};	  
+			
+	 var form_data = {"login_id" : $("#fk_login_id"+heartse).val(), "seq_tbl_board" : $("#seq_tbl_board"+heartse).val()};	  
 	 $.ajax({
 			
 			url: "/resns/heartCheck.re",
@@ -446,7 +445,7 @@ function goVeiwContent(statuscount){
 							re += re_content;
 							re += "<div style='display: none' id='reReply"+entryIndex+"'>";
 							re += "<input type='text' id='reReValue"+entryIndex+"' />";
-							re += "<button onclick='writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+")'>입력</button>";
+							re += "<button class='btn btn-default' onclick=\"writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+",'"+re_id+"');\">입력</button>";
 							re += "</div>";
 							
 						}//원 댓글 끝
@@ -632,11 +631,26 @@ function goVeiwContent(statuscount){
 
 	function writeRe(statuscount) {
 		
-		
-		if (${sessionScope.loginUser != null}) {
+		var statuscount = statuscount;
+		//var start = start;
+		 //var no =  $("#spreadBtn"+statuscount).val();
+		//alert("statuscount"+statuscount);
+		//alert("start"+no);
+
 			
-			var form_data = {"re_content" : $("#re_content"+statuscount).val(),
-							 "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+			var re_content = $("#re_content"+statuscount).val();
+			
+			if ($.trim(re_content) == "") {
+				
+				swal("내용을 입력하세요.");
+				event.preventDefault();
+				
+			}
+			
+			else {
+			var form_data = {"re_content" : re_content,
+							 "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
+							 "fk_login_id" : $("#fk_login_id"+statuscount).val() };
 
 			$.ajax({
 				
@@ -646,21 +660,25 @@ function goVeiwContent(statuscount){
 				dataType: "JSON",
 				success: function(data) {
 					
-					swal(data.msg);
+					
 					
 					$("#re_content"+statuscount).val("");
+
 					
-					VeiwRe(statuscount);
+					swal({ title: "댓글 작성 성공!", text: data.msg}, function(){ location.reload(); });
+					//swal(data.msg)
+					//location.reload(); 
+					//goVeiwRe(statuscount,"1");
 					reCounting(statuscount);
+					//$("#spreadBtn"+statuscount).attr("disabled", false);
+					
+		
 				}, error: function() {
 					
 				}
 				
 			});
-		}
-		else if (${sessionScope.loginUser == null}) {
-			location.href="/resns/writeReply.re";
-		}
+			}
 	}
 
 	
@@ -722,7 +740,7 @@ function goVeiwContent(statuscount){
 	
 	
 	
-	function writeReRe(entryIndex, statuscount, re_groupno, re_seq) {
+	function writeReRe(entryIndex, statuscount, re,seq,re_groupno, re_seq) {
 		
 		var rereValue = $("#reReValue"+entryIndex).val();
 		
@@ -743,7 +761,8 @@ function goVeiwContent(statuscount){
 		
 
 		var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
-					"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue
+					"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue, "re_id" : re_id
+					,"fk_login_id" : $("#fk_login_id"+statuscount).val()
 					};
 		  
 		  $.ajax({
@@ -1197,6 +1216,14 @@ function goVeiwContent(statuscount){
 												style="width: 18px; height: 18px; cursor: pointer;"
 												class="heart"  class="heart" onclick="addHeart('${status.count}');" />
 												<div style="display: inline-block;" id="heartCnt${status.count}"><span style="font-weight: bold;">좋아요 ${vo.board_heart}개</span></div> &nbsp;&nbsp;
+												
+												<c:if test="${loginUser.login_id == vo.login_id}">
+											<a href="/resns/deleteBoard.re?seq_tbl_board=${vo.seq_tbl_board}">
+											<img
+												src="<%=request.getContextPath()%>/resources/images/delete.png"
+												style="width: 18px; height: 18px;" align="right" />
+											</a>	
+										</c:if>
 		<%-- <a href="/resns/reportingBoard.re?fk_login_id=${vo.follow_id}&seq_tbl_board=${vo.seq_tbl_board}"> <img style="width: 18px; height: 18px; margin-right: 80px;"  src="<%=request.getContextPath()%>/resources/images/report.png" align="right" /> </a> --%>	
 		</td>
         <td width="30px" height="40px">&nbsp;</td>
@@ -1252,7 +1279,7 @@ function goVeiwContent(statuscount){
     <td width="740px" colspan="2" class="readMore">
 	<strong id="reCnt${status.count}">댓글${vo.board_recnt}개</strong>
 	<span id="spreadBtn" class="remore" onClick="goVeiwRe('${status.count}');">&nbsp;&nbsp;모두 보기</span>
-	<input type="hidden" id="seq_tbl_board${status.count}" value="${vo.seq_tbl_board}">
+	<%-- <input type="hidden" id="seq_tbl_board${status.count}" value="${vo.seq_tbl_board}"> --%>
 	<div id="display${status.count}" style="padding-top: 10px;" class="desc"></div>
 	</td>
     <td width="30px">&nbsp;</td>
