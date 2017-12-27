@@ -123,7 +123,7 @@
 <form class="form-horizontal" name="registerFrm"encType="multipart/form-data">
 	<fieldset>
 
-		<legend><span style="font-size: xx-large; font-style: oblique; font-weight: bold;">회원가입</span></legend>
+		<legend><span style="font-size: xx-large; font-style: oblique; font-weight: bold; color: fuchsia;">회원가입</span></legend>
 
 		<div class="form-group">
 			<label class="cols-sm-4 control-label" for="name"></label>

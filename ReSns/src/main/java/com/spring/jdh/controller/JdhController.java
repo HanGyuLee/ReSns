@@ -704,7 +704,8 @@ public class JdhController {
 					totalCount = service.getTotalCount2(map);
 					System.out.println("totalCount2 : "+totalCount);
 			}*/
-			if((colname!=null&&!"".equals(colname)) && (search!=null&&!"".equals(search))){
+			if((colname!=null&&!"".equals(colname)) && (search!=null&&!"".equals(search)) 
+				&& ( !colname.equals("null") && !search.equals("null"))	){
 				totalCount = service.getTotalCount2(map);
 				System.out.println("totalCount2 : "+totalCount);
 			}
@@ -757,7 +758,7 @@ public class JdhController {
 			req.setAttribute("colname", colname);
 			req.setAttribute("search", search);
 			req.setAttribute("memberListToString", memList.toString());
-			return "jdh/memberSV.tiles2";
+			return "jdh/memberSV.tiles3";
 		}
 		
 		

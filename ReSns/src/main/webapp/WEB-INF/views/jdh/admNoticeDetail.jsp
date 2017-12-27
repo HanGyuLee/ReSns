@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.min.css">
+
 <script src="<%= request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
 
 
