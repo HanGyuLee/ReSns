@@ -10,7 +10,7 @@
 
    
 <style type="text/css">
-	table, th, td, input, textarea {border: solid gray 1px;}
+	table, th, td, input, textarea {border: solid gray 0px;}
 	
 	#table, #table2 {border-collapse: collapse;
 	 		         width: 600px;
@@ -22,6 +22,7 @@
 	.short {width: 120px;} 	
 	
 	a{text-decoration: none;}	
+	
 
 </style>
 
@@ -77,9 +78,9 @@
 	<c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
 	    <br/><br/>
 	    <div style="margin-left: 200px;">
-	    <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}'">되돌아가기</button>
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/medit.re?seq_tbl_music=${mvo.seq_tbl_music}&fk_login_id=${fk_login_id}'">수정</button>
-		<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/mdel.re?seq_tbl_music=${mvo.seq_tbl_music}&fk_login_id=${fk_login_id}'">삭제</button>
+	    <button type="button" class="btn btn-sm btn-primary btn-create" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}'">되돌아가기</button>
+		<button type="button" class="btn btn-sm btn-primary btn-create" onClick="javascript:location.href='<%= request.getContextPath() %>/medit.re?seq_tbl_music=${mvo.seq_tbl_music}&fk_login_id=${fk_login_id}'">수정</button>
+		<button type="button" class="btn btn-sm btn-primary btn-create" onClick="javascript:location.href='<%= request.getContextPath() %>/mdel.re?seq_tbl_music=${mvo.seq_tbl_music}&fk_login_id=${fk_login_id}'">삭제</button>
 		<br/><br/>
 		</div>
 	</c:if>
@@ -87,7 +88,7 @@
 		<c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
 	    <br/><br/>
 	    <div style="margin-left: 200px;">
-	    <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}'">되돌아가기</button>
+	    <button type="button" class="btn btn-sm btn-primary btn-create" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}'">되돌아가기</button>
 		<br/><br/>
 		</div>
 	</c:if>
@@ -98,8 +99,8 @@
 	<form	name="addWriteFrm" action="<%=request.getContextPath()%>/addComment.re" method="get">
 			 <input type="hidden" name="re_login_id" value="${sessionScope.loginUser.login_id}" />
 		성명 : <input type="text" name="login_name" value="${sessionScope.loginUser.login_name}" class="short" readonly />
-		      <br/><br/>
-		댓글 : <input type="text" name="re_ycontent" id="re_ycontent" class="long" />
+		      <br/>
+		댓글 : <input type="text" placeholder="바른말 고운말을 씁시다:)" name="re_ycontent" id="re_ycontent" class="long" />
 			 <!-- 댓글에 달리는 원게시물 글번호 (즉, 댓글의 부모글) -->
 			 <input type="hidden" name="seq_tbl_music" value="${seq_tbl_music}" />
 			 <input type="hidden" name="fk_login_id" value="${fk_login_id}" />
@@ -109,7 +110,7 @@
 		  
 			 <!-- 돌아갈 글 목록 페이지 -->
 			 <%-- <input type="hidden" name="gobackURL" value="${gobackURL}"/> --%>
-		&nbsp;&nbsp;<button type="button" onClick="goWrite();">쓰기</button>
+		&nbsp;&nbsp;<button type="button" class="btn btn-sm btn-primary btn-create" onClick="goWrite();">쓰기</button>
 	</form>
 	
 	<!-- ==== #93. 댓글 내용 보여주기 ==== -->
@@ -122,11 +123,9 @@
 				    <input type="hidden" name="re_login_id" value="${cvo.RE_LOGIN_ID}"/>
 				    <input type="hidden" name="seq_tbl_music" value="${cvo.SEQ_TBL_MUSIC}"/>
 				    <input type="hidden" name="fk_login_id" value="${fk_login_id}"/>
-				    <td>${cvo.LOGIN_NAME}</td>
-					<td>${cvo.RE_YCONTENT}</td>
-					<td>${cvo.RE_YDATE}</td>
+				    <td><span style="font-weight:bold;">└${cvo.LOGIN_NAME}</span>:&nbsp;&nbsp;<span style="font-weight:bold;">${cvo.RE_YCONTENT}</span>&nbsp;&nbsp;${cvo.RE_YDATE}</td>
 					<c:if test="${sessionScope.loginUser.login_id == cvo.RE_LOGIN_ID}">
-					  <td type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/remdel.re?seq_tbl_music=${seq_tbl_music}&re_login_id=${cvo.RE_LOGIN_ID}&seq_tbl_remusic=${cvo.SEQ_TBL_REMUSIC}&fk_login_id=${fk_login_id}'"><button>삭제</button></td>
+					  <td  onClick="javascript:location.href='<%= request.getContextPath() %>/remdel.re?seq_tbl_music=${seq_tbl_music}&re_login_id=${cvo.RE_LOGIN_ID}&seq_tbl_remusic=${cvo.SEQ_TBL_REMUSIC}&fk_login_id=${fk_login_id}'"><button class="btn btn-sm btn-primary btn-create">삭제</button></td>
 					</c:if>
 					<c:if test="${sessionScope.loginUser.login_id != cvo.RE_LOGIN_ID}">
 					</c:if>

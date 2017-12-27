@@ -272,7 +272,7 @@ used to vertically center elements, may need modification if you're not using de
 </script>
 
 <div align="center" style="padding-left: 10%; border: solid 0px red;">
-	<h1>YOUTUBE-LIST</h1><br/><br/>
+	<h1 style="font-family: cursive;">CREATE YOURSELF</h1><br/><br/>
 	
 	 
 	<!-- ==== 테이블 보여주기 ==== -->
@@ -283,15 +283,15 @@ used to vertically center elements, may need modification if you're not using de
 			<option value="music_content">내용</option>
 		</select>
 			<input type="text" name="search" id="search" size="40px"/>
-			<button type="button" onClick="goSearch();">검색</button> 
-			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}'">되돌아가기</button>
+			<button type="button" class="btn btn-sm btn-primary btn-create" onClick="goSearch();">검색</button> 
+			<button type="button" class="btn btn-sm btn-primary btn-create" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}'">되돌아가기</button>
 			<input type="hidden" name="fk_login_id" id="fk_login_id" value="${fk_login_id}" />
 			<!-- ===== Ajax로 검색어 입력시 자동글 완성하기 ===== -->
 		   <div id="displayList" style="width:312px; margin-left: -87px; border-top: 0px; border: solid gray 1px;">
 		  
 		   </div>
 	</form>
-
+<%-- 
 <table id="table">
 	
 <thead>
@@ -337,6 +337,111 @@ used to vertically center elements, may need modification if you're not using de
 	 <c:forEach var="m" items="${mlist}" varStatus="status"> 
 			<tr>
 			<input type="hidden" name="fk_login_id" value="${m.FK_LOGIN_ID}"/>
+			<td align="center" style="width: 70px;">${m.SEQ_TBL_MUSIC}</td>
+	 		<c:if test="${m.MUSIC_COMMENTCOUNT != 0}">
+			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}','${m.FK_LOGIN_ID}');">${m.MUSIC_NAME}&nbsp;<span style="font-style: italic; color:red;">[${m.MUSIC_COMMENTCOUNT}]</span></span></td>
+			</c:if>
+			<c:if test="${m.MUSIC_COMMENTCOUNT == 0}">
+			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}','${m.FK_LOGIN_ID}');">${m.MUSIC_NAME}</span></td>
+			</c:if>
+			<td align="center" style="width: 70px;">${m.MUSIC_DATE}</td>
+			<c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+			  <td align="center" style="width: 70px;">&nbsp;&nbsp;<input type="checkbox" class="delChkbox" name="delChkbox" id="delChkbox${status.count}" value="${m.SEQ_TBL_MUSIC}"/></td>
+			</c:if>
+			<c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
+			</c:if>
+			</tr>
+     </c:forEach>
+    </form>	
+    
+    
+	</tbody>
+</table>  --%>
+	<br/>
+
+	<form name="seqFrm">
+		<input type="hidden" name="seq_tbl_music" />
+		<input type="hidden" name="fk_login_id" />
+	<!--  <input type="hidden" name="gobackURL" />  -->
+	</form>
+	<br/>
+<%-- 
+	<!-- ===  페이지바 보여주기 -->
+	<div align="center" style="width:70%; margin-left: 50px;" >
+		${pagebar} 
+	</div>
+	<br/> --%>
+	
+
+
+</div>
+
+<!--////////////////////////////////////////////////////////////////////////////////  -->
+
+<%-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
+
+--%>	
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="panel panel-default panel-table">
+              <div class="panel-heading">
+                <div class="row">
+                  <div class="col col-xs-6">
+                    <h3 class="panel-title"><span style="font-weight:bold;">Remeber E.member</span></h3>
+                  </div>
+                  
+                   <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+                  <div class="col col-xs-6 text-right">
+                  	 <button type="button" class="btn btn-sm btn-primary btn-create"  onClick="javascript:location.href='/resns/mwrite.re?fk_login_id=${fk_login_id}'">글쓰기</button>&nbsp;
+		             <button type="button" class="btn btn-sm btn-primary btn-danger" id="delete"> <!-- onClick="mDel(); "> -->삭제</button>&nbsp;	
+                  </div>
+                  </c:if>
+                  
+                   <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
+                  <div class="col col-xs-6 text-right">
+                  	
+                  </div>
+                  </c:if>
+                  
+                </div>
+              </div>
+              <div class="panel-body">
+                <table class="table table-striped table-bordered table-list">
+                  <thead>
+                   <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+                    <tr>
+                        <th>제목</th>
+                        <th>날짜</th>
+                       	<th style="width: 70px;"><span style="font-size:9pt; color:red;"><label for ="allCheckbox">전체선택&nbsp;</label></span>&nbsp;<input type="checkbox" id="allCheckbox" /></th>
+                    </tr> 
+                    </c:if>
+                    
+                     <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
+                     <tr>
+                        <th align="center" class="hidden-xs">제목</th>
+                        <th>날짜</th>
+                      
+                    </tr> 
+                    </c:if>
+                  </thead>
+                  
+                  
+                  
+                  
+                  
+ <tbody>	
+	<c:if test="${mlist == null || empty mlist }">
+	 <tr>
+	   <td align="center" colspan="4"><span style="color:red; font-weight:bold;">등록된 게시물이 없습니다.</span></td>
+	 </tr>
+	</c:if>
+
+	<form name="delfrm">
+	 <c:forEach var="m" items="${mlist}" varStatus="status"> 
+			<tr>
+			<input type="hidden" name="fk_login_id" value="${m.FK_LOGIN_ID}"/>
 			<%-- <td align="center" style="width: 70px;">${m.SEQ_TBL_MUSIC}</td> --%>
 	 		<c:if test="${m.MUSIC_COMMENTCOUNT != 0}">
 			<td align="center" style="width: 360px;"><span style="cursor: pointer;"  class="music_name" onClick="goView('${m.SEQ_TBL_MUSIC}','${m.FK_LOGIN_ID}');">${m.MUSIC_NAME}&nbsp;<span style="font-style: italic; color:red;">[${m.MUSIC_COMMENTCOUNT}]</span></span></td>
@@ -356,103 +461,6 @@ used to vertically center elements, may need modification if you're not using de
     
     
 	</tbody>
-</table> 
-	<br/>
-
-	<form name="seqFrm">
-		<input type="hidden" name="seq_tbl_music" />
-		<input type="hidden" name="fk_login_id" />
-	<!--  <input type="hidden" name="gobackURL" />  -->
-	</form>
-	<br/>
-
-	<!-- ===  페이지바 보여주기 -->
-	<div align="center" style="width:70%; margin-left: 50px;" >
-		${pagebar} 
-	</div>
-	<br/>
-	
-
-
-</div>
-
-<!--////////////////////////////////////////////////////////////////////////////////  -->
-
-<%-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
-
-	
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-
-            <div class="panel panel-default panel-table">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col col-xs-6">
-                    <h3 class="panel-title"><span style="font-weight:bold;">Remeber E.member</span></h3>
-                  </div>
-                  <div class="col col-xs-6 text-right">
-                    <button type="button" class="btn btn-sm btn-primary btn-create">create new youtube</button>
-                  </div>
-                </div>
-              </div>
-              <div class="panel-body">
-                <table class="table table-striped table-bordered table-list">
-                  <thead>
-                   <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
-                    <tr>
-                        <th><em class="fa fa-cog"></em></th>
-                        <th class="hidden-xs">제목</th>
-                        <th>날짜</th>
-                        <th>선택</th>
-                       	<th style="width: 70px;"><span style="font-size:9pt; color:red;"><label for ="allCheckbox">전체선택&nbsp;</label></span>&nbsp;<input type="checkbox" id="allCheckbox" /></th>
-                    </tr> 
-                    </c:if>
-                    
-                     <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
-                     <tr>
-                        <th class="hidden-xs">제목</th>
-                        <th>날짜</th>
-                        <th>선택</th>
-                    </tr> 
-                    </c:if>
-                  </thead>
-                  
-                  
-                  
-                  
-                  
-                  <tbody>
-                  <c:if test="${mlist == null || empty mlist }">
-	                <tr>
-	                   <td align="center" colspan="5"><span style="color:red; font-weight:bold;">등록된 게시물이 없습니다.</span></td>
-	                </tr>
-	               </c:if>
-	               
-	               
-	               
-                    <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
-                    
-                          <tr>
-                            <td align="center">
-                              <a class="btn btn-default" onClick="javascript:location.href='/resns/mwrite.re?fk_login_id=${fk_login_id}'"><em class="fa fa-pencil"></em></a>
-                              <a class="btn btn-danger" id="delete"><em class="fa fa-trash"></em></a>
-                            </td>
-                            <td class="hidden-xs">제목</td>
-                            <td>날짜</td>
-                            <td>선택</td>
-                             <td align="center" style="width: 70px;">&nbsp;&nbsp;<input type="checkbox" class="delChkbox" name="delChkbox" id="delChkbox${status.count}" value="${m.SEQ_TBL_MUSIC}"/></td>
-                          </tr>
-                      </c:if>    
-                      
-                        <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
-                          <tr>
-                            <td class="hidden-xs">제목</td>
-                            <td>날짜</td>
-                            <td>선택</td>
-                          </tr>
-                      </c:if>  
-                        </tbody>
                 </table>
             
               </div>
@@ -473,7 +481,7 @@ used to vertically center elements, may need modification if you're not using de
               </div>
             </div>
 
-</div></div></div> --%>
+</div></div></div>
 
 
 

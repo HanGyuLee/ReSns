@@ -74,7 +74,7 @@ $(document).ready(function(){
 <!-- 글쓰기폼 -->
 
 <div style="margin-top:100px; padding-left: 10%; border: solid 0px red; ">
-  <h2>♥MAKE YOUR OWN COLLECTION♥</h2>
+  <h2 style="font-family: cursive;">♥MAKE YOUR OWN COLLECTION♥</h2>
   <div style="margin-top:20px; margin-bottom:20px; ">
       <a href="http://www.youtube.com/" target="_blank">LINK TO YOUTUBE</a>
   </div>
@@ -113,8 +113,8 @@ $(document).ready(function(){
 		<input type="hidden" name="re_login_id" value="${re_login_id}"/>
 		
 		<div style="margin-left:200px;">
-		    <button type="button" onClick="goWrite();">완료</button>
-		    <button type="button" onClick="javascript:history.back();">취소</button>
+		    <button type="button" class="btn btn-sm btn-primary btn-create" onClick="goWrite();">완료</button>
+		    <button type="button" class="btn btn-sm btn-primary btn-create" onClick="javascript:history.back();">취소</button>
 		</div>
            <!-- 	<div style="display: inline-block;">
 	       <iframe></iframe>
