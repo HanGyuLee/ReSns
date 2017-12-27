@@ -78,6 +78,7 @@ public class JdhController {
 			String id = req.getParameter("id"); // 뷰단에서 가져온값
 			String pwd = req.getParameter("pwd");
 			
+			
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("id", id);
 			map.put("pwd", pwd);
@@ -94,16 +95,16 @@ public class JdhController {
 				-1은 아이디와 존재하지 않는 경우
 			*/
 			
+			
 			// 로그인 결과(1 OR 0 OR -1)를 request 영역에 저장시켜서 view 단 페이지로 넘긴다.
 			req.setAttribute("n", n);
+			
 			
 			if(n == 1){
 				uservo = service.getloginMember(id);
 				loginUser = service.getloginSession(id);
 				req.setAttribute("uservo", uservo);
 				session.setAttribute("loginUser", loginUser);
-				
-				System.out.println("아이디 "+id);
 				
 				int birth = service.getBirth(id);
 				
@@ -117,6 +118,7 @@ public class JdhController {
 				String gobackURL = (String)session.getAttribute("gobackURL");
 				
 				req.setAttribute("gobackURL", gobackURL);
+				req.setAttribute("login_status", loginUser.getLogin_status());
 				
 				session.removeAttribute("gobackURL");
 			}
@@ -269,7 +271,27 @@ public class JdhController {
 			
 			String user_gender = req.getParameter("user_gender");	// 성별		
 			String user_email = req.getParameter("user_email");		// 이메일			
-			String user_birth = req.getParameter("user_birth");		// 생년월일
+			//String user_birth = req.getParameter("user_birth");		// 생년월일
+			
+			String birth1 = req.getParameter("birth1");	//년도
+			String birth2 = req.getParameter("birth2");	// 월
+			String birth3 = req.getParameter("birth3");	// 일
+			
+			if (Integer.parseInt(birth2) < 10) {
+				
+				birth2 = "0"+birth2;
+				
+			}
+			
+			if (Integer.parseInt(birth3) < 10) {
+				
+				birth3 = "0"+birth3;
+				
+			}
+			
+			String user_birth = birth2+"/"+birth3+"/"+birth1;
+			
+			System.out.println(user_birth);
 			
 			MultipartFile attach = req.getFile("attach");
 			
@@ -371,7 +393,7 @@ public class JdhController {
 				req.setAttribute("loc", loc);
 			}
 			
-			return "msg.notiles";	
+			return "msg.notiles";
 		}
 		
 		//////////////////////////////////// 공지사항 ////////////////////////////////////////
@@ -423,7 +445,7 @@ public class JdhController {
 			
 			noticeList = service.getNoticeList(map);
 			String pageBar = MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "noticeAdmMain.re");
-			
+			System.out.println("확인용 pageBar"+pageBar);
 			req.setAttribute("noticeList", noticeList);
 			req.setAttribute("pageBar", pageBar);
 			
@@ -728,7 +750,7 @@ public class JdhController {
 			pagebar += MyUtil.getPageBarWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, colname, search, null, "memberSupervise.re");
 			
 			pagebar += "</ul>";
-			
+			System.out.println("pagebar==================="+pagebar);
 			
 			req.setAttribute("pagebar", pagebar);
 			req.setAttribute("memList", memList);

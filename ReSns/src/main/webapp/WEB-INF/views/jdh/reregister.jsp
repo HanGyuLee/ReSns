@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <meta charset="utf-8">
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 
 <style type="text/css">
@@ -50,12 +50,11 @@
 			}
 		}); // end of $("#passwd").blur()----------------------
 
-		$("#pwdcheck").blur(function() {
+		$("#login_pwdchk").blur(function() {
 			var pwd = $("#login_pwd").val();
 			var pwdcheck = $(this).val();
-
 			if (pwd != pwdcheck) {
-				$(this).next().show();
+				$(this).parent().parent().next().show();
 				$(":input").attr("disabled", true).addClass("bgcol");
 				$(this).attr("disabled", false).removeClass("bgcol");
 				$("#login_pwd").attr("disabled", false).removeClass("bgcol");
@@ -63,12 +62,27 @@
 				$(this).val("");
 				$("#login_pwd").focus();
 			} else {
-				$(this).next().hide();
+				//$(this).next().hide();
+				$(".error").hide();
 				$(":input").attr("disabled", false).removeClass("bgcol");
 				$("#goregister").attr("disabled", false);
 			}
 		}); // end of $("#passwdcheck").blur
-
+		
+		$(".birthSelect").change(function(){
+			
+			var birth1 = $("#birth1").val();
+			var birth2 = $("#birth2").val();
+			var birth3 = $("#birth3").val();
+			
+			if(parseInt(birth2) < 10) {
+				birth2 = "0"+birth2;
+			}
+			if(parseInt(birth3) < 10) {
+				birth3 = "0"+birth3;
+			}
+			$("#user_birth").val(birth1+birth2+birth3);
+		});
 		
 	}); // end of document ready()-------------
  	
@@ -154,6 +168,8 @@
 						required="required" required> <span class="help-block"></span>
 				</div>
 			</div>
+			
+			<span class="error" style="color:red;">암호는 영문자,숫자,특수기호가 혼합된 8~15 글자로만 입력가능합니다.</span>
 		</div>
 
 
@@ -210,8 +226,32 @@
 		<div class="col-md-4">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fa fa-th"aria-hidden="true"></i>생년월일</span> 
-				<input id="user_birth"name="user_birth" type="text" placeholder="월/일/년도 순으로 입력해주세요."
-					class="form-control input-md required" required> <span class="help-block"></span>
+				<input id="user_birth" name="user_birth" type="text" placeholder="월/일/년도 순으로 입력해주세요."
+					class="form-control input-md required" value="19500101" required>
+					
+					
+					<select id="birth2" name="birth2" class="birthSelect">
+						<c:forEach begin="1" end="12" step="1" varStatus="status">
+							<option value="${status.count}">${status.count}월</option>
+						</c:forEach>
+					</select>
+					
+					<select id="birth3" name="birth3" class="birthSelect">
+						<c:forEach begin="1" end="31" step="1" varStatus="status">
+							<option value="${status.count}">${status.count}일</option>
+						</c:forEach>
+					</select>
+					
+					<select id="birth1" name="birth1" class="birthSelect">
+						<c:set var="year" value="1950" />
+						<c:forEach begin="1950" end="2017" step="1">
+							<option value="${year}">${year}년</option>
+							<c:set var="year" value="${year+1}" />
+						</c:forEach>
+					</select>
+					
+					
+					<span class="help-block"></span>
 			</div>
 		</div>
 	</div>

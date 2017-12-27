@@ -5,11 +5,16 @@
 
 <script type="text/javascript">
 
-	<c:if test="${n == 1 && empty gobackURL}">
+	<c:if test="${n == 1 && empty gobackURL && login_status == 1}">
 		alert("로그인 성공!!");
 		location.href="<%=request.getContextPath() %>/followmain.re";
 	</c:if>
-		
+	
+	<c:if test="${n == 1 && empty gobackURL && login_status == 9}">
+		alert("로그인 성공!!");
+		location.href="<%=request.getContextPath() %>/adminMain.re";
+	</c:if>
+
 	<c:if test="${n == 1 && not empty gobackURL}">
 		alert("로그인 성공!!");
 		location.href="${gobackURL}";

@@ -98,7 +98,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<h4 style="font-style: oblique; font-size: x-large; font-weight: bold; color: fuchsia;">공지사항 페이지 테이블</h4><br/>
+			<h4 style="font-style: oblique; font-size: x-large; font-weight: bold; color: fuchsia;">회원관리 페이지</h4><br/>
 			
 			
 			
