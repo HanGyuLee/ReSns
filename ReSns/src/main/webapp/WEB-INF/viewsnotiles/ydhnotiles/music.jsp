@@ -253,7 +253,7 @@ used to vertically center elements, may need modification if you're not using de
 	function goSearch(){
   		var frm = document.searchFrm;
   		var search = $("#search").val();
-  		alert("searchtest::"+search);
+  		//alert("searchtest::"+search);
   		//frm.method ="get";
   		//frm.action = "/resns/music.re";
   		
@@ -266,6 +266,8 @@ used to vertically center elements, may need modification if you're not using de
   			frm.submit();
   		}
   	}	
+	
+
 	
 </script>
 
@@ -282,9 +284,10 @@ used to vertically center elements, may need modification if you're not using de
 		</select>
 			<input type="text" name="search" id="search" size="40px"/>
 			<button type="button" onClick="goSearch();">검색</button> 
+			<button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/music.re?fk_login_id=${fk_login_id}'">되돌아가기</button>
 			<input type="hidden" name="fk_login_id" id="fk_login_id" value="${fk_login_id}" />
 			<!-- ===== Ajax로 검색어 입력시 자동글 완성하기 ===== -->
-		   <div id="displayList" style="width:312px; margin-left: 57px; border-top: 0px; border: solid gray 1px;">
+		   <div id="displayList" style="width:312px; margin-left: -87px; border-top: 0px; border: solid gray 1px;">
 		  
 		   </div>
 	</form>

@@ -342,7 +342,7 @@ order by seq_tbl_music desc
   select rownum as rno 
                   ,seq_tbl_music
                   ,music_name
-                  ,case when length(music_content)>7 then substr(music_content,1,5)||'..' else music_content end as music_content
+                  ,case when length(music_content)>7 then substr(music_content,1,5) else music_content end as music_content
                   ,to_char(music_date,'yyyy-mm-dd') as music_date
                   ,music_commentcount
                   ,fk_login_id
@@ -412,7 +412,7 @@ where fk_login_id = #{fk_login_id}
    </if>
    <if test='colname.equals("music_content")'>   		
 		select case when length(music_content)>7 
-		       then substr(music_content,1,5)||'..' 
+		       then substr(music_content,1,5)
 		       else music_content
 		       end as music_content
 		from tbl_music
