@@ -9,8 +9,8 @@
 
 
 .modal-dialog.modal-80size {
-  width: 50%;
-  height: 80%;
+  width: 35%;
+  height: 0%; 
   margin: 50 auto;
   padding: 0;
 }
@@ -19,7 +19,7 @@
   height: 80%;
   min-height: 50%;
   width: 110%;
-}
+} 
 
 #simplemodal-overlay {background-color:#000;}
 /* #modal_content{display:none;margin:50 auto; width:100px; height:100px;background:blue;color:#fff} */
@@ -228,7 +228,6 @@ $(document).ready(function(){
 	   
 
 
-
 });//document
 
 function goDetail(seq_tbl_board)
@@ -292,7 +291,7 @@ function displayNEWAppend(start){
    				// html +=    "<span style='cursor: pointer;'><a data-toggle='modal' data-target='#userlogin' data-dismiss='modal' onClick=\"goDetail('"+seq_tbl_board+"');\"><img src='resources/images/"+bimg_filename+"'style='width: 250px; height: 250px;'/></a></span>";
    				 html +=    "<figcaption>";
    				 html +=    "<h3>social net service :: re</h3>";
-   				 html +=    "<span style='cursor: pointer;'><a data-toggle='modal' data-target='#userlogin' data-dismiss='modal' onClick=\"goDetail('"+seq_tbl_board+"');\"><img src='resources/images/"+bimg_filename+"'style='width: 250px; height: 300px;'/></a></span>";
+   				 html +=    "<span style='cursor: pointer; '><a data-toggle='modal' data-target='#userlogin'  data-dismiss='modal' onClick=\"goDetail('"+seq_tbl_board+"');\"><img src='resources/images/"+bimg_filename+"'style='width: 250px; height: 300px;'/></a></span>";
    				 html +=    "</figcaption>";
    				 html += "</figure>";
 
@@ -338,6 +337,9 @@ function displayNEWAppend(start){
 </head>
 <input type="hidden" value="${search}" id="searchTag" name="searchTag"/>
 
+<div align="center">
+  <span style="font-weight:bold; font-size:25pt; color:navy; ">[&nbsp;${search}&nbsp;]</span><span style="font-weight:bold; font-size:20pt;">&nbsp;검색 결과입니다.</span>
+</div>
 <div style="margin-top:20px; margin-bottom:20px;">
 
  <div  align="center" id="displayResultNEW" style="margin: auto; border: solid 0px red;" ></div>
@@ -356,26 +358,54 @@ function displayNEWAppend(start){
 <body>
 <!-- ///////////////////////////////// -->
 
-
-<div class="modal fade" id="userlogin" role="dialog">
-   <div class="modal-dialog  modal-80size">
-   
-      <%-- Modal content --%>
-        <div class="modal-content  modal-80size" align="center">
+<%-- 
+<div class="modal fade" id="userlogin" role="dialog"  style="width: 130%;" >
+   <div class="modal-dialog modal-80size ">
+      Modal content
+        <div class="modal-content " align="center" >
           <div class="modal-header">
-            <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
+            <button type="button" class="close myclose" data-dismiss="modal" style="width: 130%;">&times;</button>
             
             <h4 class="modal-title">♥Remeber E.member♥</h4>
             
             </div>
-          <div class="modal-body modal-80size" style="width: 100%; height: 500px;">
-             <div id="login">
-                <iframe id="test001" style="border: none; width: 100%; height: 450px;" src=""></iframe>
+               <div class="modal-body modal-80size" style="width: 100%; height: 1008px;">
+               <div id="login" style="width: 98%;">
+                <iframe id="test001" style="border: none; width: 100%; height: 1008px;" src=""></iframe>
+               </div>
              </div>
-          </div>
+          
           <div class="modal-footer">
-             <button type="button" class="btn btn-default myclose" data-dismiss="modal">Close</button>
+             <button type="button" class="btn btn-default myclose" data-dismiss="modal" >Close</button>
           </div>
+          
+          
+        </div>
+
+   </div>
+</div> --%>
+
+
+<div class="modal fade" id="userlogin" role="dialog"  style="width: 130%;" >
+   <div class="modal-dialog modal-80size ">
+      <%-- Modal content --%>
+        <div class="modal-content " >
+          <div align="center" class="modal-header"  style="height:0px;">
+          <!--   <button type="button" class="close myclose" data-dismiss="modal" style="width: 130%;">&times;</button> -->
+            <button type="button" class="btn btn-default myclose" data-dismiss="modal"><h17 class="modal-title">♥Remeber E.member♥</h17></button>
+            
+            </div>
+               <div class="modal-body modal-80size" style="width: 100%; height: 1008px;">
+               <div id="login" style="width: 98%;">
+                <iframe id="test001" style="border: none; width: 100%; height: 1008px;" src=""></iframe>
+               </div>
+             </div>
+          
+          <div class="modal-footer" >
+            <!--  <button type="button" class="btn btn-default myclose" data-dismiss="modal" >Close</button> -->
+          </div>
+          
+          
         </div>
 
    </div>

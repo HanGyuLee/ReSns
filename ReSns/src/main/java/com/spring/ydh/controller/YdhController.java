@@ -50,7 +50,7 @@ public class YdhController {
 	public String searchTag(HttpServletRequest req){
 		
 		 String search = req.getParameter("search");
-		 System.out.println("tst:"+search);
+		 //System.out.println("tst:"+search);
 		 HashMap<String,String> map = new HashMap<String,String>();
 		 map.put("search", search);
 		 
@@ -89,7 +89,7 @@ public class YdhController {
 	public String searchName(HttpServletRequest req){
 		
 		 String search = req.getParameter("search");
-		 System.out.println("tst:"+search);
+		 //System.out.println("tst:"+search);
 		 HashMap<String,String> map = new HashMap<String,String>();
 		 map.put("search", search);
 		 
@@ -132,12 +132,12 @@ public class YdhController {
 		 if(!search.trim().isEmpty() ){
 		
 		 List<HashMap<String,String>> searchNameOne = service.searchNameOne(map);//한명검색
-		 System.out.println("map확인:"+map);
+		 //System.out.println("map확인:"+map);
 		 
 			 if(!searchNameOne.isEmpty()){
 				 req.setAttribute("searchNameOne", searchNameOne);
 				 req.setAttribute("search", search);
-				 System.out.println("name:"+searchNameOne);
+				// System.out.println("name:"+searchNameOne);
 				 
 			    }
 
@@ -152,7 +152,7 @@ public class YdhController {
 	public String searchEndMap(HttpServletRequest req){
 		
 		 String search = req.getParameter("search");
-		 System.out.println("tst:"+search);
+		 //System.out.println("tst:"+search);
 		 HashMap<String,String> map = new HashMap<String,String>();
 		 map.put("search", search);
 		 
@@ -261,16 +261,16 @@ public class YdhController {
 	@RequestMapping(value="/displaymoreJsonTag.re", method={RequestMethod.GET})
 	public String displaymoreJsonTag(HttpServletRequest req){
 	    
-		System.out.println("넘어오나 확인");
+		//System.out.println("넘어오나 확인");
 		
 		String start = req.getParameter("start");
 		String lenNEW = req.getParameter("lenNEW");
 		String searchTag = req.getParameter("searchTag");
 		//String seq_tbl_board = req.getParameter("seq_tbl_board");
 		
-		System.out.println("start::"+start);
-		System.out.println("len::"+lenNEW);
-		System.out.println("searchTag::"+searchTag);
+		//System.out.println("start::"+start);
+		//System.out.println("len::"+lenNEW);
+		//System.out.println("searchTag::"+searchTag);
 		//System.out.println("seq_tbl_board::"+seq_tbl_board);
 		
 		
@@ -288,17 +288,17 @@ public class YdhController {
 		startrno = Integer.parseInt(start);					//시작행번호
 		endrno = startrno + (Integer.parseInt(lenNEW) - 1 );	// 끝행번호
 		
-		System.out.println("startrno확인::"+startrno);
-		System.out.println("endrno확인::"+endrno);
+		//System.out.println("startrno확인::"+startrno);
+		//System.out.println("endrno확인::"+endrno);
 		
 		HashMap<String,String> map = new HashMap<String,String>();
 		map.put("startrno",Integer.toString(startrno));
 		map.put("endrno", Integer.toString(endrno));
 		map.put("searchTag", searchTag);
 		
-		System.out.println("displayMORETAGs");
+		//System.out.println("displayMORETAGs");
 		String boardList = service.displayTagmore(map);//tag더보기
-		System.out.println("boardList"+boardList);
+		//System.out.println("boardList"+boardList);
 
 	    req.setAttribute("boardList", boardList);
 	    
@@ -315,9 +315,9 @@ public class YdhController {
 		String lenNEW = req.getParameter("lenNEW");
 		String searchMap = req.getParameter("searchMap");
 		
-		System.out.println("startMap::"+start);
-		System.out.println("len::"+lenNEW);
-		System.out.println("searchMap::"+searchMap);
+		//System.out.println("startMap::"+start);
+		//System.out.println("len::"+lenNEW);
+		//System.out.println("searchMap::"+searchMap);
 		
 		
 		if(start.trim().isEmpty()){
@@ -333,17 +333,17 @@ public class YdhController {
 		startrno = Integer.parseInt(start);					//시작행번호
 		endrno = startrno + (Integer.parseInt(lenNEW) - 1 );	// 끝행번호
 		
-		System.out.println("startrno 맵확인::"+startrno);
-		System.out.println("endrno 맵확인::"+endrno);
+		//System.out.println("startrno 맵확인::"+startrno);
+		//System.out.println("endrno 맵확인::"+endrno);
 		
 		HashMap<String,String> map = new HashMap<String,String>();
 		map.put("startrno",Integer.toString(startrno));
 		map.put("endrno", Integer.toString(endrno));
 		map.put("searchMap", searchMap);
 		
-		System.out.println("displayMORETAGs");
+		//System.out.println("displayMORETAGs");
 		String maplist = service.displayMapmore(map);//tag더보기
-		System.out.println("maplist::"+maplist);
+		//System.out.println("maplist::"+maplist);
 
 	    req.setAttribute("maplist", maplist);
 		
@@ -355,14 +355,14 @@ public class YdhController {
 	//별명들더보기
 	@RequestMapping(value="/displaymoreJName.re", method={RequestMethod.GET})
 	public String displaymoreJName(HttpServletRequest req){
-	System.out.println("Begin list of names");
+	//System.out.println("Begin list of names");
 		String start = req.getParameter("start");
 		String lenNEW = req.getParameter("lenNEW");
 		String searchNames = req.getParameter("searchNames");
 		
-		System.out.println("startMap::"+start);
-		System.out.println("len::"+lenNEW);
-		System.out.println("searchNames::"+searchNames);
+		//System.out.println("startMap::"+start);
+		//System.out.println("len::"+lenNEW);
+		//System.out.println("searchNames::"+searchNames);
 		
 		
 		if(start.trim().isEmpty()){
@@ -378,17 +378,17 @@ public class YdhController {
 		startrno = Integer.parseInt(start);					//시작행번호
 		endrno = startrno + (Integer.parseInt(lenNEW) - 1 );	// 끝행번호
 		
-		System.out.println("startrno 맵확인::"+startrno);
-		System.out.println("endrno 맵확인::"+endrno);
+		//System.out.println("startrno 맵확인::"+startrno);
+		//System.out.println("endrno 맵확인::"+endrno);
 		
 		HashMap<String,String> map = new HashMap<String,String>();
 		map.put("startrno",Integer.toString(startrno));
 		map.put("endrno", Integer.toString(endrno));
 		map.put("searchNames", searchNames);
 		
-		System.out.println("displaynames");
+		//System.out.println("displaynames");
 		String names = service.displayNamesmore(map);
-		System.out.println("names::"+names);
+		//System.out.println("names::"+names);
 
 	    req.setAttribute("names", names);
 		
@@ -396,27 +396,8 @@ public class YdhController {
 		
 	}
 	
-	//tag더보기 페이징
-/*	@RequestMapping(value="/searchEndTag.re", method={RequestMethod.GET})
-	public String jtagCount(HttpServletRequest req){
-		System.out.println("더보기페이징");
-		String searchTag = req.getParameter("searchTag");
-		
-		int jtCnt = service.jtagCount(searchTag);
-		System.out.println("searchTag cnt"+searchTag);
-		
-		req.setAttribute("jtCnt", jtCnt);
-		System.out.println("jtCnt"+jtCnt);
-		
-		return "ydh/searchTag.tiles";
-		
-	}*/
-	
-	//map더보기 페이징
-	
-	//names더보기 페이징
-	
 
+	
 	/*==================================<음악LIST>====================================*/
 	@RequestMapping(value="/musicBegin.re", method={RequestMethod.GET})
 	public String requireLogin2_musicBegin(HttpServletRequest req,HttpServletResponse response,HttpSession session){
@@ -507,13 +488,13 @@ public class YdhController {
 	    	
 	    	//String gobackURL ="music.re?fk_login_id="+fk_login_id+"currentShowPageNo="+currentShowPageNo+"blockSize"+blockSize+"sizePerPage"+sizePerPage+"totalPage"+totalPage+"colname"+colname+"search"+search;
 	    	
-	    	System.out.println("totalCount::"+totalCount);
-	    	System.out.println("sizePerPage::"+sizePerPage);
-	    	System.out.println("currentShowPageNo::"+currentShowPageNo);
-	    	System.out.println("totalPage::"+totalPage);
-	    	System.out.println("startRno::"+startRno);
-	    	System.out.println("endRno::"+endRno);
-	    	System.out.println("blockSize::"+blockSize);
+	    	//System.out.println("totalCount::"+totalCount);
+	    	//System.out.println("sizePerPage::"+sizePerPage);
+	    	//System.out.println("currentShowPageNo::"+currentShowPageNo);
+	    	//System.out.println("totalPage::"+totalPage);
+	    	//System.out.println("startRno::"+startRno);
+	    	//System.out.println("endRno::"+endRno);
+	    	//System.out.println("blockSize::"+blockSize);
 	    	
 	    	
 	    	req.setAttribute("pagebar", pagebar);
@@ -583,7 +564,8 @@ public class YdhController {
 	//글쓰기
 	@RequestMapping(value="/mwriteEnd.re", method={RequestMethod.POST})
 	public String mwriteEnd(HttpServletRequest req, HttpSession ses, MusicVO mvo){//나중에aop추가
-		   String seq_tbl_music = req.getParameter("seq_tbl_music");
+		   
+		String seq_tbl_music = req.getParameter("seq_tbl_music");
 		   String fk_login_id = req.getParameter("fk_login_id");
 		    int n = service.mwrite(mvo);//유튭글insert
 			req.setAttribute("n", n);
@@ -599,13 +581,7 @@ public class YdhController {
     @RequestMapping(value="/addComment.re", method={RequestMethod.GET})
     public String requireLogin2_addComment(HttpServletRequest req, HttpServletResponse response, MCommentVO commentvo)
     throws Throwable{
-    	/*
-    		댓글 씀 => tblComment에 insert 동시에 tblBoard(부모테이블)에 commentCount의 숫자가 올라감
-    				동시에 두 테이블에 변화가 있어야함으로 TX가 필요하다. (TX발생함으로 throws Throwable처리를 해준다.)
-    	*/
-    	
-    	
-    	
+    
     	String fk_login_id = req.getParameter("fk_login_id");
    
     	//String gobackURL = req.getParameter("gobackURL");
@@ -756,13 +732,10 @@ public class YdhController {
 			map.put("fk_login_id", mvo.getFk_login_id());
 		
 			
-				int n = service.mupdateEnd(map);
-			
-			   
-			
-				System.out.println("n::"+n);
+			int n = service.mupdateEnd(map);
+
+			//System.out.println("n::"+n);
 				
-			
 			req.setAttribute("n", n);//글수정(update)
 		    //req.setAttribute("seq_tbl_music", mvo.getSeq_tbl_music());
 		    req.setAttribute("seq_tbl_music", seq_tbl_music);
@@ -800,7 +773,7 @@ public class YdhController {
 		
 		String fk_login_id = req.getParameter("fk_login_id");
 	    String[] delchckboxArr = req.getParameterValues("delChkbox");
-	    System.out.println("delchckboxArr controller::"+delchckboxArr);
+	    //System.out.println("delchckboxArr controller::"+delchckboxArr);
 	    String str_seq_tbl_music = "";
         
         for (int i=0; i<delchckboxArr.length; i++) {

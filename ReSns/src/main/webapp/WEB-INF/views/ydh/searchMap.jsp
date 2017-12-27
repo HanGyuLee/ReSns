@@ -10,8 +10,8 @@
 
 
 .modal-dialog.modal-80size {
-  width: 50%;
-  height: 80%;
+  width: 35%;
+  height: 0%; 
   margin: 50 auto;
   padding: 0;
 }
@@ -20,8 +20,7 @@
   height: 80%;
   min-height: 50%;
   width: 110%;
-}
-
+} 
 
 #simplemodal-overlay {background-color:#000;}
 /* #modal_content{display:none;margin:50 auto; width:50px; height:50px;background:blue;color:#fff} */
@@ -374,6 +373,12 @@ function displayNEWAppend(start){
 </c:forEach> --%>
 
 <input type="hidden" value="${search}" id="searchMap" name="searchMap"/>
+
+
+<div align="center">
+  <span style="font-weight:bold; font-size:25pt; color:navy; ">[&nbsp;${search}&nbsp;]</span><span style="font-weight:bold; font-size:20pt;">&nbsp;검색 결과입니다.</span>
+</div>
+
 <div style="margin-top:20px; margin-bottom:20px;">
 <div  align="center" id="displayResultNEW" style="margin: auto; border: solid 0px red;" ></div>
 	 <div style=" margin-top: 20xp; margin-bottom: 20px; align="center">
@@ -390,46 +395,56 @@ function displayNEWAppend(start){
 </body>
 
 <!-- ////////////////////////////////////// -->
+
+
 <%-- <div class="modal fade" id="userlogin" role="dialog">
-   <div class="modal-dialog ">
-   
-      Modal content
-        <div class="modal-content " align="center" style=" height: 900px;">
-          <div class="modal-header">
-            <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
-            
-            <h4 class="modal-title">♥Remeber E.member♥</h4>            
-            </div>
-          <div class="modal-body" style="width: 100%;"> 
-                <iframe id="test001" style="border: none; width: 100%; height: 700px; zoom:50%;" src="" ></iframe>
-          </div>
-          <div class="modal-footer" style="margin-bottom: 0px;">
-             <button type="button"class="btn btn-default myclose" data-dismiss="modal">Close</button>
-          </div> 
-        </div>
-
-   </div>
-</div> --%>
-
-<div class="modal fade" id="userlogin" role="dialog">
    <div class="modal-dialog  modal-80size">
    
-      <%-- Modal content --%>
+      Modal content
         <div class="modal-content  modal-80size" align="center">
           <div class="modal-header">
-            <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
+            <button type="button" class="close myclose" data-dismiss="modal"  style="width: 130%;">&times;</button>
             
             <h4 class="modal-title">♥Remeber E.member♥</h4>
             
             </div>
-          <div class="modal-body modal-80size" style="width: 100%; height: 500px;">
+          <div class="modal-body modal-80size"  style="width: 100%; height: 1008px;">
              <div id="login">
-                <iframe id="test001" style="border: none; width: 100%; height: 450px;" src=""></iframe>
+                <iframe id="test001" style="border: none; width: 100%; height: 1008px;" src=""></iframe>
              </div>
           </div>
           <div class="modal-footer">
              <button type="button" class="btn btn-default myclose" data-dismiss="modal">Close</button>
           </div>
+        </div>
+
+   </div>
+</div> --%>
+
+
+<!-- ///////////////////////////////// -->
+
+
+<div class="modal fade" id="userlogin" role="dialog"  style="width: 130%;" >
+   <div class="modal-dialog modal-80size ">
+      <%-- Modal content --%>
+        <div class="modal-content " >
+          <div align="center" class="modal-header"  style="height:0px;">
+          <!--   <button type="button" class="close myclose" data-dismiss="modal" style="width: 130%;">&times;</button> -->
+            <button type="button" class="btn btn-default myclose" data-dismiss="modal"><h17 class="modal-title">♥Remeber E.member♥</h17></button>
+            
+            </div>
+               <div class="modal-body modal-80size" style="width: 100%; height: 1008px;">
+               <div id="login" style="width: 98%;">
+                <iframe id="test001" style="border: none; width: 100%; height: 1008px;" src=""></iframe>
+               </div>
+             </div>
+          
+          <div class="modal-footer" >
+            <!--  <button type="button" class="btn btn-default myclose" data-dismiss="modal" >Close</button> -->
+          </div>
+          
+          
         </div>
 
    </div>

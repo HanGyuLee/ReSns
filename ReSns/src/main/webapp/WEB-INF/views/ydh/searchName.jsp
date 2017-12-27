@@ -72,13 +72,13 @@ function displayNEWAppend(start){
    					var login_id = entry.login_id;
    					var user_ed = entry.user_ed;
    					var user_ing = entry.user_ing;
-   					var user_boardcnt = entry.user_boardcnt;
+   					//var user_boardcnt = entry.user_boardcnt;
    					var uimg_profile_filename = entry.uimg_profile_filename;
    					
    					html += "<div align='center'>"
    					html += "<a href='/resns/otherspage.re?fk_login_id="+login_id+"'><img src='resources/images/"+uimg_profile_filename+"' class='img-circle' style='width: 150px; height: 150px;'/></a><br/>";
    					html += "<a href='/resns/otherspage.re?fk_login_id="+login_id+"'><span style='font-size:25pt; cursor:pointer; font-weight:bold;'>별명:&nbsp;"+login_name+"</span></a><br/>"; 
-   					html += "<span style='font-weight:bold; font-size:20pt;'>"+"팔로워"+user_ed+"&nbsp;"+ "팔로잉"+user_ing+"&nbsp;"+"게시물"+user_boardcnt+"</span>"
+   					html += "<span style='font-weight:bold; font-size:20pt;'>"+"팔로워"+user_ed+"&nbsp;"+ "팔로잉"+user_ing+"&nbsp;</span>"
    									
    										
    				});//end of $.each
@@ -123,6 +123,10 @@ function displayNEWAppend(start){
 
 	
 <input type="hidden" value="${search}" id="searchNames" name="searchNames"/>
+<div align="center">
+  <span style="font-weight:bold; font-size:25pt; color:navy; ">[&nbsp;${search}&nbsp;]</span><span style="font-weight:bold; font-size:20pt;">&nbsp;검색 결과입니다.</span>
+</div><br/><br/>
+
  <div align="center" id="displayResultNEW" style="margin: auto; border: solid 0px red;"></div>
 	 <div style="margin-top: 20px; margin-bottom: 20px;"align="center">
 		<button type="button" id="btnMoreNEW" value="" > 더보기</button>

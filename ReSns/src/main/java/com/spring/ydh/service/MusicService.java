@@ -111,10 +111,10 @@ public class MusicService implements InterMusicService {
 
 	@Override//태그검색(게시물)
 	public String jTag(HashMap<String, String> map) {
-		System.out.println("serviceTag");
+		//System.out.println("serviceTag");
 		int jtagCnt = dao.jTagCnt(map);
 		
-		System.out.println("jresult확인:"+jtagCnt);
+		//System.out.println("jresult확인:"+jtagCnt);
 		
 		
 		JSONArray jTag = new JSONArray();
@@ -128,13 +128,13 @@ public class MusicService implements InterMusicService {
 			jobj.put("jtagCnt", jtagCnt);
 			jobj.put("jTagList", jTagList);
 			jTag.put(jobj);
-			System.out.println("Tagtest:"+jTag);
+			//System.out.println("Tagtest:"+jTag);
 			
 		}//if
 	
 		
 		String str_jTag = jTag.toString();
-		System.out.println("str_jTag test:"+str_jTag);
+		//System.out.println("str_jTag test:"+str_jTag);
 		return str_jTag;
 	
 	}//jTag
@@ -176,16 +176,16 @@ public class MusicService implements InterMusicService {
 		String url = mvo.getMusic_link();
 		String seq = mvo.getSeq_tbl_music();
 		
-		System.out.println("id확인"+id);
+		/*System.out.println("id확인"+id);
 		System.out.println("co확인"+co);
 		System.out.println("na확인"+na);
 		System.out.println("url확인"+url);
 		System.out.println("seq확인"+seq);
-
+        */
 	
 		int  n = dao.mwrite(mvo);
 	   
-		System.out.println("n test 글쓰기::"+n);
+		//System.out.println("n test 글쓰기::"+n);
 		return n;
 		
 	}
@@ -223,7 +223,7 @@ public class MusicService implements InterMusicService {
 		
 			 int n = dao.mupdateEnd(map);
 		
-			System.out.println("Fail");
+			//System.out.println("Fail");
 		 
 		  System.out.println("n test::"+n);
 		     return n;
@@ -233,7 +233,7 @@ public class MusicService implements InterMusicService {
 
 	@Override//글삭제
 	public int mdel(HashMap<String, String> map) {
-		  System.out.println("service");
+		 // System.out.println("service");
 		  int n =  dao.mdel(map);
 		  //System.out.println("n:"+n);
 		return n;
@@ -243,9 +243,9 @@ public class MusicService implements InterMusicService {
 
 	@Override//체크박스글삭제
 	public int delcheckbox(HashMap<String,Object> map) {
-		System.out.println("service seq::"+map);
+		//System.out.println("service seq::"+map);
 		int n = dao.delcheckbox(map);
-		System.out.println("service n ::"+n);
+		//System.out.println("service n ::"+n);
 		
 		return n;
 	}
@@ -398,14 +398,15 @@ public class MusicService implements InterMusicService {
         
         List<HashMap<String, String>> taglistboard = dao.searchTagMore(map);
 
+        /*   
         System.out.println("서비스확인태그:"+map.get("searchTag"));
         System.out.println("서비스확인스타트:"+map.get("startrno"));
         System.out.println("서비스확인엔드:"+map.get("endrno"));
-        
+        */
 		//JSONArray jasonList = new JSONArray();
 		JSONArray jasonList2 = new JSONArray();
 		
-		System.out.println("taglistboard::"+taglistboard);
+		//System.out.println("taglistboard::"+taglistboard);
 		
 		if(taglistboard != null && taglistboard.size()>0){
 			for( HashMap<String, String> map3 : taglistboard){
@@ -417,14 +418,14 @@ public class MusicService implements InterMusicService {
 				jsonObj2.put("bimg_filename", map3.get("bimg_filename"));
 				
 				jasonList2.put(jsonObj2);
-				System.out.println("이름::"+map3.get("login_name"));
+				//System.out.println("이름::"+map3.get("login_name"));
 			}
 			
 
 		}//end of if
 		
 		str_displaytagmore = jasonList2.toString();
-		System.out.println("서비스단 마지막::"+str_displaytagmore);
+		//System.out.println("서비스단 마지막::"+str_displaytagmore);
 	
 		
 		
@@ -439,15 +440,16 @@ public class MusicService implements InterMusicService {
 		String str_displaymapmore = "";
         
         List<HashMap<String, String>> maplist = dao.searchMapMore(map);
-
+       
+        /*
         System.out.println("서비스확인태그맵:"+map.get("searchMap"));
         System.out.println("서비스확인스타트맵:"+map.get("startrno"));
         System.out.println("서비스확인엔드맵:"+map.get("endrno"));
-        
+        */
 		//JSONArray jasonList = new JSONArray();
 		JSONArray jasonList2 = new JSONArray();
 		
-		System.out.println("maplist::"+maplist);
+		//System.out.println("maplist::"+maplist);
 		
 		if(maplist != null && maplist.size()>0){
 			for( HashMap<String, String> jmap : maplist){
@@ -464,14 +466,14 @@ public class MusicService implements InterMusicService {
 				
 				
 				jasonList2.put(jsonObj2);
-				System.out.println("이름::"+jmap.get("login_name"));
+				//System.out.println("이름::"+jmap.get("login_name"));
 			}
 			
 
 		}//end of if
 		
 		str_displaymapmore = jasonList2.toString();
-		System.out.println("서비스단 마지막str_displaymapmore::"+str_displaymapmore);
+		//System.out.println("서비스단 마지막str_displaymapmore::"+str_displaymapmore);
 
 		
 		
@@ -487,14 +489,16 @@ public class MusicService implements InterMusicService {
         
         List<HashMap<String, String>> names = dao.searchNamesMore(map);
 
+        /*
         System.out.println("서비스확인네임s:"+map.get("searchMap"));
         System.out.println("서비스확인스타트네임s:"+map.get("startrno"));
         System.out.println("서비스확인엔드네임s:"+map.get("endrno"));
+        */
         
 		//JSONArray jasonList = new JSONArray();
 		JSONArray jasonList2 = new JSONArray();
 		
-		System.out.println("names::"+names);
+		//System.out.println("names::"+names);
 		
 		if(names != null && names.size()>0){
 			for( HashMap<String, String> jmap : names){
@@ -507,14 +511,14 @@ public class MusicService implements InterMusicService {
 				jsonObj2.put("uimg_profile_filename", jmap.get("uimg_profile_filename"));
 
 				jasonList2.put(jsonObj2);
-				System.out.println("이름::"+jmap.get("login_name"));
+				//System.out.println("이름::"+jmap.get("login_name"));
 			}
 			
 
 		}//end of if
 		
 		str_displayNamesmore = jasonList2.toString();
-		System.out.println("서비스단 마지막str_displaymapmore::"+str_displayNamesmore);
+		//System.out.println("서비스단 마지막str_displaymapmore::"+str_displayNamesmore);
 
 		
 		

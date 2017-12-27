@@ -45,7 +45,7 @@
 </script>
 
 <div style="padding-left: 10%; border: solid 0px red;">
-	<h1>글내용보기</h1>
+	<h1></h1>
 	<table id="table">
 		<%-- <tr>
 			<th>글번호</th>
@@ -70,7 +70,7 @@
 			<th>youtube</th>
 			<td>${mvo.music_link}</td>
 		</tr>
-		
+	
 		
 		
 	</table>

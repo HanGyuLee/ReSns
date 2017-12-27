@@ -3,7 +3,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resources/BootStrapStudy/css/bootstrap.css">
  <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js"></script>
  <script type="text/javascript" src="<%=request.getContextPath() %>/resources/BootStrapStudy/js/bootstrap.js"></script>
@@ -21,6 +21,66 @@
    #table { border-collapse: collapse; width:920px;}
    #table th, #table td {padding:5px;}
    #table th {background-color:#DDDDDD;}
+   
+   
+   
+   
+   
+ /*   .panel-table .panel-body{
+  padding:0;
+}
+
+.panel-table .panel-body .table-bordered{
+  border-style: none;
+  margin:0;
+}
+
+.panel-table .panel-body .table-bordered > thead > tr > th:first-of-type {
+    text-align:center;
+    width: 100px;
+}
+
+.panel-table .panel-body .table-bordered > thead > tr > th:last-of-type,
+.panel-table .panel-body .table-bordered > tbody > tr > td:last-of-type {
+  border-right: 0px;
+}
+
+.panel-table .panel-body .table-bordered > thead > tr > th:first-of-type,
+.panel-table .panel-body .table-bordered > tbody > tr > td:first-of-type {
+  border-left: 0px;
+}
+
+.panel-table .panel-body .table-bordered > tbody > tr:first-of-type > td{
+  border-bottom: 0px;
+}
+
+.panel-table .panel-body .table-bordered > thead > tr:first-of-type > th{
+  border-top: 0px;
+}
+
+.panel-table .panel-footer .pagination{
+  margin:0; 
+}
+
+
+used to vertically center elements, may need modification if you're not using default sizes.
+
+.panel-table .panel-footer .col{
+ line-height: 34px;
+ height: 34px;
+}
+
+.panel-table .panel-heading .col h3{
+ line-height: 30px;
+ height: 30px;
+}
+
+.panel-table .panel-body .table-bordered > tbody > tr > td{
+  line-height: 34px;
+} 
+
+*/
+
    
 </style>
 
@@ -312,6 +372,109 @@
 
 
 </div>
+
+<!--////////////////////////////////////////////////////////////////////////////////  -->
+
+<%-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
+
+	
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="panel panel-default panel-table">
+              <div class="panel-heading">
+                <div class="row">
+                  <div class="col col-xs-6">
+                    <h3 class="panel-title"><span style="font-weight:bold;">Remeber E.member</span></h3>
+                  </div>
+                  <div class="col col-xs-6 text-right">
+                    <button type="button" class="btn btn-sm btn-primary btn-create">create new youtube</button>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-body">
+                <table class="table table-striped table-bordered table-list">
+                  <thead>
+                   <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+                    <tr>
+                        <th><em class="fa fa-cog"></em></th>
+                        <th class="hidden-xs">제목</th>
+                        <th>날짜</th>
+                        <th>선택</th>
+                       	<th style="width: 70px;"><span style="font-size:9pt; color:red;"><label for ="allCheckbox">전체선택&nbsp;</label></span>&nbsp;<input type="checkbox" id="allCheckbox" /></th>
+                    </tr> 
+                    </c:if>
+                    
+                     <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
+                     <tr>
+                        <th class="hidden-xs">제목</th>
+                        <th>날짜</th>
+                        <th>선택</th>
+                    </tr> 
+                    </c:if>
+                  </thead>
+                  
+                  
+                  
+                  
+                  
+                  <tbody>
+                  <c:if test="${mlist == null || empty mlist }">
+	                <tr>
+	                   <td align="center" colspan="5"><span style="color:red; font-weight:bold;">등록된 게시물이 없습니다.</span></td>
+	                </tr>
+	               </c:if>
+	               
+	               
+	               
+                    <c:if test="${fk_login_id == sessionScope.loginUser.login_id}">
+                    
+                          <tr>
+                            <td align="center">
+                              <a class="btn btn-default" onClick="javascript:location.href='/resns/mwrite.re?fk_login_id=${fk_login_id}'"><em class="fa fa-pencil"></em></a>
+                              <a class="btn btn-danger" id="delete"><em class="fa fa-trash"></em></a>
+                            </td>
+                            <td class="hidden-xs">제목</td>
+                            <td>날짜</td>
+                            <td>선택</td>
+                             <td align="center" style="width: 70px;">&nbsp;&nbsp;<input type="checkbox" class="delChkbox" name="delChkbox" id="delChkbox${status.count}" value="${m.SEQ_TBL_MUSIC}"/></td>
+                          </tr>
+                      </c:if>    
+                      
+                        <c:if test="${fk_login_id != sessionScope.loginUser.login_id}">
+                          <tr>
+                            <td class="hidden-xs">제목</td>
+                            <td>날짜</td>
+                            <td>선택</td>
+                          </tr>
+                      </c:if>  
+                        </tbody>
+                </table>
+            
+              </div>
+              <div class="panel-footer">
+                <div class="row">
+                  <div class="col col-xs-4">Page 
+                  </div>
+                  <div class="col col-xs-8">
+                    <ul class="pagination hidden-xs pull-right">
+                      ${pagebar} 
+                    </ul>
+                    <ul class="pagination visible-xs pull-right">
+                        <li><a href="#">«</a></li>
+                        <li><a href="#">»</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+</div></div></div> --%>
+
+
+
+
 
 <form name="deltest">
 <input type="hidden" id="test01"/>
