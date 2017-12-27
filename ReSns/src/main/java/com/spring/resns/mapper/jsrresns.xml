@@ -345,6 +345,7 @@ select seq_tbl_q, fk_login_id, q_status, q_date, q_askid
          	as q_content
 from tbl_q
 where fk_login_id = #{fk_login_id}
+and q_content = #{qsearch}
 order by q_date desc
 )V
 )T

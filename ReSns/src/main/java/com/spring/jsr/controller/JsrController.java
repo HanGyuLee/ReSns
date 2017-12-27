@@ -457,8 +457,7 @@ public class JsrController {
 		
 		
 		String fk_login_id = req.getParameter("fk_login_id");//일단 임의로 qqii를 넣어준다.
-		//system.out.println("fk_login_id확인:"+fk_login_id);
-		
+		System.out.println("fk_login_id확인:"+fk_login_id);
 		
 		if(fk_login_id ==null || fk_login_id.isEmpty()){
 			req.setAttribute("msg", "비정상적인 경로로 접근하였습니다.");

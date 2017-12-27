@@ -440,7 +440,7 @@ function goVeiwContent(statuscount){
 							re += re_content;
 							re += "<div style='display: none' id='reReply"+entryIndex+"'>";
 							re += "<input type='text' id='reReValue"+entryIndex+"' />";
-							re += "<button onclick='writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+")'>입력</button>";
+							re += "<button class='btn btn-default' onclick=\"writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+",'"+re_id+"');\">입력</button>";
 							re += "</div>";
 							
 						}//원 댓글 끝
@@ -627,10 +627,26 @@ function goVeiwContent(statuscount){
 	function writeRe(statuscount) {
 		
 		
-		if (${sessionScope.loginUser != null}) {
+		var statuscount = statuscount;
+		//var start = start;
+		 //var no =  $("#spreadBtn"+statuscount).val();
+		//alert("statuscount"+statuscount);
+		//alert("start"+no);
+
 			
-			var form_data = {"re_content" : $("#re_content"+statuscount).val(),
-							 "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val() };
+			var re_content = $("#re_content"+statuscount).val();
+			
+			if ($.trim(re_content) == "") {
+				
+				swal("내용을 입력하세요.");
+				event.preventDefault();
+				
+			}
+			
+			else {
+			var form_data = {"re_content" : re_content,
+							 "seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
+							 "fk_login_id" : $("#fk_login_id"+statuscount).val() };
 
 			$.ajax({
 				
@@ -640,21 +656,25 @@ function goVeiwContent(statuscount){
 				dataType: "JSON",
 				success: function(data) {
 					
-					swal(data.msg);
+					
 					
 					$("#re_content"+statuscount).val("");
+
 					
-					VeiwRe(statuscount);
+					swal({ title: "댓글 작성 성공!", text: data.msg}, function(){ location.reload(); });
+					//swal(data.msg)
+					//location.reload(); 
+					//goVeiwRe(statuscount,"1");
 					reCounting(statuscount);
+					//$("#spreadBtn"+statuscount).attr("disabled", false);
+					
+		
 				}, error: function() {
 					
 				}
 				
 			});
-		}
-		else if (${sessionScope.loginUser == null}) {
-			location.href="/resns/writeReply.re";
-		}
+			}
 	}
 
 	
@@ -718,7 +738,7 @@ function goVeiwContent(statuscount){
 	
 	function writeReRe(entryIndex, statuscount, re_groupno, re_seq) {
 		
-		var rereValue = $("#reReValue"+entryIndex).val();
+	var rereValue = $("#reReValue"+entryIndex).val();
 		
 		if (${sessionScope.loginUser == null}) {
 			
@@ -737,7 +757,8 @@ function goVeiwContent(statuscount){
 		
 
 		var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
-					"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue
+					"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue, "re_id" : re_id
+					,"fk_login_id" : $("#fk_login_id"+statuscount).val()
 					};
 		  
 		  $.ajax({
