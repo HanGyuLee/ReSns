@@ -457,7 +457,7 @@ public class JsrController {
 		
 		
 		String fk_login_id = req.getParameter("fk_login_id");//일단 임의로 qqii를 넣어준다.
-		System.out.println("fk_login_id확인:"+fk_login_id);
+		//System.out.println("fk_login_id확인:"+fk_login_id);
 		
 		if(fk_login_id ==null || fk_login_id.isEmpty()){
 			req.setAttribute("msg", "비정상적인 경로로 접근하였습니다.");
@@ -469,6 +469,7 @@ public class JsrController {
 			*/
 		
 		String qsearch = req.getParameter("qsearch");
+		//System.out.println("qsearch::"+qsearch);
 	//게시판  주인인 경우 다른 페이지로 리턴하게 해주거나 리스트에서 보여주기를 다르게 해야한다.
 		HashMap<String,String> map =  new HashMap<String,String>();
 		map.put("login_id", login_id);
@@ -507,7 +508,7 @@ public class JsrController {
 		
 		if(qsearch!=null && !qsearch.trim().isEmpty() && !qsearch.equalsIgnoreCase("null")){ //검색 있을 때
 			queBoardList = service.qeBoardList2(map);
-			
+			//System.out.println("queBoardList::"+queBoardList);
 		}
 		else {//검색어 없을 때
 			queBoardList = service.qeBoardList(map);

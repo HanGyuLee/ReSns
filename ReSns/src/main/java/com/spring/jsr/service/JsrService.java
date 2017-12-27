@@ -521,7 +521,7 @@ public class JsrService implements InterJsrService {
 	@Override
 	public String wordQSearch(HashMap<String, String> map) {
 		List<String> wordList = jdao.wordQSearch(map);
-		
+		//System.out.println("확인::"+map.get("qsearch"));
 		JSONArray jsonMap = new JSONArray();
 		if (wordList != null) {
 			for(String word : wordList) {

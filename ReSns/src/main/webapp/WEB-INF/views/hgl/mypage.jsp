@@ -441,10 +441,10 @@ function goVeiwContent(statuscount){
 							}//원 댓글이 로그인한 회원과 같으면	
 							
 						
-							re += "<img src='resources/images/reoption.png' align='right' style='width: 15px; height: 15px; cursor: pointer;' onclick='runEffect("+entryIndex+")' /><br/>";
+							re += "<img src='resources/images/reoption.png' align='right' style='width: 15px; height: 15px; cursor: pointer;' onclick='runEffect("+re_seq+")' /><br/>";
 							re += re_content;
-							re += "<div style='display: none' id='reReply"+entryIndex+"'>";
-							re += "<input type='text' id='reReValue"+entryIndex+"' />";
+							re += "<div style='display: none' id='reReply"+re_seq+"'>";
+							re += "<input type='text' id='reReValue"+re_seq+"' />";
 							re += "<button class='btn btn-default' onclick=\"writeReRe("+entryIndex+","+statuscount+","+re_groupno+","+re_seq+",'"+re_id+"');\">입력</button>";
 							re += "</div>";
 							
@@ -740,15 +740,9 @@ function goVeiwContent(statuscount){
 	
 	
 	
-	function writeReRe(entryIndex, statuscount, re,seq,re_groupno, re_seq) {
-		
-		var rereValue = $("#reReValue"+entryIndex).val();
-		
-		if (${sessionScope.loginUser == null}) {
-			
-			location.href="/resns/writeReRe.re";
-			
-		}
+	function writeReRe(entryIndex, statuscount, re_groupno, re_seq, re_id) {
+		//var no =  $("#spreadBtn"+statuscount).val();
+		var rereValue = $("#reReValue"+re_seq).val();
 		
 		
 		if ($.trim(rereValue) == "") {
@@ -759,7 +753,7 @@ function goVeiwContent(statuscount){
 			
 		}
 		
-
+		else{
 		var form_data = {"seq_tbl_board" : $("#seq_tbl_board"+statuscount).val(),
 					"re_groupno" : re_groupno, "re_seq" : re_seq, "re_content" : rereValue, "re_id" : re_id
 					,"fk_login_id" : $("#fk_login_id"+statuscount).val()
@@ -773,10 +767,15 @@ function goVeiwContent(statuscount){
 			  dataType: "JSON",
 			  success: function(data) {
 				  
-				swal(data.msg);
-				  
-				VeiwRe(statuscount);
+				
+				$("#rereValue"+statuscount).val("");
+				$("#display"+statuscount).empty();
+				$("#recount"+statuscount).text(parseInt($("#recount"+statuscount).text()) - parseInt($("#recount"+statuscount).text()) )
+				VeiwRe(statuscount,"1");
+				swal({ title: "댓글 작성 성공!", text: data.msg}, function(){ location.reload(); });
+				//$("#spreadBtn"+statuscount).attr("disabled", false);
 				reCounting(statuscount);
+				//location.reload(); 
 				  
 			  }, error: function() {
 				  
@@ -784,6 +783,7 @@ function goVeiwContent(statuscount){
 			  
 			  
 		  }); 
+		}
 	}
 
 	

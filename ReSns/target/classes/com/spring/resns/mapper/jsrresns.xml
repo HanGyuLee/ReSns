@@ -345,12 +345,11 @@ select seq_tbl_q, fk_login_id, q_status, q_date, q_askid
          	as q_content
 from tbl_q
 where fk_login_id = #{fk_login_id}
-and q_content = #{qsearch}
+and q_content like '%' || #{qsearch} || '%' 
 order by q_date desc
 )V
 )T
 where  T.rno >= #{startRno} and T.rno <![CDATA[<=]]> #{endRno}
-order by T.q_date desc
 </select>
 <!-- 검색어 있는 백문백답 리스트 불러오기 -->
 
