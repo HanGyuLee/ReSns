@@ -862,9 +862,7 @@ function runEffect(entryIndex) {
 					<div class="modal fade" id="${status.count}" tabindex="-1"
 						role="dialog">
 						<div class="modal-dialog" role="document">
-							<div class="modal-content" style="width: 800px; height: 500px; cursor: pointer;">
-							
-								<button type="button" class="close" data-dismiss="modal" >×</button>
+							<div class="modal-content" style="width: 800px; height: 500px;">
 								
 								<div class="modal-body">
 									<div

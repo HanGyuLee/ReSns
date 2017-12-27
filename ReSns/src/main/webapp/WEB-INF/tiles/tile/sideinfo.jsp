@@ -136,7 +136,7 @@
 
 
 <span id="tagList"></span>
-<div id="container"></div>
+<div id="container" style="cursor: pointer;"></div>
 
 
 
