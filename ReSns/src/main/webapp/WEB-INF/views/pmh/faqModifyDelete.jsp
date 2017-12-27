@@ -29,7 +29,7 @@
 	
 	div.btns { position:absolute;
 				  top:60%;
-				  left:81%;
+				  left:90%;
 	}
 	/* 	
 	table { width: 100%;
