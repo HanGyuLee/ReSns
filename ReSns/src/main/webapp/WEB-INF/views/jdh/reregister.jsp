@@ -120,12 +120,19 @@
 	 document.title = "회원가입"; 
 </script>
 
-<form class="form-horizontal" name="registerFrm"encType="multipart/form-data">
+<style>
+	legend {
+		text-align: center;
+	}
+</style>
+<body>
+<form class="form-horizontal" name="registerFrm" id="registerFrm" encType="multipart/form-data">
 	<fieldset>
 
 		<legend><span style="font-size: xx-large; font-style: oblique; font-weight: bold; color: fuchsia;">회원가입</span></legend>
 
-		<div class="form-group">
+	<div style="margin-left: 250px;">
+		<div class="form-group center-block">
 			<label class="cols-sm-4 control-label" for="name"></label>
 			<div class="col-md-4">
 				<div class="input-group">
@@ -137,7 +144,7 @@
 			<span style="color: #4F84C4;"><span class="glyphicon glyphicon-ok-circle"></span> ID 중복체크</span>
 			</a> <span class="error">아이디 중복체크부터 해주세요.</span>
 		</div>
-
+	
 
 		<div class="form-group">
 			<label for="password" class="cols-sm-4 control-label"></label>
@@ -175,16 +182,16 @@
 
 		<div>
 			성별
-			<fieldset style="font-weight: bold;">
+			<fieldset style="font-weight: bold;"> 
 				성별을 선택하세요 <input type="radio" name="user_gender" id="user_gender"
 					value="1" checked="checked" class="required" required><label for="radio-1">남자</label>&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="radio" name="user_gender" id="user_gender2" value="2" class="required" required><label
 					for="radio-2">여자</label>&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio"
 					name="user_gender" id="user_gender3" value="3" class="required" required><label
 					for="radio-3">선택안함</label>&nbsp;&nbsp;&nbsp;&nbsp;
-			</fieldset>
+			</fieldset> 
 		</div>
-		<br />
+		
 
 
 
@@ -203,7 +210,7 @@
 
 		<br />
 		<div class="form-group">
-			<label for="star" class="col-sm-4 control-label"></label>
+			<label for="star" class="control-label"></label>
 			<div class="col-md-4">
 				<div class="input-group">
 					<span class="input-group-addon"><i class="fa fa-star"
@@ -222,7 +229,7 @@
 
 
 	<div class="form-group">
-		<label class="col-md-4 control-label" for="mac"></label>
+		<label class="col-md-0 control-label" for="mac"></label>
 		<div class="col-md-4">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fa fa-th"aria-hidden="true"></i>생년월일</span> 
@@ -259,7 +266,7 @@
 
 
 	<div class="form-group">
-		<label class="col-md-4 control-label" for="mac"></label>
+		<label class="col-md-0 control-label" for="mac"></label>
 		<div class="col-md-4">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fa fa-upload"
@@ -272,13 +279,14 @@
 
 
 	<div class="form-group">
-		<label class="col-md-4 control-label" for="simpan"></label>
+		<label class="col-md-0 control-label" for="simpan"></label>
 		<div class="col-md-8">
 			<button type="button" id="goregister" name="reregister"class="btn btn-success" onclick="doRegister();">등록</button>
 			<button type="button" id="gofail" name="registerfail"class="btn btn-danger">취소</button>
 		</div>
 	</div>
-
+</div>
 	</fieldset>
 </form>
 
+</body>

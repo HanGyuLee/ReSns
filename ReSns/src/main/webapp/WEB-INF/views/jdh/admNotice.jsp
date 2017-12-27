@@ -62,7 +62,7 @@
 				<table id="mytable" class="table table-bordred table-striped">
 					<thead>
 						<tr>
-							<th>seq</th>
+							<th></th>
 							<th>카테고리</th>
 							<th>날짜</th>
 							<th>제목</th>
@@ -78,17 +78,15 @@
 							<td>
 								<c:choose>
 									<c:when test="${vo.notice_cate eq 0}">
-										기타
+										<span style="color: teal; font-weight: bold; font-style: italic;">기타</span>
 									</c:when>
 									<c:when test="${vo.notice_cate eq 1}">
-										업데이트
+										<span style="color: orange; font-weight: bold; font-style: italic;">업데이트</span>
 									</c:when>
 									<c:when test="${vo.notice_cate eq 2}">
-										긴급
+										<span style="color: red; font-weight: bold; font-style: italic;">긴급</span>
 									</c:when>
-									<c:when test="${vo.notice_cate eq 3}">
-										에러(고쳐)
-									</c:when>
+									
 								</c:choose>
 							</td>
 							<td>${vo.notice_date}</td>

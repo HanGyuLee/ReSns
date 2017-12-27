@@ -10,9 +10,9 @@
     <style type="text/css">
 
 	body{
- background: url('http://k30.kn3.net/taringa/3/F/4/1/A/2/TheCrashWTF/B95.jpg');
+ background-color: #f5f5f5;
 }
-	  
+
 	</style>
 
 <!-- 
@@ -137,9 +137,9 @@
 
 <body>
             <div class="container" style="width:130%; height:80%; margin: auto;">
-                <div class="row vertical-offset-100">
-                    <div class="col-md-4 col-md-offset-4">
-                        <div class="panel panel-default">
+                <div class="row vertical-offset-100" >
+                    <div class="col-md-4 col-md-offset-4" >
+                        <div class="panel panel-default" style="border-style: hidden;">
                             <div class="panel-heading">                                
                                 <div class="row-fluid user-row">
                                     <img src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-1/p200x200/21752007_1546637858708136_2911158173821163272_n.png?oh=8fef724e1730308435625632b2803357&oe=5AB88BC5" class="img-responsive" alt="Conxole Admin" style="margin-left: 170px;"/>

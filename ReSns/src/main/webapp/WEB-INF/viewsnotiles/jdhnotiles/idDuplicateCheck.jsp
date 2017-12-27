@@ -38,12 +38,12 @@
    
    
    function setUserID(userid) {
-      
-      var openerfrm = opener.document.registerFrm;
+      console.log(userid);
+    var openerfrm = opener.document.getElementById("registerFrm");
       // opener 는 팝업창을 열게한 부모창을 말한다.
       // 여기서 부모창은 memberRegisterForm.jsp 회원가입 페이지이다.
-      openerfrm.userid.value = userid;
-      openerfrm.pwd.focus();
+      openerfrm.login_id.value = userid;
+      openerfrm.login_pwd.focus();
       
       self.close();
       // 여기서 self 는 팝업창 자기자신을 말한다.

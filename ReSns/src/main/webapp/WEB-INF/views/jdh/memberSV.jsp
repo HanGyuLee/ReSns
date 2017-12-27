@@ -143,19 +143,19 @@
 							<c:forEach var="mvo" items="${memList}">
 								<tr>
 									<!-- fk_login_id, login_name, user_email, user_report, login_status -->
-									<td>${mvo.fk_login_id}</td>
-									<td>${mvo.user_email}</td>
-									<td>${mvo.login_name}</td>
-									<td align="center">${mvo.user_report}</td>
+									<td><span style="font-weight: bold; font-style: italic;">${mvo.fk_login_id}</span></td>
+									<td><span style="font-weight: bold; font-style: italic;">${mvo.user_email}</span></td>
+									<td><span style="font-weight: bold; font-style: italic;">${mvo.login_name}</span></td>
+									<td align="center"><span style="font-weight: bold; font-style: italic;">${mvo.user_report}</span></td>
 									<td><c:choose>
-							<c:when test="${mvo.login_status eq 1}">
-										회원
-									</c:when>
+								<c:when test="${mvo.login_status eq 1}">
+										<span style="font-weight: bold;">회원</span>
+								</c:when>
 									<c:when test="${mvo.login_status eq 9}">
-										관리자
+										<span style="color: green; font-weight: bold;">관리자</span>
 									</c:when>
 									<c:when test="${mvo.login_status eq 0}">
-										정지
+										<span style="color: red;">정지</span>
 									</c:when>
 							</c:choose></td>
 							

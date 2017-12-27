@@ -852,6 +852,7 @@ public class JdhController {
 		// 아이디 중복체크		
 		@RequestMapping(value="/memberIdDuplicateCheck.re")
 		   public String idDuplicateCheck(HttpServletRequest req) {
+			System.out.println("여기오냐");
 		      String method = req.getMethod();
 		      String userid = req.getParameter("userid");
 		      req.setAttribute("method", method);
