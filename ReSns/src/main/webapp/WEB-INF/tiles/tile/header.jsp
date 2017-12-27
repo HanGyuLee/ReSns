@@ -579,11 +579,6 @@ function goAlarm(userid){
                     result += alarm_time +"</a> </li><li class='divider'></li>";   	
                 }
                 
-                if (alarm_type == " 나에게 메세지를 보냈습니다"){
-                    result += "<li><a href='#' onclick=\"window.open(\'"+url+"\', \'_blank\', 'width=900,height=950,toolbars=no,scrollbars=no');\" return false;  style='text-decoration:none;'>";
-                    result += "<img src='resources/images/profile0.png' style='width: 30px; height: 30px; display: inline;' class='img-responsive img-circle'/><span style='font-weight: bold;'>"+login_name+"님이 "+alarm_type+"</span></span><br/>";
-                    result += alarm_time +"</a> </li><li class='divider'></li>";   	
-                }
                 
                 if (alarm_type == " 게시물에 댓글을 남겼습니다"){
                     result += "<li><a href='#' onclick=\"window.open(\'"+url+"\', \'_blank\', 'width=900,height=950,toolbars=no,scrollbars=no');\" return false;  style='text-decoration:none;'>";
